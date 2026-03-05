@@ -664,7 +664,7 @@
               setIsAuthChecking(false);
           };
 
-          // 🟢 2. SMART POLLING DATA FETCHING 🟢
+          // 🟢 2. SMART POLLING DATA FETCHING (SAFE RENDERING FIX) 🟢
           useEffect(() => {
               if (!user) return;
               let isMounted = true;
@@ -676,13 +676,14 @@
                   const { data: settings } = await supabase.from('store_settings').select('*');
                   if (settings) {
                       settings.forEach(s => {
-                          if (s.id === 'Products') setCategories(s.data.list || DEFAULT_CATEGORIES);
-                          if (s.id === 'SMS') setSmsSettings(s.data);
-                          if (s.id === 'CryptoMethods') setCryptoSettings(s.data.list || []);
-                          if (s.id === 'Bank') setBankSettings(s.data);
-                          if (s.id === 'CustomPayments') setCustomPayments(s.data.list || []);
-                          if (s.id === 'Notice') setGlobalNotice(s.data.text || '');
-                          if (s.id === 'Features') setFeatureSettings(s.data);
+                          const sData = s.data || {};
+                          if (s.id === 'Products') setCategories(sData.list || DEFAULT_CATEGORIES);
+                          if (s.id === 'SMS') setSmsSettings(sData);
+                          if (s.id === 'CryptoMethods') setCryptoSettings(sData.list || []);
+                          if (s.id === 'Bank') setBankSettings(sData);
+                          if (s.id === 'CustomPayments') setCustomPayments(sData.list || []);
+                          if (s.id === 'Notice') setGlobalNotice(sData.text || '');
+                          if (s.id === 'Features') setFeatureSettings(sData);
                       });
                   }
 
@@ -690,40 +691,40 @@
                   const { data: stock } = await supabase.from('store_inventory').select('data').eq('id', 'Stock').single();
                   if (stock) setInventory(stock.data || {});
 
-                  // 3. Fetch User/Admin Data
+                  // 3. Fetch User/Admin Data safely handling missing JSON properties
                   if (user.role === 'admin') {
                       const { data: usersData } = await supabase.from('store_users').select('*');
-                      if(usersData) { let uObj={}; usersData.forEach(u => uObj[u.id] = u.data); setUsersDB(uObj); }
+                      if(usersData) { let uObj={}; usersData.forEach(u => uObj[u.id] = u.data || {}); setUsersDB(uObj); }
                       
                       const { data: ordersData } = await supabase.from('store_orders').select('*');
-                      if(ordersData) setAllOrders(ordersData.map(d => ({id: d.id, ...d.data, date: d.data.date || d.date})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                      if(ordersData) setAllOrders(ordersData.map(d => ({id: d.id, ...(d.data || {}), date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
                       
                       const { data: depsData } = await supabase.from('store_deposits').select('*');
-                      if(depsData) setDeposits(depsData.map(d => ({id: d.id, ...d.data, email: d.email || d.data.email, date: d.data.date || d.date})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                      if(depsData) setDeposits(depsData.map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
                       
                       const { data: purData } = await supabase.from('store_purchases').select('*');
-                      if(purData) setPurchases(purData.map(d => ({id: d.id, ...d.data, customer: d.customer || d.data.customer, type: d.type || d.data.type, date: d.data.date || d.date})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                      if(purData) setPurchases(purData.map(d => ({id: d.id, ...(d.data || {}), customer: d.customer || d.data?.customer, type: d.type || d.data?.type, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
 
                       const { data: tickData } = await supabase.from('store_tickets').select('*');
-                      if(tickData) setTickets(tickData.map(d => ({id: d.id, ...d.data, email: d.email || d.data.email, date: d.data.date || d.date})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                      if(tickData) setTickets(tickData.map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
 
                       const { data: actChats } = await supabase.from('store_active_chats').select('*');
-                      if(actChats) setActiveChats(actChats.map(d => ({id: d.id, userEmail: d.id, ...d.data})).sort((a,b)=>new Date(b.lastMessageTime || b.last_message_time)-new Date(a.lastMessageTime || a.last_message_time)));
+                      if(actChats) setActiveChats(actChats.map(d => ({id: d.id, userEmail: d.id, ...(d.data || {})})).sort((a,b)=>new Date(b.lastMessageTime || b.last_message_time || 0)-new Date(a.lastMessageTime || a.last_message_time || 0)));
                   } else {
                       const { data: myUser } = await supabase.from('store_users').select('data').eq('id', user.email).single();
-                      if(myUser) setUsersDB({ [user.email]: myUser.data });
+                      if(myUser) setUsersDB({ [user.email]: myUser.data || {} });
 
                       const { data: depsData } = await supabase.from('store_deposits').select('*').eq('email', user.email);
-                      if(depsData) setDeposits(depsData.map(d => ({id: d.id, ...d.data, email: d.email || d.data.email, date: d.data.date || d.date})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                      if(depsData) setDeposits(depsData.map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
 
                       const { data: ordersData } = await supabase.from('store_orders').select('*').eq('customer', user.email);
-                      if(ordersData) setAllOrders(ordersData.map(d => ({id: d.id, ...d.data, date: d.data.date || d.date})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                      if(ordersData) setAllOrders(ordersData.map(d => ({id: d.id, ...(d.data || {}), date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
 
                       const { data: purData } = await supabase.from('store_purchases').select('*').eq('customer', user.email);
-                      if(purData) setPurchases(purData.map(d => ({id: d.id, ...d.data, customer: d.customer || d.data.customer, type: d.type || d.data.type, date: d.data.date || d.date})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                      if(purData) setPurchases(purData.map(d => ({id: d.id, ...(d.data || {}), customer: d.customer || d.data?.customer, type: d.type || d.data?.type, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
 
                       const { data: tickData } = await supabase.from('store_tickets').select('*').eq('email', user.email);
-                      if(tickData) setTickets(tickData.map(d => ({id: d.id, ...d.data, email: d.email || d.data.email, date: d.data.date || d.date})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                      if(tickData) setTickets(tickData.map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
                   }
               };
 
@@ -1827,7 +1828,7 @@
                               <div className="h-full bg-white transition-all duration-1000" style={{ width: `${(timeLeft / 3600) * 100}%` }}></div>
                           </div>
                           
-                          <p className="text-[10px] font-mono font-bold text-white flex items-center justify-center gap-2 pt-4 uppercase tracking-[0.3em]">
+                          <p className="text-[10px] font-bold text-white flex items-center justify-center gap-2 pt-4 uppercase tracking-[0.3em]">
                               <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span> Waiting for payment
                           </p>
                           
@@ -2439,8 +2440,8 @@
 
           const startTicketChat = (userEmail) => { if (userEmail) setSelectedChatUser(userEmail); };
 
-          const pendingDeposits = deposits.filter(d => d.status === 'Pending' || d.status === 'Verifying...' || d.status === 'Pending Review' || d.status === 'Awaiting Payment');
-          const totalSales = orders.filter(o => o.status === 'Completed').reduce((sum, order) => sum + Number(order.total || 0), 0);
+          const pendingDeposits = (deposits || []).filter(d => d && (d.status === 'Pending' || d.status === 'Verifying...' || d.status === 'Pending Review' || d.status === 'Awaiting Payment'));
+          const totalSales = (orders || []).filter(o => o && o.status === 'Completed').reduce((sum, order) => sum + Number(order.total || 0), 0);
           const filteredUsers = Object.keys(usersDB).filter(email => email.toLowerCase().includes(customerSearch.toLowerCase()));
 
           const handleUploadAccounts = async (e) => {
@@ -2688,19 +2689,22 @@
                           <tr><th className="p-4 sm:p-5">User</th><th className="p-4 sm:p-5">Spent</th><th className="p-4 sm:p-5">Balance</th><th className="p-4 sm:p-5 text-right">Action</th></tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
-                          {filteredUsers.map((email, idx) => (
-                            <tr key={email} className="hover:bg-[rgba(255,255,255,0.05)] transition-colors animate-fade-in-up" style={{animationDelay: `${idx * 0.03}s`}}>
-                              <td className="p-4 sm:p-5">
-                                  <p className="text-white font-medium text-xs tracking-wide allow-select">{String(email)}</p>
-                                  <p className="text-[9px] text-gray-500 mt-1.5 font-mono uppercase tracking-widest allow-select">Pass: {usersDB[email].password || 'Hidden'}</p>
-                              </td>
-                              <td className="p-4 sm:p-5 font-mono text-gray-400">${Number(usersDB[email].totalSpent || 0).toFixed(2)}</td>
-                              <td className="p-4 sm:p-5 font-mono font-bold text-white">${Number(usersDB[email].balance || 0).toFixed(2)}</td>
-                              <td className="p-4 sm:p-5 text-right">
-                                <button onClick={() => setEditUserModal({ show: true, email: email, password: usersDB[email].password || '', balance: usersDB[email].balance || 0, totalSpent: usersDB[email].totalSpent || 0 })} className="btn-animate bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 px-4 py-2 rounded-lg text-[10px] uppercase tracking-widest font-bold transition-all ml-auto flex items-center gap-2"><Edit className="w-3 h-3"/> Edit</button>
-                              </td>
-                            </tr>
-                          ))}
+                          {filteredUsers.map((email, idx) => {
+                            const uData = usersDB[email] || {};
+                            return (
+                                <tr key={email} className="hover:bg-[rgba(255,255,255,0.05)] transition-colors animate-fade-in-up" style={{animationDelay: `${idx * 0.03}s`}}>
+                                  <td className="p-4 sm:p-5">
+                                      <p className="text-white font-medium text-xs tracking-wide allow-select">{String(email)}</p>
+                                      <p className="text-[9px] text-gray-500 mt-1.5 font-mono uppercase tracking-widest allow-select">Pass: {uData.password || 'Hidden'}</p>
+                                  </td>
+                                  <td className="p-4 sm:p-5 font-mono text-gray-400">${Number(uData.totalSpent || 0).toFixed(2)}</td>
+                                  <td className="p-4 sm:p-5 font-mono font-bold text-white">${Number(uData.balance || 0).toFixed(2)}</td>
+                                  <td className="p-4 sm:p-5 text-right">
+                                    <button onClick={() => setEditUserModal({ show: true, email: email, password: uData.password || '', balance: uData.balance || 0, totalSpent: uData.totalSpent || 0 })} className="btn-animate bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 px-4 py-2 rounded-lg text-[10px] uppercase tracking-widest font-bold transition-all ml-auto flex items-center gap-2"><Edit className="w-3 h-3"/> Edit</button>
+                                  </td>
+                                </tr>
+                            )
+                          })}
                         </tbody>
                       </table>
                       {filteredUsers.length === 0 && <p className="text-center py-16 text-gray-600 font-mono text-xs uppercase tracking-widest">No users found.</p>}
