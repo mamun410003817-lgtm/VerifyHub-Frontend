@@ -121,27 +121,50 @@
 
     <!-- 🟢 ADVANCED ANTI-HACKING & ANTI-DEVTOOLS SCRIPT 🟢 -->
     <script>
+        // Disable React DevTools
         if (typeof window.__REACT_DEVTOOLS_GLOBAL_HOOK__ === 'object') {
             for (let [key, value] of Object.entries(window.__REACT_DEVTOOLS_GLOBAL_HOOK__)) {
                 window.__REACT_DEVTOOLS_GLOBAL_HOOK__[key] = typeof value === 'function' ? () => {} : null;
             }
         }
-        try { if (window.top !== window.self) {} } catch (e) {}
 
+        // Prevent Right Click
         document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Prevent Keyboard Shortcuts (F12, Ctrl+Shift+I, Ctrl+U, Ctrl+S, Ctrl+C)
         document.onkeydown = function(e) {
             if (e.keyCode === 123 || 
                 (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || 
-                (e.ctrlKey && e.keyCode === 85)) {
+                (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 67))) {
                 e.preventDefault();
                 return false;
             }
         };
 
+        // Aggressive DevTools Detection & Console Spam
         setInterval(function() {
             console.clear();
-            console.log("%cSTOP! This is a restricted area.", "color: red; font-size: 20px; font-weight: bold;");
+            console.log("%cSTOP! This is a restricted area.", "color: red; font-size: 40px; font-weight: bold; text-shadow: 2px 2px 0 #000;");
+            console.log("%cViolating our security policies will result in an immediate IP ban.", "color: white; font-size: 16px;");
+            
+            // This small trick pauses the debugger if someone tries to open it
+            const start = performance.now();
+            debugger;
+            if (performance.now() - start > 100) {
+                // They likely have DevTools open
+                document.body.innerHTML = "<div style='display:flex;justify-content:center;align-items:center;height:100vh;background:#000;color:red;font-family:monospace;font-size:24px;text-align:center;'>SECURITY BREACH DETECTED.<br/>ACCESS DENIED.</div>";
+            }
         }, 1000);
+
+        // Prevent framing (Clickjacking protection)
+        try { 
+            if (window.top !== window.self) {
+                window.top.location = window.self.location;
+            } 
+        } catch (e) {}
+
+        // Prevent Dragging Images/Text
+        document.addEventListener('dragstart', e => e.preventDefault());
     </script>
 
     <style>
