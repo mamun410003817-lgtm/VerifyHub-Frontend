@@ -282,7 +282,7 @@
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
         // ⚠️ Render-এ লাইভ করার পর নিচের লিঙ্কটি আপনার সার্ভারের লিঙ্ক দিয়ে বদলে দিন ⚠️
-        const BACKEND_URL = 'https://verifyhub-elite-api.onrender.com'; 
+        const BACKEND_URL = 'https://verifyhub-elite-backend.onrender.com'; 
 
         const getAuthToken = async () => {
             const { data } = await supabase.auth.getSession();
@@ -913,6 +913,7 @@
                 <div className="w-full relative tab-transition-enter" key={activeTab}>
                     <ErrorBoundary>
                         {user.role === 'admin' ? (
+                          // 🟢 FIXED: globalNotice is now properly passed to AdminDashboard 🟢
                           <AdminDashboard inventory={inventory} orders={allOrders} deposits={deposits} categories={categories} usersDB={usersDB} purchases={purchases} tickets={tickets} triggerToast={triggerToast} promoSettings={promoSettings} globalNotice={globalNotice} featureSettings={featureSettings} bankSettings={bankSettings} cryptoSettings={cryptoSettings} customPayments={customPayments} smsSettings={smsSettings} activeChats={activeChats} activeTab={activeTab} />
                         ) : (
                           <>
@@ -1092,35 +1093,22 @@
               setIsSmsLoading(true);
               try {
                   const token = await getAuthToken(); 
-                  const deductRes = await fetch('https://verifyhub-elite-api.onrender.com/api/sms-deduct', {
-                      method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                      body: JSON.stringify({ email: user.email, price: finalBuyPrice })
-                  });
                   
-                  if (!deductRes.ok) { triggerToast(`Server Error ${deductRes.status}: Deduction failed.`); setIsSmsLoading(false); return; }
-                  
-                  const deductData = await deductRes.json();
-                  if (!deductData.success) { triggerToast(deductData.message || "Balance deduction failed."); setIsSmsLoading(false); return; }
-
+                  // 🟢 NEW LOGIC: Request Number FIRST, Backend will deduct IF successful 🟢
                   const res = await fetch('https://verifyhub-elite-api.onrender.com/api/juicy/getNumber', {
                       method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                      body: JSON.stringify({ serviceId: currentService.code, countryId: smsCountry, maxPrice: exactMaxPrice }) 
+                      // Send requestedPrice to backend so it knows how much to deduct
+                      body: JSON.stringify({ serviceId: currentService.code, countryId: smsCountry, maxPrice: exactMaxPrice, requestedPrice: finalBuyPrice }) 
                   });
+                  
+                  if (!res.ok) { triggerToast(`Server Error ${res.status}`); setIsSmsLoading(false); return; }
+                  
                   const data = await res.json();
                   
                   if (data?.success && data?.phone) {
-                      let finalOrderPrice = finalBuyPrice;
-                      if (data.exactCost !== undefined && data.exactCost !== null) {
-                          const markup = parseFloat(smsSettings?.markup || 1.00);
-                          const actualTotalCost = parseFloat(data.exactCost) + markup;
-                          const diff = parseFloat((finalBuyPrice - actualTotalCost).toFixed(2));
-                          if (diff > 0) {
-                              fetch('https://verifyhub-elite-api.onrender.com/api/sms-refund', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ email: user.email, price: diff }) }).catch(()=>{});
-                              finalOrderPrice = actualTotalCost; 
-                          }
-                      }
+                      // Success! Backend already deducted the money.
                       const cleanName = (currentService.name || '').split(' [')[0];
-                      const newOrder = { id: data.orderId, phone: data.phone, service: cleanName, countryId: smsCountry, price: finalOrderPrice, status: 'ACTIVE', codes: [], expiresAt: Date.now() + 240 * 1000, isCancelling: false, isNew: true };
+                      const newOrder = { id: data.orderId, phone: data.phone, service: cleanName, countryId: smsCountry, price: finalBuyPrice, status: 'ACTIVE', codes: [], expiresAt: Date.now() + 240 * 1000, isCancelling: false, isNew: true };
                       setActiveOrders(prev => [newOrder, ...prev]); 
                       triggerToast("Number assigned!");
                       
@@ -1132,7 +1120,7 @@
                       }, 200);
 
                   } else {
-                      await fetch('https://verifyhub-elite-api.onrender.com/api/sms-refund', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ email: user.email, price: finalBuyPrice }) });
+                      // Failed to get number. Money was NOT deducted.
                       triggerToast(data?.message || "Failed to get number.");
                   }
               } catch (e) { triggerToast("Network Error."); } finally { setIsSmsLoading(false); }
