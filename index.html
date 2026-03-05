@@ -913,7 +913,7 @@
                 <div className="w-full relative tab-transition-enter" key={activeTab}>
                     <ErrorBoundary>
                         {user.role === 'admin' ? (
-                          <AdminDashboard inventory={inventory} orders={allOrders} deposits={deposits} categories={categories} usersDB={usersDB} purchases={purchases} tickets={tickets} triggerToast={triggerToast} promoSettings={promoSettings} featureSettings={featureSettings} bankSettings={bankSettings} cryptoSettings={cryptoSettings} customPayments={customPayments} smsSettings={smsSettings} activeChats={activeChats} activeTab={activeTab} />
+                          <AdminDashboard inventory={inventory} orders={allOrders} deposits={deposits} categories={categories} usersDB={usersDB} purchases={purchases} tickets={tickets} triggerToast={triggerToast} promoSettings={promoSettings} globalNotice={globalNotice} featureSettings={featureSettings} bankSettings={bankSettings} cryptoSettings={cryptoSettings} customPayments={customPayments} smsSettings={smsSettings} activeChats={activeChats} activeTab={activeTab} />
                         ) : (
                           <>
                               {activeTab === 'sms' && <CustomerDashboardSMS user={user} balance={currentUserBalance} triggerToast={triggerToast} smsSettings={smsSettings} />}
@@ -2275,7 +2275,7 @@
         // ==========================================
         // ADMIN DASHBOARD
         // ==========================================
-        function AdminDashboard({ inventory, orders, deposits, categories, usersDB, purchases, tickets, triggerToast, promoSettings, featureSettings, bankSettings, cryptoSettings, customPayments, smsSettings, activeChats, activeTab }) {
+        function AdminDashboard({ inventory, orders, deposits, categories, usersDB, purchases, tickets, triggerToast, promoSettings, globalNotice, featureSettings, bankSettings, cryptoSettings, customPayments, smsSettings, activeChats, activeTab }) {
           const [uploadCategory, setUploadCategory] = useState('new');
           const [uploadText, setUploadText] = useState('');
           const [customerSearch, setCustomerSearch] = useState('');
