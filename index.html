@@ -464,7 +464,9 @@
                 <div className={`fixed top-6 left-1/2 -translate-x-1/2 z-[9999] w-[90%] max-w-sm transition-all duration-300 ease-in-out ${show ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'}`}>
                     <div className="glass-effect p-4 rounded-3xl flex items-center gap-4 shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
                         <div className="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(255,255,255,0.5)]">
-                            <MessageSquare className="w-6 h-6 animate-pulse" />
+                            <span className="animate-pulse">
+                                <MessageSquare className="w-6 h-6"/>
+                            </span>
                         </div>
                         <div className="flex-grow pt-0.5">
                             <p className="text-[10px] font-bold text-brand-primary uppercase tracking-widest mb-1.5 flex items-center justify-between">
@@ -579,7 +581,7 @@
                                    await fetch(`${BACKEND_URL}/api/secure-action`, {
                                        method: 'POST',
                                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                                       body: JSON.stringify({ action: 'create_ticket', id: id, email: acc.customer, subject: `Reported Account`, message: `I have an issue with this account.` })
+                                       body: JSON.stringify({ action: 'create_ticket', id: id, subject: `Reported Account`, message: `I have an issue with this account.` })
                                    });
                                    triggerToast('Report sent to admin.');
                                } catch(e) {
@@ -623,7 +625,6 @@
               {id: 4, name: 'ETH', network: 'ERC20', address: 'Your_ETH_Address'},
               {id: 5, name: 'LTC', network: 'Litecoin', address: 'Your_LTC_Address'}
           ]);
-          // 🟢 FIX: Default active is TRUE explicitly
           const [smsSettings, setSmsSettings] = useState({ active: true, markup: 1.00 });
           const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
           const [customPayments, setCustomPayments] = useState([]);
@@ -672,27 +673,9 @@
               if (supaUser && supaUser.email) {
                   let currentAdminEmail = 'mdmunnachowdhury0003817@gmail.com';
                   try {
-                      // 🟢 ANTI-TAMPERING: Admin email fetched from DB, not hardcoded frontend.
                       const { data } = await supabase.from('store_settings').select('data').eq('id', 'AdminConfig').maybeSingle();
-                      if (data && data.data && data.data.adminEmail) {
-                          currentAdminEmail = data.data.adminEmail;
-                      }
+                      if (data && data.data) currentAdminEmail = data.data.adminEmail || currentAdminEmail;
                   } catch(e) {}
-
-                  // Insert if not exists (safeguard) through backend to avoid direct DB writes
-                  if (supaUser.email.toLowerCase() !== currentAdminEmail.toLowerCase()) {
-                      const { data: uData } = await supabase.from('store_users').select('data').eq('id', supaUser.email).maybeSingle();
-                      if (!uData) {
-                           try {
-                               const token = await getAuthToken();
-                               await fetch(`${BACKEND_URL}/api/secure-action`, {
-                                   method: 'POST',
-                                   headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                                   body: JSON.stringify({ action: 'create_user', email: supaUser.email })
-                               });
-                           } catch(e) {}
-                      }
-                  }
 
                   if (supaUser.email.toLowerCase() === currentAdminEmail.toLowerCase()) {
                       setUser({ email: supaUser.email, role: 'admin' }); setActiveTab('inventory');
@@ -719,7 +702,6 @@
                       settings.forEach(s => {
                           const sData = s.data || {};
                           if (s.id === 'Products') setCategories(sData.list || DEFAULT_CATEGORIES);
-                          // 🟢 FIX: Ensure 'active' defaults to true even if DB doesn't have it
                           if (s.id === 'SMS') setSmsSettings({ active: sData.active !== false, markup: sData.markup || 1.00 });
                           if (s.id === 'CryptoMethods') setCryptoSettings(sData.list || []);
                           if (s.id === 'Bank') setBankSettings(sData);
@@ -795,7 +777,7 @@
             
             if (authMethod === 'admin') {
               let currentAdminEmail = 'mdmunnachowdhury0003817@gmail.com'; 
-              try { const { data } = await supabase.from('store_settings').select('data').eq('id', 'AdminConfig').maybeSingle(); if (data && data.data && data.data.adminEmail) currentAdminEmail = data.data.adminEmail; } catch (e) {}
+              try { const { data } = await supabase.from('store_settings').select('data').eq('id', 'AdminConfig').maybeSingle(); if (data && data.data) currentAdminEmail = data.data.adminEmail || currentAdminEmail; } catch (e) {}
 
               if (email.toLowerCase() !== currentAdminEmail.toLowerCase()) { setAuthError('Access Denied: Invalid Admin Clearance.'); setIsLoading(false); return; }
               const { error } = await supabase.auth.signInWithPassword({ email, password: pwd });
@@ -809,13 +791,13 @@
                 const { data, error } = await supabase.auth.signUp({ email, password: pwd });
                 if (error) throw error;
                 
-                // 🟢 RLS Friendly: Using backend to create user profile securely
+                // Use backend to create user profile
                 const token = data.session?.access_token || (await getAuthToken());
                 if(token) {
                     await fetch(`${BACKEND_URL}/api/secure-action`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                        body: JSON.stringify({ action: 'create_user', email: email, password: pwd })
+                        body: JSON.stringify({ action: 'create_user' })
                     });
                 }
                 
@@ -954,7 +936,7 @@
                               <tab.icon className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-200 ${activeTab === tab.id ? 'scale-110 mb-1 text-black' : 'group-hover:scale-110 group-hover:-translate-y-0.5 mb-1 text-gray-400 group-hover:text-white'}`} strokeWidth={activeTab === tab.id ? 2 : 1.5} /> 
                               <span className={`text-[7.5px] sm:text-[9px] min-[400px]:text-[10px] leading-tight mt-0.5 uppercase tracking-wider text-center w-full whitespace-normal break-words px-0.5 ${activeTab === tab.id ? 'font-bold text-black' : 'font-medium text-gray-400 group-hover:text-white'}`}>
                                   {tab.label}
-                              </span>
+                                  </span>
                           </div>
                       </button>
                     ))}
@@ -1024,7 +1006,7 @@
                     await fetch(`${BACKEND_URL}/api/secure-action`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                        body: JSON.stringify({ action: 'send_chat', email: user.email, text: msgText })
+                        body: JSON.stringify({ action: 'send_chat', text: msgText })
                     });
                 } catch(err) {}
             };
@@ -1304,7 +1286,7 @@
                               setActiveOrders(prev => prev.map(o => {
                                   if (o.id === order.id && !o.codes.includes(data.code)) {
                                       triggerToast(`New SMS Received!`);
-                                      getAuthToken().then(token => { fetch(`${BACKEND_URL}/api/secure-action`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ action: 'save_sms', email: user.email, type: `Live SMS (${o.service})`, data: `Phone: ${o.phone}\nSMS Code: ${data.code}` }) }); });
+                                      getAuthToken().then(token => { fetch(`${BACKEND_URL}/api/secure-action`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ action: 'save_sms', type: `Live SMS (${o.service})`, data: `Phone: ${o.phone}\nSMS Code: ${data.code}` }) }); });
                                       return { ...o, codes: [...o.codes, data.code], lastMsg: 'SMS Received' };
                                   } return o;
                               }));
@@ -1656,7 +1638,7 @@
         // ==========================================
         // FUNDS MODULE
         // ==========================================
-        function CustomerDashboardFunds({ user, db, appId, triggerToast, addNotification, bankSettings, cryptoSettings, customPayments, deposits }) {
+        function CustomerDashboardFunds({ user, triggerToast, addNotification, bankSettings, cryptoSettings, customPayments, deposits }) {
           const [hiddenInvoices, setHiddenInvoices] = useState(() => {
               try {
                   const stored = localStorage.getItem(`hiddenInvoices_${user?.email}`);
@@ -1689,10 +1671,10 @@
           }, [hiddenInvoices, user]);
 
           const pendingCrypto = (deposits || []).find(d => {
-              if (!d || d.email !== user?.email || d.status !== 'Awaiting Payment' || !String(d.method).includes('(Auto)')) return false;
+              if (!d || d.email !== user?.email || (d.status !== 'Awaiting Payment' && d.data?.status !== 'Awaiting Payment') || (!String(d.method).includes('(Auto)') && !String(d.data?.method).includes('(Auto)'))) return false;
               if (hiddenInvoices.includes(d.id)) return false; 
               
-              const invoiceTime = new Date(d.date).getTime();
+              const invoiceTime = new Date(d.data?.date || d.date).getTime();
               if (Date.now() - invoiceTime > 3600000) return false; 
               return true;
           });
@@ -1703,7 +1685,7 @@
           const validCryptoOptions = cryptoSettings && cryptoSettings.length > 0 ? cryptoSettings : [{id: 1, name: 'USDT', network: 'TRC20', address: 'TELRyMwDmdKzBRb7Uaw3zNvphrc8V3D5Mj'}];
           const [cryptoMethod, setCryptoMethod] = useState(validCryptoOptions[0].name);
           
-          const activeCryptoMethodName = pendingCrypto ? String(pendingCrypto.method).split(' ')[0] : cryptoMethod;
+          const activeCryptoMethodName = pendingCrypto ? String(pendingCrypto.data?.method || pendingCrypto.method).split(' ')[0] : cryptoMethod;
           const activeCryptoObj = validCryptoOptions.find(c => c.name === activeCryptoMethodName) || validCryptoOptions[0];
           
           const [timeLeft, setTimeLeft] = useState(3600);
@@ -1715,7 +1697,7 @@
           useEffect(() => {
               if (!pendingCrypto) return;
               
-              const invoiceTime = new Date(pendingCrypto.date).getTime();
+              const invoiceTime = new Date(pendingCrypto.data?.date || pendingCrypto.date).getTime();
               
               const calcTimeLeft = () => {
                   let diff = 3600 - Math.floor((Date.now() - invoiceTime) / 1000);
@@ -1743,12 +1725,12 @@
                       const token = await getAuthToken();
                       const response = await fetch(`${BACKEND_URL}/api/verify-deposit`, {
                           method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                          body: JSON.stringify({ invoiceId: pendingCrypto.id, amount: pendingCrypto.amount, method: pendingCrypto.method, cryptoAmount: pendingCrypto.cryptoAmount })
+                          body: JSON.stringify({ invoiceId: pendingCrypto.id, amount: pendingCrypto.data?.amount || pendingCrypto.amount, method: pendingCrypto.data?.method || pendingCrypto.method, cryptoAmount: pendingCrypto.data?.cryptoAmount || pendingCrypto.cryptoAmount })
                       });
                       const result = await response.json();
                       if (result.success) {
-                          triggerToast(`Payment Verified! $${pendingCrypto.amount} added.`);
-                          addNotification('Deposit Successful', `$${pendingCrypto.amount} added to balance.`);
+                          triggerToast(`Payment Verified! $${pendingCrypto.data?.amount || pendingCrypto.amount} added.`);
+                          addNotification('Deposit Successful', `$${pendingCrypto.data?.amount || pendingCrypto.amount} added to balance.`);
                       }
                   } catch (err) {}
               }, 5000);
@@ -1800,7 +1782,7 @@
                   await fetch(`${BACKEND_URL}/api/secure-action`, {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                      body: JSON.stringify({ action: 'create_deposit', id: newInvoiceId, email: user.email, amount: finalAmount, cryptoAmount: cryptoAmount, method: `${cryptoMethod} (Auto)`, txId: 'Pending' })
+                      body: JSON.stringify({ action: 'create_deposit', id: newInvoiceId, amount: finalAmount, cryptoAmount: cryptoAmount, method: `${cryptoMethod} (Auto)`, txId: 'Pending' })
                   });
                   triggerToast(`Invoice created for ` + cryptoMethod);
               } catch (err) { triggerToast("Request failed."); }
@@ -1825,12 +1807,12 @@
                   const token = await getAuthToken();
                   const response = await fetch(`${BACKEND_URL}/api/verify-deposit`, {
                       method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                      body: JSON.stringify({ invoiceId: pendingCrypto.id, amount: pendingCrypto.amount, method: pendingCrypto.method, cryptoAmount: pendingCrypto.cryptoAmount })
+                      body: JSON.stringify({ invoiceId: pendingCrypto.id, amount: pendingCrypto.data?.amount || pendingCrypto.amount, method: pendingCrypto.data?.method || pendingCrypto.method, cryptoAmount: pendingCrypto.data?.cryptoAmount || pendingCrypto.cryptoAmount })
                   });
                   const result = await response.json();
                   if (result.success) {
-                      triggerToast(`Payment Verified! $${pendingCrypto.amount} added.`);
-                      addNotification('Deposit Successful', `$${pendingCrypto.amount} added to balance.`);
+                      triggerToast(`Payment Verified! $${pendingCrypto.data?.amount || pendingCrypto.amount} added.`);
+                      addNotification('Deposit Successful', `$${pendingCrypto.data?.amount || pendingCrypto.amount} added to balance.`);
                   } else {
                       setHiddenInvoices(prev => {
                           const newArr = [...prev, pendingCrypto.id];
@@ -1858,7 +1840,7 @@
                   await fetch(`${BACKEND_URL}/api/secure-action`, {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                      body: JSON.stringify({ action: 'create_deposit', id: newInvoiceId, email: user.email, amount: amt, method: manualMethod, txId: manualTxId })
+                      body: JSON.stringify({ action: 'create_deposit', id: newInvoiceId, amount: amt, method: manualMethod, txId: manualTxId })
                   });
                   triggerToast(`Deposit request sent! Admin will review shortly.`);
                   setManualAmount('');
@@ -1885,7 +1867,7 @@
                                   const token = await getAuthToken();
                                   const response = await fetch(`${BACKEND_URL}/api/flutterwave-success`, {
                                       method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                                      body: JSON.stringify({ email: user.email, amount: Number(usdAmt), transactionId: String(data.transaction_id || data.tx_ref) })
+                                      body: JSON.stringify({ amount: Number(usdAmt), transactionId: String(data.transaction_id || data.tx_ref) })
                                   });
                                   const result = await response.json();
                                   if(result.success) {
@@ -1973,7 +1955,7 @@
                           </p>
                           
                           <div className="text-3xl sm:text-4xl font-light font-mono text-white tracking-widest allow-select">
-                              {pendingCrypto.cryptoAmount} <span className="text-sm text-gray-400">{String(pendingCrypto.method).split(' ')[0]}</span>
+                              {pendingCrypto.data?.cryptoAmount || pendingCrypto.cryptoAmount} <span className="text-sm text-gray-400">{String(pendingCrypto.data?.method || pendingCrypto.method).split(' ')[0]}</span>
                           </div>
                           
                           <div className="bg-white/5 border border-white/10 p-4 rounded-xl mt-6 shadow-inner">
@@ -1987,7 +1969,7 @@
                           <div className="bg-red-900/20 p-4 rounded-xl border border-red-900/50 text-left">
                               <p className="text-[10px] text-red-400 font-bold mb-1.5 flex items-center gap-1.5 uppercase tracking-[0.2em]"><AlertTriangle className="w-3 h-3 text-red-500"/> Important</p>
                               <p className="text-[10px] text-gray-300 leading-relaxed font-mono">
-                                  Send exactly <span className="text-white font-bold">{pendingCrypto.cryptoAmount}</span>. Pay exchange fees separately.
+                                  Send exactly <span className="text-white font-bold">{pendingCrypto.data?.cryptoAmount || pendingCrypto.cryptoAmount}</span>. Pay exchange fees separately.
                               </p>
                           </div>
                           
@@ -2077,7 +2059,7 @@
           );
         }
 
-        function CustomerDashboardVault({ purchases, db, appId, triggerToast, user }) {
+        function CustomerDashboardVault({ purchases, triggerToast, user }) {
           const myPurchases = (purchases || []).filter(p => p && p.customer === user?.email);
 
           return (
@@ -2106,7 +2088,7 @@
                     {myPurchases.map((acc, idx) => {
                         if (!acc) return null;
                         return (
-                            <VaultItem key={acc.id || idx} acc={acc} idx={idx} db={db} appId={appId} triggerToast={triggerToast} />
+                            <VaultItem key={acc.id || idx} acc={acc} idx={idx} triggerToast={triggerToast} />
                         )
                     })}
                   </div>
@@ -2116,7 +2098,7 @@
           );
         }
 
-        function CustomerDashboardProfile({ user, balance, tier, userInfo, allOrders, deposits, purchases, tickets, db, appId, featureSettings, triggerToast }) {
+        function CustomerDashboardProfile({ user, balance, tier, userInfo, allOrders, deposits, purchases, tickets, featureSettings, triggerToast }) {
           const [profileSubTab, setProfileSubTab] = useState('overview');
           const [ticketSubject, setTicketSubject] = useState('');
           const [ticketMessage, setTicketMessage] = useState('');
@@ -2127,8 +2109,7 @@
             try {
               const token = await getAuthToken();
               const res = await fetch(`${BACKEND_URL}/api/claim-daily-bonus`, {
-                  method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                  body: JSON.stringify({ email: user.email })
+                  method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
               });
               const data = await res.json();
               triggerToast(data.message);
@@ -2142,7 +2123,7 @@
               await fetch(`${BACKEND_URL}/api/secure-action`, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                  body: JSON.stringify({ action: 'create_ticket', id: 'TCK-' + Date.now(), email: user.email, subject: ticketSubject, message: ticketMessage })
+                  body: JSON.stringify({ action: 'create_ticket', id: 'TCK-' + Date.now(), subject: ticketSubject, message: ticketMessage })
               });
               setTicketSubject(''); setTicketMessage(''); triggerToast('Ticket sent successfully.');
             } catch(err) {}
@@ -2155,7 +2136,7 @@
           const myPurchases = (purchases || []).filter(p => p && p.customer === user?.email);
 
           const unifiedHistory = [
-              ...myDeposits.map(d => ({ id: d.id, type: d.status === 'Approved' ? 'Funds Added' : 'Deposit Processing', amount: d.amount, date: d.date, status: d.status, method: d.method })),
+              ...myDeposits.map(d => ({ id: d.id, type: d.status === 'Approved' ? 'Funds Added' : 'Deposit Processing', amount: d.data?.amount || d.amount, date: d.data?.date || d.date, status: d.data?.status || d.status, method: d.data?.method || d.method })),
               ...myOrders.map(o => ({ id: o.id, type: 'Bought Account', amount: o.total, date: o.date, status: o.status, method: 'Account Balance' })),
               ...myPurchases.filter(p => String(p.type).includes('Network') || String(p.type).includes('Protocol')).map(p => ({ id: p.id, type: p.type, amount: 0, date: p.date, status: 'Acquired', method: 'Account Balance' }))
           ].sort((a,b) => {
@@ -2322,13 +2303,13 @@
                              <div key={t.id} className="bg-[rgba(0,0,0,0.5)] border border-white/10 p-4 rounded-2xl group hover:border-white/30 transition-colors relative overflow-hidden animate-fade-in-up" style={{animationDelay: `${idx * 0.1}s`}}>
                                <div className="absolute top-0 left-0 w-1.5 h-full bg-white/10 group-hover:bg-white transition-colors"></div>
                                <div className="flex justify-between items-start mb-4 pl-3">
-                                 <h4 className="font-bold text-gray-200 text-xs uppercase tracking-wider break-words w-[70%]">{t.subject}</h4>
-                                 <span className={`text-[8px] px-2 py-1 rounded border uppercase tracking-[0.2em] font-bold ${t.status === 'Open' ? 'bg-red-900/20 text-red-400 border-red-900/50' : 'bg-green-900/20 text-green-400 border-green-900/50'}`}>{t.status}</span>
+                                 <h4 className="font-bold text-gray-200 text-xs uppercase tracking-wider break-words w-[70%]">{t.data?.subject || t.subject}</h4>
+                                 <span className={`text-[8px] px-2 py-1 rounded border uppercase tracking-[0.2em] font-bold ${t.data?.status === 'Open' || t.status === 'Open' ? 'bg-red-900/20 text-red-400 border-red-900/50' : 'bg-green-900/20 text-green-400 border-green-900/50'}`}>{t.data?.status || t.status}</span>
                                </div>
                                <div className="bg-[#050505] p-3 rounded-lg mb-3 shadow-inner ml-3">
-                                 <p className="text-xs text-gray-300 font-light leading-relaxed break-words allow-select">{t.message}</p>
+                                 <p className="text-xs text-gray-300 font-light leading-relaxed break-words allow-select">{t.data?.message || t.message}</p>
                                </div>
-                               <p className="text-[9px] text-gray-500 font-mono flex items-center gap-1.5 uppercase tracking-widest ml-3"><Clock className="w-3 h-3"/> {safeFormatDate(t.date)}</p>
+                               <p className="text-[9px] text-gray-500 font-mono flex items-center gap-1.5 uppercase tracking-widest ml-3"><Clock className="w-3 h-3"/> {safeFormatDate(t.data?.date || t.date)}</p>
                              </div>
                            ))}
                          </div>
@@ -2342,7 +2323,7 @@
         // ==========================================
         // CART MODAL
         // ==========================================
-        function CartModal({ cart, setCart, setShowCart, balance, user, promoSettings, triggerToast, addNotification, db, appId }) {
+        function CartModal({ cart, setCart, setShowCart, balance, user, promoSettings, triggerToast, addNotification }) {
             const [isCheckingOut, setIsCheckingOut] = useState(false);
             const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
             const discountAmount = promoSettings?.isActive ? (totalAmount * (promoSettings.discount / 100)) : 0;
@@ -2355,7 +2336,7 @@
                 try {
                     const token = await getAuthToken();
                     const response = await fetch(`${BACKEND_URL}/api/checkout`, {
-                        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ email: user.email, cart: cart })
+                        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ cart: cart })
                     });
                     clearTimeout(serverWakeTimer);
                     if (!response.ok) throw new Error("Network error");
@@ -2625,8 +2606,8 @@
 
           const startTicketChat = (userEmail) => { if (userEmail) setSelectedChatUser(userEmail); };
 
-          const pendingDeposits = (deposits || []).filter(d => d && (d.status === 'Pending' || d.status === 'Verifying...' || d.status === 'Pending Review' || d.status === 'Awaiting Payment'));
-          const totalSales = (orders || []).filter(o => o && o.status === 'Completed').reduce((sum, order) => sum + Number(order.total || 0), 0);
+          const pendingDeposits = (deposits || []).filter(d => d && (d.status === 'Pending' || d.status === 'Verifying...' || d.status === 'Pending Review' || d.status === 'Awaiting Payment' || d.data?.status === 'Pending Review' || d.data?.status === 'Awaiting Payment'));
+          const totalSales = (orders || []).filter(o => o && (o.status === 'Completed' || o.data?.status === 'Completed')).reduce((sum, order) => sum + Number(order.total || order.data?.total || 0), 0);
           const filteredUsers = Object.keys(usersDB).filter(email => email.toLowerCase().includes(customerSearch.toLowerCase()));
 
           const handleUploadAccounts = async (e) => {
@@ -2685,7 +2666,7 @@
               await fetch(`${BACKEND_URL}/api/secure-action`, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                  body: JSON.stringify({ action: 'approve_deposit', id: depId, email: dep.email, amount: dep.amount })
+                  body: JSON.stringify({ action: 'approve_deposit', id: depId, email: dep.email, amount: dep.data?.amount || dep.amount })
               });
               triggerToast("Approved.");
             } catch (err) { triggerToast("Failed."); }
@@ -2923,11 +2904,11 @@
                             <div className="flex justify-between items-start mb-3">
                               <div>
                                 <p className="text-gray-300 font-medium text-xs mb-1 allow-select">{String(t.email || 'Unknown')}</p>
-                                <span className="font-bold text-[10px] text-white uppercase tracking-wide">{t.subject}</span>
+                                <span className="font-bold text-[10px] text-white uppercase tracking-wide">{t.data?.subject || t.subject}</span>
                               </div>
                               <div className="flex flex-col items-end gap-2">
-                                  <span className={`text-[8px] px-2 py-1 rounded border uppercase tracking-[0.2em] font-bold ${t.status === 'Open' ? 'bg-red-900/20 text-red-400 border-red-900/50' : 'bg-green-900/20 text-green-400 border-green-900/50'}`}>{t.status}</span>
-                                  {t.status === 'Open' && (
+                                  <span className={`text-[8px] px-2 py-1 rounded border uppercase tracking-[0.2em] font-bold ${t.data?.status === 'Open' || t.status === 'Open' ? 'bg-red-900/20 text-red-400 border-red-900/50' : 'bg-green-900/20 text-green-400 border-green-900/50'}`}>{t.data?.status || t.status}</span>
+                                  {(t.data?.status === 'Open' || t.status === 'Open') && (
                                     <div className="flex gap-2 mt-1">
                                         <button onClick={() => startTicketChat(t.email)} className="btn-animate text-[9px] text-white hover:text-gray-300 transition-colors underline flex items-center gap-1"><MessageCircle className="w-2.5 h-2.5"/> Reply</button>
                                         <button onClick={() => handleResolveTicket(t.id)} className="btn-animate text-[9px] text-gray-500 hover:text-white transition-colors underline ml-2">Resolve</button>
@@ -2936,9 +2917,9 @@
                               </div>
                             </div>
                             <div className="bg-[#000] p-3 rounded-lg mb-3 shadow-inner ml-3">
-                              <p className="text-xs text-gray-300 font-light leading-relaxed break-words allow-select">{t.message}</p>
+                              <p className="text-xs text-gray-300 font-light leading-relaxed break-words allow-select">{t.data?.message || t.message}</p>
                             </div>
-                            <p className="text-[9px] text-gray-500 font-mono flex items-center gap-1.5 uppercase tracking-widest ml-3"><Clock className="w-3 h-3"/> {safeFormatDate(t.date)}</p>
+                            <p className="text-[9px] text-gray-500 font-mono flex items-center gap-1.5 uppercase tracking-widest ml-3"><Clock className="w-3 h-3"/> {safeFormatDate(t.data?.date || t.date)}</p>
                           </div>
                         ))}
                         {tickets.length === 0 && <p className="text-center text-gray-600 py-10 text-xs font-mono uppercase tracking-widest">No tickets.</p>}
@@ -3043,7 +3024,7 @@
                               {purchases.map((p, idx) => (
                                 <tr key={p.id || idx} className="hover:bg-[rgba(255,255,255,0.05)] transition-colors animate-fade-in-up" style={{animationDelay: `${(idx % 10) * 0.05}s`}}>
                                   <td className="p-4 sm:p-5 align-top">
-                                      <p className="text-[10px] text-gray-400 font-mono uppercase tracking-widest mt-1">{safeFormatDate(p.date)}</p>
+                                      <p className="text-[10px] text-gray-400 font-mono uppercase tracking-widest mt-1">{safeFormatDate(p.data?.date || p.date)}</p>
                                   </td>
                                   <td className="p-4 sm:p-5 align-top">
                                       <p className="text-xs font-bold text-white tracking-wide mt-1 allow-select">{p.customer}</p>
@@ -3053,7 +3034,7 @@
                                   </td>
                                   <td className="p-4 sm:p-5">
                                       <div className="bg-[rgba(0,0,0,0.4)] border border-white/5 p-3 rounded-xl min-w-[250px] max-w-sm max-h-32 overflow-y-auto custom-scrollbar shadow-inner">
-                                          <pre className="text-[11px] font-mono text-white font-medium whitespace-pre-wrap break-words allow-select">{p.data}</pre>
+                                          <pre className="text-[11px] font-mono text-white font-medium whitespace-pre-wrap break-words allow-select">{p.data?.data || p.data}</pre>
                                       </div>
                                   </td>
                                 </tr>
@@ -3079,21 +3060,21 @@
                         </thead>
                         <tbody className="divide-y divide-white/5">
                           {deposits.map((dep, idx) => {
-                            const isPending = String(dep.status || '').includes('Pending') || String(dep.status || '').includes('Awaiting');
+                            const isPending = String(dep.data?.status || dep.status || '').includes('Pending') || String(dep.data?.status || dep.status || '').includes('Awaiting');
                             return (
                               <tr key={dep.id} className="hover:bg-[rgba(255,255,255,0.05)] transition-colors animate-fade-in-up" style={{animationDelay: `${idx * 0.05}s`}}>
                                 <td className="p-4 sm:p-5">
-                                  <p className="font-mono text-white font-bold text-[10px] truncate max-w-[120px] allow-select">{String(dep.id || '')}</p>
-                                  <p className="text-[9px] text-gray-500 mt-1.5 font-mono uppercase tracking-widest">{safeFormatDate(dep.date)}</p>
+                                  <p className="font-mono text-white font-bold text-[10px] truncate max-w-[120px] allow-select">{String(dep.data?.txId || dep.id || '')}</p>
+                                  <p className="text-[9px] text-gray-500 mt-1.5 font-mono uppercase tracking-widest">{safeFormatDate(dep.data?.date || dep.date)}</p>
                                 </td>
                                 <td className="p-4 sm:p-5">
                                   <p className="text-gray-200 font-medium text-xs allow-select">{String(dep.email || '')}</p>
-                                  <p className="text-[9px] text-gray-500 mt-1.5 font-mono uppercase tracking-widest">{String(dep.method || '')}</p>
+                                  <p className="text-[9px] text-gray-500 mt-1.5 font-mono uppercase tracking-widest">{String(dep.data?.method || dep.method || '')}</p>
                                 </td>
-                                <td className="p-4 sm:p-5 font-mono font-bold text-white">${Number(dep.amount || 0).toFixed(2)}</td>
+                                <td className="p-4 sm:p-5 font-mono font-bold text-white">${Number(dep.data?.amount || dep.amount || 0).toFixed(2)}</td>
                                 <td className="p-4 sm:p-5 text-right">
                                   <div className="flex flex-col items-end gap-2">
-                                    <span className={`text-[9px] uppercase tracking-[0.2em] font-bold ${dep.status === 'Approved' ? 'text-green-500' : isPending ? 'text-white' : 'text-red-500'}`}>{String(dep.status || '')}</span>
+                                    <span className={`text-[9px] uppercase tracking-[0.2em] font-bold ${(dep.data?.status || dep.status) === 'Approved' ? 'text-green-500' : isPending ? 'text-white' : 'text-red-500'}`}>{String(dep.data?.status || dep.status || '')}</span>
                                     {isPending && (
                                         <button onClick={() => handleManualApprove(dep.id)} className="btn-animate bg-white text-black border border-white px-3 py-1.5 rounded text-[9px] uppercase tracking-widest font-bold transition-all mt-1">
                                             Approve
