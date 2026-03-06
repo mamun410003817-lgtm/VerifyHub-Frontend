@@ -305,7 +305,7 @@
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
         // 🟢 NEW RENDER BACKEND URL 🟢
-        const BACKEND_URL = 'https://verifyhub-backend-new.onrender.com'; 
+        const BACKEND_URL = 'https://verifyhub-elite-backend.onrender.com'; 
 
         const getAuthToken = async () => {
             const { data } = await supabase.auth.getSession();
@@ -1670,12 +1670,20 @@
               }
           }, [hiddenInvoices, user]);
 
+          // 🔥 FIX: Improved condition to properly catch pending invoices even if nested differently 🔥
           const pendingCrypto = (deposits || []).find(d => {
-              if (!d || d.email !== user?.email || (d.status !== 'Awaiting Payment' && d.data?.status !== 'Awaiting Payment') || (!String(d.method).includes('(Auto)') && !String(d.data?.method).includes('(Auto)'))) return false;
+              if (!d || d.email !== user?.email) return false;
               if (hiddenInvoices.includes(d.id)) return false; 
+
+              const status = d.data?.status || d.status;
+              const method = d.data?.method || d.method;
+
+              if (status !== 'Awaiting Payment' && status !== 'Pending Review') return false;
+              if (!String(method).includes('(Auto)')) return false;
               
-              const invoiceTime = new Date(d.data?.date || d.date).getTime();
+              const invoiceTime = new Date(d.data?.date || d.date || Date.now()).getTime();
               if (Date.now() - invoiceTime > 3600000) return false; 
+              
               return true;
           });
           
@@ -1697,7 +1705,7 @@
           useEffect(() => {
               if (!pendingCrypto) return;
               
-              const invoiceTime = new Date(pendingCrypto.data?.date || pendingCrypto.date).getTime();
+              const invoiceTime = new Date(pendingCrypto.data?.date || pendingCrypto.date || Date.now()).getTime();
               
               const calcTimeLeft = () => {
                   let diff = 3600 - Math.floor((Date.now() - invoiceTime) / 1000);
