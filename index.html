@@ -1048,6 +1048,26 @@
             );
         }
 
+        // 🟢 FALLBACK APPS: In case Backend Server is Asleep or Fails 🟢
+        const FALLBACK_APPS = [
+            { code: "1", serviceId: "1", name: "Google", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
+            { code: "8", serviceId: "8", name: "WhatsApp", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
+            { code: "5", serviceId: "5", name: "Telegram", finalPrice: 3.10, baseCost: 2.10, prices: [{value: 3.10, quantity: 100}], originalPrice: 2.10 },
+            { code: "12", serviceId: "12", name: "Facebook", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
+            { code: "6", serviceId: "6", name: "Instagram", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
+            { code: "49", serviceId: "49", name: "Snapchat", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
+            { code: "17", serviceId: "17", name: "Netflix", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
+            { code: "2", serviceId: "2", name: "Microsoft / Outlook", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
+            { code: "4", serviceId: "4", name: "Twitter", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
+            { code: "10", serviceId: "10", name: "Discord", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
+            { code: "76", serviceId: "76", name: "Tiktok", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
+            { code: "26", serviceId: "26", name: "Amazon", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
+            { code: "3", serviceId: "3", name: "Uber", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
+            { code: "7", serviceId: "7", name: "Tinder", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
+            { code: "9", serviceId: "9", name: "Steam", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
+            { code: "11", serviceId: "11", name: "Yahoo", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 }
+        ];
+
         function CustomerDashboardSMS({ user, balance, triggerToast, smsSettings }) {
           const [isSmsLoading, setIsSmsLoading] = useState(false);
           const [selectedSmsService, setSelectedSmsService] = useState(''); 
@@ -1056,7 +1076,7 @@
           const [appSearch, setAppSearch] = useState('');
           const [isFetchingServices, setIsFetchingServices] = useState(false);
           const [smsCountry, setSmsCountry] = useState('USA'); 
-          const [retryCount, setRetryCount] = useState(0); // 🟢 FIX: Added Retry State
+          const [retryCount, setRetryCount] = useState(0); 
           
           const [priceTiers, setPriceTiers] = useState([]);
           const [selectedTier, setSelectedTier] = useState(null);
@@ -1072,35 +1092,48 @@
 
           useEffect(() => { if (user?.email) localStorage.setItem(`smsOrders_${user.email}`, JSON.stringify(activeOrders)); }, [activeOrders, user]);
 
-          // 🟢 FIX: Handle undefined active state properly
           const smsActive = smsSettings?.active !== false; 
           
           useEffect(() => {
               if (smsActive) {
                   setIsFetchingServices(true);
                   const controller = new AbortController();
-                  // 🟢 FIX: Increased timeout to 60 seconds for Render Free Tier Wakeup
+                  // 🟢 FIX: 60 sec timeout for initial Render sleep wakeup
                   const timeoutId = setTimeout(() => {
                       controller.abort();
-                      triggerToast("Server is taking too long to wake up. Retrying...");
                   }, 60000); 
 
                   fetch(`${BACKEND_URL}/api/grizzly/getPrices?country=${smsCountry}`, { signal: controller.signal })
                   .then(async (r) => {
-                      if(!r.ok) throw new Error(`HTTP Error ${r.status}`);
+                      if(!r.ok) {
+                          const text = await r.text();
+                          throw new Error(`HTTP Error ${r.status}`);
+                      }
                       return r.json();
                   })
                   .then(json => { 
                       clearTimeout(timeoutId);
-                      const srvs = json?.success && Array.isArray(json.data) ? json.data : [];
-                      setAvailableServices(srvs); 
+                      if (!json.success) {
+                          triggerToast("API Warning: " + (json.message || "Could not load full list"));
+                      }
+                      const srvs = json?.success && Array.isArray(json.data) && json.data.length > 0 ? json.data : [];
+                      
+                      if (srvs.length > 0) {
+                          setAvailableServices(srvs); 
+                      } else {
+                          triggerToast("Loaded offline backup apps.");
+                          setAvailableServices(FALLBACK_APPS.map(app => ({...app, countryId: smsCountry})));
+                      }
                       setIsFetchingServices(false); 
                   }).catch((err) => { 
                       clearTimeout(timeoutId);
                       setIsFetchingServices(false); 
-                      setAvailableServices([]); 
+                      setAvailableServices(FALLBACK_APPS.map(app => ({...app, countryId: smsCountry}))); 
                       if(err.name !== 'AbortError') {
                           console.error("Fetch Apps Error:", err);
+                          triggerToast("Server disconnected. Loaded Backup Apps.");
+                      } else {
+                          triggerToast("Server taking too long. Loaded Backup Apps.");
                       }
                   });
 
@@ -1112,7 +1145,7 @@
               if (selectedSmsService && smsCountry) {
                   setIsTiersLoading(true);
                   const controller = new AbortController();
-                  const timeoutId = setTimeout(() => controller.abort(), 45000); // 🟢 FIX: Increased timeout
+                  const timeoutId = setTimeout(() => controller.abort(), 45000); 
                   
                   fetch(`${BACKEND_URL}/api/grizzly/getServiceTiers?country=${smsCountry}&service=${selectedSmsService}`, { signal: controller.signal })
                   .then(res => res.json()).then(data => { 
@@ -1120,12 +1153,26 @@
                       if (data?.success && Array.isArray(data?.tiers) && data.tiers.length > 0) { 
                           setPriceTiers(data.tiers); setSelectedTier(data.tiers[0]); 
                       } else { 
-                          setPriceTiers([]); setSelectedTier(null); 
+                          // 🟢 FIX: Fallback Price if backend fails
+                          const fb = FALLBACK_APPS.find(a => a.code === selectedSmsService);
+                          if(fb) {
+                              const t = { originalPrice: fb.originalPrice, priceWithMarkup: fb.finalPrice };
+                              setPriceTiers([t]); setSelectedTier(t);
+                          } else {
+                              setPriceTiers([]); setSelectedTier(null); 
+                          }
                       } 
                       setIsTiersLoading(false); 
                   }).catch(() => { 
                       clearTimeout(timeoutId);
-                      setPriceTiers([]); setSelectedTier(null); setIsTiersLoading(false); 
+                      const fb = FALLBACK_APPS.find(a => a.code === selectedSmsService);
+                      if(fb) {
+                          const t = { originalPrice: fb.originalPrice, priceWithMarkup: fb.finalPrice };
+                          setPriceTiers([t]); setSelectedTier(t);
+                      } else {
+                          setPriceTiers([]); setSelectedTier(null); 
+                      }
+                      setIsTiersLoading(false); 
                   });
                   return () => { clearTimeout(timeoutId); controller.abort(); };
               }
@@ -1147,10 +1194,8 @@
               try {
                   const token = await getAuthToken(); 
                   
-                  // 🟢 NEW LOGIC: Request Number FIRST, Backend will deduct IF successful 🟢
                   const res = await fetch(`${BACKEND_URL}/api/juicy/getNumber`, {
                       method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                      // Send requestedPrice to backend so it knows how much to deduct
                       body: JSON.stringify({ serviceId: currentService.code, countryId: smsCountry, maxPrice: exactMaxPrice, requestedPrice: finalBuyPrice }) 
                   });
                   
@@ -1159,7 +1204,6 @@
                   const data = await res.json();
                   
                   if (data?.success && data?.phone) {
-                      // Success! Backend already deducted the money.
                       const cleanName = (currentService.name || '').split(' [')[0];
                       const newOrder = { id: data.orderId, phone: data.phone, service: cleanName, countryId: smsCountry, price: finalBuyPrice, status: 'ACTIVE', codes: [], expiresAt: Date.now() + 240 * 1000, isCancelling: false, isNew: true };
                       setActiveOrders(prev => [newOrder, ...prev]); 
@@ -1173,7 +1217,6 @@
                       }, 200);
 
                   } else {
-                      // Failed to get number. Money was NOT deducted.
                       triggerToast(data?.message || "Failed to get number.");
                   }
               } catch (e) { triggerToast("Network Error."); } finally { setIsSmsLoading(false); }
@@ -1191,7 +1234,6 @@
                       return; 
                   }
                   
-                  // 🟢 FIX: Send only orderId to securely refund
                   await fetch(`${BACKEND_URL}/api/sms-refund`, { 
                       method: 'POST', 
                       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, 
