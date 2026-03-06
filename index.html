@@ -575,9 +575,16 @@
                            const id = 'REP-' + Date.now();
                            if(acc.customer) {
                                try {
-                                   await supabase.from('store_tickets').upsert({ id: id, email: acc.customer, data: { subject: `Reported Account`, message: `I have an issue with this account.`, status: 'Open', date: new Date().toISOString() }});
+                                   const token = await getAuthToken();
+                                   await fetch(`${BACKEND_URL}/api/secure-action`, {
+                                       method: 'POST',
+                                       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                       body: JSON.stringify({ action: 'create_ticket', id: id, email: acc.customer, subject: `Reported Account`, message: `I have an issue with this account.` })
+                                   });
                                    triggerToast('Report sent to admin.');
-                               } catch(e) {}
+                               } catch(e) {
+                                   triggerToast('Failed to send report.');
+                               }
                            }
                         }} className="text-[9px] font-mono text-gray-500 hover:text-red-400 uppercase tracking-widest transition-colors">Report Issue</button>
                         <button onClick={() => {
@@ -665,15 +672,25 @@
               if (supaUser && supaUser.email) {
                   let currentAdminEmail = 'mdmunnachowdhury0003817@gmail.com';
                   try {
+                      // 🟢 ANTI-TAMPERING: Admin email fetched from DB, not hardcoded frontend.
                       const { data } = await supabase.from('store_settings').select('data').eq('id', 'AdminConfig').maybeSingle();
-                      if (data && data.data) currentAdminEmail = data.data.adminEmail || currentAdminEmail;
+                      if (data && data.data && data.data.adminEmail) {
+                          currentAdminEmail = data.data.adminEmail;
+                      }
                   } catch(e) {}
 
-                  // Insert if not exists (safeguard)
+                  // Insert if not exists (safeguard) through backend to avoid direct DB writes
                   if (supaUser.email.toLowerCase() !== currentAdminEmail.toLowerCase()) {
                       const { data: uData } = await supabase.from('store_users').select('data').eq('id', supaUser.email).maybeSingle();
                       if (!uData) {
-                          await supabase.from('store_users').upsert({ id: supaUser.email, data: { password: '', balance: 0, totalSpent: 0, joined: new Date().toISOString(), lastBonusDate: '' } });
+                           try {
+                               const token = await getAuthToken();
+                               await fetch(`${BACKEND_URL}/api/secure-action`, {
+                                   method: 'POST',
+                                   headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                   body: JSON.stringify({ action: 'create_user', email: supaUser.email })
+                               });
+                           } catch(e) {}
                       }
                   }
 
@@ -778,7 +795,7 @@
             
             if (authMethod === 'admin') {
               let currentAdminEmail = 'mdmunnachowdhury0003817@gmail.com'; 
-              try { const { data } = await supabase.from('store_settings').select('data').eq('id', 'AdminConfig').maybeSingle(); if (data && data.data) currentAdminEmail = data.data.adminEmail || currentAdminEmail; } catch (e) {}
+              try { const { data } = await supabase.from('store_settings').select('data').eq('id', 'AdminConfig').maybeSingle(); if (data && data.data && data.data.adminEmail) currentAdminEmail = data.data.adminEmail; } catch (e) {}
 
               if (email.toLowerCase() !== currentAdminEmail.toLowerCase()) { setAuthError('Access Denied: Invalid Admin Clearance.'); setIsLoading(false); return; }
               const { error } = await supabase.auth.signInWithPassword({ email, password: pwd });
@@ -791,7 +808,16 @@
               if (authMethod === 'signup') {
                 const { data, error } = await supabase.auth.signUp({ email, password: pwd });
                 if (error) throw error;
-                await supabase.from('store_users').upsert({ id: email, data: { password: pwd, balance: 0, totalSpent: 0, joined: new Date().toISOString(), lastBonusDate: '' } });
+                
+                // 🟢 RLS Friendly: Using backend to create user profile securely
+                const token = data.session?.access_token || (await getAuthToken());
+                if(token) {
+                    await fetch(`${BACKEND_URL}/api/secure-action`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ action: 'create_user', email: email, password: pwd })
+                    });
+                }
                 
                 setAuthSuccessMsg('অ্যাকাউন্ট তৈরি হয়েছে! লগইন করুন (বা ইমেইল ভেরিফাই করুন)।'); 
                 setAuthMethod('login'); 
@@ -994,8 +1020,12 @@
                 const msgText = message;
                 setMessage(''); 
                 try {
-                    await supabase.from('store_chats').insert({ user_email: user.email, data: { text: msgText, sender: 'user', email: user.email } });
-                    await supabase.from('store_active_chats').upsert({ id: user.email, data: { lastMessage: msgText, userEmail: user.email, unreadByAdmin: true }, last_message_time: new Date().toISOString() });
+                    const token = await getAuthToken();
+                    await fetch(`${BACKEND_URL}/api/secure-action`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ action: 'send_chat', email: user.email, text: msgText })
+                    });
                 } catch(err) {}
             };
 
@@ -1274,7 +1304,7 @@
                               setActiveOrders(prev => prev.map(o => {
                                   if (o.id === order.id && !o.codes.includes(data.code)) {
                                       triggerToast(`New SMS Received!`);
-                                      getAuthToken().then(token => { fetch(`${BACKEND_URL}/api/sms-save`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ email: user.email, type: `Live SMS (${o.service})`, data: `Phone: ${o.phone}\nSMS Code: ${data.code}` }) }); });
+                                      getAuthToken().then(token => { fetch(`${BACKEND_URL}/api/secure-action`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ action: 'save_sms', email: user.email, type: `Live SMS (${o.service})`, data: `Phone: ${o.phone}\nSMS Code: ${data.code}` }) }); });
                                       return { ...o, codes: [...o.codes, data.code], lastMsg: 'SMS Received' };
                                   } return o;
                               }));
@@ -1766,7 +1796,12 @@
                       }
                   }
 
-                  await supabase.from('store_deposits').upsert({ id: newInvoiceId, email: user.email, data: { amount: finalAmount, cryptoAmount: cryptoAmount, method: `${cryptoMethod} (Auto)`, status: 'Awaiting Payment', date: new Date().toISOString(), txId: 'Pending' } });
+                  const token = await getAuthToken();
+                  await fetch(`${BACKEND_URL}/api/secure-action`, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                      body: JSON.stringify({ action: 'create_deposit', id: newInvoiceId, email: user.email, amount: finalAmount, cryptoAmount: cryptoAmount, method: `${cryptoMethod} (Auto)`, txId: 'Pending' })
+                  });
                   triggerToast(`Invoice created for ` + cryptoMethod);
               } catch (err) { triggerToast("Request failed."); }
               setIsGenerating(false);
@@ -1819,7 +1854,12 @@
               
               const newInvoiceId = 'DEP-MANUAL-' + Date.now();
               try {
-                  await supabase.from('store_deposits').upsert({ id: newInvoiceId, email: user.email, data: { amount: amt, method: manualMethod, status: 'Pending Review', date: new Date().toISOString(), txId: manualTxId } });
+                  const token = await getAuthToken();
+                  await fetch(`${BACKEND_URL}/api/secure-action`, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                      body: JSON.stringify({ action: 'create_deposit', id: newInvoiceId, email: user.email, amount: amt, method: manualMethod, txId: manualTxId })
+                  });
                   triggerToast(`Deposit request sent! Admin will review shortly.`);
                   setManualAmount('');
                   setManualTxId('');
@@ -2098,7 +2138,12 @@
           const submitTicket = async (e) => {
             e.preventDefault(); if (!ticketSubject.trim() || !ticketMessage.trim()) return;
             try {
-              await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'Store_Tickets', 'TCK-' + Date.now()), { email: user.email, subject: ticketSubject, message: ticketMessage, status: 'Open', date: new Date().toISOString() });
+              const token = await getAuthToken();
+              await fetch(`${BACKEND_URL}/api/secure-action`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                  body: JSON.stringify({ action: 'create_ticket', id: 'TCK-' + Date.now(), email: user.email, subject: ticketSubject, message: ticketMessage })
+              });
               setTicketSubject(''); setTicketMessage(''); triggerToast('Ticket sent successfully.');
             } catch(err) {}
           };
@@ -2514,7 +2559,12 @@
             try {
               const newInv = { ...inventory };
               newInv[categoryId].splice(accountIndex, 1);
-              await supabase.from('store_inventory').update({ data: newInv }).eq('id', 'Stock');
+              
+              const token = await getAuthToken();
+              await fetch(`${BACKEND_URL}/api/admin/save-settings`, {
+                  method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                  body: JSON.stringify({ settingsData: { id: 'Stock', data: newInv } })
+              });
               triggerToast('Account deleted.');
             } catch (err) { triggerToast('Failed to delete.'); }
           };
@@ -2541,7 +2591,14 @@
                   const { data } = await supabase.from('store_chats').select('*').eq('user_email', selectedChatUser).order('timestamp', { ascending: true });
                   if (data) {
                       setAdminChatMessages(data.map(d => ({ id: d.id, ...d.data })));
-                      await supabase.from('store_active_chats').update({ unreadByAdmin: false }).eq('id', selectedChatUser).catch(()=>{});
+                      
+                      const token = await getAuthToken();
+                      await fetch(`${BACKEND_URL}/api/secure-action`, {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                          body: JSON.stringify({ action: 'mark_chat_read', email: selectedChatUser })
+                      }).catch(()=>{});
+
                       setTimeout(() => { adminMessagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, 100);
                   }
               };
@@ -2557,8 +2614,12 @@
               setAdminChatMessage(''); 
               
               try {
-                  await supabase.from('store_chats').insert({ user_email: selectedChatUser, data: { text: msgText, sender: 'admin', email: 'Admin' } });
-                  await supabase.from('store_active_chats').upsert({ id: selectedChatUser, data: { lastMessage: msgText, userEmail: selectedChatUser, unreadByAdmin: false }, last_message_time: new Date().toISOString() });
+                  const token = await getAuthToken();
+                  await fetch(`${BACKEND_URL}/api/secure-action`, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                      body: JSON.stringify({ action: 'send_admin_chat', email: selectedChatUser, text: msgText })
+                  });
               } catch(err) {}
           };
 
@@ -2587,7 +2648,13 @@
               const newInv = { ...inventory };
               if (!newInv[uploadCategory]) newInv[uploadCategory] = [];
               newInv[uploadCategory] = [...newInv[uploadCategory], ...validAccounts];
-              await supabase.from('store_inventory').upsert({ id: 'Stock', data: newInv });
+              
+              const token = await getAuthToken();
+              await fetch(`${BACKEND_URL}/api/admin/save-settings`, {
+                  method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                  body: JSON.stringify({ settingsData: { id: 'Stock', data: newInv } })
+              });
+
               setUploadText(''); triggerToast(`Added ${validAccounts.length} accounts.`);
             } catch (err) { triggerToast("Upload failed."); }
           };
@@ -2614,28 +2681,25 @@
             const dep = deposits.find(d => d.id === depId);
             if(!dep) return;
             try {
-              const { data: depDoc } = await supabase.from('store_deposits').select('data').eq('id', depId).single();
-              if (depDoc) {
-                  depDoc.data.status = 'Approved';
-                  await supabase.from('store_deposits').update({ data: depDoc.data }).eq('id', depId);
-              }
-              const { data: uDoc } = await supabase.from('store_users').select('data').eq('id', dep.email).single();
-              if (uDoc) {
-                  uDoc.data.balance = Number(uDoc.data.balance || 0) + Number(dep.amount || 0);
-                  await supabase.from('store_users').update({ data: uDoc.data }).eq('id', dep.email);
-              }
+              const token = await getAuthToken();
+              await fetch(`${BACKEND_URL}/api/secure-action`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                  body: JSON.stringify({ action: 'approve_deposit', id: depId, email: dep.email, amount: dep.amount })
+              });
               triggerToast("Approved.");
             } catch (err) { triggerToast("Failed."); }
           };
 
           const handleResolveTicket = async (ticketId) => {
             try { 
-                const { data: tDoc } = await supabase.from('store_tickets').select('data').eq('id', ticketId).single();
-                if(tDoc) {
-                    tDoc.data.status = 'Resolved';
-                    await supabase.from('store_tickets').update({ data: tDoc.data }).eq('id', ticketId);
-                    triggerToast('Ticket closed.'); 
-                }
+                const token = await getAuthToken();
+                await fetch(`${BACKEND_URL}/api/secure-action`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ action: 'resolve_ticket', id: ticketId })
+                });
+                triggerToast('Ticket closed.'); 
             } 
             catch(err) { triggerToast('Failed to close.'); }
           };
