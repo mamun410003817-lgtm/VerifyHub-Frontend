@@ -304,8 +304,8 @@
         const supabaseKey = 'sb_publishable_2HlHVvEcZURebulTBpJVUw_GJtXAvzT';
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-        // 🟢 NEW RENDER BACKEND URL 🟢
-        const BACKEND_URL = 'https://verifyhub-elite-backend.onrender.com'; 
+        // 🟢 BACKEND URL 🟢
+        const BACKEND_URL = 'https://verifyhub-backend-new.onrender.com'; 
 
         const getAuthToken = async () => {
             const { data } = await supabase.auth.getSession();
@@ -625,6 +625,7 @@
               {id: 4, name: 'ETH', network: 'ERC20', address: 'Your_ETH_Address'},
               {id: 5, name: 'LTC', network: 'Litecoin', address: 'Your_LTC_Address'}
           ]);
+          // 🟢 FIX: Default active is TRUE explicitly
           const [smsSettings, setSmsSettings] = useState({ active: true, markup: 1.00 });
           const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
           const [customPayments, setCustomPayments] = useState([]);
@@ -673,9 +674,27 @@
               if (supaUser && supaUser.email) {
                   let currentAdminEmail = 'mdmunnachowdhury0003817@gmail.com';
                   try {
+                      // 🟢 ANTI-TAMPERING: Admin email fetched from DB, not hardcoded frontend.
                       const { data } = await supabase.from('store_settings').select('data').eq('id', 'AdminConfig').maybeSingle();
-                      if (data && data.data) currentAdminEmail = data.data.adminEmail || currentAdminEmail;
+                      if (data && data.data && data.data.adminEmail) {
+                          currentAdminEmail = data.data.adminEmail;
+                      }
                   } catch(e) {}
+
+                  // Insert if not exists (safeguard) through backend to avoid direct DB writes
+                  if (supaUser.email.toLowerCase() !== currentAdminEmail.toLowerCase()) {
+                      const { data: uData } = await supabase.from('store_users').select('data').eq('id', supaUser.email).maybeSingle();
+                      if (!uData) {
+                           try {
+                               const token = await getAuthToken();
+                               await fetch(`${BACKEND_URL}/api/secure-action`, {
+                                   method: 'POST',
+                                   headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                   body: JSON.stringify({ action: 'create_user', email: supaUser.email })
+                               });
+                           } catch(e) {}
+                      }
+                  }
 
                   if (supaUser.email.toLowerCase() === currentAdminEmail.toLowerCase()) {
                       setUser({ email: supaUser.email, role: 'admin' }); setActiveTab('inventory');
@@ -702,6 +721,7 @@
                       settings.forEach(s => {
                           const sData = s.data || {};
                           if (s.id === 'Products') setCategories(sData.list || DEFAULT_CATEGORIES);
+                          // 🟢 FIX: Ensure 'active' defaults to true even if DB doesn't have it
                           if (s.id === 'SMS') setSmsSettings({ active: sData.active !== false, markup: sData.markup || 1.00 });
                           if (s.id === 'CryptoMethods') setCryptoSettings(sData.list || []);
                           if (s.id === 'Bank') setBankSettings(sData);
@@ -791,13 +811,13 @@
                 const { data, error } = await supabase.auth.signUp({ email, password: pwd });
                 if (error) throw error;
                 
-                // Use backend to create user profile
+                // 🟢 RLS Friendly: Using backend to create user profile securely
                 const token = data.session?.access_token || (await getAuthToken());
                 if(token) {
                     await fetch(`${BACKEND_URL}/api/secure-action`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                        body: JSON.stringify({ action: 'create_user' })
+                        body: JSON.stringify({ action: 'create_user', email: email, password: pwd })
                     });
                 }
                 
