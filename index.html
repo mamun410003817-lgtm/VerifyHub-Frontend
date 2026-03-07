@@ -1719,6 +1719,11 @@
                   if (result.success) {
                       triggerToast(result.message || `Payment Verified!`);
                       addNotification('Deposit Successful', `Balance updated.`);
+                      
+                      // 🟢 UPDATE UI IMMEDIATELY 🟢
+                      setDeposits(prev => prev.map(d => d.id === pendingCrypto.id ? { ...d, status: 'Approved', data: {...(d.data || {}), status: 'Approved'} } : d));
+                      setHiddenInvoices(prev => [...prev, pendingCrypto.id]); // Hide invoice
+                      
                   } else {
                       triggerToast(result.message || 'Payment not completed yet. Try again later.');
                   }
@@ -1756,6 +1761,9 @@
                   triggerToast(`Deposit request sent! Admin will review shortly.`);
                   setManualAmount('');
                   setManualTxId('');
+                  
+                  // Optimistic UI Update
+                  setDeposits(prev => [{ id: newInvoiceId, email: user.email, date: new Date().toISOString(), status: 'Pending Review', amount: amt, method: manualMethod, data: { amount: amt, method: manualMethod, status: 'Pending Review', txId: manualTxId, date: new Date().toISOString() } }, ...prev]);
               } catch(e) {
                   triggerToast("Failed to submit request.");
               }
@@ -1965,7 +1973,7 @@
           const myPurchases = (purchases || []).filter(p => p && p.customer === user?.email);
 
           const unifiedHistory = [
-              ...myDeposits.map(d => ({ id: d.id, type: d.status === 'Approved' ? 'Funds Added' : 'Deposit Processing', amount: d.data?.amount || d.amount, date: d.data?.date || d.date, status: d.data?.status || d.status, method: d.data?.method || d.method })),
+              ...myDeposits.map(d => ({ id: d.id, type: d.status === 'Approved' || d.data?.status === 'Approved' ? 'Funds Added' : 'Deposit Processing', amount: d.data?.amount || d.amount, date: d.data?.date || d.date, status: d.data?.status || d.status, method: d.data?.method || d.method })),
               ...myOrders.map(o => ({ id: o.id, type: 'Bought Account', amount: o.total, date: o.date, status: o.status, method: 'Account Balance' })),
               ...myPurchases.filter(p => String(p.type).includes('Network') || String(p.type).includes('Protocol')).map(p => ({ id: p.id, type: p.type, amount: 0, date: p.date, status: 'Acquired', method: 'Account Balance' }))
           ].sort((a,b) => {
