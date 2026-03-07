@@ -668,23 +668,23 @@
                   } catch(e) {}
 
                   if (supaUser.email.toLowerCase() !== currentAdminEmail.toLowerCase()) {
-                      const { data: uData } = await supabase.from('store_users').select('data').eq('id', supaUser.email).maybeSingle();
+                      const { data: uData } = await supabase.from('store_users').select('data').eq('id', supaUser.email.toLowerCase()).maybeSingle();
                       if (!uData) {
                            try {
                                const token = await getAuthToken();
                                await fetch(`${BACKEND_URL}/api/secure-action`, {
                                    method: 'POST',
                                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                                   body: JSON.stringify({ action: 'create_user', email: supaUser.email })
+                                   body: JSON.stringify({ action: 'create_user', email: supaUser.email.toLowerCase() })
                                });
                            } catch(e) {}
                       }
                   }
 
                   if (supaUser.email.toLowerCase() === currentAdminEmail.toLowerCase()) {
-                      setUser({ email: supaUser.email, role: 'admin' }); setActiveTab('inventory');
+                      setUser({ email: supaUser.email.toLowerCase(), role: 'admin' }); setActiveTab('inventory');
                   } else {
-                      setUser({ email: supaUser.email, role: 'customer' }); setActiveTab('sms');
+                      setUser({ email: supaUser.email.toLowerCase(), role: 'customer' }); setActiveTab('sms');
                   }
               } else {
                   setUser(null);
@@ -795,7 +795,7 @@
                     await fetch(`${BACKEND_URL}/api/secure-action`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                        body: JSON.stringify({ action: 'create_user', email: email, password: pwd })
+                        body: JSON.stringify({ action: 'create_user', email: email.toLowerCase(), password: pwd })
                     });
                 }
                 
@@ -2489,27 +2489,40 @@
             const dep = deposits.find(d => d.id === depId);
             if(!dep) return;
             try {
-              const amtToCredit = Number(dep.data?.amount || dep.amount || 0); // 🟢 FIX: Using strictly casted Number
+              const amtToCredit = Number(dep.data?.amount || dep.amount || 0);
+              const targetEmail = String(dep.email || dep.data?.email).toLowerCase(); // 🟢 FIX: Case match 
               const token = await getAuthToken();
-              await fetch(`${BACKEND_URL}/api/secure-action`, {
+              
+              // 🟢 FIX: Do NOT update state until backend confirms success
+              const response = await fetch(`${BACKEND_URL}/api/secure-action`, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                  body: JSON.stringify({ action: 'approve_deposit', id: depId, email: dep.email, amount: amtToCredit })
+                  body: JSON.stringify({ action: 'approve_deposit', id: depId, email: targetEmail, amount: amtToCredit })
               });
-              triggerToast(`Approved! $${amtToCredit} added.`);
-              
-              // 🟢 Optimistic update for admin UI
-              setDeposits(prev => prev.map(d => d.id === depId ? { ...d, status: 'Approved', data: {...d.data, status: 'Approved'} } : d));
-              if (usersDB[dep.email]) {
-                  setUsersDB(prev => ({
-                      ...prev,
-                      [dep.email]: {
-                          ...prev[dep.email],
-                          balance: Number(prev[dep.email].balance || 0) + amtToCredit
-                      }
-                  }));
+
+              const result = await response.json();
+
+              if (result.success) {
+                  triggerToast(`Approved! $${amtToCredit} added.`);
+                  
+                  // Only update UI if backend actually succeeded
+                  setDeposits(prev => prev.map(d => d.id === depId ? { ...d, status: 'Approved', data: {...(d.data || {}), status: 'Approved'} } : d));
+                  
+                  if (usersDB[targetEmail]) {
+                      setUsersDB(prev => ({
+                          ...prev,
+                          [targetEmail]: {
+                              ...prev[targetEmail],
+                              balance: Number(prev[targetEmail].balance || 0) + amtToCredit
+                          }
+                      }));
+                  }
+              } else {
+                  triggerToast(`Failed: ${result.message || 'Unknown error'}`);
               }
-            } catch (err) { triggerToast("Failed."); }
+            } catch (err) { 
+                triggerToast("Failed to approve due to network error."); 
+            }
           };
 
           const handleResolveTicket = async (ticketId) => {
