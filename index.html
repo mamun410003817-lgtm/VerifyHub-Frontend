@@ -762,6 +762,52 @@
               return () => { isMounted = false; clearInterval(intervalId); };
           }, [user]);
 
+          // 🟢 NEW: Auto-check NOWPayments pending invoices periodically (Global)
+          useEffect(() => {
+              if (!user || user.role === 'admin') return;
+
+              const checkPendingInvoices = async () => {
+                  try {
+                      // Get all pending NOWPayments deposits for this user
+                      const pendingDeposits = deposits.filter(d => {
+                         if(d.email !== user.email) return false;
+                         const status = d.data?.status || d.status;
+                         const method = d.data?.method || d.method;
+                         if (status !== 'Awaiting Payment' && status !== 'Pending Review') return false;
+                         if (!String(method).includes('NOWPayments')) return false;
+                         return true;
+                      });
+
+                      if (pendingDeposits.length === 0) return;
+
+                      const token = await getAuthToken();
+                      
+                      // Check each one silently
+                      for(const dep of pendingDeposits) {
+                          const res = await fetch(`${BACKEND_URL}/api/nowpayments/verify`, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                              body: JSON.stringify({ invoiceId: dep.id })
+                          });
+                          
+                          const result = await res.json();
+                          if(result.success && result.message && result.message.includes('যাচাই হয়েছে')) {
+                              // It was approved! The backend already updated DB.
+                              triggerToast(`Payment Auto-Verified: $${dep.data?.amount || dep.amount} Added!`);
+                              addNotification('Deposit Auto-Approved', `$${dep.data?.amount || dep.amount} added to your balance.`);
+                              
+                              // Optimistically update the UI to instantly show 'Approved' before next sync
+                              setDeposits(prev => prev.map(dItem => dItem.id === dep.id ? { ...dItem, status: 'Approved', data: {...(dItem.data || {}), status: 'Approved'} } : dItem));
+                          }
+                      }
+                  } catch (e) {}
+              };
+
+              // Check every 10 seconds silently
+              const interval = setInterval(checkPendingInvoices, 10000);
+              return () => clearInterval(interval);
+          }, [user, deposits]);
+
           useEffect(() => {
               if (!user || user.role !== 'customer') return;
               const fetchChat = async () => {
@@ -1787,50 +1833,6 @@
                   triggerToast('Invoice cancelled successfully.');
               }
           };
-
-          // 🟢 NEW: Auto-check NOWPayments pending invoices periodically
-          useEffect(() => {
-              if (!user || user.role === 'admin') return;
-
-              const checkPendingInvoices = async () => {
-                  try {
-                      // Get all pending NOWPayments deposits for this user
-                      const pendingDeposits = deposits.filter(d => {
-                         if(d.email !== user.email) return false;
-                         const status = d.data?.status || d.status;
-                         const method = d.data?.method || d.method;
-                         if (status !== 'Awaiting Payment' && status !== 'Pending Review') return false;
-                         if (!String(method).includes('NOWPayments')) return false;
-                         return true;
-                      });
-
-                      if (pendingDeposits.length === 0) return;
-
-                      const token = await getAuthToken();
-                      
-                      // Check each one silently
-                      for(const dep of pendingDeposits) {
-                          const res = await fetch(`${BACKEND_URL}/api/nowpayments/verify`, {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                              body: JSON.stringify({ invoiceId: dep.id })
-                          });
-                          
-                          const result = await res.json();
-                          if(result.success && result.message && result.message.includes('যাচাই হয়েছে')) {
-                              // It was approved! The backend already updated DB.
-                              // We just trigger a toast, the next Sync interval will update the UI balance automatically.
-                              triggerToast(`Payment Auto-Verified: $${dep.data?.amount || dep.amount} Added!`);
-                              addNotification('Deposit Auto-Approved', `$${dep.data?.amount || dep.amount} added to your balance.`);
-                          }
-                      }
-                  } catch (e) {}
-              };
-
-              // Check every 15 seconds
-              const interval = setInterval(checkPendingInvoices, 15000);
-              return () => clearInterval(interval);
-          }, [user, deposits]);
 
           const submitManualDeposit = async (e) => {
               e.preventDefault();
