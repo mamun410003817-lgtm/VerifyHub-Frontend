@@ -700,6 +700,7 @@
               const fetchAllData = async () => {
                   if (!isMounted) return;
 
+                  // ১. পাবলিক সেটিংস ফেচ করা
                   const { data: settings } = await supabase.from('store_settings').select('*');
                   if (settings) {
                       settings.forEach(s => {
@@ -719,39 +720,38 @@
                   const { data: stock } = await supabase.from('store_inventory').select('data').eq('id', 'Stock').maybeSingle();
                   if (stock && stock.data) setInventory(stock.data);
 
-                  if (user.role === 'admin') {
-                      const { data: usersData } = await supabase.from('store_users').select('*');
-                      if(usersData) { let uObj={}; usersData.forEach(u => uObj[u.id] = u.data || {}); setUsersDB(uObj); }
+                  // ২. সিকিউরড ডেটা ফেচ করা (সার্ভারের /api/sync এর মাধ্যমে RLS বাইপাস করে)
+                  try {
+                      const token = await getAuthToken();
+                      if (!token) return;
+                      const res = await fetch(`${BACKEND_URL}/api/sync`, {
+                          method: 'GET',
+                          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+                      });
                       
-                      const { data: ordersData } = await supabase.from('store_orders').select('*');
-                      if(ordersData) setAllOrders(ordersData.map(d => ({id: d.id, ...(d.data || {}), date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
-                      
-                      const { data: depsData } = await supabase.from('store_deposits').select('*');
-                      if(depsData) setDeposits(depsData.map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
-                      
-                      const { data: purData } = await supabase.from('store_purchases').select('*');
-                      if(purData) setPurchases(purData.map(d => ({id: d.id, ...(d.data || {}), customer: d.customer || d.data?.customer, type: d.type || d.data?.type, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                      const syncData = await res.json();
 
-                      const { data: tickData } = await supabase.from('store_tickets').select('*');
-                      if(tickData) setTickets(tickData.map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
-
-                      const { data: actChats } = await supabase.from('store_active_chats').select('*');
-                      if(actChats) setActiveChats(actChats.map(d => ({id: d.id, userEmail: d.id, ...(d.data || {})})).sort((a,b)=>new Date(b.lastMessageTime || b.last_message_time || 0)-new Date(a.lastMessageTime || a.last_message_time || 0)));
-                  } else {
-                      const { data: myUser } = await supabase.from('store_users').select('data').eq('id', user.email).maybeSingle();
-                      if(myUser && myUser.data) setUsersDB({ [user.email]: myUser.data });
-
-                      const { data: depsData } = await supabase.from('store_deposits').select('*').eq('email', user.email);
-                      if(depsData) setDeposits(depsData.map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
-
-                      const { data: ordersData } = await supabase.from('store_orders').select('*').eq('customer', user.email);
-                      if(ordersData) setAllOrders(ordersData.map(d => ({id: d.id, ...(d.data || {}), date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
-
-                      const { data: purData } = await supabase.from('store_purchases').select('*').eq('customer', user.email);
-                      if(purData) setPurchases(purData.map(d => ({id: d.id, ...(d.data || {}), customer: d.customer || d.data?.customer, type: d.type || d.data?.type, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
-
-                      const { data: tickData } = await supabase.from('store_tickets').select('*').eq('email', user.email);
-                      if(tickData) setTickets(tickData.map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                      if (syncData.success) {
+                          if (user.role === 'admin' && syncData.isAdmin) {
+                              let uObj={}; 
+                              (syncData.users || []).forEach(u => uObj[u.id] = u.data || {}); 
+                              setUsersDB(uObj);
+                              
+                              setAllOrders((syncData.orders || []).map(d => ({id: d.id, ...(d.data || {}), date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                              setDeposits((syncData.deposits || []).map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                              setPurchases((syncData.purchases || []).map(d => ({id: d.id, ...(d.data || {}), customer: d.customer || d.data?.customer, type: d.type || d.data?.type, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                              setTickets((syncData.tickets || []).map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                              setActiveChats((syncData.chats || []).map(d => ({id: d.id, userEmail: d.id, ...(d.data || {})})).sort((a,b)=>new Date(b.lastMessageTime || b.last_message_time || 0)-new Date(a.lastMessageTime || a.last_message_time || 0)));
+                          } else {
+                              if(syncData.myUser) setUsersDB({ [user.email]: syncData.myUser });
+                              setAllOrders((syncData.orders || []).map(d => ({id: d.id, ...(d.data || {}), date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                              setDeposits((syncData.deposits || []).map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                              setPurchases((syncData.purchases || []).map(d => ({id: d.id, ...(d.data || {}), customer: d.customer || d.data?.customer, type: d.type || d.data?.type, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                              setTickets((syncData.tickets || []).map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                          }
+                      }
+                  } catch(e) {
+                      console.error("Sync Error:", e);
                   }
               };
 
