@@ -721,7 +721,6 @@
                           const sData = s.data || {};
                           if (s.id === 'Products') setCategories(sData.list || DEFAULT_CATEGORIES);
                           if (s.id === 'SMS') setSmsSettings({ active: sData.active !== false, markup: sData.markup || 1.00 });
-                          // 🟢 FIX: যদি ডাটাবেসে লিস্ট না থাকে বা খালি থাকে, তাহলে ডিফল্টটাই রেখে দেবে 🟢
                           if (s.id === 'CryptoMethods') {
                               if(sData.list && sData.list.length > 0) setCryptoSettings(sData.list);
                           }
@@ -1663,18 +1662,41 @@
           const [isVerifyingClick, setIsVerifyingClick] = useState(false); 
 
           const [liveRates, setLiveRates] = useState({});
+          
+          // 🟢 FIX 2: Binance Live Rate Integration 🟢
           useEffect(() => {
-              fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,tron,tether,ethereum,litecoin&vs_currencies=usd')
-              .then(r=>r.json())
-              .then(d => {
-                  setLiveRates({
-                      BTC: d.bitcoin?.usd || 0,
-                      TRX: d.tron?.usd || 0,
-                      USDT: d.tether?.usd || 1,
-                      ETH: d.ethereum?.usd || 0,
-                      LTC: d.litecoin?.usd || 0
-                  });
-              }).catch(e=>{});
+              const fetchBinanceRates = async () => {
+                  try {
+                      const [btcRes, trxRes, ethRes, ltcRes] = await Promise.all([
+                          fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT'),
+                          fetch('https://api.binance.com/api/v3/ticker/price?symbol=TRXUSDT'),
+                          fetch('https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT'),
+                          fetch('https://api.binance.com/api/v3/ticker/price?symbol=LTCUSDT')
+                      ]);
+                      
+                      const btc = await btcRes.json();
+                      const trx = await trxRes.json();
+                      const eth = await ethRes.json();
+                      const ltc = await ltcRes.json();
+                      
+                      setLiveRates({
+                          BTC: parseFloat(btc.price),
+                          TRX: parseFloat(trx.price),
+                          USDT: 1, // USDT is always 1
+                          ETH: parseFloat(eth.price),
+                          LTC: parseFloat(ltc.price)
+                      });
+                  } catch (err) {
+                      console.error("Binance Rate Error. Falling back to default rates.", err);
+                      // Fallback dummy rates if API blocked
+                      setLiveRates(prev => Object.keys(prev).length === 0 ? { BTC: 65000, TRX: 0.14, USDT: 1, ETH: 3500, LTC: 80 } : prev);
+                  }
+              };
+
+              fetchBinanceRates();
+              // Update rates every 30 seconds
+              const interval = setInterval(fetchBinanceRates, 30000);
+              return () => clearInterval(interval);
           }, []);
 
           useEffect(() => {
@@ -1683,7 +1705,6 @@
               }
           }, [hiddenInvoices, user]);
 
-          // 🔥 FIX: Improved condition to properly catch pending invoices even if nested differently 🔥
           const pendingCrypto = (deposits || []).find(d => {
               if (!d || d.email !== user?.email) return false;
               if (hiddenInvoices.includes(d.id)) return false; 
@@ -1776,26 +1797,13 @@
               
               try {
                   if (!cmName.includes('USDT')) {
-                      try {
-                          let cid = 'bitcoin';
-                          if (cmName.includes('TRX')) cid = 'tron';
-                          if (cmName.includes('ETH')) cid = 'ethereum';
-                          if (cmName.includes('LTC')) cid = 'litecoin';
-                          
-                          const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${cid}&vs_currencies=usd`);
-                          const data = await res.json();
-                          const rate = data[cid]?.usd;
-                          if (rate) {
-                               if (cmName.includes('BTC')) cryptoAmount = parseFloat((finalAmount / rate).toFixed(8));
-                               else if (cmName.includes('ETH')) cryptoAmount = parseFloat((finalAmount / rate).toFixed(6));
-                               else if (cmName.includes('LTC')) cryptoAmount = parseFloat((finalAmount / rate).toFixed(5));
-                               else cryptoAmount = parseFloat((finalAmount / rate).toFixed(2));
-                          } else { throw new Error('no rate'); }
-                      } catch(e) {
-                           if (cmName.includes('BTC') && liveRates.BTC) cryptoAmount = parseFloat((finalAmount / liveRates.BTC).toFixed(8));
-                           else if (cmName.includes('TRX') && liveRates.TRX) cryptoAmount = parseFloat((finalAmount / liveRates.TRX).toFixed(2));
-                           else if (cmName.includes('ETH') && liveRates.ETH) cryptoAmount = parseFloat((finalAmount / liveRates.ETH).toFixed(6));
-                           else if (cmName.includes('LTC') && liveRates.LTC) cryptoAmount = parseFloat((finalAmount / liveRates.LTC).toFixed(5));
+                      // Binance rates check
+                      if (cmName.includes('BTC') && liveRates.BTC) cryptoAmount = parseFloat((finalAmount / liveRates.BTC).toFixed(8));
+                      else if (cmName.includes('TRX') && liveRates.TRX) cryptoAmount = parseFloat((finalAmount / liveRates.TRX).toFixed(2));
+                      else if (cmName.includes('ETH') && liveRates.ETH) cryptoAmount = parseFloat((finalAmount / liveRates.ETH).toFixed(6));
+                      else if (cmName.includes('LTC') && liveRates.LTC) cryptoAmount = parseFloat((finalAmount / liveRates.LTC).toFixed(5));
+                      else {
+                          throw new Error('Exchange rate not loaded yet. Please wait a second.');
                       }
                   }
 
@@ -1806,7 +1814,6 @@
                       body: JSON.stringify({ action: 'create_deposit', id: newInvoiceId, amount: finalAmount, cryptoAmount: cryptoAmount, method: `${cryptoMethod} (Auto)`, txId: 'Pending' })
                   });
                   
-                  // 🟢 OPTIMISTIC UPDATE FOR INSTANT POPUP 🟢
                   const newPending = {
                       id: newInvoiceId,
                       email: user.email,
@@ -1815,7 +1822,7 @@
                   setDeposits(prev => [newPending, ...prev]);
 
                   triggerToast(`Invoice created for ` + cryptoMethod);
-              } catch (err) { triggerToast("Request failed."); }
+              } catch (err) { triggerToast(err.message || "Request failed."); }
               setIsGenerating(false);
           };
 
@@ -2690,22 +2697,23 @@
             const dep = deposits.find(d => d.id === depId);
             if(!dep) return;
             try {
+              const amtToCredit = Number(dep.data?.amount || dep.amount || 0); // 🟢 FIX: Using strictly casted Number
               const token = await getAuthToken();
               await fetch(`${BACKEND_URL}/api/secure-action`, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                  body: JSON.stringify({ action: 'approve_deposit', id: depId, email: dep.email, amount: dep.data?.amount || dep.amount })
+                  body: JSON.stringify({ action: 'approve_deposit', id: depId, email: dep.email, amount: amtToCredit })
               });
-              triggerToast("Approved.");
+              triggerToast(`Approved! $${amtToCredit} added.`);
               
               // 🟢 Optimistic update for admin UI
-              setDeposits(prev => prev.map(d => d.id === depId ? { ...d, status: 'Approved' } : d));
+              setDeposits(prev => prev.map(d => d.id === depId ? { ...d, status: 'Approved', data: {...d.data, status: 'Approved'} } : d));
               if (usersDB[dep.email]) {
                   setUsersDB(prev => ({
                       ...prev,
                       [dep.email]: {
                           ...prev[dep.email],
-                          balance: Number(prev[dep.email].balance || 0) + Number(dep.data?.amount || dep.amount || 0)
+                          balance: Number(prev[dep.email].balance || 0) + amtToCredit
                       }
                   }));
               }
