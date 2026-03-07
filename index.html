@@ -743,7 +743,9 @@
                               setTickets((syncData.tickets || []).map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
                               setActiveChats((syncData.chats || []).map(d => ({id: d.id, userEmail: d.id, ...(d.data || {})})).sort((a,b)=>new Date(b.lastMessageTime || b.last_message_time || 0)-new Date(a.lastMessageTime || a.last_message_time || 0)));
                           } else {
-                              if(syncData.myUser) setUsersDB({ [user.email]: syncData.myUser });
+                              // 🟢 FIX: Correctly extract nested user data for the customer
+                              if(syncData.myUser) setUsersDB({ [user.email]: syncData.myUser.data || {} });
+                              
                               setAllOrders((syncData.orders || []).map(d => ({id: d.id, ...(d.data || {}), date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
                               setDeposits((syncData.deposits || []).map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
                               setPurchases((syncData.purchases || []).map(d => ({id: d.id, ...(d.data || {}), customer: d.customer || d.data?.customer, type: d.type || d.data?.type, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
