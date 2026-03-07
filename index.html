@@ -304,8 +304,8 @@
         const supabaseKey = 'sb_publishable_2HlHVvEcZURebulTBpJVUw_GJtXAvzT';
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-        // 🟢 BACKEND URL 🟢
-        const BACKEND_URL = 'https://verifyhub-elite-backend.onrender.com'; 
+        // 🟢 CORRECT BACKEND URL 🟢
+        const BACKEND_URL = 'https://verifyhub-backend-new.onrender.com'; 
 
         const getAuthToken = async () => {
             const { data } = await supabase.auth.getSession();
@@ -1138,7 +1138,6 @@
                   fetch(`${BACKEND_URL}/api/grizzly/getPrices?country=${smsCountry}`, { signal: controller.signal })
                   .then(async (r) => {
                       if(!r.ok) {
-                          const text = await r.text();
                           throw new Error(`HTTP Error ${r.status}`);
                       }
                       return r.json();
@@ -1163,9 +1162,9 @@
                       setAvailableServices(FALLBACK_APPS.map(app => ({...app, countryId: smsCountry}))); 
                       if(err.name !== 'AbortError') {
                           console.error("Fetch Apps Error:", err);
-                          triggerToast("Server disconnected. Loaded Backup Apps.");
+                          triggerToast("সার্ভার কানেকশন ফেইল: " + err.message);
                       } else {
-                          triggerToast("Server taking too long. Loaded Backup Apps.");
+                          triggerToast("সার্ভার টাইমআউট। অফলাইন অ্যাপ লোড হয়েছে।");
                       }
                   });
 
