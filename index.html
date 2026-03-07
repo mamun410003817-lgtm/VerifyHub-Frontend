@@ -305,7 +305,7 @@
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
         // 🟢 BACKEND URL 🟢
-        const BACKEND_URL = 'https://verifyhub-backend-new.onrender.com'; 
+        const BACKEND_URL = 'https://verifyhub-elite-backend.onrender.com'; 
 
         const getAuthToken = async () => {
             const { data } = await supabase.auth.getSession();
@@ -966,12 +966,12 @@
                 <div className="w-full relative tab-transition-enter" key={activeTab}>
                     <ErrorBoundary>
                         {user.role === 'admin' ? (
-                          <AdminDashboard inventory={inventory} orders={allOrders} deposits={deposits} categories={categories} usersDB={usersDB} purchases={purchases} tickets={tickets} triggerToast={triggerToast} promoSettings={promoSettings} globalNotice={globalNotice} featureSettings={featureSettings} bankSettings={bankSettings} cryptoSettings={cryptoSettings} customPayments={customPayments} smsSettings={smsSettings} activeChats={activeChats} activeTab={activeTab} />
+                          <AdminDashboard inventory={inventory} orders={allOrders} deposits={deposits} setDeposits={setDeposits} categories={categories} usersDB={usersDB} setUsersDB={setUsersDB} purchases={purchases} tickets={tickets} triggerToast={triggerToast} promoSettings={promoSettings} globalNotice={globalNotice} featureSettings={featureSettings} bankSettings={bankSettings} cryptoSettings={cryptoSettings} customPayments={customPayments} smsSettings={smsSettings} activeChats={activeChats} activeTab={activeTab} />
                         ) : (
                           <>
                               {activeTab === 'sms' && <CustomerDashboardSMS user={user} balance={currentUserBalance} triggerToast={triggerToast} smsSettings={smsSettings} />}
                               {activeTab === 'store' && <CustomerDashboardStore inventory={inventory} categories={categories} cart={cart} setCart={setCart} triggerToast={triggerToast} />}
-                              {activeTab === 'add_funds' && <CustomerDashboardFunds deposits={deposits} user={user} triggerToast={triggerToast} addNotification={addNotification} bankSettings={bankSettings} cryptoSettings={cryptoSettings} customPayments={customPayments} />}
+                              {activeTab === 'add_funds' && <CustomerDashboardFunds deposits={deposits} setDeposits={setDeposits} user={user} triggerToast={triggerToast} addNotification={addNotification} bankSettings={bankSettings} cryptoSettings={cryptoSettings} customPayments={customPayments} />}
                               {activeTab === 'my_accounts' && <CustomerDashboardVault user={user} purchases={purchases} triggerToast={triggerToast} />}
                               {activeTab === 'profile' && <CustomerDashboardProfile user={user} balance={currentUserBalance} tier={currentUserTier} userInfo={usersDB[user.email]} allOrders={allOrders} deposits={deposits} purchases={purchases} tickets={tickets.filter(t => t && t.email === user.email)} featureSettings={featureSettings} triggerToast={triggerToast} />}
                           </>
@@ -1658,7 +1658,7 @@
         // ==========================================
         // FUNDS MODULE
         // ==========================================
-        function CustomerDashboardFunds({ user, triggerToast, addNotification, bankSettings, cryptoSettings, customPayments, deposits }) {
+        function CustomerDashboardFunds({ user, triggerToast, addNotification, bankSettings, cryptoSettings, customPayments, deposits, setDeposits }) {
           const [hiddenInvoices, setHiddenInvoices] = useState(() => {
               try {
                   const stored = localStorage.getItem(`hiddenInvoices_${user?.email}`);
@@ -1812,19 +1812,26 @@
                       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                       body: JSON.stringify({ action: 'create_deposit', id: newInvoiceId, amount: finalAmount, cryptoAmount: cryptoAmount, method: `${cryptoMethod} (Auto)`, txId: 'Pending' })
                   });
+                  
+                  // 🟢 OPTIMISTIC UPDATE FOR INSTANT POPUP 🟢
+                  const newPending = {
+                      id: newInvoiceId,
+                      email: user.email,
+                      data: { amount: finalAmount, method: `${cryptoMethod} (Auto)`, cryptoAmount: cryptoAmount, status: 'Awaiting Payment', date: new Date().toISOString() }
+                  };
+                  setDeposits(prev => [newPending, ...prev]);
+
                   triggerToast(`Invoice created for ` + cryptoMethod);
               } catch (err) { triggerToast("Request failed."); }
               setIsGenerating(false);
           };
 
           const cancelAutoPay = () => {
-              if (pendingCrypto) {
-                  setHiddenInvoices(prev => {
-                      const newArr = [...prev, pendingCrypto.id];
-                      localStorage.setItem(`hiddenInvoices_${user?.email}`, JSON.stringify(newArr));
-                      return newArr;
-                  }); 
-                  triggerToast('Invoice hidden. Balance will be added if paid.');
+              if (pendingCrypto && pendingCrypto.id) {
+                  const newArr = [...hiddenInvoices, pendingCrypto.id];
+                  setHiddenInvoices(newArr);
+                  localStorage.setItem(`hiddenInvoices_${user?.email}`, JSON.stringify(newArr));
+                  triggerToast('Invoice cancelled successfully.');
               }
           };
 
@@ -2429,7 +2436,7 @@
         // ==========================================
         // ADMIN DASHBOARD
         // ==========================================
-        function AdminDashboard({ inventory, orders, deposits, categories, usersDB, purchases, tickets, triggerToast, promoSettings, globalNotice, featureSettings, bankSettings, cryptoSettings, customPayments, smsSettings, activeChats, activeTab }) {
+        function AdminDashboard({ inventory, orders, deposits, setDeposits, categories, usersDB, setUsersDB, purchases, tickets, triggerToast, promoSettings, globalNotice, featureSettings, bankSettings, cryptoSettings, customPayments, smsSettings, activeChats, activeTab }) {
           const [uploadCategory, setUploadCategory] = useState('new');
           const [uploadText, setUploadText] = useState('');
           const [customerSearch, setCustomerSearch] = useState('');
@@ -2697,6 +2704,18 @@
                   body: JSON.stringify({ action: 'approve_deposit', id: depId, email: dep.email, amount: dep.data?.amount || dep.amount })
               });
               triggerToast("Approved.");
+              
+              // 🟢 Optimistic update for admin UI
+              setDeposits(prev => prev.map(d => d.id === depId ? { ...d, status: 'Approved' } : d));
+              if (usersDB[dep.email]) {
+                  setUsersDB(prev => ({
+                      ...prev,
+                      [dep.email]: {
+                          ...prev[dep.email],
+                          balance: Number(prev[dep.email].balance || 0) + Number(dep.data?.amount || dep.amount || 0)
+                      }
+                  }));
+              }
             } catch (err) { triggerToast("Failed."); }
           };
 
