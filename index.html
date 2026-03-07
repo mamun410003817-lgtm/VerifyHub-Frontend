@@ -618,14 +618,16 @@
           const [globalNotice, setGlobalNotice] = useState('');
           const [featureSettings, setFeatureSettings] = useState({ dailyReward: false, referral: false });
           const [bankSettings, setBankSettings] = useState({ bankName: 'Parallex', accountName: 'Samuel Osita Emmanuel', accountNumber: '1120927346', nairaRate: 1500, flutterwaveKey: '', flutterwaveActive: false });
+          
+          // 🟢 FIX: আপনার দেওয়া আসল ক্রিপ্টো অ্যাড্রেসগুলো ডিফল্ট স্টেটে বসানো হলো 🟢
           const [cryptoSettings, setCryptoSettings] = useState([
-              {id: 1, name: 'BTC', network: 'Bitcoin', address: 'Your_BTC_Address'},
-              {id: 2, name: 'TRX', network: 'Tron', address: 'Your_TRX_Address'},
-              {id: 3, name: 'USDT', network: 'BEP20', address: 'Your_USDT_BEP20_Address'},
-              {id: 4, name: 'ETH', network: 'ERC20', address: 'Your_ETH_Address'},
-              {id: 5, name: 'LTC', network: 'Litecoin', address: 'Your_LTC_Address'}
+              {id: 1, name: 'BTC', network: 'Bitcoin', address: '1EgVdWyoCsWepg3TAowifuhoR81Lm1xEUd'},
+              {id: 2, name: 'USDT', network: 'TRC20', address: 'TELRyMwDmdKzBRb7Uaw3zNvphrc8V3D5Mj'},
+              {id: 3, name: 'ETH', network: 'BEP20', address: '0xa9b94afb7c43d941bcbbca0580110eb3795cb9d3'},
+              {id: 4, name: 'LTC', network: 'Litecoin', address: 'LLMoXTTJeVECWKEk1V92jRRs8XHmH2d5Vt'},
+              {id: 5, name: 'TRX', network: 'TRC20', address: 'TELRyMwDmdKzBRb7Uaw3zNvphrc8V3D5Mj'}
           ]);
-          // 🟢 FIX: Default active is TRUE explicitly
+
           const [smsSettings, setSmsSettings] = useState({ active: true, markup: 1.00 });
           const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
           const [customPayments, setCustomPayments] = useState([]);
@@ -674,14 +676,12 @@
               if (supaUser && supaUser.email) {
                   let currentAdminEmail = 'mdmunnachowdhury0003817@gmail.com';
                   try {
-                      // 🟢 ANTI-TAMPERING: Admin email fetched from DB, not hardcoded frontend.
                       const { data } = await supabase.from('store_settings').select('data').eq('id', 'AdminConfig').maybeSingle();
                       if (data && data.data && data.data.adminEmail) {
                           currentAdminEmail = data.data.adminEmail;
                       }
                   } catch(e) {}
 
-                  // Insert if not exists (safeguard) through backend to avoid direct DB writes
                   if (supaUser.email.toLowerCase() !== currentAdminEmail.toLowerCase()) {
                       const { data: uData } = await supabase.from('store_users').select('data').eq('id', supaUser.email).maybeSingle();
                       if (!uData) {
@@ -707,7 +707,7 @@
               setIsAuthChecking(false);
           };
 
-          // 🟢 2. SMART POLLING DATA FETCHING (SAFE RENDERING FIX) 🟢
+          // 🟢 2. SMART POLLING DATA FETCHING 🟢
           useEffect(() => {
               if (!user) return;
               let isMounted = true;
@@ -715,15 +715,16 @@
               const fetchAllData = async () => {
                   if (!isMounted) return;
 
-                  // 1. Fetch Settings
                   const { data: settings } = await supabase.from('store_settings').select('*');
                   if (settings) {
                       settings.forEach(s => {
                           const sData = s.data || {};
                           if (s.id === 'Products') setCategories(sData.list || DEFAULT_CATEGORIES);
-                          // 🟢 FIX: Ensure 'active' defaults to true even if DB doesn't have it
                           if (s.id === 'SMS') setSmsSettings({ active: sData.active !== false, markup: sData.markup || 1.00 });
-                          if (s.id === 'CryptoMethods') setCryptoSettings(sData.list || []);
+                          // 🟢 FIX: যদি ডাটাবেসে লিস্ট না থাকে বা খালি থাকে, তাহলে ডিফল্টটাই রেখে দেবে 🟢
+                          if (s.id === 'CryptoMethods') {
+                              if(sData.list && sData.list.length > 0) setCryptoSettings(sData.list);
+                          }
                           if (s.id === 'Bank') setBankSettings(sData);
                           if (s.id === 'CustomPayments') setCustomPayments(sData.list || []);
                           if (s.id === 'Notice') setGlobalNotice(sData.text || '');
@@ -731,11 +732,9 @@
                       });
                   }
 
-                  // 2. Fetch Inventory
                   const { data: stock } = await supabase.from('store_inventory').select('data').eq('id', 'Stock').maybeSingle();
                   if (stock && stock.data) setInventory(stock.data);
 
-                  // 3. Fetch User/Admin Data safely handling missing JSON properties
                   if (user.role === 'admin') {
                       const { data: usersData } = await supabase.from('store_users').select('*');
                       if(usersData) { let uObj={}; usersData.forEach(u => uObj[u.id] = u.data || {}); setUsersDB(uObj); }
@@ -777,15 +776,11 @@
               return () => { isMounted = false; clearInterval(intervalId); };
           }, [user]);
 
-
-          // 🟢 POLL LIVE CHAT SEPARATELY FOR SPEED 🟢
           useEffect(() => {
               if (!user || user.role !== 'customer') return;
               const fetchChat = async () => {
                   const { data } = await supabase.from('store_chats').select('*').eq('user_email', user.email).order('timestamp', { ascending: true });
-                  if (data) {
-                      // Handled in LiveChatWidget
-                  }
+                  if (data) {}
               };
               fetchChat();
           }, [user]);
@@ -811,7 +806,6 @@
                 const { data, error } = await supabase.auth.signUp({ email, password: pwd });
                 if (error) throw error;
                 
-                // 🟢 RLS Friendly: Using backend to create user profile securely
                 const token = data.session?.access_token || (await getAuthToken());
                 if(token) {
                     await fetch(`${BACKEND_URL}/api/secure-action`, {
