@@ -288,7 +288,7 @@
             ShoppingCart, LogOut, Package, Users, DollarSign, Settings, Plus, Trash2, CheckCircle, 
             X, Wallet, CreditCard, Clock, Copy, ArrowRight, Bell, User as UserIcon, 
             Activity, BarChart, Eye, Lock, Search, Megaphone, Award, Zap, Headset, 
-            Star, AlertTriangle, Smartphone, ShieldCheck, Moon, HelpCircle, History, TrendingUp, Sparkles, Building, Edit, RefreshCw, ChevronDown, StopCircle, Ban, Info, Key, MessageSquare, Send, BookOpen, MessageCircle, Radar, CircleDollarSign
+            Star, AlertTriangle, Smartphone, ShieldCheck, Moon, HelpCircle, History, TrendingUp, Sparkles, Building, Edit, RefreshCw, ChevronDown, StopCircle, Ban, Info, Key, MessageSquare, Send, BookOpen, MessageCircle, Radar, CircleDollarSign, ScanLine
         } from 'lucide-react';
 
         // 🟢 SUPABASE INITIALIZATION 🟢
@@ -298,6 +298,16 @@
 
         // 🟢 BACKEND URL 🟢
         const BACKEND_URL = 'https://verifyhub-backend-new.onrender.com'; 
+
+        // 🟢 CRYPTO COINS LIST FOR WHITE-LABEL 🟢
+        const CRYPTO_COINS = [
+            { id: 'usdtrc20', name: 'USDT (TRC20 Network)' },
+            { id: 'trx', name: 'Tron (TRX)' },
+            { id: 'ltc', name: 'Litecoin (LTC)' },
+            { id: 'doge', name: 'Dogecoin (DOGE)' },
+            { id: 'btc', name: 'Bitcoin (BTC)' },
+            { id: 'bnbbsc', name: 'BNB (Smart Chain)' }
+        ];
 
         const getAuthToken = async () => {
             const { data } = await supabase.auth.getSession();
@@ -741,9 +751,8 @@
                               setDeposits((syncData.deposits || []).map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
                               setPurchases((syncData.purchases || []).map(d => ({id: d.id, ...(d.data || {}), customer: d.customer || d.data?.customer, type: d.type || d.data?.type, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
                               setTickets((syncData.tickets || []).map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
-                              setActiveChats((syncData.chats || []).map(d => ({id: d.id, userEmail: d.id, ...(d.data || {})})).sort((a,b)=>new Date(b.lastMessageTime || b.last_message_time || 0)-new Date(a.lastMessageTime || a.last_message_time || 0)));
+                              setActiveChats((syncData.chats || []).map(d => ({id: d.id, userEmail: d.id, ...(d.data || {})})).sort((a,b)=>new Date(b.lastMessageTime || b.last_message_time || 0)-new Date(a.lastMessageTime || a.lastMessageTime || 0)));
                           } else {
-                              // 🟢 FIX: Correctly extract nested user data for the customer
                               if(syncData.myUser) setUsersDB({ [user.email]: syncData.myUser.data || {} });
                               
                               setAllOrders((syncData.orders || []).map(d => ({id: d.id, ...(d.data || {}), date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
@@ -762,7 +771,7 @@
               return () => { isMounted = false; clearInterval(intervalId); };
           }, [user]);
 
-          // 🟢 NEW: Auto-check NOWPayments pending invoices periodically (Global)
+          // 🟢 NEW: Global Status Tracker & Auto-Verify for NOWPayments
           useEffect(() => {
               if (!user || user.role === 'admin') return;
 
@@ -791,13 +800,31 @@
                           });
                           
                           const result = await res.json();
+                          
+                          // Track Status Updates (Waiting -> Confirming -> Finished)
+                          if (result.status && result.status !== dep.data?.payment_status) {
+                              setDeposits(prev => prev.map(dItem => dItem.id === dep.id ? { ...dItem, data: {...(dItem.data || {}), payment_status: result.status} } : dItem));
+                          }
+
                           if(result.success && result.message && result.message.includes('যাচাই হয়েছে')) {
-                              // It was approved! The backend already updated DB.
+                              // It was approved!
                               triggerToast(`Payment Auto-Verified: $${dep.data?.amount || dep.amount} Added!`);
                               addNotification('Deposit Auto-Approved', `$${dep.data?.amount || dep.amount} added to your balance.`);
                               
-                              // Optimistically update the UI to instantly show 'Approved' before next sync
-                              setDeposits(prev => prev.map(dItem => dItem.id === dep.id ? { ...dItem, status: 'Approved', data: {...(dItem.data || {}), status: 'Approved'} } : dItem));
+                              // Optimistically update the UI to instantly show 'Finished' 
+                              setDeposits(prev => prev.map(dItem => dItem.id === dep.id ? { ...dItem, status: 'Approved', data: {...(dItem.data || {}), status: 'Approved', payment_status: 'finished'} } : dItem));
+                              
+                              // Delay hiding the invoice so the user can see the "Success" screen for a bit
+                              setTimeout(() => {
+                                  try {
+                                      const stored = localStorage.getItem(`hiddenInvoices_${user?.email}`);
+                                      const currHidden = stored ? JSON.parse(stored) : [];
+                                      localStorage.setItem(`hiddenInvoices_${user?.email}`, JSON.stringify([...currHidden, dep.id]));
+                                      // Force reload from localstorage will happen next render, or we can just force state update:
+                                      // (We actually handle hidden via state inside the component usually, but this works to clean it up eventually)
+                                      window.location.reload(); 
+                                  } catch(e) {}
+                              }, 5000);
                           }
                       }
                   } catch (e) {}
@@ -1694,6 +1721,7 @@
           const [isGenerating, setIsGenerating] = useState(false); 
           const [isVerifyingClick, setIsVerifyingClick] = useState(false); 
           const [cryptoAmountInput, setCryptoAmountInput] = useState(''); 
+          const [selectedCoin, setSelectedCoin] = useState('usdtrc20'); 
 
           const [manualAmount, setManualAmount] = useState('');
           const [manualMethod, setManualMethod] = useState('Local Bank Transfer');
@@ -1705,7 +1733,7 @@
               }
           }, [hiddenInvoices, user]);
 
-          // 🟢 FIX: Modified to catch NOWPayments pending invoices
+          // 🟢 Modified to catch NOWPayments pending invoices
           const pendingCrypto = (deposits || []).find(d => {
               if (!d || d.email !== user?.email) return false;
               if (hiddenInvoices.includes(d.id)) return false; 
@@ -1731,19 +1759,36 @@
               
               try {
                   const token = await getAuthToken();
-                  const response = await fetch(`${BACKEND_URL}/api/nowpayments/create-invoice`, {
+                  // 🟢 NEW: Call the specific Create Payment API
+                  const response = await fetch(`${BACKEND_URL}/api/nowpayments/create-payment`, {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                      body: JSON.stringify({ amount: baseAmount })
+                      body: JSON.stringify({ amount: baseAmount, pay_currency: selectedCoin })
                   });
                   
                   const result = await response.json();
                   
-                  if(result.success && result.url) {
-                      window.open(result.url, '_blank'); // 🟢 FIX: Open in new tab to avoid reload
-                      triggerToast("Invoice created. Please pay in the new tab.");
+                  if(result.success && result.payment) {
+                      triggerToast("Payment address generated!");
+                      const newDep = {
+                          id: result.payment.order_id,
+                          email: user.email,
+                          data: {
+                              amount: baseAmount,
+                              method: 'Crypto (NOWPayments)',
+                              status: 'Awaiting Payment',
+                              invoice_id: result.payment.payment_id,
+                              txId: 'Pending',
+                              pay_address: result.payment.pay_address,
+                              pay_amount: result.payment.pay_amount,
+                              pay_currency: result.payment.pay_currency,
+                              payment_status: result.payment.payment_status || 'waiting'
+                          }
+                      };
+                      setDeposits(prev => [newDep, ...prev]);
+                      setCryptoAmountInput('');
                   } else {
-                      triggerToast(result.message || "Failed to generate invoice.");
+                      triggerToast(result.message || "Failed to generate payment address.");
                   }
               } catch (err) { 
                   triggerToast("Request failed."); 
@@ -1752,7 +1797,7 @@
           };
 
           const handleNowPaymentsVerify = async (e) => {
-              if(e) e.preventDefault(); // 🟢 FIX: Prevent default to stop reloading
+              if(e) e.preventDefault(); 
               if (!pendingCrypto) return;
               setIsVerifyingClick(true);
               try {
@@ -1762,14 +1807,19 @@
                       body: JSON.stringify({ invoiceId: pendingCrypto.id })
                   });
                   const result = await response.json();
-                  if (result.success) {
-                      triggerToast(result.message || `Payment Verified!`);
-                      addNotification('Deposit Successful', `Balance updated.`);
+                  
+                  // Update Status tracking if changed
+                  if (result.status && result.status !== pendingCrypto.data?.payment_status) {
+                      setDeposits(prev => prev.map(dItem => dItem.id === pendingCrypto.id ? { ...dItem, data: {...(dItem.data || {}), payment_status: result.status} } : dItem));
+                  }
+
+                  if (result.success && result.message && result.message.includes('যাচাই হয়েছে')) {
+                      triggerToast(`Payment Verified: $${pendingCrypto.data?.amount || pendingCrypto.amount} Added!`);
+                      addNotification('Deposit Approved', `$${pendingCrypto.data?.amount || pendingCrypto.amount} added to balance.`);
                       
-                      // 🟢 UPDATE UI IMMEDIATELY 🟢
-                      setDeposits(prev => prev.map(d => d.id === pendingCrypto.id ? { ...d, status: 'Approved', data: {...(d.data || {}), status: 'Approved'} } : d));
-                      setHiddenInvoices(prev => [...prev, pendingCrypto.id]); // Hide invoice
+                      setDeposits(prev => prev.map(d => d.id === pendingCrypto.id ? { ...d, status: 'Approved', data: {...(d.data || {}), status: 'Approved', payment_status: 'finished'} } : d));
                       
+                      setTimeout(() => { setHiddenInvoices(prev => [...prev, pendingCrypto.id]); }, 5000);
                   } else {
                       triggerToast(result.message || 'Payment not completed yet. Try again later.');
                   }
@@ -1781,7 +1831,7 @@
           };
 
           const cancelAutoPay = (e) => {
-              if(e) e.preventDefault(); // 🟢 FIX: Prevent default
+              if(e) e.preventDefault(); 
               if (pendingCrypto && pendingCrypto.id) {
                   const newArr = [...hiddenInvoices, pendingCrypto.id];
                   setHiddenInvoices(newArr);
@@ -1821,51 +1871,86 @@
           };
 
           const selectedCustomPayment = (customPayments || []).find(p => p.name === manualMethod);
+          
+          const payStatus = pendingCrypto?.data?.payment_status || 'waiting';
 
           return (
             <div className="animate-matrix-in grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 w-full">
               <div className="space-y-6 sm:space-y-8 w-full">
                 <div className="glass-effect rounded-3xl p-6 sm:p-8 h-fit border border-white/10">
                   <h2 className="text-sm font-bold tracking-widest mb-6 text-white flex items-center gap-2 uppercase">
-                     <Zap className="w-4 h-4"/> Auto Crypto Deposit (NOWPayments)
+                     <Zap className="w-4 h-4"/> Auto Crypto Deposit
                   </h2>
                   
                   {!pendingCrypto ? (
                       <div className="mt-4">
                         <form onSubmit={startAutoDeposit} className="space-y-5 w-full">
-                          <div>
-                            <label className="block text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em]">Amount (USD)</label>
-                            <div className="relative">
-                               <DollarSign className="w-4 h-4 text-white absolute left-4 top-3.5" />
-                               <input type="number" step="1" min="1" name="amount" value={cryptoAmountInput} onChange={e => setCryptoAmountInput(e.target.value)} required placeholder="10" className="glass-input allow-select pl-11 text-sm font-mono" />
-                            </div>
+                          <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <label className="block text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em]">Amount (USD)</label>
+                                <div className="relative">
+                                   <DollarSign className="w-4 h-4 text-white absolute left-4 top-3.5" />
+                                   <input type="number" step="1" min="1" name="amount" value={cryptoAmountInput} onChange={e => setCryptoAmountInput(e.target.value)} required placeholder="10" className="glass-input allow-select pl-11 text-sm font-mono" />
+                                </div>
+                              </div>
+                              <div>
+                                <label className="block text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em]">Select Coin</label>
+                                <div className="relative w-full">
+                                    <select value={selectedCoin} onChange={e => setSelectedCoin(e.target.value)} className="glass-input h-[45px] appearance-none cursor-pointer text-xs font-mono text-white bg-transparent allow-select">
+                                        {CRYPTO_COINS.map(c => <option key={c.id} value={c.id} className="bg-[#121212]">{c.name}</option>)}
+                                    </select>
+                                    <ChevronDown className="w-4 h-4 text-gray-400 absolute right-4 top-3.5 pointer-events-none"/>
+                                </div>
+                              </div>
                           </div>
-                          <button type="submit" disabled={isGenerating} className="btn-animate w-full bg-white text-black font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 tracking-widest uppercase text-xs h-12 mt-2 disabled:opacity-50">
+                          <button type="submit" disabled={isGenerating} className="btn-animate w-full bg-white text-black font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 tracking-widest uppercase text-xs mt-2 disabled:opacity-50">
                               {isGenerating ? 'Processing...' : 'Pay with Crypto'}
                           </button>
                         </form>
                       </div>
                   ) : (
                       isNowPayments && (
-                          <div className="bg-[rgba(0,0,0,0.5)] border border-white/10 rounded-2xl p-6 text-center space-y-6 relative overflow-hidden mt-6 animate-fade-in-up">
-                              <p className="text-[10px] font-bold text-white flex items-center justify-center gap-2 pt-4 uppercase tracking-[0.3em]">
-                                  <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span> Invoice Active
-                              </p>
+                          <div className="bg-[rgba(0,0,0,0.5)] border border-white/10 rounded-2xl p-6 text-center space-y-5 relative overflow-hidden mt-6 animate-fade-in-up">
+                              <h3 className="text-xs font-bold text-white uppercase tracking-widest border-b border-white/10 pb-3 flex items-center justify-center gap-2">
+                                 <ScanLine className="w-4 h-4"/> Complete Payment
+                              </h3>
                               
-                              <div className="text-3xl sm:text-4xl font-light font-mono text-white tracking-widest allow-select">
-                                  ${pendingCrypto.data?.amount || pendingCrypto.amount}
+                              <div className="flex justify-center pt-2">
+                                  <div className="p-2.5 bg-white rounded-2xl shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                                      <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${pendingCrypto.data?.pay_address}`} alt="QR Code" className="w-32 h-32" />
+                                  </div>
                               </div>
-                              <p className="text-xs text-gray-400 font-mono mt-2">Complete your payment in the NOWPayments tab.</p>
-                              
-                              <div className="flex flex-col gap-3 pt-4 border-t border-white/10 w-full">
-                                  <button type="button" onClick={(e) => { e.preventDefault(); window.open(pendingCrypto.data?.invoice_url, '_blank'); }} className="btn-animate w-full bg-white/10 hover:bg-white/20 text-white font-bold py-3.5 px-6 rounded-2xl flex items-center justify-center gap-2 uppercase tracking-widest text-[10px]">
-                                      Open Payment Page
+
+                              <div className="space-y-1">
+                                  <p className="text-[10px] text-gray-400 uppercase tracking-widest">Send Exactly</p>
+                                  <div className="text-2xl font-bold text-brand-primary flex items-center justify-center gap-2 allow-select">
+                                      {pendingCrypto.data?.pay_amount} <span className="text-sm text-white">{String(pendingCrypto.data?.pay_currency).toUpperCase()}</span>
+                                      <button type="button" onClick={() => copyToClipboard(pendingCrypto.data?.pay_amount)} className="text-gray-400 hover:text-white p-1"><Copy className="w-4 h-4"/></button>
+                                  </div>
+                              </div>
+
+                              <div className="space-y-2">
+                                  <p className="text-[10px] text-gray-400 uppercase tracking-widest">To Address</p>
+                                  <div className="bg-[#000] border border-white/10 p-3 rounded-xl flex items-center justify-between gap-3 shadow-inner">
+                                      <span className="text-[11px] font-mono text-white truncate allow-select">{pendingCrypto.data?.pay_address}</span>
+                                      <button type="button" onClick={() => copyToClipboard(pendingCrypto.data?.pay_address)} className="btn-animate p-2 bg-white/10 hover:bg-white hover:text-black text-white rounded-lg shrink-0"><Copy className="w-3 h-3"/></button>
+                                  </div>
+                              </div>
+
+                              <div className={`p-3 rounded-xl border flex items-center justify-center gap-2 font-bold text-[10px] uppercase tracking-widest transition-colors ${payStatus === 'waiting' ? 'bg-yellow-500/10 border-yellow-500/30 text-yellow-500' : ((payStatus === 'confirming' || payStatus === 'sending') ? 'bg-brand-primary/10 border-brand-primary/30 text-brand-primary' : 'bg-green-500/10 border-green-500/30 text-green-500')}`}>
+                                  {(payStatus === 'waiting' || payStatus === 'confirming' || payStatus === 'sending') && <RefreshCw className="w-3.5 h-3.5 animate-spin"/>}
+                                  {(payStatus === 'finished' || payStatus === 'partially_paid') && <CheckCircle className="w-3.5 h-3.5"/>}
+                                  
+                                  {payStatus === 'waiting' ? 'Waiting for Transfer...' : 
+                                   ((payStatus === 'confirming' || payStatus === 'sending') ? 'Confirming on Blockchain...' : 
+                                   ((payStatus === 'finished' || payStatus === 'partially_paid') ? 'Payment Verified!' : 'Payment Failed/Expired'))}
+                              </div>
+
+                              <div className="pt-3 border-t border-white/10 flex justify-between items-center">
+                                  <button type="button" onClick={handleNowPaymentsVerify} disabled={isVerifyingClick} className="btn-animate text-[9px] text-brand-primary hover:text-white font-bold uppercase tracking-widest transition-colors disabled:opacity-50 flex items-center gap-1">
+                                      {isVerifyingClick ? 'Checking...' : 'Force Check'}
                                   </button>
-                                  <button type="button" onClick={handleNowPaymentsVerify} disabled={isVerifyingClick} className="btn-animate w-full bg-brand-primary hover:bg-white text-black font-bold py-3.5 px-6 rounded-2xl flex items-center justify-center gap-2 uppercase tracking-widest text-[11px] disabled:opacity-50 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
-                                      {isVerifyingClick ? <RefreshCw className="w-4 h-4 animate-spin"/> : <CheckCircle className="w-4 h-4"/>}
-                                      {isVerifyingClick ? 'Verifying...' : 'Verify Payment'}
-                                  </button>
-                                  <button type="button" onClick={cancelAutoPay} className="btn-animate text-[9px] text-gray-500 hover:text-red-400 font-bold uppercase tracking-widest transition-colors mt-2">Cancel Invoice</button>
+                                  <button type="button" onClick={cancelAutoPay} className="btn-animate text-[9px] text-gray-500 hover:text-red-400 font-bold uppercase tracking-widest transition-colors">Cancel Invoice</button>
                               </div>
                           </div>
                       )
