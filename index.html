@@ -598,7 +598,6 @@
           const [user, setUser] = useState(null); 
           const [isAuthChecking, setIsAuthChecking] = useState(true);
           
-          // 🟢 FIX: State persistence for activeTab to prevent resetting on minimize
           const [activeTab, setActiveTab] = useState(() => {
               return localStorage.getItem('lastActiveTab') || 'sms';
           });
@@ -640,7 +639,6 @@
 
           useEffect(() => { setTimeout(() => setShowSplash(false), 2000); }, []);
 
-          // Save tab to localstorage when it changes
           useEffect(() => {
               if (user) {
                   localStorage.setItem('lastActiveTab', activeTab);
@@ -701,7 +699,6 @@
 
                   if (supaUser.email.toLowerCase() === currentAdminEmail.toLowerCase()) {
                       setUser({ email: supaUser.email.toLowerCase(), role: 'admin' }); 
-                      // Verify the saved tab belongs to admin
                       if(!savedTab || !ADMIN_TABS.some(t => t.id === savedTab)) {
                           setActiveTab('inventory');
                       } else {
@@ -709,7 +706,6 @@
                       }
                   } else {
                       setUser({ email: supaUser.email.toLowerCase(), role: 'customer' }); 
-                      // Verify the saved tab belongs to customer
                       if(!savedTab || !CUSTOMER_TABS.some(t => t.id === savedTab)) {
                           setActiveTab('sms');
                       } else {
@@ -730,7 +726,6 @@
               const fetchAllData = async () => {
                   if (!isMounted) return;
 
-                  // ১. পাবলিক সেটিংস ফেচ করা (Smart Deep Compare)
                   const { data: settings } = await supabase.from('store_settings').select('*');
                   if (settings) {
                       settings.forEach(s => {
@@ -750,7 +745,6 @@
                   const { data: stock } = await supabase.from('store_inventory').select('data').eq('id', 'Stock').maybeSingle();
                   if (stock && stock.data) setInventory(prev => JSON.stringify(prev) !== JSON.stringify(stock.data) ? stock.data : prev);
 
-                  // ২. সিকিউরড ডেটা ফেচ করা
                   try {
                       const token = await getAuthToken();
                       if (!token) return;
@@ -781,9 +775,7 @@
                               setTickets((syncData.tickets || []).map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
                           }
                       }
-                  } catch(e) {
-                      console.error("Sync Error:", e);
-                  }
+                  } catch(e) {}
               };
 
               fetchAllData();
@@ -891,7 +883,7 @@
                   setShowCart(false); 
                   setEmailInput(''); 
                   setPasswordInput(''); 
-                  localStorage.removeItem('lastActiveTab'); // Clear saved tab on logout
+                  localStorage.removeItem('lastActiveTab');
               }); 
           };
 
@@ -2324,30 +2316,30 @@
           const [uploadText, setUploadText] = useState('');
           const [customerSearch, setCustomerSearch] = useState('');
 
-          const [promoInput, setPromoInput] = useState('');
-          const [discountInput, setDiscountInput] = useState(0);
-          const [promoActive, setPromoActive] = useState(false);
-          const [noticeInput, setNoticeInput] = useState('');
-          const [nairaRateInput, setNairaRateInput] = useState(1500);
+          const [promoInput, setPromoInput] = useState(promoSettings?.code || '');
+          const [discountInput, setDiscountInput] = useState(promoSettings?.discount || 0);
+          const [promoActive, setPromoActive] = useState(promoSettings?.isActive || false);
+          const [noticeInput, setNoticeInput] = useState(globalNotice || '');
+          const [nairaRateInput, setNairaRateInput] = useState(bankSettings?.nairaRate || 1500);
           
-          const [flutterwaveKeyInput, setFlutterwaveKeyInput] = useState('');
-          const [flutterwaveActiveInput, setFlutterwaveActiveInput] = useState(false);
+          const [flutterwaveKeyInput, setFlutterwaveKeyInput] = useState(bankSettings?.flutterwaveKey || '');
+          const [flutterwaveActiveInput, setFlutterwaveActiveInput] = useState(bankSettings?.flutterwaveActive || false);
           
-          const [dailyRewardActive, setDailyRewardActive] = useState(false);
-          const [referralActive, setReferralActive] = useState(false);
+          const [dailyRewardActive, setDailyRewardActive] = useState(featureSettings?.dailyReward || false);
+          const [referralActive, setReferralActive] = useState(featureSettings?.referral || false);
 
-          const [smsMarkupInput, setSmsMarkupInput] = useState(1.00);
-          const [smsActiveInput, setSmsActiveInput] = useState(true);
+          const [smsMarkupInput, setSmsMarkupInput] = useState(smsSettings?.markup ?? 1.00);
+          const [smsActiveInput, setSmsActiveInput] = useState(smsSettings?.active ?? true);
 
-          const [maintenanceActiveInput, setMaintenanceActiveInput] = useState(false);
-          const [maintenanceMessageInput, setMaintenanceMessageInput] = useState('We are currently performing scheduled maintenance. Please check back later.');
+          const [maintenanceActiveInput, setMaintenanceActiveInput] = useState(maintenanceSettings?.active || false);
+          const [maintenanceMessageInput, setMaintenanceMessageInput] = useState(maintenanceSettings?.message || 'We are currently performing scheduled maintenance. Please check back later.');
           
-          const [cryptoMethodsList, setCryptoMethodsList] = useState([]);
+          const [cryptoMethodsList, setCryptoMethodsList] = useState(cryptoSettings || []);
           const [newCryptoInput, setNewCryptoInput] = useState({ name: '', network: '', address: '' });
           
-          const [bankNameInput, setBankNameInput] = useState('Parallex');
-          const [bankAccountNameInput, setBankAccountNameInput] = useState('Samuel Osita Emmanuel');
-          const [bankAccountNumberInput, setBankAccountNumberInput] = useState('1120927346');
+          const [bankNameInput, setBankNameInput] = useState(bankSettings?.bankName || 'Parallex');
+          const [bankAccountNameInput, setBankAccountNameInput] = useState(bankSettings?.accountName || 'Samuel Osita Emmanuel');
+          const [bankAccountNumberInput, setBankAccountNumberInput] = useState(bankSettings?.accountNumber || '1120927346');
 
           const [editUserModal, setEditUserModal] = useState({ show: false, email: '', password: '', balance: 0, totalSpent: 0 });
           
@@ -2470,23 +2462,6 @@
               triggerToast('Account deleted.');
             } catch (err) { triggerToast('Failed to delete.'); }
           };
-
-          useEffect(() => {
-            if (promoSettings) { setPromoInput(promoSettings.code || ''); setDiscountInput(promoSettings.discount || 0); setPromoActive(promoSettings.isActive || false); }
-            if (globalNotice !== undefined) setNoticeInput(globalNotice);
-            if (featureSettings) { setDailyRewardActive(featureSettings.dailyReward || false); setReferralActive(featureSettings.referral || false); }
-            if (bankSettings) { 
-                setNairaRateInput(bankSettings.nairaRate || 1500); 
-                setFlutterwaveKeyInput(bankSettings.flutterwaveKey || '');
-                setFlutterwaveActiveInput(bankSettings.flutterwaveActive || false);
-                setBankNameInput(bankSettings.bankName || 'Parallex');
-                setBankAccountNameInput(bankSettings.accountName || 'Samuel Osita Emmanuel');
-                setBankAccountNumberInput(bankSettings.accountNumber || '1120927346');
-            }
-            if (cryptoSettings) setCryptoMethodsList(cryptoSettings);
-            if (smsSettings) { setSmsMarkupInput(smsSettings.markup !== undefined ? smsSettings.markup : 1.00); setSmsActiveInput(smsSettings.active ?? true); }
-            if (maintenanceSettings) { setMaintenanceActiveInput(maintenanceSettings.active || false); setMaintenanceMessageInput(maintenanceSettings.message || 'We are currently performing scheduled maintenance. Please check back later.'); }
-          }, [promoSettings, globalNotice, featureSettings, bankSettings, cryptoSettings, smsSettings, maintenanceSettings]);
 
           useEffect(() => {
               if (!selectedChatUser) return;
@@ -2634,6 +2609,7 @@
 
           const handleSaveSettings = async (e) => {
             e.preventDefault();
+            triggerToast("Saving settings...");
             try {
               const token = await getAuthToken();
               
@@ -2646,15 +2622,15 @@
                   { id: 'Maintenance', data: { active: maintenanceActiveInput, message: maintenanceMessageInput } }
               ];
 
-              for (const setting of settingsToSave) {
-                  await fetch(`${BACKEND_URL}/api/admin/save-settings`, {
+              await Promise.all(settingsToSave.map(setting => 
+                  fetch(`${BACKEND_URL}/api/admin/save-settings`, {
                       method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                       body: JSON.stringify({ settingsData: setting })
-                  });
-              }
+                  })
+              ));
 
-              triggerToast("Settings saved.");
-            } catch (error) { triggerToast("Error saving."); }
+              triggerToast("Settings saved successfully.");
+            } catch (error) { triggerToast("Error saving settings."); }
           };
 
           return (
