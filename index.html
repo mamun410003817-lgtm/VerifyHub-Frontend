@@ -2670,14 +2670,17 @@
                   { id: 'Maintenance', data: { active: maintenanceActiveInput, message: maintenanceMessageInput } }
               ];
 
-              for (const setting of settingsToSave) {
-                  await fetch(`${BACKEND_URL}/api/admin/save-settings`, {
-                      method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                      body: JSON.stringify({ settingsData: setting })
-                  });
+              const response = await fetch(`${BACKEND_URL}/api/admin/save-settings`, {
+                  method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                  body: JSON.stringify({ settingsData: settingsToSave })
+              });
+              
+              const result = await response.json();
+              if (result.success) {
+                  triggerToast("Settings saved successfully.");
+              } else {
+                  triggerToast("Failed: " + result.message);
               }
-
-              triggerToast("Settings saved successfully.");
             } catch (error) { triggerToast("Error saving settings."); }
           };
 
