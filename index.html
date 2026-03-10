@@ -2368,6 +2368,9 @@
           const [adminChatMessage, setAdminChatMessage] = useState('');
           const [adminChatMessages, setAdminChatMessages] = useState([]);
           const adminMessagesEndRef = useRef(null);
+          
+          // 🟢 SMART SYNC STATE: prevents overwriting manual typing
+          const [inputsLoaded, setInputsLoaded] = useState(false);
 
           const handleAddProduct = async (e) => {
               e.preventDefault();
@@ -2477,6 +2480,28 @@
               triggerToast('Account deleted.');
             } catch (err) { triggerToast('Failed to delete.'); }
           };
+
+          useEffect(() => {
+            // 🟢 Lists like Crypto can safely update anytime without messing up typing
+            if (cryptoSettings) setCryptoMethodsList(cryptoSettings);
+            
+            // 🟢 Form Inputs will ONLY be set once on initial load so checkboxes don't disappear
+            if (!inputsLoaded && bankSettings && bankSettings.bankName) {
+                if (promoSettings) { setPromoInput(promoSettings.code || ''); setDiscountInput(promoSettings.discount || 0); setPromoActive(promoSettings.isActive || false); }
+                if (globalNotice !== undefined) setNoticeInput(globalNotice);
+                if (featureSettings) { setDailyRewardActive(featureSettings.dailyReward || false); setReferralActive(featureSettings.referral || false); }
+                setNairaRateInput(bankSettings.nairaRate || 1500); 
+                setFlutterwaveKeyInput(bankSettings.flutterwaveKey || '');
+                setFlutterwaveActiveInput(bankSettings.flutterwaveActive || false);
+                setBankNameInput(bankSettings.bankName || 'Parallex');
+                setBankAccountNameInput(bankSettings.accountName || 'Samuel Osita Emmanuel');
+                setBankAccountNumberInput(bankSettings.accountNumber || '1120927346');
+                if (smsSettings) { setSmsMarkupInput(smsSettings.markup !== undefined ? smsSettings.markup : 1.00); setSmsActiveInput(smsSettings.active ?? true); }
+                if (maintenanceSettings) { setMaintenanceActiveInput(maintenanceSettings.active || false); setMaintenanceMessageInput(maintenanceSettings.message || 'We are currently performing scheduled maintenance. Please check back later.'); }
+                
+                setInputsLoaded(true);
+            }
+          }, [promoSettings, globalNotice, featureSettings, bankSettings, cryptoSettings, smsSettings, maintenanceSettings, inputsLoaded]);
 
           useEffect(() => {
               if (!selectedChatUser) return;
@@ -2637,12 +2662,13 @@
                   { id: 'Maintenance', data: { active: maintenanceActiveInput, message: maintenanceMessageInput } }
               ];
 
-              await Promise.all(settingsToSave.map(setting => 
-                  fetch(`${BACKEND_URL}/api/admin/save-settings`, {
+              // 🟢 FIX: Save items one-by-one so the server doesn't get overloaded with too many parallel requests
+              for (const setting of settingsToSave) {
+                  await fetch(`${BACKEND_URL}/api/admin/save-settings`, {
                       method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                       body: JSON.stringify({ settingsData: setting })
-                  })
-              ));
+                  });
+              }
 
               triggerToast("Settings saved successfully.");
             } catch (error) { triggerToast("Error saving settings."); }
