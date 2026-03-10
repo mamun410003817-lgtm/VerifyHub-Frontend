@@ -57,6 +57,7 @@
               'fade-in-up': 'fadeInUp 0.4s ease-out forwards',
               'pop-in': 'popIn 0.3s ease-out forwards',
               'pulse-slow': 'pulseSlow 4s ease-in-out infinite',
+              'spin-slow': 'spin 3s linear infinite',
             },
             keyframes: {
               matrixIn: {
@@ -615,6 +616,7 @@
           const [globalNotice, setGlobalNotice] = useState('');
           const [featureSettings, setFeatureSettings] = useState({ dailyReward: false, referral: false });
           const [bankSettings, setBankSettings] = useState({ bankName: 'Parallex', accountName: 'Samuel Osita Emmanuel', accountNumber: '1120927346', nairaRate: 1500, flutterwaveKey: '', flutterwaveActive: false });
+          const [maintenanceSettings, setMaintenanceSettings] = useState({ active: false, message: 'We are currently performing scheduled maintenance. Please check back later.' });
           
           const [cryptoSettings, setCryptoSettings] = useState([]);
 
@@ -649,11 +651,13 @@
           const addNotification = (title, text) => { setNotifications(prev => [{ id: Date.now(), title, text, time: 'Just now' }, ...prev].slice(0, 5)); };
 
           const getFriendlyAuthError = (errorMessage) => {
-              if (String(errorMessage).includes('invalid-email')) return 'আপনার ইমেইল এড্রেসটি সঠিক নয়। দয়া করে ঠিকভাবে লিখুন।';
-              if (String(errorMessage).includes('Invalid login credentials')) return 'পাসওয়ার্ড ভুল হয়েছে।  আবার চেষ্টা করুন।';
-              if (String(errorMessage).includes('User already registered')) return 'এই ইমেইল দিয়ে আগে থেকেই একটি অ্যাকাউন্ট খোলা আছে। দয়া করে লগইন করুন।';
-              if (String(errorMessage).includes('Password should be at least')) return 'পাসওয়ার্ড খুব দুর্বল। কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড দিন।';
-              return errorMessage || 'একটি সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।';
+              const msg = String(errorMessage);
+              if (msg.includes('invalid-email')) return 'Invalid email address format.';
+              if (msg.includes('Invalid login credentials')) return 'Incorrect email or password.';
+              if (msg.includes('Email not confirmed')) return 'Please verify your email address before logging in.';
+              if (msg.includes('User already registered')) return 'An account with this email already exists.';
+              if (msg.includes('Password should be at least')) return 'Password is too weak. Must be at least 6 characters.';
+              return msg || 'An error occurred. Please try again.';
           };
 
           // 🟢 1. AUTHENTICATION (Supabase) 🟢
@@ -740,6 +744,7 @@
                           if (s.id === 'CustomPayments') setCustomPayments(sData.list || []);
                           if (s.id === 'Notice') setGlobalNotice(sData.text || '');
                           if (s.id === 'Features') setFeatureSettings(sData);
+                          if (s.id === 'Maintenance') setMaintenanceSettings(sData);
                       });
                   }
 
@@ -813,7 +818,7 @@
                           });
                           
                           const result = await res.json();
-                          if(result.success && result.message && result.message.includes('যাচাই হয়েছে')) {
+                          if(result.success && result.message && result.message.includes('Verified')) {
                               triggerToast(`Payment Auto-Verified: $${dep.data?.amount || dep.amount} Added!`);
                               addNotification('Deposit Auto-Approved', `$${dep.data?.amount || dep.amount} added to your balance.`);
                               
@@ -857,7 +862,7 @@
                     });
                 }
                 
-                setAuthSuccessMsg('অ্যাকাউন্ট তৈরি হয়েছে! লগইন করুন (বা ইমেইল ভেরিফাই করুন)।'); 
+                setAuthSuccessMsg('Account created! Please verify your email before logging in.'); 
                 setAuthMethod('login'); 
               } else {
                 const { error } = await supabase.auth.signInWithPassword({ email, password: pwd });
@@ -870,12 +875,12 @@
           };
 
           const handleForgotPassword = async () => {
-            if (!emailInput.trim()) { setAuthError('পাসওয়ার্ড রিসেট করতে আগে ইমেইল এড্রেস লিখুন।'); return; }
+            if (!emailInput.trim()) { setAuthError('Enter your email address first to reset password.'); return; }
             setIsLoading(true);
             try {
               const { error } = await supabase.auth.resetPasswordForEmail(emailInput.trim());
               if(error) throw error;
-              setAuthError(''); setAuthSuccessMsg('আপনার ইমেইলে পাসওয়ার্ড রিসেট লিংক পাঠানো হয়েছে।');
+              setAuthError(''); setAuthSuccessMsg('Password reset link has been sent to your email.');
             } catch (error) { setAuthError(getFriendlyAuthError(error.message)); } 
             finally { setIsLoading(false); }
           };
@@ -993,25 +998,37 @@
                   </div>
                 )}
 
-                <div className="w-full relative z-30 mb-8">
-                  <div className="glass-effect rounded-[24px] p-1.5 sm:p-2 grid grid-cols-5 gap-1 w-full border border-white/10 mx-auto max-w-5xl">
-                    {(user.role === 'admin' ? ADMIN_TABS : CUSTOMER_TABS).map(tab => (
-                      <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`btn-animate relative flex flex-col items-center justify-center py-3 sm:py-3.5 px-0.5 sm:px-2 rounded-xl min-w-0 group ${activeTab === tab.id ? 'bg-white shadow-[0_4px_15px_rgba(255,255,255,0.2)]' : 'hover:bg-white/10'}`}>
-                          <div className="relative z-10 flex flex-col items-center justify-center w-full">
-                              <tab.icon className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-200 ${activeTab === tab.id ? 'scale-110 mb-1 text-black' : 'group-hover:scale-110 group-hover:-translate-y-0.5 mb-1 text-gray-400 group-hover:text-white'}`} strokeWidth={activeTab === tab.id ? 2 : 1.5} /> 
-                              <span className={`text-[7.5px] sm:text-[9px] min-[400px]:text-[10px] leading-tight mt-0.5 uppercase tracking-wider text-center w-full whitespace-normal break-words px-0.5 ${activeTab === tab.id ? 'font-bold text-black' : 'font-medium text-gray-400 group-hover:text-white'}`}>
-                                  {tab.label}
-                                  </span>
-                          </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                {(!maintenanceSettings?.active || user.role === 'admin') && (
+                    <div className="w-full relative z-30 mb-8">
+                      <div className="glass-effect rounded-[24px] p-1.5 sm:p-2 grid grid-cols-5 gap-1 w-full border border-white/10 mx-auto max-w-5xl">
+                        {(user.role === 'admin' ? ADMIN_TABS : CUSTOMER_TABS).map(tab => (
+                          <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`btn-animate relative flex flex-col items-center justify-center py-3 sm:py-3.5 px-0.5 sm:px-2 rounded-xl min-w-0 group ${activeTab === tab.id ? 'bg-white shadow-[0_4px_15px_rgba(255,255,255,0.2)]' : 'hover:bg-white/10'}`}>
+                              <div className="relative z-10 flex flex-col items-center justify-center w-full">
+                                  <tab.icon className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-200 ${activeTab === tab.id ? 'scale-110 mb-1 text-black' : 'group-hover:scale-110 group-hover:-translate-y-0.5 mb-1 text-gray-400 group-hover:text-white'}`} strokeWidth={activeTab === tab.id ? 2 : 1.5} /> 
+                                  <span className={`text-[7.5px] sm:text-[9px] min-[400px]:text-[10px] leading-tight mt-0.5 uppercase tracking-wider text-center w-full whitespace-normal break-words px-0.5 ${activeTab === tab.id ? 'font-bold text-black' : 'font-medium text-gray-400 group-hover:text-white'}`}>
+                                      {tab.label}
+                                      </span>
+                              </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                )}
 
                 <div className="w-full relative tab-transition-enter" key={activeTab}>
                     <ErrorBoundary>
                         {user.role === 'admin' ? (
-                          <AdminDashboard inventory={inventory} orders={allOrders} deposits={deposits} setDeposits={setDeposits} categories={categories} usersDB={usersDB} setUsersDB={setUsersDB} purchases={purchases} tickets={tickets} triggerToast={triggerToast} promoSettings={promoSettings} globalNotice={globalNotice} featureSettings={featureSettings} bankSettings={bankSettings} cryptoSettings={cryptoSettings} customPayments={customPayments} smsSettings={smsSettings} activeChats={activeChats} activeTab={activeTab} />
+                          <AdminDashboard inventory={inventory} orders={allOrders} deposits={deposits} setDeposits={setDeposits} categories={categories} usersDB={usersDB} setUsersDB={setUsersDB} purchases={purchases} tickets={tickets} triggerToast={triggerToast} promoSettings={promoSettings} globalNotice={globalNotice} featureSettings={featureSettings} bankSettings={bankSettings} cryptoSettings={cryptoSettings} customPayments={customPayments} smsSettings={smsSettings} activeChats={activeChats} activeTab={activeTab} maintenanceSettings={maintenanceSettings} />
+                        ) : maintenanceSettings?.active ? (
+                          <div className="w-full flex flex-col items-center justify-center py-20 animate-fade-in-up">
+                              <div className="w-20 h-20 bg-red-900/20 border border-red-500/50 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(239,68,68,0.2)]">
+                                  <Settings className="w-10 h-10 text-red-500 animate-spin-slow" />
+                              </div>
+                              <h2 className="text-2xl font-bold tracking-widest text-white uppercase mb-4 text-center">System Maintenance</h2>
+                              <div className="glass-panel p-6 rounded-2xl max-w-lg w-full text-center border border-white/10">
+                                  <p className="text-gray-300 leading-relaxed tracking-wide font-mono text-sm allow-select whitespace-pre-wrap">{maintenanceSettings.message}</p>
+                              </div>
+                          </div>
                         ) : (
                           <>
                               {activeTab === 'sms' && <CustomerDashboardSMS user={user} balance={currentUserBalance} triggerToast={triggerToast} smsSettings={smsSettings} />}
@@ -1207,9 +1224,9 @@
                       setAvailableServices(FALLBACK_APPS.map(app => ({...app, countryId: smsCountry}))); 
                       if(err.name !== 'AbortError') {
                           console.error("Fetch Apps Error:", err);
-                          triggerToast("সার্ভার কানেকশন ফেইল: " + err.message);
+                          triggerToast("Server connection failed: " + err.message);
                       } else {
-                          triggerToast("সার্ভার টাইমআউট। অফলাইন অ্যাপ লোড হয়েছে।");
+                          triggerToast("Server timeout. Offline apps loaded.");
                       }
                   });
 
@@ -2303,7 +2320,7 @@
         // ==========================================
         // ADMIN DASHBOARD
         // ==========================================
-        function AdminDashboard({ inventory, orders, deposits, setDeposits, categories, usersDB, setUsersDB, purchases, tickets, triggerToast, promoSettings, globalNotice, featureSettings, bankSettings, cryptoSettings, customPayments, smsSettings, activeChats, activeTab }) {
+        function AdminDashboard({ inventory, orders, deposits, setDeposits, categories, usersDB, setUsersDB, purchases, tickets, triggerToast, promoSettings, globalNotice, featureSettings, bankSettings, cryptoSettings, customPayments, smsSettings, activeChats, activeTab, maintenanceSettings }) {
           const [uploadCategory, setUploadCategory] = useState('new');
           const [uploadText, setUploadText] = useState('');
           const [customerSearch, setCustomerSearch] = useState('');
@@ -2322,6 +2339,9 @@
 
           const [smsMarkupInput, setSmsMarkupInput] = useState(1.00);
           const [smsActiveInput, setSmsActiveInput] = useState(true);
+
+          const [maintenanceActiveInput, setMaintenanceActiveInput] = useState(false);
+          const [maintenanceMessageInput, setMaintenanceMessageInput] = useState('We are currently performing scheduled maintenance. Please check back later.');
           
           const [cryptoMethodsList, setCryptoMethodsList] = useState([]);
           const [newCryptoInput, setNewCryptoInput] = useState({ name: '', network: '', address: '' });
@@ -2466,7 +2486,8 @@
             }
             if (cryptoSettings) setCryptoMethodsList(cryptoSettings);
             if (smsSettings) { setSmsMarkupInput(smsSettings.markup !== undefined ? smsSettings.markup : 1.00); setSmsActiveInput(smsSettings.active ?? true); }
-          }, [promoSettings, globalNotice, featureSettings, bankSettings, cryptoSettings, smsSettings]);
+            if (maintenanceSettings) { setMaintenanceActiveInput(maintenanceSettings.active || false); setMaintenanceMessageInput(maintenanceSettings.message || 'We are currently performing scheduled maintenance. Please check back later.'); }
+          }, [promoSettings, globalNotice, featureSettings, bankSettings, cryptoSettings, smsSettings, maintenanceSettings]);
 
           useEffect(() => {
               if (!selectedChatUser) return;
@@ -2622,7 +2643,8 @@
                   { id: 'Notice', data: { text: noticeInput } },
                   { id: 'Features', data: { dailyReward: dailyRewardActive, referral: referralActive } },
                   { id: 'SMS', data: { markup: parseFloat(smsMarkupInput), active: smsActiveInput } },
-                  { id: 'Bank', data: { bankName: bankNameInput, accountName: bankAccountNameInput, accountNumber: bankAccountNumberInput, nairaRate: parseFloat(nairaRateInput) || 1500, flutterwaveKey: flutterwaveKeyInput, flutterwaveActive: flutterwaveActiveInput } }
+                  { id: 'Bank', data: { bankName: bankNameInput, accountName: bankAccountNameInput, accountNumber: bankAccountNumberInput, nairaRate: parseFloat(nairaRateInput) || 1500, flutterwaveKey: flutterwaveKeyInput, flutterwaveActive: flutterwaveActiveInput } },
+                  { id: 'Maintenance', data: { active: maintenanceActiveInput, message: maintenanceMessageInput } }
               ];
 
               for (const setting of settingsToSave) {
@@ -3130,6 +3152,19 @@
                            <h3 className="text-[10px] font-bold text-white uppercase tracking-[0.3em]">Global Notice</h3>
                            <div>
                              <textarea value={noticeInput} onChange={(e) => setNoticeInput(e.target.value)} placeholder="Write a notice for all users..." rows="3" className={`${uiInput} allow-select resize-none`} />
+                           </div>
+                        </div>
+
+                        {/* 🟢 MAINTENANCE MODE SETTINGS 🟢 */}
+                        <div className="space-y-5 pt-4 border-t border-white/10">
+                           <h3 className="text-[10px] font-bold text-red-500 uppercase tracking-[0.3em] flex items-center gap-2"><Settings className="w-3.5 h-3.5"/> Maintenance Mode</h3>
+                           <label className="flex items-center gap-3 cursor-pointer mt-4 pl-1 bg-[rgba(0,0,0,0.5)] border border-white/5 p-4 rounded-xl mb-4 transition-colors hover:border-red-500/50">
+                             <input type="checkbox" checked={maintenanceActiveInput} onChange={(e) => setMaintenanceActiveInput(e.target.checked)} className="w-4 h-4 rounded text-red-500 focus:ring-red-500 bg-[#000]" />
+                             <span className="text-xs font-bold text-white uppercase tracking-wider">Enable Maintenance Mode</span>
+                           </label>
+                           <div>
+                             <label className="block text-[9px] font-bold text-gray-500 mb-2 uppercase tracking-widest">Maintenance Message</label>
+                             <textarea value={maintenanceMessageInput} onChange={(e) => setMaintenanceMessageInput(e.target.value)} placeholder="We are currently upgrading our systems. Please check back later." rows="2" className={`${uiInput} allow-select resize-none`} />
                            </div>
                         </div>
 
