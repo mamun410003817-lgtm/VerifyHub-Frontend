@@ -722,7 +722,7 @@
               setIsAuthChecking(false);
           };
 
-          // 🟢 2. SMART POLLING DATA FETCHING 🟢
+          // 🟢 2. SMART POLLING DATA FETCHING (FIXED FOR OVERWRITING INPUTS) 🟢
           useEffect(() => {
               if (!user) return;
               let isMounted = true;
@@ -730,26 +730,25 @@
               const fetchAllData = async () => {
                   if (!isMounted) return;
 
-                  // ১. পাবলিক সেটিংস ফেচ করা
+                  // ১. পাবলিক সেটিংস ফেচ করা (Smart Deep Compare)
                   const { data: settings } = await supabase.from('store_settings').select('*');
                   if (settings) {
                       settings.forEach(s => {
                           const sData = s.data || {};
-                          if (s.id === 'Products') setCategories(sData.list || DEFAULT_CATEGORIES);
-                          if (s.id === 'SMS') setSmsSettings({ active: sData.active !== false, markup: sData.markup || 1.00 });
-                          if (s.id === 'CryptoMethods') {
-                              if(sData.list && sData.list.length > 0) setCryptoSettings(sData.list);
-                          }
-                          if (s.id === 'Bank') setBankSettings(sData);
-                          if (s.id === 'CustomPayments') setCustomPayments(sData.list || []);
-                          if (s.id === 'Notice') setGlobalNotice(sData.text || '');
-                          if (s.id === 'Features') setFeatureSettings(sData);
-                          if (s.id === 'Maintenance') setMaintenanceSettings(sData);
+                          if (s.id === 'Products') setCategories(prev => JSON.stringify(prev) !== JSON.stringify(sData.list || DEFAULT_CATEGORIES) ? (sData.list || DEFAULT_CATEGORIES) : prev);
+                          if (s.id === 'SMS') setSmsSettings(prev => JSON.stringify(prev) !== JSON.stringify({ active: sData.active !== false, markup: sData.markup || 1.00 }) ? { active: sData.active !== false, markup: sData.markup || 1.00 } : prev);
+                          if (s.id === 'CryptoMethods') setCryptoSettings(prev => JSON.stringify(prev) !== JSON.stringify(sData.list || []) ? (sData.list || []) : prev);
+                          if (s.id === 'Bank') setBankSettings(prev => JSON.stringify(prev) !== JSON.stringify(sData) ? sData : prev);
+                          if (s.id === 'CustomPayments') setCustomPayments(prev => JSON.stringify(prev) !== JSON.stringify(sData.list || []) ? (sData.list || []) : prev);
+                          if (s.id === 'Notice') setGlobalNotice(prev => prev !== (sData.text || '') ? (sData.text || '') : prev);
+                          if (s.id === 'Features') setFeatureSettings(prev => JSON.stringify(prev) !== JSON.stringify(sData) ? sData : prev);
+                          if (s.id === 'Maintenance') setMaintenanceSettings(prev => JSON.stringify(prev) !== JSON.stringify(sData) ? sData : prev);
+                          if (s.id === 'PromoCode') setPromoSettings(prev => JSON.stringify(prev) !== JSON.stringify(sData) ? sData : prev);
                       });
                   }
 
                   const { data: stock } = await supabase.from('store_inventory').select('data').eq('id', 'Stock').maybeSingle();
-                  if (stock && stock.data) setInventory(stock.data);
+                  if (stock && stock.data) setInventory(prev => JSON.stringify(prev) !== JSON.stringify(stock.data) ? stock.data : prev);
 
                   // ২. সিকিউরড ডেটা ফেচ করা
                   try {
