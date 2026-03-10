@@ -718,7 +718,7 @@
               setIsAuthChecking(false);
           };
 
-          // 🟢 2. SMART POLLING DATA FETCHING (FIXED FOR OVERWRITING INPUTS) 🟢
+          // 🟢 2. SMART POLLING DATA FETCHING (FIXED TO PREVENT OVERWRITING INPUTS) 🟢
           useEffect(() => {
               if (!user) return;
               let isMounted = true;
@@ -726,19 +726,14 @@
               const fetchAllData = async () => {
                   if (!isMounted) return;
 
+                  // Only sync lists from server, let individual state variables handle their own form inputs
                   const { data: settings } = await supabase.from('store_settings').select('*');
                   if (settings) {
                       settings.forEach(s => {
                           const sData = s.data || {};
                           if (s.id === 'Products') setCategories(prev => JSON.stringify(prev) !== JSON.stringify(sData.list || DEFAULT_CATEGORIES) ? (sData.list || DEFAULT_CATEGORIES) : prev);
-                          if (s.id === 'SMS') setSmsSettings(prev => JSON.stringify(prev) !== JSON.stringify({ active: sData.active !== false, markup: sData.markup || 1.00 }) ? { active: sData.active !== false, markup: sData.markup || 1.00 } : prev);
                           if (s.id === 'CryptoMethods') setCryptoSettings(prev => JSON.stringify(prev) !== JSON.stringify(sData.list || []) ? (sData.list || []) : prev);
-                          if (s.id === 'Bank') setBankSettings(prev => JSON.stringify(prev) !== JSON.stringify(sData) ? sData : prev);
                           if (s.id === 'CustomPayments') setCustomPayments(prev => JSON.stringify(prev) !== JSON.stringify(sData.list || []) ? (sData.list || []) : prev);
-                          if (s.id === 'Notice') setGlobalNotice(prev => prev !== (sData.text || '') ? (sData.text || '') : prev);
-                          if (s.id === 'Features') setFeatureSettings(prev => JSON.stringify(prev) !== JSON.stringify(sData) ? sData : prev);
-                          if (s.id === 'Maintenance') setMaintenanceSettings(prev => JSON.stringify(prev) !== JSON.stringify(sData) ? sData : prev);
-                          if (s.id === 'PromoCode') setPromoSettings(prev => JSON.stringify(prev) !== JSON.stringify(sData) ? sData : prev);
                       });
                   }
 
@@ -782,6 +777,26 @@
               const intervalId = setInterval(fetchAllData, 6000); 
               return () => { isMounted = false; clearInterval(intervalId); };
           }, [user]);
+
+          // Load initial settings once on mount or when user role is determined
+          useEffect(() => {
+              if(!user) return;
+              const loadInitialSettings = async () => {
+                  const { data: settings } = await supabase.from('store_settings').select('*');
+                  if (settings) {
+                      settings.forEach(s => {
+                          const sData = s.data || {};
+                          if (s.id === 'SMS') { setSmsSettings({ active: sData.active !== false, markup: sData.markup || 1.00 }); }
+                          if (s.id === 'Bank') { setBankSettings(sData); }
+                          if (s.id === 'Notice') { setGlobalNotice(sData.text || ''); }
+                          if (s.id === 'Features') { setFeatureSettings(sData); }
+                          if (s.id === 'Maintenance') { setMaintenanceSettings(sData); }
+                          if (s.id === 'PromoCode') { setPromoSettings(sData); }
+                      });
+                  }
+              };
+              loadInitialSettings();
+          }, [user?.email]);
 
           useEffect(() => {
               if (!user || user.role === 'admin') return;
