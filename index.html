@@ -120,46 +120,6 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://checkout.flutterwave.com/v3.js"></script>
 
-    <!-- 🟢 ADVANCED ANTI-HACKING & ANTI-DEVTOOLS SCRIPT 🟢 -->
-    <script>
-        // Disable React DevTools
-        if (typeof window.__REACT_DEVTOOLS_GLOBAL_HOOK__ === 'object') {
-            for (let [key, value] of Object.entries(window.__REACT_DEVTOOLS_GLOBAL_HOOK__)) {
-                window.__REACT_DEVTOOLS_GLOBAL_HOOK__[key] = typeof value === 'function' ? () => {} : null;
-            }
-        }
-
-        // Prevent Right Click
-        document.addEventListener('contextmenu', event => event.preventDefault());
-
-        // Prevent Keyboard Shortcuts
-        document.onkeydown = function(e) {
-            if (e.keyCode === 123 || 
-                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || 
-                (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 67))) {
-                e.preventDefault();
-                return false;
-            }
-        };
-
-        setInterval(function() {
-            console.clear();
-            const start = performance.now();
-            debugger;
-            if (performance.now() - start > 100) {
-                document.body.innerHTML = "<div style='display:flex;justify-content:center;align-items:center;height:100vh;background:#000;color:red;font-family:monospace;font-size:24px;text-align:center;'>SECURITY BREACH DETECTED.<br/>ACCESS DENIED.</div>";
-            }
-        }, 1000);
-
-        try { 
-            if (window.top !== window.self) {
-                window.top.location = window.self.location;
-            } 
-        } catch (e) {}
-
-        document.addEventListener('dragstart', e => e.preventDefault());
-    </script>
-
     <style>
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
