@@ -6,16 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <!-- 🟢 SEO META TAGS START 🟢 -->
-    <title>VerifyHub Elite - Buy Virtual Numbers & Premium Accounts</title>
-    <meta name="description" content="Welcome to VerifyHub Elite. Buy reliable virtual numbers for SMS verification and premium verified accounts instantly. High quality service with crypto and manual payment support.">
-    <meta name="keywords" content="virtual number, buy sms, sms verification, premium accounts, buy google voice, textplus accounts, phone verification, verifyhub elite">
+    <title>VerifyHub Elite - Buy Premium Accounts</title>
+    <meta name="description" content="Welcome to VerifyHub Elite. Buy reliable premium verified accounts instantly. High quality service with crypto and manual payment support.">
+    <meta name="keywords" content="premium accounts, buy google voice, textplus accounts, verifyhub elite">
     <meta name="author" content="VerifyHub Elite">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://verify-hub-psi.vercel.app"> 
     
     <!-- Open Graph (Facebook/WhatsApp Preview) -->
-    <meta property="og:title" content="VerifyHub Elite - Virtual Numbers & Accounts">
-    <meta property="og:description" content="Instant SMS verification numbers and premium accounts. Secure payments accepted.">
+    <meta property="og:title" content="VerifyHub Elite - Premium Accounts">
+    <meta property="og:description" content="Instant premium accounts. Secure payments accepted.">
     <meta property="og:url" content="https://verify-hub-psi.vercel.app">
     <meta property="og:type" content="website">
     <!-- 🟢 SEO META TAGS END 🟢 -->
@@ -287,9 +287,9 @@
 
         import { 
             ShoppingCart, LogOut, Package, Users, DollarSign, Settings, Plus, Trash2, CheckCircle, 
-            X, Wallet, CreditCard, Clock, Copy, ArrowRight, Bell, User as UserIcon, 
-            Activity, BarChart, Eye, Lock, Search, Megaphone, Award, Zap, Headset, 
-            Star, AlertTriangle, Smartphone, ShieldCheck, Moon, HelpCircle, History, TrendingUp, Sparkles, Building, Edit, RefreshCw, ChevronDown, StopCircle, Ban, Info, Key, MessageSquare, Send, BookOpen, MessageCircle, Radar, CircleDollarSign
+            X, Wallet, CreditCard, Clock, Copy, Bell, User as UserIcon, 
+            Activity, BarChart, Lock, Search, Megaphone, Award, Zap, Headset, 
+            Star, AlertTriangle, ShieldCheck, History, Edit, RefreshCw, ChevronDown, MessageSquare, Send, MessageCircle, CircleDollarSign, Key
         } from 'lucide-react';
 
         // 🟢 SUPABASE INITIALIZATION 🟢
@@ -343,15 +343,7 @@
           { id: 'gv_bulk', name: 'Bulk Google Voice', description: 'Wholesale package of 10 accounts.', price: 45.00 }
         ];
 
-        const NETWORK_REGIONS = [
-          { id: 'USA', name: 'United States (+1)' },
-          { id: 'UK', name: 'United Kingdom (+44)' },
-          { id: 'NL', name: 'Netherlands (+31)' },
-          { id: 'PH', name: 'Philippines (+63)' }
-        ];
-
         const CUSTOMER_TABS = [
-            { id: 'sms', label: 'Buy SMS', icon: Smartphone },
             { id: 'store', label: 'Buy Account', icon: ShoppingCart },
             { id: 'add_funds', label: 'Add Fund', icon: Wallet },
             { id: 'my_accounts', label: 'Purchased', icon: Key },
@@ -491,24 +483,6 @@
             }
         }
 
-        function OrderTimerDisplay({ expiresAt }) {
-            const [timeLeft, setTimeLeft] = useState(Math.max(0, Math.floor((expiresAt - Date.now()) / 1000)));
-            useEffect(() => {
-                const int = setInterval(() => setTimeLeft(Math.max(0, Math.floor((expiresAt - Date.now()) / 1000))), 1000);
-                return () => clearInterval(int);
-            }, [expiresAt]);
-            return <span className="font-mono text-xl font-bold text-white tracking-widest">{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</span>;
-        }
-
-        function OrderProgressBar({ expiresAt }) {
-            const [timeLeft, setTimeLeft] = useState(Math.max(0, Math.floor((expiresAt - Date.now()) / 1000)));
-            useEffect(() => {
-                const int = setInterval(() => setTimeLeft(Math.max(0, Math.floor((expiresAt - Date.now()) / 1000))), 1000);
-                return () => clearInterval(int);
-            }, [expiresAt]);
-            return <div className="bg-brand-primary h-full shadow-[0_0_10px_rgba(6,182,212,0.8)]" style={{width: `${(timeLeft / 240) * 100}%`}}></div>;
-        }
-
         const VaultItem = ({ acc, idx, triggerToast }) => {
             const [totpCode, setTotpCode] = useState('');
             const [timeLeft, setTimeLeft] = useState(30);
@@ -599,7 +573,7 @@
           const [isAuthChecking, setIsAuthChecking] = useState(true);
           
           const [activeTab, setActiveTab] = useState(() => {
-              return localStorage.getItem('lastActiveTab') || 'sms';
+              return localStorage.getItem('lastActiveTab') || 'store';
           });
           
           const [usersDB, setUsersDB] = useState({});
@@ -619,7 +593,6 @@
           
           const [cryptoSettings, setCryptoSettings] = useState([]);
 
-          const [smsSettings, setSmsSettings] = useState({ active: true, markup: 1.00 });
           const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
           const [customPayments, setCustomPayments] = useState([]);
           
@@ -708,7 +681,7 @@
                   } else {
                       setUser({ email: supaUser.email.toLowerCase(), role: 'customer' }); 
                       if(!savedTab || !CUSTOMER_TABS.some(t => t.id === savedTab)) {
-                          setActiveTab('sms');
+                          setActiveTab('store');
                       } else {
                           setActiveTab(savedTab);
                       }
@@ -727,7 +700,6 @@
               const fetchAllData = async () => {
                   if (!isMounted) return;
 
-                  // Only sync lists from server, let individual state variables handle their own form inputs
                   const { data: settings } = await supabase.from('store_settings').select('*');
                   if (settings) {
                       settings.forEach(s => {
@@ -783,7 +755,6 @@
               return () => { isMounted = false; clearInterval(intervalId); };
           }, [user]);
 
-          // Load initial settings once on mount or when user role is determined
           useEffect(() => {
               if(!user) return;
               const loadInitialSettings = async () => {
@@ -791,7 +762,6 @@
                   if (settings) {
                       settings.forEach(s => {
                           const sData = s.data || {};
-                          if (s.id === 'SMS') { setSmsSettings({ active: sData.active !== false, markup: sData.markup || 1.00 }); }
                           if (s.id === 'Bank') { setBankSettings(sData); }
                           if (s.id === 'Notice') { setGlobalNotice(sData.text || ''); }
                           if (s.id === 'Features') { setFeatureSettings(sData); }
@@ -1011,7 +981,7 @@
 
                 {(!maintenanceSettings?.active || user.role === 'admin') && (
                     <div className="w-full relative z-30 mb-8">
-                      <div className="glass-effect rounded-[24px] p-1.5 sm:p-2 grid grid-cols-5 gap-1 w-full border border-white/10 mx-auto max-w-5xl">
+                      <div className="glass-effect rounded-[24px] p-1.5 sm:p-2 grid grid-cols-4 lg:grid-cols-6 gap-1 w-full border border-white/10 mx-auto max-w-5xl">
                         {(user.role === 'admin' ? ADMIN_TABS : CUSTOMER_TABS).map(tab => (
                           <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`btn-animate relative flex flex-col items-center justify-center py-3 sm:py-3.5 px-0.5 sm:px-2 rounded-xl min-w-0 group ${activeTab === tab.id ? 'bg-white shadow-[0_4px_15px_rgba(255,255,255,0.2)]' : 'hover:bg-white/10'}`}>
                               <div className="relative z-10 flex flex-col items-center justify-center w-full">
@@ -1029,7 +999,7 @@
                 <div className="w-full relative tab-transition-enter" key={activeTab}>
                     <ErrorBoundary>
                         {user.role === 'admin' ? (
-                          <AdminDashboard inventory={inventory} orders={allOrders} deposits={deposits} setDeposits={setDeposits} categories={categories} usersDB={usersDB} setUsersDB={setUsersDB} purchases={purchases} tickets={tickets} triggerToast={triggerToast} promoSettings={promoSettings} globalNotice={globalNotice} featureSettings={featureSettings} bankSettings={bankSettings} cryptoSettings={cryptoSettings} customPayments={customPayments} smsSettings={smsSettings} activeChats={activeChats} activeTab={activeTab} maintenanceSettings={maintenanceSettings} isInitialSyncDone={isInitialSyncDone} />
+                          <AdminDashboard inventory={inventory} orders={allOrders} deposits={deposits} setDeposits={setDeposits} categories={categories} usersDB={usersDB} setUsersDB={setUsersDB} purchases={purchases} tickets={tickets} triggerToast={triggerToast} promoSettings={promoSettings} globalNotice={globalNotice} featureSettings={featureSettings} bankSettings={bankSettings} cryptoSettings={cryptoSettings} customPayments={customPayments} activeChats={activeChats} activeTab={activeTab} maintenanceSettings={maintenanceSettings} isInitialSyncDone={isInitialSyncDone} />
                         ) : maintenanceSettings?.active ? (
                           <div className="w-full flex flex-col items-center justify-center py-20 animate-fade-in-up">
                               <div className="w-20 h-20 bg-red-900/20 border border-red-500/50 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(239,68,68,0.2)]">
@@ -1042,7 +1012,6 @@
                           </div>
                         ) : (
                           <>
-                              {activeTab === 'sms' && <CustomerDashboardSMS user={user} balance={currentUserBalance} triggerToast={triggerToast} smsSettings={smsSettings} />}
                               {activeTab === 'store' && <CustomerDashboardStore inventory={inventory} categories={categories} cart={cart} setCart={setCart} triggerToast={triggerToast} />}
                               {activeTab === 'add_funds' && <CustomerDashboardFunds deposits={deposits} setDeposits={setDeposits} user={user} triggerToast={triggerToast} addNotification={addNotification} bankSettings={bankSettings} cryptoSettings={cryptoSettings} customPayments={customPayments} />}
                               {activeTab === 'my_accounts' && <CustomerDashboardVault user={user} purchases={purchases} triggerToast={triggerToast} />}
@@ -1151,469 +1120,6 @@
                     )}
                 </>
             );
-        }
-
-        // 🟢 FALLBACK APPS: In case Backend Server is Asleep or Fails 🟢
-        const FALLBACK_APPS = [
-            { code: "1", serviceId: "1", name: "Google", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "8", serviceId: "8", name: "WhatsApp", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "5", serviceId: "5", name: "Telegram", finalPrice: 3.10, baseCost: 2.10, prices: [{value: 3.10, quantity: 100}], originalPrice: 2.10 },
-            { code: "12", serviceId: "12", name: "Facebook", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "6", serviceId: "6", name: "Instagram", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "49", serviceId: "49", name: "Snapchat", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "17", serviceId: "17", name: "Netflix", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "2", serviceId: "2", name: "Microsoft / Outlook", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "4", serviceId: "4", name: "Twitter", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "10", serviceId: "10", name: "Discord", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "76", serviceId: "76", name: "Tiktok", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "26", serviceId: "26", name: "Amazon", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "3", serviceId: "3", name: "Uber", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "7", serviceId: "7", name: "Tinder", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "9", serviceId: "9", name: "Steam", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "11", serviceId: "11", name: "Yahoo", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 }
-        ];
-
-        function CustomerDashboardSMS({ user, balance, triggerToast, smsSettings }) {
-          const [isSmsLoading, setIsSmsLoading] = useState(false);
-          const [selectedSmsService, setSelectedSmsService] = useState(''); 
-          const [availableServices, setAvailableServices] = useState([]); 
-          const [isAppDropdownOpen, setIsAppDropdownOpen] = useState(false);
-          const [appSearch, setAppSearch] = useState('');
-          const [isFetchingServices, setIsFetchingServices] = useState(false);
-          const [smsCountry, setSmsCountry] = useState('USA'); 
-          const [retryCount, setRetryCount] = useState(0); 
-          
-          const [priceTiers, setPriceTiers] = useState([]);
-          const [selectedTier, setSelectedTier] = useState(null);
-          const [isTiersLoading, setIsTiersLoading] = useState(false);
-
-          const [confirmAction, setConfirmAction] = useState({ show: false, type: '', orderId: null, price: 0 });
-          const [showSmsWarning, setShowSmsWarning] = useState(false);
-
-          const ordersContainerRef = useRef(null);
-          const [activeOrders, setActiveOrders] = useState(() => {
-              try { const saved = localStorage.getItem(`smsOrders_${user?.email}`); if (saved) { const parsed = JSON.parse(saved); if(Array.isArray(parsed)) return parsed.filter(o => o && o.status === 'ACTIVE'); } } catch(e) {} return [];
-          });
-
-          useEffect(() => { if (user?.email) localStorage.setItem(`smsOrders_${user.email}`, JSON.stringify(activeOrders)); }, [activeOrders, user]);
-
-          const smsActive = smsSettings?.active !== false; 
-          
-          useEffect(() => {
-              if (smsActive) {
-                  setIsFetchingServices(true);
-                  const controller = new AbortController();
-                  // 🟢 FIX: 60 sec timeout for initial Render sleep wakeup
-                  const timeoutId = setTimeout(() => {
-                      controller.abort();
-                  }, 60000); 
-
-                  fetch(`${BACKEND_URL}/api/grizzly/getPrices?country=${smsCountry}`, { signal: controller.signal })
-                  .then(async (r) => {
-                      if(!r.ok) {
-                          throw new Error(`HTTP Error ${r.status}`);
-                      }
-                      return r.json();
-                  })
-                  .then(json => { 
-                      clearTimeout(timeoutId);
-                      if (!json.success) {
-                          triggerToast("API Warning: " + (json.message || "Could not load full list"));
-                      }
-                      const srvs = json?.success && Array.isArray(json.data) && json.data.length > 0 ? json.data : [];
-                      
-                      if (srvs.length > 0) {
-                          setAvailableServices(srvs); 
-                      } else {
-                          triggerToast("Loaded offline backup apps.");
-                          setAvailableServices(FALLBACK_APPS.map(app => ({...app, countryId: smsCountry})));
-                      }
-                      setIsFetchingServices(false); 
-                  }).catch((err) => { 
-                      clearTimeout(timeoutId);
-                      setIsFetchingServices(false); 
-                      setAvailableServices(FALLBACK_APPS.map(app => ({...app, countryId: smsCountry}))); 
-                      if(err.name !== 'AbortError') {
-                          console.error("Fetch Apps Error:", err);
-                          triggerToast("Server connection failed: " + err.message);
-                      } else {
-                          triggerToast("Server timeout. Offline apps loaded.");
-                      }
-                  });
-
-                  return () => { clearTimeout(timeoutId); controller.abort(); };
-              }
-          }, [smsActive, smsCountry, retryCount]);
-
-          useEffect(() => {
-              if (selectedSmsService && smsCountry) {
-                  setIsTiersLoading(true);
-                  const controller = new AbortController();
-                  const timeoutId = setTimeout(() => controller.abort(), 45000); 
-                  
-                  fetch(`${BACKEND_URL}/api/grizzly/getServiceTiers?country=${smsCountry}&service=${selectedSmsService}`, { signal: controller.signal })
-                  .then(res => res.json()).then(data => { 
-                      clearTimeout(timeoutId);
-                      if (data?.success && Array.isArray(data?.tiers) && data.tiers.length > 0) { 
-                          setPriceTiers(data.tiers); setSelectedTier(data.tiers[0]); 
-                      } else { 
-                          // 🟢 FIX: Fallback Price if backend fails
-                          const fb = FALLBACK_APPS.find(a => a.code === selectedSmsService);
-                          if(fb) {
-                              const t = { originalPrice: fb.originalPrice, priceWithMarkup: fb.finalPrice };
-                              setPriceTiers([t]); setSelectedTier(t);
-                          } else {
-                              setPriceTiers([]); setSelectedTier(null); 
-                          }
-                      } 
-                      setIsTiersLoading(false); 
-                  }).catch(() => { 
-                      clearTimeout(timeoutId);
-                      const fb = FALLBACK_APPS.find(a => a.code === selectedSmsService);
-                      if(fb) {
-                          const t = { originalPrice: fb.originalPrice, priceWithMarkup: fb.finalPrice };
-                          setPriceTiers([t]); setSelectedTier(t);
-                      } else {
-                          setPriceTiers([]); setSelectedTier(null); 
-                      }
-                      setIsTiersLoading(false); 
-                  });
-                  return () => { clearTimeout(timeoutId); controller.abort(); };
-              }
-          }, [selectedSmsService, smsCountry]);
-
-          const filteredApps = Array.isArray(availableServices) ? availableServices.filter(app => (app?.name || '').toLowerCase().includes((appSearch || '').toLowerCase())) : [];
-
-          const currentService = availableServices.find(s => s?.code === selectedSmsService) || null;
-          const fallbackPrice = currentService?.finalPrice ? parseFloat(currentService.finalPrice) : 0;
-          const finalBuyPrice = selectedTier?.priceWithMarkup ? parseFloat(selectedTier.priceWithMarkup) : fallbackPrice;
-          const exactMaxPrice = selectedTier?.originalPrice ? parseFloat(selectedTier.originalPrice) : null;
-
-          const buySmsNumber = async () => {
-              if (!currentService) return;
-              if (activeOrders.length > 0) { triggerToast("Please complete your current order first."); return; }
-              if (balance < finalBuyPrice) { triggerToast("Insufficient balance."); return; }
-              
-              setIsSmsLoading(true);
-              try {
-                  const token = await getAuthToken(); 
-                  
-                  const res = await fetch(`${BACKEND_URL}/api/juicy/getNumber`, {
-                      method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                      body: JSON.stringify({ serviceId: currentService.code, countryId: smsCountry, maxPrice: exactMaxPrice, requestedPrice: finalBuyPrice }) 
-                  });
-                  
-                  if (!res.ok) { triggerToast(`Server Error ${res.status}`); setIsSmsLoading(false); return; }
-                  
-                  const data = await res.json();
-                  
-                  if (data?.success && data?.phone) {
-                      const cleanName = (currentService.name || '').split(' [')[0];
-                      const newOrder = { id: data.orderId, phone: data.phone, service: cleanName, countryId: smsCountry, price: finalBuyPrice, status: 'ACTIVE', codes: [], expiresAt: Date.now() + 240 * 1000, isCancelling: false, isNew: true };
-                      setActiveOrders(prev => [newOrder, ...prev]); 
-                      triggerToast("Number assigned!");
-                      
-                      setShowSmsWarning(true);
-
-                      setTimeout(() => {
-                          const elements = document.querySelectorAll('.order-card-anim');
-                          if(elements.length > 0) elements[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                      }, 200);
-
-                  } else {
-                      triggerToast(data?.message || "Failed to get number.");
-                  }
-              } catch (e) { triggerToast("Network Error."); } finally { setIsSmsLoading(false); }
-          };
-
-          const performSkip = async (orderId, priceToRefund, isAuto = false) => {
-              try {
-                  const token = await getAuthToken();
-                  const skipRes = await fetch(`${BACKEND_URL}/api/juicy/skip`, { method: 'POST', headers: {'Content-Type':'application/json', 'Authorization': `Bearer ${token}`}, body: JSON.stringify({orderId}) }); 
-                  const skipData = await skipRes.json();
-                  
-                  if (!skipData.success) { 
-                      if (!isAuto) triggerToast(skipData.message); 
-                      if (String(skipData.message).includes('received')) { setActiveOrders(prev => prev.map(o => o.id === orderId ? {...o, isCancelling: false} : o)); }
-                      return; 
-                  }
-                  
-                  await fetch(`${BACKEND_URL}/api/sms-refund`, { 
-                      method: 'POST', 
-                      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, 
-                      body: JSON.stringify({ orderId: orderId }) 
-                  });
-                  
-                  if(!isAuto) triggerToast(`Skipped. $${priceToRefund.toFixed(2)} refunded.`); 
-                  else triggerToast(`Time expired. Auto-refunded.`);
-                  
-                  setActiveOrders(prev => prev.filter(o => o.id !== orderId));
-              } catch (e) {
-                  if(!isAuto) triggerToast("Network Error.");
-                  setActiveOrders(prev => prev.map(o => o.id === orderId ? {...o, isCancelling: false} : o));
-              } 
-          };
-
-          const executeConfirmAction = () => {
-              if(confirmAction.type === 'skip') performSkip(confirmAction.orderId, confirmAction.price);
-              setConfirmAction({ show: false, type: '', orderId: null, price: 0 });
-          };
-
-          useEffect(() => {
-              if(activeOrders.length === 0) return;
-              const interval = setInterval(() => {
-                  activeOrders.forEach(async (order) => {
-                      if (order.codes.length > 0) return; 
-                      if (Date.now() >= order.expiresAt) {
-                          if (!order.isCancelling) {
-                              setActiveOrders(prev => prev.map(o => o.id === order.id ? {...o, isCancelling: true} : o));
-                              performSkip(order.id, order.price, true);
-                          }
-                          return;
-                      }
-                      try {
-                          const res = await fetch(`${BACKEND_URL}/api/juicy/getStatus?orderId=${order.id}`);
-                          const data = await res.json();
-                          if (data.success && data.status === 'OK' && data.code) {
-                              setActiveOrders(prev => prev.map(o => {
-                                  if (o.id === order.id && !o.codes.includes(data.code)) {
-                                      triggerToast(`New SMS Received!`);
-                                      getAuthToken().then(token => { fetch(`${BACKEND_URL}/api/secure-action`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ action: 'save_sms', type: `Live SMS (${o.service})`, data: `Phone: ${o.phone}\nSMS Code: ${data.code}` }) }); });
-                                      return { ...o, codes: [...o.codes, data.code], lastMsg: 'SMS Received' };
-                                  } return o;
-                              }));
-                          } else if (String(data.status).includes('CANCEL')) { setActiveOrders(prev => prev.filter(o => o.id !== order.id));
-                          } else { setActiveOrders(prev => prev.map(o => o.id === order.id ? {...o, lastMsg: data.status} : o)); }
-                      } catch(e) {}
-                  });
-              }, 5000); 
-              return () => clearInterval(interval);
-          }, [activeOrders, user]);
-
-          const copyText = (text) => {
-             if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => triggerToast("Copied!"));
-             else { const t = document.createElement("textarea"); t.value = text; document.body.appendChild(t); t.select(); document.execCommand("copy"); document.body.removeChild(t); triggerToast("Copied!"); }
-          };
-
-          const formatPhoneDisplay = (phone) => { return `+${String(phone).replace(/\D/g, '')}`; };
-          const copyNumberOnly = (phone) => { copyText(String(phone).replace(/\D/g, '')); };
-
-          if(smsSettings?.active === false) return <div className="glass-effect rounded-3xl w-full text-center py-32 text-gray-500 font-mono text-sm uppercase tracking-widest"><Smartphone className="w-12 h-12 mx-auto mb-4 opacity-30" strokeWidth={1.5}/> Service Offline.</div>;
-
-          return (
-            <div className="w-full max-w-3xl mx-auto space-y-6 sm:space-y-8 relative animate-matrix-in">
-                {showSmsWarning && createPortal(
-                    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-[#000]/80 backdrop-blur-sm animate-fade-in-up">
-                        <div className="glass-effect w-full max-w-sm rounded-3xl p-6 sm:p-8 relative overflow-hidden border border-white/20 bg-[#0f172a]">
-                            <div className="absolute top-0 left-0 w-full h-1.5 bg-yellow-500"></div>
-                            <div className="flex items-center gap-4 mb-6">
-                                <div className="p-3.5 rounded-2xl glass-panel text-yellow-500 border border-yellow-500/30">
-                                    <AlertTriangle className="w-6 h-6"/>
-                                </div>
-                                <h3 className="text-base font-bold text-white tracking-widest uppercase">Important Notice</h3>
-                            </div>
-                            <p className="text-sm text-gray-300 leading-relaxed font-medium mb-8">
-                                If the number shows that the phone number is already registered on another device then please don't request code. Skip it immediately to get a refund.
-                            </p>
-                            <button onClick={() => setShowSmsWarning(false)} className="btn-animate w-full py-4 rounded-xl font-bold text-black text-xs uppercase tracking-widest bg-yellow-500 hover:bg-yellow-400">
-                                I Understand
-                            </button>
-                        </div>
-                    </div>,
-                    document.body
-                )}
-
-                {confirmAction.show && createPortal(
-                    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-[#000]/80 backdrop-blur-sm">
-                        <div className="glass-effect w-full max-w-sm rounded-3xl p-6 sm:p-8 relative overflow-hidden border border-white/20 animate-fade-in-up bg-[#0f172a]">
-                            <div className="absolute top-0 left-0 w-full h-1.5 bg-red-600"></div>
-                            <div className="flex items-center gap-4 mb-6">
-                                <div className="p-3.5 rounded-2xl glass-panel text-red-500 border border-red-500/30">
-                                    <Ban className="w-6 h-6"/>
-                                </div>
-                                <h3 className="text-base font-bold text-white tracking-widest uppercase">Skip Number?</h3>
-                            </div>
-                            <p className="text-xs text-gray-300 leading-relaxed font-light mb-8">
-                                Are you sure you want to skip this number? It will be banned and balance refunded.
-                            </p>
-                            <div className="flex gap-3 w-full">
-                                <button onClick={() => setConfirmAction({ show: false, type: '', orderId: null, price: 0 })} className="btn-animate flex-1 py-3.5 rounded-xl font-bold text-gray-300 glass-panel hover:bg-white/10 text-xs uppercase tracking-widest">Cancel</button>
-                                <button onClick={executeConfirmAction} className="btn-animate flex-1 py-3.5 rounded-xl font-bold text-white text-xs uppercase tracking-widest bg-red-600 hover:bg-red-500 border border-red-500/50">Yes, Skip</button>
-                            </div>
-                        </div>
-                    </div>,
-                    document.body
-                )}
-
-                {isAppDropdownOpen && createPortal(
-                   <div className="fixed inset-0 z-[99999] bg-[rgba(3,7,18,0.95)] backdrop-blur-2xl flex flex-col animate-pop-in overflow-hidden">
-                       <div className="p-4 sm:p-6 border-b border-white/10 flex justify-between items-center bg-transparent sticky top-0 z-20">
-                           <h3 className="font-bold text-white text-sm sm:text-base tracking-widest uppercase">Select Application</h3>
-                           <button onClick={() => { setIsAppDropdownOpen(false); setAppSearch(''); }} className="btn-animate p-2 bg-white/10 hover:bg-white text-white hover:text-black rounded-full transition-colors"><X className="w-5 h-5"/></button>
-                       </div>
-                       <div className="p-4 sm:p-6 bg-transparent border-b border-white/10 sticky top-[73px] z-20">
-                           <div className="relative">
-                               <Search className="w-5 h-5 text-gray-500 absolute left-4 top-3.5 pointer-events-none" />
-                               <input autoFocus type="text" placeholder="Search app..." value={appSearch} onChange={(e) => setAppSearch(e.target.value)} className="w-full bg-[rgba(255,255,255,0.05)] border border-white/20 rounded-xl pl-12 py-3.5 text-base text-white outline-none focus:border-brand-primary allow-select"/>
-                           </div>
-                       </div>
-                       <div className="flex-grow overflow-y-auto p-4 sm:p-6 custom-scrollbar bg-transparent space-y-3 pb-24 z-10 relative">
-                           {filteredApps.length === 0 ? (
-                               <div className="text-center py-10 flex flex-col items-center">
-                                    <p className="text-gray-500 text-xs font-mono uppercase tracking-widest mb-4">
-                                        {isFetchingServices ? 'Fetching Apps...' : 'No apps found.'}
-                                    </p>
-                                    {!isFetchingServices && (
-                                        <button onClick={() => { setRetryCount(r => r + 1); setIsAppDropdownOpen(false); }} className="btn-animate bg-white/10 hover:bg-white text-white hover:text-black px-4 py-2 rounded-lg text-[10px] uppercase tracking-widest font-bold flex items-center gap-2">
-                                            <RefreshCw className="w-3 h-3" /> Retry Connection
-                                        </button>
-                                    )}
-                               </div>
-                           ) : 
-                               filteredApps.map((s) => {
-                                   if(!s) return null;
-                                   return (
-                                       <div key={s.code} onClick={() => { setSelectedSmsService(s.code); setIsAppDropdownOpen(false); setAppSearch(''); }} className={`btn-animate p-4 rounded-2xl cursor-pointer text-sm font-bold flex items-center justify-between ${selectedSmsService === s.code ? 'bg-white text-black shadow-[0_5px_20px_rgba(255,255,255,0.3)]' : 'text-gray-200 bg-[rgba(15,23,42,0.6)] border border-white/5 hover:border-white/20'}`}>
-                                           <div className="flex items-center gap-3">
-                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${selectedSmsService === s.code ? 'bg-black/10' : 'bg-white/5'}`}>
-                                                    <Smartphone className="w-4 h-4"/>
-                                                </div>
-                                                {s.name}
-                                           </div>
-                                           {selectedSmsService === s.code && <CheckCircle className="w-5 h-5" />}
-                                       </div>
-                                   );
-                               })
-                           }
-                       </div>
-                   </div>,
-                   document.body
-                )}
-
-                <div className={uiCard + " p-6 sm:p-8"}>
-                    <div className="flex items-center justify-between mb-8 pb-5 border-b border-white/10 relative z-10">
-                        <h2 className="text-lg sm:text-xl font-light tracking-[0.2em] text-white flex items-center gap-3 uppercase">
-                            <div className="w-10 h-10 rounded-xl glass-panel flex items-center justify-center shadow-inner">
-                                <Radar className="w-5 h-5 text-brand-primary animate-spin" style={{ animationDuration: '4s' }}/>
-                            </div>
-                            Control <span className="font-bold text-brand-primary">Panel</span>
-                        </h2>
-                        <div className="flex items-center gap-2 glass-panel px-3 py-1.5 rounded-full border-white/10">
-                           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>
-                           <span className="text-[9px] text-gray-300 font-mono uppercase tracking-widest hidden sm:block pt-0.5">Status: Live</span>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 relative z-10 mb-8">
-                        <div className="glass-panel p-4 rounded-2xl hover:border-brand-primary/30 transition-colors">
-                            <label className="block text-[9px] font-bold text-gray-400 mb-2.5 uppercase tracking-[0.2em] ml-1">Select Region</label>
-                            <div className="relative">
-                                <select value={smsCountry} onChange={e => setSmsCountry(e.target.value)} className={uiInput + " appearance-none cursor-pointer pr-10 text-white h-12 bg-transparent allow-select"}>
-                                    {NETWORK_REGIONS.map(c => <option key={c.id} value={c.id} className="bg-[#121212]">{c.name}</option>)}
-                                </select>
-                                <ChevronDown className="w-4 h-4 text-white absolute right-4 top-4 pointer-events-none" />
-                            </div>
-                        </div>
-
-                        <div className="glass-panel p-4 rounded-2xl hover:border-brand-primary/30 transition-colors">
-                            <label className="block text-[9px] font-bold text-gray-400 mb-2.5 uppercase tracking-[0.2em] ml-1">Select Price</label>
-                            <div className="relative w-full">
-                                <select 
-                                    value={selectedTier?.originalPrice ? String(selectedTier.originalPrice) : ''}
-                                    onChange={(e) => { const tier = Array.isArray(priceTiers) ? priceTiers.find(t => String(t?.originalPrice) === e.target.value) : null; if(tier) setSelectedTier(tier); }}
-                                    disabled={isTiersLoading || (!Array.isArray(priceTiers)) || priceTiers.length === 0}
-                                    className={uiInput + " h-12 pl-10 appearance-none cursor-pointer text-[13px] font-mono text-white bg-transparent disabled:opacity-50 allow-select"}
-                                >
-                                    {isTiersLoading ? (
-                                        <option value="" className="text-xs bg-[#121212] text-gray-500">...</option>
-                                    ) : (Array.isArray(priceTiers) && priceTiers.length > 0) ? (
-                                        priceTiers.map((tier, idx) => (
-                                            <option key={idx} value={String(tier.originalPrice)} className="bg-[#121212] text-gray-200">${Number(tier.priceWithMarkup || 0).toFixed(2)}</option>
-                                        ))
-                                    ) : (
-                                        <option value="" className="bg-[#121212] text-gray-500">$0.00</option>
-                                    )}
-                                </select>
-                                <DollarSign className="w-4 h-4 text-gray-400 absolute left-3.5 top-4 pointer-events-none"/>
-                                <ChevronDown className="w-4 h-4 text-gray-600 absolute right-4 top-4 pointer-events-none"/>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="glass-panel p-5 sm:p-6 rounded-3xl mb-8 relative transition-all">
-                       <label className="block text-[10px] font-bold text-gray-400 mb-3 uppercase tracking-[0.2em] ml-1">Select Application</label>
-                       <div className="relative w-full">
-                           <div onClick={() => setIsAppDropdownOpen(!isAppDropdownOpen)} className={uiInput + " h-14 pl-12 pr-10 flex items-center justify-between cursor-pointer hover:border-brand-primary/50 bg-[rgba(0,0,0,0.5)]"}>
-                               <span className="truncate text-white font-bold text-[13px] tracking-wide">{isFetchingServices ? 'Loading Apps...' : (currentService ? `${currentService.name}` : (availableServices.length > 0 ? 'Select App' : 'No services found'))}</span>
-                               {isFetchingServices ? <RefreshCw className="w-4 h-4 text-brand-primary absolute left-4 animate-spin"/> : <Smartphone className="w-4 h-4 text-brand-primary absolute left-4"/>}
-                               <ChevronDown className={`w-4 h-4 text-gray-400 absolute right-4 transition-transform ${isAppDropdownOpen ? 'rotate-180' : ''}`}/>
-                           </div>
-                       </div>
-                    </div>
-
-                    {selectedSmsService && (
-                        <button onClick={buySmsNumber} disabled={isSmsLoading || activeOrders.length > 0 || (!priceTiers || priceTiers.length === 0)} className="btn-animate w-full glass-effect hover:bg-white text-white hover:text-black font-bold py-4 rounded-2xl text-xs tracking-widest uppercase shadow-[0_5px_20px_rgba(255,255,255,0.1)] h-14 mt-4 relative z-10 max-w-md mx-auto flex items-center justify-center gap-2 animate-fade-in-up">
-                            {activeOrders.length > 0 ? <span className="flex items-center gap-2"><StopCircle className="w-4 h-4"/> Finish Order First</span> : isSmsLoading ? <span className="flex items-center gap-2"><RefreshCw className="w-4 h-4 animate-spin"/> Processing...</span> : 'Get Number'}
-                        </button>
-                    )}
-                </div>
-
-                <div ref={ordersContainerRef} className="w-full max-w-3xl mx-auto">
-                    {activeOrders.map((order, index) => {
-                        return (
-                            <div key={order.id} className="glass-effect order-card-anim rounded-3xl border border-white/20 flex flex-col items-center py-10 px-6 sm:px-10 animate-fade-in-up relative overflow-hidden group mt-8">
-                                <div className="absolute top-0 left-0 w-full h-[3px] bg-white/10">
-                                    <OrderProgressBar expiresAt={order.expiresAt} />
-                                </div>
-                                
-                                <div className="flex items-center gap-2.5 mb-8 glass-panel px-5 py-2.5 rounded-full border-white/20 relative z-10">
-                                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                                    <p className="text-white font-bold uppercase tracking-[0.3em] text-[10px] pt-0.5">{order.service}</p>
-                                </div>
-
-                                <div className="flex items-center gap-4 w-full max-w-md mb-10 relative z-10">
-                                    <div className="text-3xl sm:text-5xl font-mono font-bold text-white bg-[rgba(0,0,0,0.5)] px-6 py-6 rounded-2xl border border-white/10 flex-grow text-center whitespace-nowrap overflow-hidden text-ellipsis tracking-wider drop-shadow-md allow-select">
-                                        +{String(order.phone).replace(/\D/g, '')}
-                                    </div>
-                                    <button onClick={() => copyNumberOnly(order.phone)} className="btn-animate p-6 bg-white hover:bg-gray-200 text-black rounded-2xl shadow-[0_0_20px_rgba(255,255,255,0.2)] shrink-0">
-                                        <Copy className="w-6 h-6"/>
-                                    </button>
-                                </div>
-                                
-                                {order.codes.length === 0 ? (
-                                    <div className="w-full max-w-md relative z-10">
-                                        <p className="text-gray-400 font-mono text-[10px] uppercase tracking-widest mb-4 flex justify-center items-center gap-2"><RefreshCw className="w-3 h-3 animate-spin text-white"/> {order.lastMsg === 'WAITING' || !order.lastMsg ? 'Waiting for SMS...' : `Status: ${order.lastMsg}`}</p>
-                                        <div className="flex justify-between items-center bg-[rgba(0,0,0,0.5)] p-4 rounded-2xl border border-white/10">
-                                            <div className="flex items-center gap-3 pl-2">
-                                                <Clock className="w-4 h-4 text-gray-400 hidden sm:block"/>
-                                                <OrderTimerDisplay expiresAt={order.expiresAt} />
-                                            </div>
-                                            
-                                            <button onClick={() => setConfirmAction({show: true, type: 'skip', orderId: order.id, price: order.price})} className="btn-animate bg-red-900/20 hover:bg-red-900/40 border border-red-900/50 text-red-400 px-6 py-3 rounded-xl text-[10px] uppercase tracking-widest font-bold flex items-center gap-2"><Ban className="w-3.5 h-3.5"/> Skip</button>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="w-full max-w-md space-y-5 relative z-10 animate-swoosh-in">
-                                        <p className="text-[11px] text-green-400 font-bold uppercase tracking-[0.3em] text-center mb-5">SMS Received</p>
-                                        {order.codes.map((c, i) => {
-                                            return (
-                                                <div key={i} className="flex flex-col gap-4 bg-[rgba(255,255,255,0.05)] border border-brand-primary/30 p-5 rounded-2xl animate-fade-in-up" style={{animationDelay: `${i * 0.1}s`, animationFillMode: 'both'}}>
-                                                    <p className="text-sm text-white font-sans font-medium tracking-normal leading-relaxed text-left break-words drop-shadow-md allow-select">{c}</p>
-                                                    <button onClick={() => copyText(c)} className="btn-animate w-full py-3.5 bg-brand-primary text-black hover:bg-white rounded-xl flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest font-bold shadow-[0_0_15px_rgba(6,182,212,0.3)] shrink-0">
-                                                        <Copy className="w-4 h-4"/> Copy Full Message
-                                                    </button>
-                                                </div>
-                                            );
-                                        })}
-                                        <button onClick={() => setActiveOrders([])} className="btn-animate w-full glass-panel hover:bg-white/20 text-white font-bold py-4 px-6 rounded-2xl transition-all flex items-center justify-center gap-2 uppercase tracking-widest mt-8 !text-xs">Close Order</button>
-                                    </div>
-                                )}
-                            </div>
-                        )
-                    })}
-                </div>
-            </div>
-          );
         }
 
         // ==========================================
@@ -1752,7 +1258,6 @@
               }
           }, [hiddenInvoices, user]);
 
-          // 🟢 FIX: Modified to catch NOWPayments pending invoices
           const pendingCrypto = (deposits || []).find(d => {
               if (!d || d.email !== user?.email) return false;
               if (hiddenInvoices.includes(d.id)) return false; 
@@ -2331,7 +1836,7 @@
         // ==========================================
         // ADMIN DASHBOARD
         // ==========================================
-        function AdminDashboard({ inventory, orders, deposits, setDeposits, categories, usersDB, setUsersDB, purchases, tickets, triggerToast, promoSettings, globalNotice, featureSettings, bankSettings, cryptoSettings, customPayments, smsSettings, activeChats, activeTab, maintenanceSettings, isInitialSyncDone }) {
+        function AdminDashboard({ inventory, orders, deposits, setDeposits, categories, usersDB, setUsersDB, purchases, tickets, triggerToast, promoSettings, globalNotice, featureSettings, bankSettings, cryptoSettings, customPayments, activeChats, activeTab, maintenanceSettings, isInitialSyncDone }) {
           const [uploadCategory, setUploadCategory] = useState('new');
           const [uploadText, setUploadText] = useState('');
           const [customerSearch, setCustomerSearch] = useState('');
@@ -2347,9 +1852,6 @@
           
           const [dailyRewardActive, setDailyRewardActive] = useState(false);
           const [referralActive, setReferralActive] = useState(false);
-
-          const [smsMarkupInput, setSmsMarkupInput] = useState(1.00);
-          const [smsActiveInput, setSmsActiveInput] = useState(true);
 
           const [maintenanceActiveInput, setMaintenanceActiveInput] = useState(false);
           const [maintenanceMessageInput, setMaintenanceMessageInput] = useState('');
@@ -2393,14 +1895,12 @@
                 setBankAccountNumberInput(bankSettings?.accountNumber || '');
                 setDailyRewardActive(featureSettings?.dailyReward || false);
                 setReferralActive(featureSettings?.referral || false);
-                setSmsMarkupInput(smsSettings?.markup ?? 1.00);
-                setSmsActiveInput(smsSettings?.active ?? true);
                 setMaintenanceActiveInput(maintenanceSettings?.active || false);
                 setMaintenanceMessageInput(maintenanceSettings?.message || 'We are currently performing scheduled maintenance. Please check back later.');
                 
                 setInputsLoaded(true);
             }
-          }, [isInitialSyncDone, inputsLoaded, promoSettings, globalNotice, featureSettings, bankSettings, cryptoSettings, smsSettings, maintenanceSettings]);
+          }, [isInitialSyncDone, inputsLoaded, promoSettings, globalNotice, featureSettings, bankSettings, cryptoSettings, maintenanceSettings]);
 
           const handleAddProduct = async (e) => {
               e.preventDefault();
@@ -2598,11 +2098,6 @@
             } catch (err) { triggerToast('Network error.'); }
           };
 
-          const sendResetLinkToUser = async (userEmail) => {
-              try { await supabase.auth.resetPasswordForEmail(userEmail); triggerToast(`Link sent to ${userEmail}`); } 
-              catch (err) { triggerToast('Failed to send.'); }
-          };
-
           const handleManualApprove = async (depId) => {
             const dep = deposits.find(d => d.id === depId);
             if(!dep) return;
@@ -2665,7 +2160,6 @@
                   { id: 'PromoCode', data: { code: String(promoInput).toUpperCase(), discount: parseFloat(discountInput), isActive: promoActive } },
                   { id: 'Notice', data: { text: noticeInput } },
                   { id: 'Features', data: { dailyReward: dailyRewardActive, referral: referralActive } },
-                  { id: 'SMS', data: { markup: parseFloat(smsMarkupInput), active: smsActiveInput } },
                   { id: 'Bank', data: { bankName: bankNameInput, accountName: bankAccountNameInput, accountNumber: bankAccountNumberInput, nairaRate: parseFloat(nairaRateInput) || 1500, flutterwaveKey: flutterwaveKeyInput, flutterwaveActive: flutterwaveActiveInput } },
                   { id: 'Maintenance', data: { active: maintenanceActiveInput, message: maintenanceMessageInput } }
               ];
@@ -3134,18 +2628,6 @@
                              <label className="block text-[9px] font-bold text-gray-500 mb-2 uppercase tracking-widest">Flutterwave Public Key</label>
                              <input type="text" value={flutterwaveKeyInput} onChange={(e) => setFlutterwaveKeyInput(e.target.value)} placeholder="FLWPUBK_TEST-..." className={`${uiInput} allow-select font-mono`} />
                            </div>
-                        </div>
-
-                        <div className="space-y-5 pt-4 border-t border-white/10">
-                           <h3 className="text-[10px] font-bold text-white uppercase tracking-[0.3em]">SMS Settings</h3>
-                           <div>
-                             <label className="block text-[9px] font-bold text-gray-500 mb-2 uppercase tracking-widest">Added Profit per SMS ($)</label>
-                             <input type="number" step="0.01" value={smsMarkupInput} onChange={(e) => setSmsMarkupInput(e.target.value)} placeholder="1.00" className={`${uiInput} allow-select`} />
-                           </div>
-                           <label className="flex items-center gap-3 cursor-pointer mt-4 pl-1 bg-[rgba(0,0,0,0.5)] border border-white/5 p-4 rounded-xl transition-colors hover:border-white/20">
-                             <input type="checkbox" checked={smsActiveInput} onChange={(e) => setSmsActiveInput(e.target.checked)} className="w-4 h-4 rounded text-brand-primary focus:ring-brand-primary bg-[#000]" />
-                             <span className="text-xs font-bold text-white uppercase tracking-wider">Enable SMS Service Module</span>
-                           </label>
                         </div>
 
                         <div className="space-y-5 pt-4 border-t border-white/10">
