@@ -1060,117 +1060,14 @@
           );
         }
 
-        function LiveChatWidget({ user, setIncomingMsg }) {
-            const [isOpen, setIsOpen] = useState(false);
-            const [message, setMessage] = useState('');
-            const [chatMessages, setChatMessages] = useState([]);
-            const [unreadCount, setUnreadCount] = useState(0);
-            const messagesEndRef = useRef(null);
-
-            useEffect(() => {
-                const fetchChat = async () => {
-                    const { data } = await supabase.from('store_chats').select('*').eq('user_email', user.email).order('timestamp', { ascending: true });
-                    if (data) {
-                        const newMsgs = data.map(m => ({ id: m.id, ...m.data, timestamp: m.timestamp }));
-                        if(newMsgs.length > chatMessages.length && !isOpen) {
-                            const lastMsg = newMsgs[newMsgs.length - 1];
-                            if(lastMsg.sender === 'admin') {
-                                setIncomingMsg(lastMsg.text);
-                                setUnreadCount(prev => prev + 1);
-                            }
-                        }
-                        setChatMessages(newMsgs);
-                    }
-                };
-                fetchChat();
-                const intId = setInterval(fetchChat, 4000);
-                return () => clearInterval(intId);
-            }, [isOpen, user.email, setIncomingMsg, chatMessages.length]);
-
-            useEffect(() => { if (isOpen) { setUnreadCount(0); setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }), 100); } }, [isOpen, chatMessages]);
-
-            const sendMessage = async (e) => {
-                e.preventDefault();
-                if (!message.trim()) return;
-                const msgText = message;
-                setMessage(''); 
-                try {
-                    const token = await getAuthToken();
-                    await fetch(`${BACKEND_URL}/api/secure-action`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                        body: JSON.stringify({ action: 'send_chat', text: msgText })
-                    });
-                } catch(err) {}
-            };
-
-            return (
-                <>
-                    <button onClick={() => setIsOpen(!isOpen)} className="btn-animate fixed bottom-6 right-6 z-[150] w-14 h-14 bg-white rounded-full shadow-[0_4px_15px_rgba(255,255,255,0.3)] flex items-center justify-center text-black">
-                        {isOpen ? <X className="w-6 h-6" /> : <MessageSquare className="w-6 h-6" />}
-                        {!isOpen && unreadCount > 0 && (
-                            <span className="absolute -top-1 -right-1 bg-brand-primary text-black text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white animate-pulse shadow-lg">
-                                {unreadCount}
-                            </span>
-                        )}
-                    </button>
-                    {isOpen && (
-                        <div className="fixed bottom-24 right-6 z-[150] w-[340px] h-[480px] glass-effect rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] flex flex-col overflow-hidden origin-bottom-right animate-fade-in-up">
-                            <div className="bg-[rgba(255,255,255,0.05)] border-b border-white/10 p-5 flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                   <div className="w-2.5 h-2.5 bg-brand-primary rounded-full animate-pulse"></div>
-                                   <h3 className="text-white font-bold text-[11px] tracking-widest uppercase">Admin Support</h3>
-                                </div>
-                                <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white transition-colors"><X className="w-4 h-4"/></button>
-                            </div>
-                            <div className="flex-grow overflow-y-auto p-5 space-y-4 custom-scrollbar bg-transparent">
-                                {chatMessages.length === 0 ? (
-                                    <div className="h-full flex flex-col items-center justify-center opacity-40">
-                                        <Headset className="w-12 h-12 mb-4 text-white" strokeWidth={1.5} />
-                                        <p className="text-[10px] text-gray-300 font-mono text-center uppercase tracking-widest">Encrypted Channel Open</p>
-                                    </div>
-                                ) : (
-                                    chatMessages.map((msg, i) => (
-                                        <div key={msg.id} className={`flex flex-col animate-swoosh-in ${msg.sender === 'user' ? 'items-end' : 'items-start'}`} style={{animationDelay: `${i * 0.03}s`}}>
-                                            <div className={`px-4 py-3 rounded-2xl max-w-[85%] text-[12px] font-medium leading-relaxed shadow-lg allow-select ${msg.sender === 'user' ? 'bg-white text-black rounded-tr-sm' : 'glass-panel text-white rounded-tl-sm'}`}>
-                                                {msg.text}
-                                            </div>
-                                            <span className="text-[8px] text-gray-500 mt-1.5 font-mono tracking-wider">
-                                                {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Sending...'}
-                                            </span>
-                                        </div>
-                                    ))
-                                )}
-                                <div ref={messagesEndRef} />
-                            </div>
-                            <form onSubmit={sendMessage} className="bg-[rgba(0,0,0,0.5)] border-t border-white/10 p-4 flex gap-3 items-center">
-                                <input type="text" value={message} onChange={e => setMessage(e.target.value)} placeholder="Type a message..." className="glass-input allow-select !py-3"/>
-                                <button type="submit" disabled={!message.trim()} className="btn-animate bg-white text-black p-3.5 rounded-xl disabled:opacity-50"><Send className="w-4 h-4" /></button>
-                            </form>
-                        </div>
-                    )}
-                </>
-            );
-        }
-
-        // 🟢 FALLBACK APPS: In case Backend Server is Asleep or Fails 🟢
-        const FALLBACK_APPS = [
-            { code: "1", serviceId: "1", name: "Google", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "8", serviceId: "8", name: "WhatsApp", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "5", serviceId: "5", name: "Telegram", finalPrice: 3.10, baseCost: 2.10, prices: [{value: 3.10, quantity: 100}], originalPrice: 2.10 },
-            { code: "12", serviceId: "12", name: "Facebook", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "6", serviceId: "6", name: "Instagram", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "49", serviceId: "49", name: "Snapchat", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "17", serviceId: "17", name: "Netflix", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "2", serviceId: "2", name: "Microsoft / Outlook", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "4", serviceId: "4", name: "Twitter", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "10", serviceId: "10", name: "Discord", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "76", serviceId: "76", name: "Tiktok", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "26", serviceId: "26", name: "Amazon", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "3", serviceId: "3", name: "Uber", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "7", serviceId: "7", name: "Tinder", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "9", serviceId: "9", name: "Steam", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 },
-            { code: "11", serviceId: "11", name: "Yahoo", finalPrice: 2.58, baseCost: 1.58, prices: [{value: 2.58, quantity: 100}], originalPrice: 1.58 }
+        const usaStatesList = [
+            "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", 
+            "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", 
+            "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", 
+            "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", 
+            "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", 
+            "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", 
+            "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
         ];
 
         function CustomerDashboardSMS({ user, balance, triggerToast, smsSettings }) {
@@ -1183,9 +1080,8 @@
           const [smsCountry, setSmsCountry] = useState('USA'); 
           const [retryCount, setRetryCount] = useState(0); 
           
-          const [priceTiers, setPriceTiers] = useState([]);
-          const [selectedTier, setSelectedTier] = useState(null);
-          const [isTiersLoading, setIsTiersLoading] = useState(false);
+          const [targetState, setTargetState] = useState('');
+          const [duration, setDuration] = useState('15 minutes');
 
           const [confirmAction, setConfirmAction] = useState({ show: false, type: '', orderId: null, price: 0 });
           const [showSmsWarning, setShowSmsWarning] = useState(false);
@@ -1203,12 +1099,11 @@
               if (smsActive) {
                   setIsFetchingServices(true);
                   const controller = new AbortController();
-                  // 🟢 FIX: 60 sec timeout for initial Render sleep wakeup
                   const timeoutId = setTimeout(() => {
                       controller.abort();
                   }, 60000); 
 
-                  fetch(`${BACKEND_URL}/api/grizzly/getPrices?country=${smsCountry}`, { signal: controller.signal })
+                  fetch(`${BACKEND_URL}/api/sms/getRates?country=${smsCountry}`, { signal: controller.signal })
                   .then(async (r) => {
                       if(!r.ok) {
                           throw new Error(`HTTP Error ${r.status}`);
@@ -1220,19 +1115,34 @@
                       if (!json.success) {
                           triggerToast("API Warning: " + (json.message || "Could not load full list"));
                       }
-                      const srvs = json?.success && Array.isArray(json.data) && json.data.length > 0 ? json.data : [];
+                      const srvs = json?.success && Array.isArray(json.data) && json.data.length > 0 ? json.data.map(item => ({
+                          code: item.app, 
+                          name: `${item.app} ($${item.finalPrice})`,
+                          rawName: item.app,
+                          finalPrice: item.finalPrice
+                      })) : [];
                       
                       if (srvs.length > 0) {
                           setAvailableServices(srvs); 
                       } else {
                           triggerToast("Loaded offline backup apps.");
-                          setAvailableServices(FALLBACK_APPS.map(app => ({...app, countryId: smsCountry})));
+                          setAvailableServices(FALLBACK_APPS.map(app => ({
+                              ...app, 
+                              countryId: smsCountry,
+                              name: `${app.name} ($${app.finalPrice})`,
+                              rawName: app.name
+                          })));
                       }
                       setIsFetchingServices(false); 
                   }).catch((err) => { 
                       clearTimeout(timeoutId);
                       setIsFetchingServices(false); 
-                      setAvailableServices(FALLBACK_APPS.map(app => ({...app, countryId: smsCountry}))); 
+                      setAvailableServices(FALLBACK_APPS.map(app => ({
+                          ...app, 
+                          countryId: smsCountry,
+                          name: `${app.name} ($${app.finalPrice})`,
+                          rawName: app.name
+                      }))); 
                       if(err.name !== 'AbortError') {
                           console.error("Fetch Apps Error:", err);
                           triggerToast("Server connection failed: " + err.message);
@@ -1245,49 +1155,10 @@
               }
           }, [smsActive, smsCountry, retryCount]);
 
-          useEffect(() => {
-              if (selectedSmsService && smsCountry) {
-                  setIsTiersLoading(true);
-                  const controller = new AbortController();
-                  const timeoutId = setTimeout(() => controller.abort(), 45000); 
-                  
-                  fetch(`${BACKEND_URL}/api/grizzly/getServiceTiers?country=${smsCountry}&service=${selectedSmsService}`, { signal: controller.signal })
-                  .then(res => res.json()).then(data => { 
-                      clearTimeout(timeoutId);
-                      if (data?.success && Array.isArray(data?.tiers) && data.tiers.length > 0) { 
-                          setPriceTiers(data.tiers); setSelectedTier(data.tiers[0]); 
-                      } else { 
-                          // 🟢 FIX: Fallback Price if backend fails
-                          const fb = FALLBACK_APPS.find(a => a.code === selectedSmsService);
-                          if(fb) {
-                              const t = { originalPrice: fb.originalPrice, priceWithMarkup: fb.finalPrice };
-                              setPriceTiers([t]); setSelectedTier(t);
-                          } else {
-                              setPriceTiers([]); setSelectedTier(null); 
-                          }
-                      } 
-                      setIsTiersLoading(false); 
-                  }).catch(() => { 
-                      clearTimeout(timeoutId);
-                      const fb = FALLBACK_APPS.find(a => a.code === selectedSmsService);
-                      if(fb) {
-                          const t = { originalPrice: fb.originalPrice, priceWithMarkup: fb.finalPrice };
-                          setPriceTiers([t]); setSelectedTier(t);
-                      } else {
-                          setPriceTiers([]); setSelectedTier(null); 
-                      }
-                      setIsTiersLoading(false); 
-                  });
-                  return () => { clearTimeout(timeoutId); controller.abort(); };
-              }
-          }, [selectedSmsService, smsCountry]);
-
           const filteredApps = Array.isArray(availableServices) ? availableServices.filter(app => (app?.name || '').toLowerCase().includes((appSearch || '').toLowerCase())) : [];
 
           const currentService = availableServices.find(s => s?.code === selectedSmsService) || null;
-          const fallbackPrice = currentService?.finalPrice ? parseFloat(currentService.finalPrice) : 0;
-          const finalBuyPrice = selectedTier?.priceWithMarkup ? parseFloat(selectedTier.priceWithMarkup) : fallbackPrice;
-          const exactMaxPrice = selectedTier?.originalPrice ? parseFloat(selectedTier.originalPrice) : null;
+          const finalBuyPrice = currentService?.finalPrice ? parseFloat(currentService.finalPrice) : 0;
 
           const buySmsNumber = async () => {
               if (!currentService) return;
@@ -1298,9 +1169,15 @@
               try {
                   const token = await getAuthToken(); 
                   
-                  const res = await fetch(`${BACKEND_URL}/api/juicy/getNumber`, {
+                  const res = await fetch(`${BACKEND_URL}/api/sms/getNumber`, {
                       method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                      body: JSON.stringify({ serviceId: currentService.code, countryId: smsCountry, maxPrice: exactMaxPrice, requestedPrice: finalBuyPrice }) 
+                      body: JSON.stringify({ 
+                          country: smsCountry, 
+                          appName: currentService.rawName || currentService.name, 
+                          duration: duration,
+                          targetState: targetState,
+                          maxPrice: finalBuyPrice 
+                      }) 
                   });
                   
                   if (!res.ok) { triggerToast(`Server Error ${res.status}`); setIsSmsLoading(false); return; }
@@ -1308,10 +1185,24 @@
                   const data = await res.json();
                   
                   if (data?.success && data?.phone) {
-                      const cleanName = (currentService.name || '').split(' [')[0];
-                      const newOrder = { id: data.orderId, phone: data.phone, service: cleanName, countryId: smsCountry, price: finalBuyPrice, status: 'ACTIVE', codes: [], expiresAt: Date.now() + 240 * 1000, isCancelling: false, isNew: true };
+                      const cleanName = (currentService.rawName || currentService.name).split(' [')[0];
+                      const newOrder = { 
+                          id: data.orderId, 
+                          phone: data.phone, 
+                          service: cleanName, 
+                          countryId: smsCountry, 
+                          price: finalBuyPrice, 
+                          status: 'ACTIVE', 
+                          codes: [], 
+                          expiresAt: Date.now() + 240 * 1000, 
+                          isCancelling: false, 
+                          isNew: true,
+                          receivedAreaCode: data.receivedAreaCode,
+                          stateName: data.stateName,
+                          duration: duration
+                      };
                       setActiveOrders(prev => [newOrder, ...prev]); 
-                      triggerToast("Number assigned!");
+                      triggerToast("100% Match! Number acquired successfully.");
                       
                       setShowSmsWarning(true);
 
@@ -1329,22 +1220,16 @@
           const performSkip = async (orderId, priceToRefund, isAuto = false) => {
               try {
                   const token = await getAuthToken();
-                  const skipRes = await fetch(`${BACKEND_URL}/api/juicy/skip`, { method: 'POST', headers: {'Content-Type':'application/json', 'Authorization': `Bearer ${token}`}, body: JSON.stringify({orderId}) }); 
+                  const skipRes = await fetch(`${BACKEND_URL}/api/sms/cancel`, { method: 'POST', headers: {'Content-Type':'application/json', 'Authorization': `Bearer ${token}`}, body: JSON.stringify({orderId}) }); 
                   const skipData = await skipRes.json();
                   
                   if (!skipData.success) { 
                       if (!isAuto) triggerToast(skipData.message); 
-                      if (String(skipData.message).includes('received')) { setActiveOrders(prev => prev.map(o => o.id === orderId ? {...o, isCancelling: false} : o)); }
+                      if (String(skipData.message).toLowerCase().includes('received')) { setActiveOrders(prev => prev.map(o => o.id === orderId ? {...o, isCancelling: false} : o)); }
                       return; 
                   }
                   
-                  await fetch(`${BACKEND_URL}/api/sms-refund`, { 
-                      method: 'POST', 
-                      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, 
-                      body: JSON.stringify({ orderId: orderId }) 
-                  });
-                  
-                  if(!isAuto) triggerToast(`Skipped. $${priceToRefund.toFixed(2)} refunded.`); 
+                  if(!isAuto) triggerToast(`Canceled. $${priceToRefund.toFixed(2)} refunded.`); 
                   else triggerToast(`Time expired. Auto-refunded.`);
                   
                   setActiveOrders(prev => prev.filter(o => o.id !== orderId));
@@ -1372,7 +1257,7 @@
                           return;
                       }
                       try {
-                          const res = await fetch(`${BACKEND_URL}/api/juicy/getStatus?orderId=${order.id}`);
+                          const res = await fetch(`${BACKEND_URL}/api/sms/getStatus?orderId=${order.id}`);
                           const data = await res.json();
                           if (data.success && data.status === 'OK' && data.code) {
                               setActiveOrders(prev => prev.map(o => {
@@ -1395,7 +1280,6 @@
              else { const t = document.createElement("textarea"); t.value = text; document.body.appendChild(t); t.select(); document.execCommand("copy"); document.body.removeChild(t); triggerToast("Copied!"); }
           };
 
-          const formatPhoneDisplay = (phone) => { return `+${String(phone).replace(/\D/g, '')}`; };
           const copyNumberOnly = (phone) => { copyText(String(phone).replace(/\D/g, '')); };
 
           if(smsSettings?.active === false) return <div className="glass-effect rounded-3xl w-full text-center py-32 text-gray-500 font-mono text-sm uppercase tracking-widest"><Smartphone className="w-12 h-12 mx-auto mb-4 opacity-30" strokeWidth={1.5}/> Service Offline.</div>;
@@ -1413,7 +1297,7 @@
                                 <h3 className="text-base font-bold text-white tracking-widest uppercase">Important Notice</h3>
                             </div>
                             <p className="text-sm text-gray-300 leading-relaxed font-medium mb-8">
-                                If the number shows that the phone number is already registered on another device then please don't request code. Skip it immediately to get a refund.
+                                If the number shows that the phone number is already registered on another device then please don't request code. Cancel it immediately to get a refund.
                             </p>
                             <button onClick={() => setShowSmsWarning(false)} className="btn-animate w-full py-4 rounded-xl font-bold text-black text-xs uppercase tracking-widest bg-yellow-500 hover:bg-yellow-400">
                                 I Understand
@@ -1431,14 +1315,14 @@
                                 <div className="p-3.5 rounded-2xl glass-panel text-red-500 border border-red-500/30">
                                     <Ban className="w-6 h-6"/>
                                 </div>
-                                <h3 className="text-base font-bold text-white tracking-widest uppercase">Skip Number?</h3>
+                                <h3 className="text-base font-bold text-white tracking-widest uppercase">Cancel Number?</h3>
                             </div>
                             <p className="text-xs text-gray-300 leading-relaxed font-light mb-8">
-                                Are you sure you want to skip this number? It will be banned and balance refunded.
+                                Are you sure you want to cancel this number? It will be banned and balance refunded.
                             </p>
                             <div className="flex gap-3 w-full">
-                                <button onClick={() => setConfirmAction({ show: false, type: '', orderId: null, price: 0 })} className="btn-animate flex-1 py-3.5 rounded-xl font-bold text-gray-300 glass-panel hover:bg-white/10 text-xs uppercase tracking-widest">Cancel</button>
-                                <button onClick={executeConfirmAction} className="btn-animate flex-1 py-3.5 rounded-xl font-bold text-white text-xs uppercase tracking-widest bg-red-600 hover:bg-red-500 border border-red-500/50">Yes, Skip</button>
+                                <button onClick={() => setConfirmAction({ show: false, type: '', orderId: null, price: 0 })} className="btn-animate flex-1 py-3.5 rounded-xl font-bold text-gray-300 glass-panel hover:bg-white/10 text-xs uppercase tracking-widest">Keep</button>
+                                <button onClick={executeConfirmAction} className="btn-animate flex-1 py-3.5 rounded-xl font-bold text-white text-xs uppercase tracking-widest bg-red-600 hover:bg-red-500 border border-red-500/50">Yes, Cancel</button>
                             </div>
                         </div>
                     </div>,
@@ -1504,11 +1388,11 @@
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 relative z-10 mb-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 relative z-10 mb-5">
                         <div className="glass-panel p-4 rounded-2xl hover:border-brand-primary/30 transition-colors">
                             <label className="block text-[9px] font-bold text-gray-400 mb-2.5 uppercase tracking-[0.2em] ml-1">Select Region</label>
                             <div className="relative">
-                                <select value={smsCountry} onChange={e => setSmsCountry(e.target.value)} className={uiInput + " appearance-none cursor-pointer pr-10 text-white h-12 bg-transparent allow-select"}>
+                                <select value={smsCountry} onChange={e => { setSmsCountry(e.target.value); setTargetState(''); }} className={uiInput + " appearance-none cursor-pointer pr-10 text-white h-12 bg-transparent allow-select"}>
                                     {NETWORK_REGIONS.map(c => <option key={c.id} value={c.id} className="bg-[#121212]">{c.name}</option>)}
                                 </select>
                                 <ChevronDown className="w-4 h-4 text-white absolute right-4 top-4 pointer-events-none" />
@@ -1516,44 +1400,58 @@
                         </div>
 
                         <div className="glass-panel p-4 rounded-2xl hover:border-brand-primary/30 transition-colors">
-                            <label className="block text-[9px] font-bold text-gray-400 mb-2.5 uppercase tracking-[0.2em] ml-1">Select Price</label>
+                            <label className="block text-[9px] font-bold text-gray-400 mb-2.5 uppercase tracking-[0.2em] ml-1">Target State (USA only)</label>
                             <div className="relative w-full">
                                 <select 
-                                    value={selectedTier?.originalPrice ? String(selectedTier.originalPrice) : ''}
-                                    onChange={(e) => { const tier = Array.isArray(priceTiers) ? priceTiers.find(t => String(t?.originalPrice) === e.target.value) : null; if(tier) setSelectedTier(tier); }}
-                                    disabled={isTiersLoading || (!Array.isArray(priceTiers)) || priceTiers.length === 0}
-                                    className={uiInput + " h-12 pl-10 appearance-none cursor-pointer text-[13px] font-mono text-white bg-transparent disabled:opacity-50 allow-select"}
+                                    value={targetState}
+                                    onChange={(e) => setTargetState(e.target.value)}
+                                    disabled={smsCountry !== 'USA'}
+                                    className={uiInput + " h-12 appearance-none cursor-pointer text-[13px] font-mono text-white bg-transparent disabled:opacity-50 allow-select"}
                                 >
-                                    {isTiersLoading ? (
-                                        <option value="" className="text-xs bg-[#121212] text-gray-500">...</option>
-                                    ) : (Array.isArray(priceTiers) && priceTiers.length > 0) ? (
-                                        priceTiers.map((tier, idx) => (
-                                            <option key={idx} value={String(tier.originalPrice)} className="bg-[#121212] text-gray-200">${Number(tier.priceWithMarkup || 0).toFixed(2)}</option>
-                                        ))
-                                    ) : (
-                                        <option value="" className="bg-[#121212] text-gray-500">$0.00</option>
-                                    )}
+                                    <option value="" className="bg-[#121212] text-gray-200">Any State (Random)</option>
+                                    {usaStatesList.map(st => (
+                                        <option key={st} value={st} className="bg-[#121212] text-gray-200">{st}</option>
+                                    ))}
                                 </select>
-                                <DollarSign className="w-4 h-4 text-gray-400 absolute left-3.5 top-4 pointer-events-none"/>
                                 <ChevronDown className="w-4 h-4 text-gray-600 absolute right-4 top-4 pointer-events-none"/>
                             </div>
                         </div>
                     </div>
 
-                    <div className="glass-panel p-5 sm:p-6 rounded-3xl mb-8 relative transition-all">
-                       <label className="block text-[10px] font-bold text-gray-400 mb-3 uppercase tracking-[0.2em] ml-1">Select Application</label>
-                       <div className="relative w-full">
-                           <div onClick={() => setIsAppDropdownOpen(!isAppDropdownOpen)} className={uiInput + " h-14 pl-12 pr-10 flex items-center justify-between cursor-pointer hover:border-brand-primary/50 bg-[rgba(0,0,0,0.5)]"}>
-                               <span className="truncate text-white font-bold text-[13px] tracking-wide">{isFetchingServices ? 'Loading Apps...' : (currentService ? `${currentService.name}` : (availableServices.length > 0 ? 'Select App' : 'No services found'))}</span>
-                               {isFetchingServices ? <RefreshCw className="w-4 h-4 text-brand-primary absolute left-4 animate-spin"/> : <Smartphone className="w-4 h-4 text-brand-primary absolute left-4"/>}
-                               <ChevronDown className={`w-4 h-4 text-gray-400 absolute right-4 transition-transform ${isAppDropdownOpen ? 'rotate-180' : ''}`}/>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 relative z-10 mb-8">
+                        <div className="glass-panel p-5 sm:p-6 rounded-3xl relative transition-all">
+                           <label className="block text-[10px] font-bold text-gray-400 mb-3 uppercase tracking-[0.2em] ml-1">Select Application</label>
+                           <div className="relative w-full">
+                               <div onClick={() => setIsAppDropdownOpen(!isAppDropdownOpen)} className={uiInput + " h-14 pl-12 pr-10 flex items-center justify-between cursor-pointer hover:border-brand-primary/50 bg-[rgba(0,0,0,0.5)]"}>
+                                   <span className="truncate text-white font-bold text-[13px] tracking-wide">{isFetchingServices ? 'Loading Apps...' : (currentService ? `${currentService.name}` : (availableServices.length > 0 ? 'Select App' : 'No services found'))}</span>
+                                   {isFetchingServices ? <RefreshCw className="w-4 h-4 text-brand-primary absolute left-4 animate-spin"/> : <Smartphone className="w-4 h-4 text-brand-primary absolute left-4"/>}
+                                   <ChevronDown className={`w-4 h-4 text-gray-400 absolute right-4 transition-transform ${isAppDropdownOpen ? 'rotate-180' : ''}`}/>
+                               </div>
                            </div>
-                       </div>
+                        </div>
+
+                        <div className="glass-panel p-5 sm:p-6 rounded-3xl relative transition-all">
+                           <label className="block text-[10px] font-bold text-gray-400 mb-3 uppercase tracking-[0.2em] ml-1">Duration</label>
+                           <div className="relative w-full">
+                               <select 
+                                   value={duration}
+                                   onChange={e => setDuration(e.target.value)}
+                                   className={uiInput + " h-14 appearance-none cursor-pointer text-[13px] font-bold text-white bg-[rgba(0,0,0,0.5)] allow-select"}
+                               >
+                                   <option value="15 minutes" className="bg-[#121212] text-gray-200">15 minutes (Regular)</option>
+                                   <option value="3 days" className="bg-[#121212] text-gray-200">3 days (Rent)</option>
+                                   <option value="7 days" className="bg-[#121212] text-gray-200">7 days (Rent)</option>
+                                   <option value="14 days" className="bg-[#121212] text-gray-200">14 days (Rent)</option>
+                                   <option value="25 days" className="bg-[#121212] text-gray-200">25 days (Rent)</option>
+                               </select>
+                               <ChevronDown className="w-4 h-4 text-gray-600 absolute right-4 top-5 pointer-events-none"/>
+                           </div>
+                        </div>
                     </div>
 
                     {selectedSmsService && (
-                        <button onClick={buySmsNumber} disabled={isSmsLoading || activeOrders.length > 0 || (!priceTiers || priceTiers.length === 0)} className="btn-animate w-full glass-effect hover:bg-white text-white hover:text-black font-bold py-4 rounded-2xl text-xs tracking-widest uppercase shadow-[0_5px_20px_rgba(255,255,255,0.1)] h-14 mt-4 relative z-10 max-w-md mx-auto flex items-center justify-center gap-2 animate-fade-in-up">
-                            {activeOrders.length > 0 ? <span className="flex items-center gap-2"><StopCircle className="w-4 h-4"/> Finish Order First</span> : isSmsLoading ? <span className="flex items-center gap-2"><RefreshCw className="w-4 h-4 animate-spin"/> Processing...</span> : 'Get Number'}
+                        <button onClick={buySmsNumber} disabled={isSmsLoading || activeOrders.length > 0 || finalBuyPrice <= 0} className="btn-animate w-full glass-effect hover:bg-white text-white hover:text-black font-bold py-4 rounded-2xl text-xs tracking-widest uppercase shadow-[0_5px_20px_rgba(255,255,255,0.1)] h-14 mt-4 relative z-10 max-w-md mx-auto flex items-center justify-center gap-2 animate-fade-in-up">
+                            {activeOrders.length > 0 ? <span className="flex items-center gap-2"><StopCircle className="w-4 h-4"/> Finish Order First</span> : isSmsLoading ? <span className="flex items-center gap-2"><RefreshCw className="w-4 h-4 animate-spin"/> Hunting Number...</span> : 'Find Exact Number'}
                         </button>
                     )}
                 </div>
@@ -1566,9 +1464,18 @@
                                     <OrderProgressBar expiresAt={order.expiresAt} />
                                 </div>
                                 
-                                <div className="flex items-center gap-2.5 mb-8 glass-panel px-5 py-2.5 rounded-full border-white/20 relative z-10">
-                                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                                    <p className="text-white font-bold uppercase tracking-[0.3em] text-[10px] pt-0.5">{order.service}</p>
+                                <div className="flex flex-col items-center gap-2.5 mb-8 relative z-10">
+                                    <div className="flex items-center gap-2 glass-panel px-5 py-2.5 rounded-full border-white/20">
+                                        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                        <p className="text-white font-bold uppercase tracking-[0.3em] text-[10px] pt-0.5">{order.service}</p>
+                                    </div>
+                                    
+                                    {order.receivedAreaCode && (
+                                        <span className="text-[10px] font-bold text-green-800 bg-green-100 px-3 py-1.5 rounded-full border border-green-300 shadow-sm flex items-center gap-1 mt-2">
+                                            <CheckCircle className="w-3 h-3"/> 100% Match: {order.stateName} ({order.receivedAreaCode})
+                                        </span>
+                                    )}
+                                    <span className="text-[9px] text-gray-400 font-mono uppercase mt-1">Duration: {order.duration || '15 minutes'}</span>
                                 </div>
 
                                 <div className="flex items-center gap-4 w-full max-w-md mb-10 relative z-10">
@@ -1589,7 +1496,7 @@
                                                 <OrderTimerDisplay expiresAt={order.expiresAt} />
                                             </div>
                                             
-                                            <button onClick={() => setConfirmAction({show: true, type: 'skip', orderId: order.id, price: order.price})} className="btn-animate bg-red-900/20 hover:bg-red-900/40 border border-red-900/50 text-red-400 px-6 py-3 rounded-xl text-[10px] uppercase tracking-widest font-bold flex items-center gap-2"><Ban className="w-3.5 h-3.5"/> Skip</button>
+                                            <button onClick={() => setConfirmAction({show: true, type: 'skip', orderId: order.id, price: order.price})} className="btn-animate bg-red-900/20 hover:bg-red-900/40 border border-red-900/50 text-red-400 px-6 py-3 rounded-xl text-[10px] uppercase tracking-widest font-bold flex items-center gap-2"><Ban className="w-3.5 h-3.5"/> Cancel</button>
                                         </div>
                                     </div>
                                 ) : (
@@ -2248,84 +2155,6 @@
               )}
             </div>
           );
-        }
-
-        // ==========================================
-        // CART MODAL
-        // ==========================================
-        function CartModal({ cart, setCart, setShowCart, balance, user, promoSettings, triggerToast, addNotification }) {
-            const [isCheckingOut, setIsCheckingOut] = useState(false);
-            const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
-            const discountAmount = promoSettings?.isActive ? (totalAmount * (promoSettings.discount / 100)) : 0;
-            const finalAmount = totalAmount - discountAmount;
-
-            const handleCheckout = async () => {
-                if (balance < finalAmount) { triggerToast("Insufficient balance. Add funds."); return; }
-                setIsCheckingOut(true);
-                let serverWakeTimer = setTimeout(() => { triggerToast("Please wait..."); }, 4000);
-                try {
-                    const token = await getAuthToken();
-                    const response = await fetch(`${BACKEND_URL}/api/checkout`, {
-                        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ cart: cart })
-                    });
-                    clearTimeout(serverWakeTimer);
-                    if (!response.ok) throw new Error("Network error");
-                    const result = await response.json();
-                    if (result.success) {
-                        triggerToast(`Successfully purchased ${cart.length} item(s).`);
-                        addNotification("Purchase Success", `You bought ${cart.length} item(s).`);
-                        setCart([]); setShowCart(false);
-                    } else triggerToast("Error: " + result.message);
-                } catch(e) { clearTimeout(serverWakeTimer); triggerToast("Purchase failed. Try again."); } 
-                finally { setIsCheckingOut(false); }
-            };
-
-            return createPortal(
-                <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-[#000]/80 backdrop-blur-sm animate-fade-in-up">
-                    <div className="glass-effect shadow-[0_20px_50px_rgba(0,0,0,0.8)] rounded-3xl w-full max-w-md p-6 sm:p-8 border border-white/20 bg-[#0f172a]">
-                        <div className="flex justify-between items-center mb-6 pb-4 border-b border-white/10">
-                            <h3 className="text-sm font-bold tracking-widest text-white flex items-center gap-2 uppercase"><ShoppingCart className="w-4 h-4"/> Your Cart</h3>
-                            <button type="button" onClick={() => setShowCart(false)} className="btn-animate p-2 bg-black/50 hover:bg-white/10 rounded-full text-gray-400 border border-white/10"><X className="w-3.5 h-3.5" /></button>
-                        </div>
-                        {cart.length === 0 ? (
-                            <div className="text-center py-16 text-gray-500 flex flex-col items-center">
-                                <ShoppingCart className="w-12 h-12 mb-4 opacity-20" strokeWidth={1} />
-                                <p className="font-mono text-[10px] uppercase tracking-widest">Cart is empty.</p>
-                            </div>
-                        ) : (
-                            <div className="space-y-6">
-                                <div className="max-h-60 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
-                                    {cart.map((item, idx) => (
-                                        <div key={idx} className="flex justify-between items-center p-4 bg-black/40 border border-white/10 rounded-2xl group hover:border-white/30 transition-colors animate-fade-in-up" style={{animationDelay: `${idx * 0.05}s`}}>
-                                            <div className="flex flex-col">
-                                                <span className="text-xs font-bold text-white uppercase tracking-wider">
-                                                    {item.name}
-                                                </span>
-                                                {item.selectedState && item.selectedState !== 'Random' && (
-                                                    <span className="text-[9px] text-gray-400 mt-1 font-mono uppercase bg-[#111] w-fit px-2 py-0.5 rounded border border-[#222]">State: {item.selectedState}</span>
-                                                )}
-                                            </div>
-                                            <div className="flex items-center gap-4">
-                                                <span className="text-sm font-mono font-bold text-white">${item.price.toFixed(2)}</span>
-                                                <button type="button" onClick={() => setCart(cart.filter((_, i) => i !== idx))} className="btn-animate p-2 bg-red-900/20 text-red-500 hover:bg-red-900/50 rounded-lg border border-red-900/30"><Trash2 className="w-3.5 h-3.5"/></button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="border-t border-white/10 pt-5 space-y-3">
-                                    <div className="flex justify-between text-[10px] text-gray-400 font-mono uppercase tracking-widest"><span>Subtotal:</span><span>${totalAmount.toFixed(2)}</span></div>
-                                    {promoSettings?.isActive && discountAmount > 0 && <div className="flex justify-between text-[10px] text-green-400 font-mono uppercase tracking-widest"><span>Discount ({promoSettings.discount}%):</span><span>-${discountAmount.toFixed(2)}</span></div>}
-                                    <div className="flex justify-between text-xl font-bold font-mono text-white pt-4 border-t border-white/10"><span>Total:</span><span>${finalAmount.toFixed(2)}</span></div>
-                                </div>
-                                <button type="button" onClick={handleCheckout} disabled={isCheckingOut || balance < finalAmount} className="btn-animate w-full bg-white text-black font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 tracking-widest uppercase text-xs mt-6">
-                                    {isCheckingOut ? 'Processing...' : (balance < finalAmount ? 'Not Enough Balance' : 'Confirm Purchase')}
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                </div>,
-                document.body
-            );
         }
 
         // ==========================================
@@ -3018,50 +2847,6 @@
                           </table>
                           {(!purchases || purchases.length === 0) && <p className="text-center py-16 text-gray-600 font-mono text-[10px] uppercase tracking-widest">No purchases yet.</p>}
                         </div>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'deposits' && (
-                  <div className="glass-effect rounded-3xl w-full border border-white/10 overflow-hidden">
-                    <div className="p-5 sm:p-6 border-b border-white/10 flex items-center justify-between bg-[rgba(0,0,0,0.5)]">
-                      <h2 className="text-sm font-bold tracking-[0.2em] uppercase text-white">Deposits</h2>
-                      {pendingDeposits.length > 0 && <span className="bg-white text-black px-3 py-1.5 rounded text-[9px] uppercase tracking-widest font-bold animate-pulse">{pendingDeposits.length} Pending</span>}
-                    </div>
-                    <div className="overflow-x-auto w-full bg-transparent">
-                      <table className="w-full text-left whitespace-nowrap text-sm">
-                        <thead className="bg-[#000] text-gray-500 font-bold border-b border-white/5 text-[10px] uppercase tracking-[0.2em]">
-                          <tr><th className="p-4 sm:p-5">TxID / Date</th><th className="p-4 sm:p-5">User / Method</th><th className="p-4 sm:p-5">Amount</th><th className="p-4 sm:p-5 text-right">Status</th></tr>
-                        </thead>
-                        <tbody className="divide-y divide-white/5">
-                          {deposits.map((dep, idx) => {
-                            const isPending = String(dep.data?.status || dep.status || '').includes('Pending') || String(dep.data?.status || dep.status || '').includes('Awaiting');
-                            return (
-                              <tr key={dep.id} className="hover:bg-[rgba(255,255,255,0.05)] transition-colors animate-fade-in-up" style={{animationDelay: `${idx * 0.05}s`}}>
-                                <td className="p-4 sm:p-5">
-                                  <p className="font-mono text-white font-bold text-[10px] truncate max-w-[120px] allow-select">{String(dep.data?.txId || dep.id || '')}</p>
-                                  <p className="text-[9px] text-gray-500 mt-1.5 font-mono uppercase tracking-widest">{safeFormatDate(dep.data?.date || dep.date)}</p>
-                                </td>
-                                <td className="p-4 sm:p-5">
-                                  <p className="text-gray-200 font-medium text-xs allow-select">{String(dep.email || '')}</p>
-                                  <p className="text-[9px] text-gray-500 mt-1.5 font-mono uppercase tracking-widest">{String(dep.data?.method || dep.method || '')}</p>
-                                </td>
-                                <td className="p-4 sm:p-5 font-mono font-bold text-white">${Number(dep.data?.amount || dep.amount || 0).toFixed(2)}</td>
-                                <td className="p-4 sm:p-5 text-right">
-                                  <div className="flex flex-col items-end gap-2">
-                                    <span className={`text-[9px] uppercase tracking-[0.2em] font-bold ${(dep.data?.status || dep.status) === 'Approved' ? 'text-green-500' : isPending ? 'text-white' : 'text-red-500'}`}>{String(dep.data?.status || dep.status || '')}</span>
-                                    {isPending && (
-                                        <button type="button" onClick={() => handleManualApprove(dep.id)} className="btn-animate bg-white text-black border border-white px-3 py-1.5 rounded text-[9px] uppercase tracking-widest font-bold transition-all mt-1">
-                                            Approve
-                                        </button>
-                                    )}
-                                  </div>
-                                </td>
-                              </tr>
-                            )
-                          })}
-                        </tbody>
-                      </table>
                     </div>
                   </div>
                 )}
