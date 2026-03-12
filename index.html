@@ -669,10 +669,10 @@
                                         <option value="25 days" className="bg-black">25 Days</option>
                                     </select>
                                     <div className="flex gap-2">
-                                        <button onClick={handleRenew} disabled={renewStatus==='processing'} className="flex-1 bg-brand-primary hover:bg-white text-black font-bold py-2 rounded-lg text-[9px] uppercase tracking-widest transition-colors flex justify-center items-center">
+                                        <button onClick={handleRenew} disabled={renewStatus==='processing'} className="flex-1 bg-brand-primary hover:bg-white text-black font-bold py-2 rounded-lg text-[9px] uppercase tracking-widest transition-colors flex justify-center items-center btn-animate">
                                             {renewStatus==='processing' ? <RefreshCw className="w-3 h-3 animate-spin"/> : 'Confirm'}
                                         </button>
-                                        <button onClick={() => setIsRenewing(false)} className="flex-1 bg-red-900/30 hover:bg-red-900/50 text-red-400 font-bold py-2 rounded-lg text-[9px] uppercase tracking-widest border border-red-900/50 transition-colors">Cancel</button>
+                                        <button onClick={() => setIsRenewing(false)} className="flex-1 bg-red-900/30 hover:bg-red-900/50 text-red-400 font-bold py-2 rounded-lg text-[9px] uppercase tracking-widest border border-red-900/50 transition-colors btn-animate">Cancel</button>
                                     </div>
                                 </div>
                             )}
@@ -1005,7 +1005,9 @@
                 <div className="w-full max-w-[400px] animate-matrix-in z-10">
                   <div className="flex flex-col items-center mb-8">
                     <EliteLogo className="w-20 h-20 mb-4 drop-shadow-[0_0_15px_rgba(191,149,63,0.5)]" />
-                    <h2 className="text-4xl sm:text-5xl font-bold tracking-[0.2em] text-white uppercase text-center drop-shadow-md">Verify<span className="font-light text-brand-primary">Hub</span></h2>
+                    <h2 className="text-4xl sm:text-5xl font-bold tracking-[0.2em] text-white uppercase text-center w-full drop-shadow-lg">
+                      Verify<span className="text-brand-primary font-light">Hub</span>
+                    </h2>
                     <div className="text-sm tracking-[0.5em] text-yellow-500 font-bold mt-2">ELITE</div>
                   </div>
                   
@@ -1437,7 +1439,7 @@
                                     
                                     <div className="space-y-6">
                                         {/* Country Select (Custom Searchable) */}
-                                        <div className="relative">
+                                        <div className="relative z-50">
                                             <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em] pl-1">Select Country</label>
                                             <SearchableDropdown 
                                                 options={countryOptions} 
@@ -1449,7 +1451,7 @@
                                         </div>
 
                                         {/* Service Select (Custom Searchable) */}
-                                        <div className="relative">
+                                        <div className="relative z-40">
                                             <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em] pl-1">Platform / Service</label>
                                             {isLoadingRates ? (
                                                 <div className="glass-input py-4 flex items-center justify-center opacity-50">
@@ -1469,7 +1471,7 @@
                                         </div>
 
                                         {/* Duration Select */}
-                                        <div>
+                                        <div className="relative z-30">
                                             <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em] pl-1">Rental Duration</label>
                                             <div className="relative">
                                                 <select value={selectedDuration} onChange={e => setSelectedDuration(e.target.value)} className="glass-input allow-select font-bold uppercase tracking-wider text-[10px] sm:text-xs py-4 appearance-none cursor-pointer hover:border-brand-primary/50 transition-colors shadow-inner">
@@ -1795,7 +1797,8 @@
                   
                   if(result.success && result.url) {
                       window.open(result.url, '_blank'); 
-                      triggerToast("Invoice created. Please pay in the new tab.");
+                      triggerToast("Invoice created. Redirecting to payment page...");
+                      setCryptoAmountInput('');
                   } else {
                       triggerToast(result.message || "Failed to generate invoice.");
                   }
@@ -1895,6 +1898,7 @@
                             </div>
                           </div>
                           <button type="submit" disabled={isGenerating} className="btn-animate w-full bg-white text-black font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 tracking-widest uppercase text-xs h-12 mt-2 disabled:opacity-50">
+                              {isGenerating ? <RefreshCw className="w-4 h-4 animate-spin"/> : <DollarSign className="w-4 h-4"/>}
                               {isGenerating ? 'Processing...' : 'Pay with Crypto'}
                           </button>
                         </form>
