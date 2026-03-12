@@ -1109,7 +1109,7 @@
                 <div className="w-full relative tab-transition-enter" key={activeTab}>
                     <ErrorBoundary>
                         {user.role === 'admin' ? (
-                          <AdminDashboard inventory={inventory} orders={allOrders} deposits={deposits} setDeposits={setDeposits} categories={categories} usersDB={usersDB} setUsersDB={setUsersDB} purchases={purchases} tickets={tickets} triggerToast={triggerToast} promoSettings={promoSettings} globalNotice={globalNotice} featureSettings={featureSettings} bankSettings={bankSettings} cryptoSettings={cryptoSettings} customPayments={customPayments} activeChats={activeChats} activeTab={activeTab} maintenanceSettings={maintenanceSettings} isInitialSyncDone={isInitialSyncDone} smsSettings={smsSettings} setSmsSettings={setSmsSettings} />
+                          <AdminDashboard inventory={inventory} setInventory={setInventory} orders={allOrders} deposits={deposits} setDeposits={setDeposits} categories={categories} usersDB={usersDB} setUsersDB={setUsersDB} purchases={purchases} tickets={tickets} triggerToast={triggerToast} promoSettings={promoSettings} globalNotice={globalNotice} featureSettings={featureSettings} bankSettings={bankSettings} cryptoSettings={cryptoSettings} customPayments={customPayments} activeChats={activeChats} activeTab={activeTab} maintenanceSettings={maintenanceSettings} isInitialSyncDone={isInitialSyncDone} smsSettings={smsSettings} setSmsSettings={setSmsSettings} />
                         ) : maintenanceSettings?.active ? (
                           <div className="w-full flex flex-col items-center justify-center py-20 animate-fade-in-up">
                               <div className="w-20 h-20 bg-red-900/20 border border-red-500/50 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(239,68,68,0.2)]">
@@ -2331,7 +2331,7 @@
         // ==========================================
         // ADMIN DASHBOARD
         // ==========================================
-        function AdminDashboard({ inventory, orders, deposits, setDeposits, categories, usersDB, setUsersDB, purchases, tickets, triggerToast, promoSettings, globalNotice, featureSettings, bankSettings, cryptoSettings, customPayments, activeChats, activeTab, maintenanceSettings, isInitialSyncDone, smsSettings, setSmsSettings }) {
+        function AdminDashboard({ inventory, setInventory, orders, deposits, setDeposits, categories, usersDB, setUsersDB, purchases, tickets, triggerToast, promoSettings, globalNotice, featureSettings, bankSettings, cryptoSettings, customPayments, activeChats, activeTab, maintenanceSettings, isInitialSyncDone, smsSettings, setSmsSettings }) {
           const [uploadCategory, setUploadCategory] = useState('new');
           const [uploadText, setUploadText] = useState('');
           const [customerSearch, setCustomerSearch] = useState('');
@@ -2532,11 +2532,10 @@
               const newInv = { ...inventory };
               newInv[categoryId].splice(accountIndex, 1);
               
-              const token = await getAuthToken();
-              await fetch(`${BACKEND_URL}/api/admin/save-settings`, {
-                  method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                  body: JSON.stringify({ settingsData: { id: 'Stock', data: newInv } })
-              });
+              const { error } = await supabase.from('store_inventory').upsert({ id: 'Stock', data: newInv });
+              if (error) throw error;
+
+              if (setInventory) setInventory(newInv);
               triggerToast('Account deleted.');
             } catch (err) { triggerToast('Failed to delete.'); }
           };
@@ -2605,14 +2604,13 @@
               if (!newInv[uploadCategory]) newInv[uploadCategory] = [];
               newInv[uploadCategory] = [...newInv[uploadCategory], ...validAccounts];
               
-              const token = await getAuthToken();
-              await fetch(`${BACKEND_URL}/api/admin/save-settings`, {
-                  method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                  body: JSON.stringify({ settingsData: { id: 'Stock', data: newInv } })
-              });
+              // 🟢 FIX: Directly updating store_inventory table instead of store_settings
+              const { error } = await supabase.from('store_inventory').upsert({ id: 'Stock', data: newInv });
+              if (error) throw error;
 
+              if (setInventory) setInventory(newInv);
               setUploadText(''); triggerToast(`Added ${validAccounts.length} accounts.`);
-            } catch (err) { triggerToast("Upload failed."); }
+            } catch (err) { triggerToast("Upload failed."); console.error(err); }
           };
 
           const submitEditUser = async (e) => {
