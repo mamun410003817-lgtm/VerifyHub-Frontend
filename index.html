@@ -2526,14 +2526,21 @@
               } catch (e) { triggerToast('Error removing crypto.'); }
           };
 
+          // 🟢 FIX: USE SECURE-ACTION BACKEND ROUTE INSTEAD OF DIRECT SUPABASE CALL 🟢
           const handleDeleteAccount = async (categoryId, accountIndex) => {
             if (!window.confirm("Delete this account?")) return;
             try {
               const newInv = { ...inventory };
               newInv[categoryId].splice(accountIndex, 1);
               
-              const { error } = await supabase.from('store_inventory').upsert({ id: 'Stock', data: newInv });
-              if (error) throw error;
+              const token = await getAuthToken();
+              const res = await fetch(`${BACKEND_URL}/api/secure-action`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                  body: JSON.stringify({ action: 'update_inventory', data: newInv })
+              });
+              const result = await res.json();
+              if (!result.success) throw new Error("Failed to update inventory via backend.");
 
               if (setInventory) setInventory(newInv);
               triggerToast('Account deleted.');
@@ -2584,6 +2591,7 @@
           const totalSales = (orders || []).filter(o => o && (o.status === 'Completed' || o.data?.status === 'Completed')).reduce((sum, order) => sum + Number(order.total || order.data?.total || 0), 0);
           const filteredUsers = Object.keys(usersDB).filter(email => email.toLowerCase().includes(customerSearch.toLowerCase()));
 
+          // 🟢 FIX: USE SECURE-ACTION BACKEND ROUTE INSTEAD OF DIRECT SUPABASE CALL 🟢
           const handleUploadAccounts = async (e) => {
             e.preventDefault(); if (!uploadText.trim()) return;
             const rawText = uploadText.trim(); let validAccounts = [];
@@ -2604,9 +2612,14 @@
               if (!newInv[uploadCategory]) newInv[uploadCategory] = [];
               newInv[uploadCategory] = [...newInv[uploadCategory], ...validAccounts];
               
-              // 🟢 FIX: Directly updating store_inventory table instead of store_settings
-              const { error } = await supabase.from('store_inventory').upsert({ id: 'Stock', data: newInv });
-              if (error) throw error;
+              const token = await getAuthToken();
+              const res = await fetch(`${BACKEND_URL}/api/secure-action`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                  body: JSON.stringify({ action: 'update_inventory', data: newInv })
+              });
+              const result = await res.json();
+              if (!result.success) throw new Error("Failed to update inventory via backend.");
 
               if (setInventory) setInventory(newInv);
               setUploadText(''); triggerToast(`Added ${validAccounts.length} accounts.`);
