@@ -475,9 +475,9 @@
                <FloatingLogos />
                <div className="relative z-10 flex flex-col items-center justify-center px-4 w-full h-full animate-pop-in text-center">
                   <EliteLogo className="w-32 h-32 mb-6 drop-shadow-[0_0_30px_rgba(191,149,63,0.6)]" />
-                  <h1 className="text-4xl sm:text-6xl font-bold tracking-[0.2em] mb-2 text-white uppercase text-center w-full drop-shadow-lg">
+                  <h2 className="text-4xl sm:text-6xl font-bold tracking-[0.2em] mb-2 text-white uppercase text-center w-full drop-shadow-lg">
                       Verify<span className="text-brand-primary font-light">Hub</span>
-                  </h1>
+                  </h2>
                   <div className="text-xl sm:text-2xl font-bold tracking-[0.6em] text-transparent bg-clip-text bg-gradient-to-r from-[#bf953f] via-[#fcf6ba] to-[#b38728] mt-2">
                       ELITE
                   </div>
@@ -599,6 +599,8 @@
             };
 
             if (!acc) return null;
+            
+            const canRenew = isSMS && acc.data && !String(acc.data).includes('Duration: 5 minutes'); // PandaSMS UK cannot be renewed
 
             return (
                 <div className="glass-panel p-6 flex flex-col animate-fade-in-up allow-select" style={{animationDelay: `${idx * 0.05}s`, animationFillMode: 'both'}}>
@@ -652,7 +654,7 @@
                     </div>
                     
                     {/* 🟢 RENEW NUMBER SECTION (For SMS numbers only) 🟢 */}
-                    {isSMS && (
+                    {canRenew && (
                         <div className="mt-4 border-t border-white/10 pt-4">
                             {!isRenewing ? (
                                 <button onClick={() => setIsRenewing(true)} className="btn-animate w-full bg-[#111] hover:bg-brand-primary text-gray-300 hover:text-black border border-white/10 font-bold py-2.5 rounded-lg text-[9px] uppercase tracking-widest flex items-center justify-center gap-2 transition-colors shadow-inner">
@@ -1159,6 +1161,7 @@
             const [selectedCountry, setSelectedCountry] = useState('USA');
             const [selectedDuration, setSelectedDuration] = useState('15 minutes'); 
             const [selectedServiceCode, setSelectedServiceCode] = useState('');
+            const [currentProvider, setCurrentProvider] = useState('');
             
             const [activeOrder, setActiveOrder] = useState(null); 
             const [isBuying, setIsCheckingOut] = useState(false);
@@ -1166,23 +1169,38 @@
 
             // Comprehensive Country List
             const COUNTRIES = [
-                "USA", "UK", "Canada", "Russia", "Germany", "France", "Spain", "Italy", "Netherlands",
-                "India", "Brazil", "Australia", "Japan", "South Africa", "Mexico", "Argentina", "Colombia",
-                "Turkey", "Indonesia", "Malaysia", "Vietnam", "Philippines", "Thailand", "Egypt", "Nigeria",
-                "Kenya", "Morocco", "Saudi Arabia", "UAE", "Israel", "Sweden", "Switzerland", "Norway",
-                "Denmark", "Finland", "Poland", "Ireland", "New Zealand", "Singapore", "Hong Kong", "Taiwan",
-                "South Korea", "Portugal", "Greece", "Austria", "Belgium", "Czech Republic", "Hungary",
-                "Romania", "Ukraine", "Kazakhstan", "Chile", "Peru", "Ecuador", "Bangladesh", "Pakistan"
-            ].sort();
+                { value: "USA", label: "United States" },
+                { value: "UK", label: "United Kingdom" },
+                { value: "Canada", label: "Canada" },
+                { value: "Russia", label: "Russia" },
+                { value: "Germany", label: "Germany" },
+                { value: "France", label: "France" },
+                { value: "Spain", label: "Spain" },
+                { value: "Italy", label: "Italy" },
+                { value: "Netherlands", label: "Netherlands" },
+                { value: "India", label: "India" },
+                { value: "Brazil", label: "Brazil" },
+                { value: "Australia", label: "Australia" },
+                { value: "Japan", label: "Japan" },
+                { value: "South Africa", label: "South Africa" }
+            ].sort((a,b) => a.label.localeCompare(b.label));
 
-            const countryOptions = COUNTRIES.map(c => ({ value: c, label: c }));
-            const durationOptions = [
-                { value: "15 minutes", label: "15 Minutes" },
-                { value: "3 days", label: "3 Days" },
-                { value: "7 days", label: "7 Days" },
-                { value: "14 days", label: "14 Days" },
-                { value: "25 days", label: "25 Days" }
-            ];
+            // Duration options logic
+            const isPanda = currentProvider === 'pandasms' || selectedCountry === 'UK' || selectedCountry === 'United Kingdom';
+            const durationOptions = isPanda ? 
+                [{ value: '5 minutes', label: '5 Minutes' }] : 
+                [
+                    { value: "15 minutes", label: "15 Minutes" },
+                    { value: "3 days", label: "3 Days" },
+                    { value: "7 days", label: "7 Days" },
+                    { value: "14 days", label: "14 Days" },
+                    { value: "25 days", label: "25 Days" }
+                ];
+
+            useEffect(() => {
+                if (isPanda) setSelectedDuration('5 minutes');
+                else if (selectedDuration === '5 minutes') setSelectedDuration('15 minutes');
+            }, [isPanda, selectedDuration]);
 
             const fetchPrices = useCallback(async () => {
                 setIsLoadingRates(true);
@@ -1194,6 +1212,7 @@
                     const data = await res.json();
                     if(data.success) {
                         setServices(data.data);
+                        setCurrentProvider(data.provider);
                         if(data.data.length > 0 && !selectedServiceCode) {
                             setSelectedServiceCode(data.data[0].code);
                         }
@@ -1213,12 +1232,12 @@
 
             useEffect(() => { return () => { if(pollInterval) clearInterval(pollInterval); } }, [pollInterval]);
 
-            const startPolling = (n_id) => {
+            const startPolling = (n_id, provider) => {
                 if(pollInterval) clearInterval(pollInterval);
                 const intId = setInterval(async () => {
                     try {
                         const token = await getAuthToken();
-                        const res = await fetch(`${BACKEND_URL}/api/sms/getStatus?n_id=${n_id}`, {
+                        const res = await fetch(`${BACKEND_URL}/api/sms/getStatus?n_id=${n_id}&provider=${provider}`, {
                             headers: { 'Authorization': `Bearer ${token}` }
                         });
                         const data = await res.json();
@@ -1235,7 +1254,7 @@
                                     body: JSON.stringify({ 
                                         action: 'save_sms', 
                                         type: `SMS Verify: ${activeOrder?.service}`, 
-                                        data: `📱 Phone: ${activeOrder?.phone}\n✉️ Code: ${data.code}` 
+                                        data: `📱 Phone: ${activeOrder?.phone}\n✉️ Code: ${data.code}\n⏳ Duration: ${activeOrder?.duration}` 
                                     })
                                 });
                             } else if (data.status === 'CANCEL') {
@@ -1277,7 +1296,8 @@
                             serviceId: serviceObj.code, 
                             countryId: selectedCountry, 
                             requestedPrice: finalCalculatedPrice,
-                            duration: selectedDuration 
+                            duration: selectedDuration,
+                            provider: currentProvider
                         })
                     });
                     const data = await res.json();
@@ -1302,9 +1322,10 @@
                             status: 'Active',
                             code: null,
                             duration: data.duration, 
+                            provider: data.provider,
                             startTime: Date.now()
                         });
-                        startPolling(data.n_id);
+                        startPolling(data.n_id, data.provider);
                     } else {
                         triggerToast(data.message || "Failed to get number.");
                     }
@@ -1321,7 +1342,7 @@
                     const res = await fetch(`${BACKEND_URL}/api/sms/cancel`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                        body: JSON.stringify({ orderId: activeOrder.orderId, n_id: activeOrder.n_id })
+                        body: JSON.stringify({ orderId: activeOrder.orderId, n_id: activeOrder.n_id, provider: activeOrder.provider })
                     });
                     const data = await res.json();
                     if(data.success) {
@@ -1372,6 +1393,7 @@
                                 {activeOrder.status === 'Active' && (
                                     <div className="h-full timer-bar" style={{
                                         animationDuration: activeOrder.duration === '15 minutes' ? '900s' : 
+                                                           activeOrder.duration === '5 minutes' ? '300s' :
                                                            activeOrder.duration === '3 days' ? '259200s' : 
                                                            activeOrder.duration === '7 days' ? '604800s' : 
                                                            activeOrder.duration === '14 days' ? '1209600s' : '2160000s'
@@ -1475,11 +1497,7 @@
                                             <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em] pl-1">Rental Duration</label>
                                             <div className="relative">
                                                 <select value={selectedDuration} onChange={e => setSelectedDuration(e.target.value)} className="glass-input allow-select font-bold uppercase tracking-wider text-[10px] sm:text-xs py-4 appearance-none cursor-pointer hover:border-brand-primary/50 transition-colors shadow-inner">
-                                                    <option value="15 minutes" className="bg-[#111]">15 Minutes (Standard OTP)</option>
-                                                    <option value="3 days" className="bg-[#111]">3 Days</option>
-                                                    <option value="7 days" className="bg-[#111]">7 Days</option>
-                                                    <option value="14 days" className="bg-[#111]">14 Days</option>
-                                                    <option value="25 days" className="bg-[#111]">25 Days</option>
+                                                    {durationOptions.map(opt => <option key={opt.value} value={opt.value} className="bg-[#111]">{opt.label}</option>)}
                                                 </select>
                                                 <Clock className="w-4 h-4 text-brand-primary absolute right-4 top-4 pointer-events-none"/>
                                             </div>
