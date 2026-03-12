@@ -1001,15 +1001,16 @@
         }
 
         // ==========================================
-        // 📱 CUSTOMER SMS STORE MODULE (NEW) 📱
+        // 📱 CUSTOMER SMS STORE MODULE (UPDATED WITH DURATION) 📱
         // ==========================================
         function CustomerDashboardSMS({ user, balance, setUsersDB, triggerToast }) {
             const [services, setServices] = useState([]);
             const [isLoadingRates, setIsLoadingRates] = useState(true);
             const [searchQuery, setSearchQuery] = useState('');
             const [selectedCountry, setSelectedCountry] = useState('USA');
+            const [selectedDuration, setSelectedDuration] = useState('15 minutes'); // 🟢 NEW STATE FOR DURATION
             
-            const [activeOrder, setActiveOrder] = useState(null); // { orderId, n_id, phone, service, originalPrice, status, code, timeLeft }
+            const [activeOrder, setActiveOrder] = useState(null); // { orderId, n_id, phone, service, originalPrice, status, code, timeLeft, duration }
             const [isBuying, setIsCheckingOut] = useState(false);
             const [pollInterval, setPollInterval] = useState(null);
 
@@ -1085,8 +1086,21 @@
                     triggerToast("Please complete or cancel your current number first.");
                     return;
                 }
-                if(balance < service.finalPrice) {
-                    triggerToast("Insufficient funds.");
+                
+                // Note: The base API returns rates for 15 minutes. 
+                // We assume you have a pricing logic for longer durations. 
+                // For simplicity, let's assume the finalPrice is calculated in backend or we multiply it here.
+                // Let's pass the selected duration to the backend, and let backend deduct the requestedPrice.
+                // You might need to adjust requestedPrice based on duration if your provider charges more for longer durations.
+                
+                let finalCalculatedPrice = service.finalPrice;
+                if (selectedDuration === '3 days') finalCalculatedPrice *= 2; // Example markup for duration
+                if (selectedDuration === '7 days') finalCalculatedPrice *= 3;
+                if (selectedDuration === '14 days') finalCalculatedPrice *= 4;
+                if (selectedDuration === '25 days') finalCalculatedPrice *= 5;
+
+                if(balance < finalCalculatedPrice) {
+                    triggerToast("Insufficient funds for this duration.");
                     return;
                 }
 
@@ -1096,19 +1110,24 @@
                     const res = await fetch(`${BACKEND_URL}/api/sms/getNumber`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                        body: JSON.stringify({ serviceId: service.code, countryId: selectedCountry, requestedPrice: service.finalPrice })
+                        body: JSON.stringify({ 
+                            serviceId: service.code, 
+                            countryId: selectedCountry, 
+                            requestedPrice: finalCalculatedPrice,
+                            duration: selectedDuration // Send selected duration to backend
+                        })
                     });
                     const data = await res.json();
                     
                     if(data.success) {
-                        triggerToast("Number assigned!");
+                        triggerToast(`Number assigned for ${data.duration}!`);
                         // Optimistically update balance
                         setUsersDB(prev => ({
                             ...prev,
                             [user.email]: {
                                 ...prev[user.email],
-                                balance: Number(prev[user.email].balance) - service.finalPrice,
-                                totalSpent: Number(prev[user.email].totalSpent || 0) + service.finalPrice
+                                balance: Number(prev[user.email].balance) - finalCalculatedPrice,
+                                totalSpent: Number(prev[user.email].totalSpent || 0) + finalCalculatedPrice
                             }
                         }));
 
@@ -1117,9 +1136,10 @@
                             n_id: data.n_id,
                             phone: data.phone,
                             service: service.name,
-                            originalPrice: service.finalPrice,
+                            originalPrice: finalCalculatedPrice,
                             status: 'Active',
                             code: null,
+                            duration: data.duration, // Store duration
                             startTime: Date.now()
                         });
                         startPolling(data.n_id);
@@ -1175,15 +1195,27 @@
                             <h1 className="text-xl sm:text-2xl font-bold text-white tracking-[0.25em] uppercase mb-1">Buy <span className="font-light text-[#eab308]">SMS</span></h1>
                             <p className="text-gray-400 text-[9px] sm:text-[10px] font-mono tracking-widest uppercase">Instant OTP Verification</p>
                         </div>
-                        <div className="flex gap-3 w-full sm:w-auto">
-                            <select value={selectedCountry} onChange={e => setSelectedCountry(e.target.value)} className="glass-input allow-select w-32 font-bold uppercase tracking-wider text-xs">
+                        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                            {/* 🟢 NEW DURATION DROPDOWN 🟢 */}
+                            <select value={selectedDuration} onChange={e => setSelectedDuration(e.target.value)} className="glass-input allow-select w-full sm:w-36 font-bold uppercase tracking-wider text-[10px]">
+                                <option value="15 minutes" className="bg-[#111]">15 Minutes</option>
+                                <option value="3 days" className="bg-[#111]">3 Days</option>
+                                <option value="7 days" className="bg-[#111]">7 Days</option>
+                                <option value="14 days" className="bg-[#111]">14 Days</option>
+                                <option value="25 days" className="bg-[#111]">25 Days</option>
+                            </select>
+                            
+                            <select value={selectedCountry} onChange={e => setSelectedCountry(e.target.value)} className="glass-input allow-select w-full sm:w-32 font-bold uppercase tracking-wider text-[10px]">
                                 <option value="USA" className="bg-[#111]">USA (+1)</option>
                                 <option value="UK" className="bg-[#111]">UK (+44)</option>
-                                {/* Add more if API supports and you want to offer them */}
+                                <option value="Canada" className="bg-[#111]">Canada (+1)</option>
+                                <option value="Russia" className="bg-[#111]">Russia (+7)</option>
+                                <option value="Germany" className="bg-[#111]">Germany (+49)</option>
+                                {/* Add more countries here based on API support */}
                             </select>
                             <div className="relative flex-grow sm:w-64">
                                 <Search className="w-4 h-4 text-white absolute left-4 top-3.5" />
-                                <input type="text" placeholder="Search service..." value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)} className="glass-input allow-select !pl-12 !py-3 rounded-2xl bg-[rgba(0,0,0,0.5)]" />
+                                <input type="text" placeholder="Search service..." value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)} className="glass-input allow-select !pl-12 !py-3 rounded-2xl bg-[rgba(0,0,0,0.5)] text-xs" />
                             </div>
                         </div>
                     </div>
@@ -1192,7 +1224,15 @@
                     {activeOrder && (
                         <div className="glass-panel p-6 rounded-3xl border-2 border-brand-primary animate-bouncy-pop relative overflow-hidden">
                             <div className="absolute top-0 left-0 w-full h-1 bg-white/10">
-                                {activeOrder.status === 'Active' && <div className="h-full timer-bar" style={{animationDuration: '900s'}}></div>} {/* 15 mins */}
+                                {/* 🟢 Timer duration based on selection 🟢 */}
+                                {activeOrder.status === 'Active' && (
+                                    <div className="h-full timer-bar" style={{
+                                        animationDuration: activeOrder.duration === '15 minutes' ? '900s' : 
+                                                           activeOrder.duration === '3 days' ? '259200s' : 
+                                                           activeOrder.duration === '7 days' ? '604800s' : 
+                                                           activeOrder.duration === '14 days' ? '1209600s' : '2160000s'
+                                    }}></div>
+                                )}
                             </div>
                             
                             <div className="flex flex-col sm:flex-row justify-between items-center gap-6 text-center sm:text-left">
@@ -1204,6 +1244,7 @@
                                             if(navigator.clipboard) navigator.clipboard.writeText(activeOrder.phone).then(()=>triggerToast("Number copied!"));
                                         }} className="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-colors"><Copy className="w-5 h-5"/></button>
                                     </div>
+                                    <p className="text-[9px] text-gray-500 font-mono mt-2 uppercase tracking-widest">Duration: <span className="text-white">{activeOrder.duration}</span></p>
                                     {activeOrder.status === 'Active' && <p className="text-xs text-gray-400 mt-2 flex items-center gap-2 justify-center sm:justify-start"><RefreshCw className="w-3.5 h-3.5 animate-spin"/> Waiting for SMS...</p>}
                                 </div>
                                 
@@ -1241,22 +1282,31 @@
                         <div className="text-center py-16 text-gray-600 font-mono text-[10px] uppercase tracking-widest">No services found for this country.</div>
                     ) : (
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                            {filteredServices.map((service, idx) => (
-                                <div key={service.code} className="glass-panel p-4 rounded-2xl flex flex-col hover:border-brand-primary/40 hover:bg-[rgba(255,255,255,0.02)] transition-all group animate-fade-in-up" style={{animationDelay: `${(idx%20) * 0.03}s`}}>
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:bg-brand-primary/10">
-                                            <MessageSquare className="w-5 h-5 text-brand-primary"/>
+                            {filteredServices.map((service, idx) => {
+                                // Calculate display price based on duration for UI info
+                                let displayPrice = service.finalPrice;
+                                if (selectedDuration === '3 days') displayPrice *= 2;
+                                if (selectedDuration === '7 days') displayPrice *= 3;
+                                if (selectedDuration === '14 days') displayPrice *= 4;
+                                if (selectedDuration === '25 days') displayPrice *= 5;
+
+                                return (
+                                    <div key={service.code} className="glass-panel p-4 rounded-2xl flex flex-col hover:border-brand-primary/40 hover:bg-[rgba(255,255,255,0.02)] transition-all group animate-fade-in-up" style={{animationDelay: `${(idx%20) * 0.03}s`}}>
+                                        <div className="flex items-center gap-3 mb-4">
+                                            <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:bg-brand-primary/10 shrink-0">
+                                                <MessageSquare className="w-5 h-5 text-brand-primary"/>
+                                            </div>
+                                            <p className="font-bold text-[11px] text-white uppercase tracking-wide truncate" title={service.name}>{service.name}</p>
                                         </div>
-                                        <p className="font-bold text-xs text-white uppercase tracking-wide truncate">{service.name}</p>
+                                        <div className="mt-auto flex items-center justify-between">
+                                            <span className="font-mono font-bold text-white text-sm">${displayPrice.toFixed(2)}</span>
+                                            <button onClick={() => buyNumber(service)} disabled={isBuying || (activeOrder && activeOrder.status === 'Active')} className="btn-animate bg-white/10 hover:bg-white text-white hover:text-black p-2 rounded-lg transition-colors disabled:opacity-50">
+                                                <ShoppingCart className="w-4 h-4"/>
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div className="mt-auto flex items-center justify-between">
-                                        <span className="font-mono font-bold text-white">${service.finalPrice.toFixed(2)}</span>
-                                        <button onClick={() => buyNumber(service)} disabled={isBuying || (activeOrder && activeOrder.status === 'Active')} className="bg-white/10 hover:bg-white text-white hover:text-black p-2 rounded-lg transition-colors disabled:opacity-50">
-                                            <ShoppingCart className="w-4 h-4"/>
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
+                                )
+                            })}
                         </div>
                     )}
                 </div>
