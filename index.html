@@ -46,44 +46,54 @@
             },
             animation: {
               'matrix-in': 'matrixIn 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards',
-              'spring-card': 'springCard 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+              'spring-card': 'springCard 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
               'swoosh-in': 'swooshIn 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards',
               'bouncy-pop': 'bouncyPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
-              'fade-in-up': 'fadeInUp 0.4s ease-out forwards',
-              'pop-in': 'popIn 0.3s ease-out forwards',
+              'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+              'pop-in': 'popIn 0.4s ease-out forwards',
               'pulse-slow': 'pulseSlow 4s ease-in-out infinite',
               'spin-slow': 'spin 3s linear infinite',
+              'shimmer': 'shimmer 2.5s linear infinite',
+              'glow-pulse': 'glowPulse 3s ease-in-out infinite'
             },
             keyframes: {
               matrixIn: {
-                '0%': { transform: 'perspective(2000px) rotateX(10deg) rotateY(-5deg) translateY(30px)', opacity: '0' },
+                '0%': { transform: 'perspective(2000px) rotateX(15deg) rotateY(-10deg) translateY(40px) scale(0.9)', opacity: '0' },
                 '100%': { transform: 'none', opacity: '1' }
               },
               springCard: {
-                '0%': { transform: 'scale(0.85) translateY(40px)', opacity: '0' },
-                '50%': { transform: 'scale(1.02) translateY(-5px)', opacity: '1' },
-                '100%': { transform: 'none', opacity: '1' }
+                '0%': { transform: 'scale(0.8) translateY(50px)', opacity: '0' },
+                '60%': { transform: 'scale(1.05) translateY(-10px)', opacity: '1' },
+                '100%': { transform: 'scale(1) translateY(0)', opacity: '1' }
               },
               swooshIn: {
-                '0%': { transform: 'translate3d(40px, 0, 0) skewX(-5deg)', opacity: '0' },
+                '0%': { transform: 'translate3d(50px, 0, 0) skewX(-10deg)', opacity: '0' },
                 '100%': { transform: 'none', opacity: '1' }
               },
               bouncyPop: {
-                '0%': { transform: 'scale(0.8) translate3d(0, 30px, 0)', opacity: '0' },
-                '50%': { transform: 'scale(1.03) translate3d(0, -5px, 0)', opacity: '1' },
+                '0%': { transform: 'scale(0.7) translate3d(0, 40px, 0)', opacity: '0' },
+                '50%': { transform: 'scale(1.05) translate3d(0, -10px, 0)', opacity: '1' },
                 '100%': { transform: 'none', opacity: '1' }
               },
               fadeInUp: {
-                '0%': { opacity: '0', transform: 'translateY(15px)' },
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
                 '100%': { opacity: '1', transform: 'none' }
               },
               popIn: {
-                '0%': { opacity: '0', transform: 'scale(0.95)' },
+                '0%': { opacity: '0', transform: 'scale(0.9)' },
                 '100%': { opacity: '1', transform: 'none' }
               },
               pulseSlow: {
-                '0%, 100%': { opacity: '1' },
-                '50%': { opacity: '0.7' }
+                '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+                '50%': { opacity: '0.8', transform: 'scale(0.98)' }
+              },
+              shimmer: {
+                '0%': { backgroundPosition: '-200% 0' },
+                '100%': { backgroundPosition: '200% 0' }
+              },
+              glowPulse: {
+                '0%, 100%': { boxShadow: '0 0 15px rgba(6,182,212,0.3)' },
+                '50%': { boxShadow: '0 0 35px rgba(6,182,212,0.7)' }
               }
             }
           }
@@ -178,6 +188,7 @@
             border-radius: 16px;
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
             transform: translateZ(0);
+            transition: all 0.3s ease;
         }
 
         .glass-input {
@@ -310,7 +321,7 @@
 
         const CUSTOMER_TABS = [
             { id: 'store', label: 'Buy Account', icon: ShoppingCart },
-            { id: 'sms_store', label: 'SMS Verifications', icon: Smartphone }, // 🟢 NEW TAB
+            { id: 'sms_store', label: 'SMS Verifications', icon: Smartphone },
             { id: 'add_funds', label: 'Add Fund', icon: Wallet },
             { id: 'my_accounts', label: 'Purchased', icon: Key },
             { id: 'profile', label: 'Profile', icon: UserIcon } 
@@ -557,7 +568,7 @@
           const [featureSettings, setFeatureSettings] = useState({ dailyReward: false, referral: false });
           const [bankSettings, setBankSettings] = useState({ bankName: 'Parallex', accountName: 'Samuel Osita Emmanuel', accountNumber: '1120927346', nairaRate: 1500, flutterwaveKey: '', flutterwaveActive: false });
           const [maintenanceSettings, setMaintenanceSettings] = useState({ active: false, message: 'We are currently performing scheduled maintenance. Please check back later.' });
-          const [smsSettings, setSmsSettings] = useState({ active: true, markup: 1.00 }); // 🟢 NEW SMS SETTINGS
+          const [smsSettings, setSmsSettings] = useState({ active: true, markup: 1.00 }); 
           
           const [cryptoSettings, setCryptoSettings] = useState([]);
 
@@ -675,7 +686,7 @@
                           if (s.id === 'Products') setCategories(prev => JSON.stringify(prev) !== JSON.stringify(sData.list || DEFAULT_CATEGORIES) ? (sData.list || DEFAULT_CATEGORIES) : prev);
                           if (s.id === 'CryptoMethods') setCryptoSettings(prev => JSON.stringify(prev) !== JSON.stringify(sData.list || []) ? (sData.list || []) : prev);
                           if (s.id === 'CustomPayments') setCustomPayments(prev => JSON.stringify(prev) !== JSON.stringify(sData.list || []) ? (sData.list || []) : prev);
-                          if (s.id === 'SMS') setSmsSettings(prev => JSON.stringify(prev) !== JSON.stringify(sData) ? sData : prev); // 🟢 Fetch SMS Settings
+                          if (s.id === 'SMS') setSmsSettings(prev => JSON.stringify(prev) !== JSON.stringify(sData) ? sData : prev); 
                       });
                   }
 
@@ -1001,20 +1012,30 @@
         }
 
         // ==========================================
-        // 📱 CUSTOMER SMS STORE MODULE (UPDATED WITH DURATION) 📱
+        // 📱 CUSTOMER SMS STORE MODULE (UPDATED UI) 📱
         // ==========================================
         function CustomerDashboardSMS({ user, balance, setUsersDB, triggerToast }) {
             const [services, setServices] = useState([]);
             const [isLoadingRates, setIsLoadingRates] = useState(true);
-            const [searchQuery, setSearchQuery] = useState('');
             const [selectedCountry, setSelectedCountry] = useState('USA');
-            const [selectedDuration, setSelectedDuration] = useState('15 minutes'); // 🟢 NEW STATE FOR DURATION
+            const [selectedDuration, setSelectedDuration] = useState('15 minutes'); 
+            const [selectedServiceCode, setSelectedServiceCode] = useState('');
             
-            const [activeOrder, setActiveOrder] = useState(null); // { orderId, n_id, phone, service, originalPrice, status, code, timeLeft, duration }
+            const [activeOrder, setActiveOrder] = useState(null); 
             const [isBuying, setIsCheckingOut] = useState(false);
             const [pollInterval, setPollInterval] = useState(null);
 
-            // Fetch pricing from backend API
+            // Comprehensive Country List
+            const COUNTRIES = [
+                "USA", "UK", "Canada", "Russia", "Germany", "France", "Spain", "Italy", "Netherlands",
+                "India", "Brazil", "Australia", "Japan", "South Africa", "Mexico", "Argentina", "Colombia",
+                "Turkey", "Indonesia", "Malaysia", "Vietnam", "Philippines", "Thailand", "Egypt", "Nigeria",
+                "Kenya", "Morocco", "Saudi Arabia", "UAE", "Israel", "Sweden", "Switzerland", "Norway",
+                "Denmark", "Finland", "Poland", "Ireland", "New Zealand", "Singapore", "Hong Kong", "Taiwan",
+                "South Korea", "Portugal", "Greece", "Austria", "Belgium", "Czech Republic", "Hungary",
+                "Romania", "Ukraine", "Kazakhstan", "Chile", "Peru", "Ecuador", "Bangladesh", "Pakistan"
+            ].sort();
+
             const fetchPrices = useCallback(async () => {
                 setIsLoadingRates(true);
                 try {
@@ -1025,23 +1046,26 @@
                     const data = await res.json();
                     if(data.success) {
                         setServices(data.data);
+                        if(data.data.length > 0) {
+                            setSelectedServiceCode(data.data[0].code);
+                        } else {
+                            setSelectedServiceCode('');
+                        }
                     } else {
                         triggerToast(data.message || 'Failed to load SMS services.');
+                        setServices([]);
+                        setSelectedServiceCode('');
                     }
                 } catch(e) {
                     triggerToast('Network error loading SMS services.');
+                    setServices([]);
                 }
                 setIsLoadingRates(false);
             }, [selectedCountry, triggerToast]);
 
-            useEffect(() => {
-                fetchPrices();
-            }, [fetchPrices]);
+            useEffect(() => { fetchPrices(); }, [fetchPrices]);
 
-            // Clean up polling if component unmounts
-            useEffect(() => {
-                return () => { if(pollInterval) clearInterval(pollInterval); }
-            }, [pollInterval]);
+            useEffect(() => { return () => { if(pollInterval) clearInterval(pollInterval); } }, [pollInterval]);
 
             const startPolling = (n_id) => {
                 if(pollInterval) clearInterval(pollInterval);
@@ -1059,7 +1083,6 @@
                                 setActiveOrder(prev => ({...prev, status: 'Completed', code: data.code}));
                                 triggerToast("SMS Code Received!");
                                 
-                                // Save to purchases automatically
                                 await fetch(`${BACKEND_URL}/api/secure-action`, {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -1069,7 +1092,6 @@
                                         data: `📱 Phone: ${activeOrder?.phone}\n✉️ Code: ${data.code}` 
                                     })
                                 });
-
                             } else if (data.status === 'CANCEL') {
                                 clearInterval(intId);
                                 setActiveOrder(prev => ({...prev, status: 'Cancelled'}));
@@ -1077,24 +1099,19 @@
                             }
                         }
                     } catch(e) {}
-                }, 10000); // Check every 10 seconds
+                }, 10000); 
                 setPollInterval(intId);
             };
 
-            const buyNumber = async (service) => {
+            const buyNumber = async (serviceObj) => {
+                if(!serviceObj) return;
                 if(activeOrder && activeOrder.status === 'Active') {
                     triggerToast("Please complete or cancel your current number first.");
                     return;
                 }
                 
-                // Note: The base API returns rates for 15 minutes. 
-                // We assume you have a pricing logic for longer durations. 
-                // For simplicity, let's assume the finalPrice is calculated in backend or we multiply it here.
-                // Let's pass the selected duration to the backend, and let backend deduct the requestedPrice.
-                // You might need to adjust requestedPrice based on duration if your provider charges more for longer durations.
-                
-                let finalCalculatedPrice = service.finalPrice;
-                if (selectedDuration === '3 days') finalCalculatedPrice *= 2; // Example markup for duration
+                let finalCalculatedPrice = serviceObj.finalPrice;
+                if (selectedDuration === '3 days') finalCalculatedPrice *= 2; 
                 if (selectedDuration === '7 days') finalCalculatedPrice *= 3;
                 if (selectedDuration === '14 days') finalCalculatedPrice *= 4;
                 if (selectedDuration === '25 days') finalCalculatedPrice *= 5;
@@ -1111,17 +1128,16 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({ 
-                            serviceId: service.code, 
+                            serviceId: serviceObj.code, 
                             countryId: selectedCountry, 
                             requestedPrice: finalCalculatedPrice,
-                            duration: selectedDuration // Send selected duration to backend
+                            duration: selectedDuration 
                         })
                     });
                     const data = await res.json();
                     
                     if(data.success) {
                         triggerToast(`Number assigned for ${data.duration}!`);
-                        // Optimistically update balance
                         setUsersDB(prev => ({
                             ...prev,
                             [user.email]: {
@@ -1135,11 +1151,11 @@
                             orderId: data.orderId,
                             n_id: data.n_id,
                             phone: data.phone,
-                            service: service.name,
+                            service: serviceObj.name,
                             originalPrice: finalCalculatedPrice,
                             status: 'Active',
                             code: null,
-                            duration: data.duration, // Store duration
+                            duration: data.duration, 
                             startTime: Date.now()
                         });
                         startPolling(data.n_id);
@@ -1166,7 +1182,6 @@
                         triggerToast("Number cancelled. Refunded.");
                         if(pollInterval) clearInterval(pollInterval);
                         
-                        // Optimistically refund
                         setUsersDB(prev => ({
                             ...prev,
                             [user.email]: {
@@ -1184,47 +1199,28 @@
                 }
             };
 
-            const filteredServices = services.filter(s => s.name.toLowerCase().includes(searchQuery.toLowerCase()));
+            const currentServiceObj = services.find(s => s.code === selectedServiceCode);
+            let displayPrice = currentServiceObj ? currentServiceObj.finalPrice : 0;
+            if (selectedDuration === '3 days') displayPrice *= 2;
+            if (selectedDuration === '7 days') displayPrice *= 3;
+            if (selectedDuration === '14 days') displayPrice *= 4;
+            if (selectedDuration === '25 days') displayPrice *= 5;
 
             return (
-                <div className="space-y-6 w-full relative z-10 animate-matrix-in">
-                    {/* Header */}
-                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 w-full glass-effect p-5 rounded-3xl border border-white/10 relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-1.5 h-full bg-[#eab308]"></div>
-                        <div className="text-center sm:text-left w-full pl-4 py-1">
-                            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-[0.25em] uppercase mb-1">Buy <span className="font-light text-[#eab308]">SMS</span></h1>
-                            <p className="text-gray-400 text-[9px] sm:text-[10px] font-mono tracking-widest uppercase">Instant OTP Verification</p>
-                        </div>
-                        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                            {/* 🟢 NEW DURATION DROPDOWN 🟢 */}
-                            <select value={selectedDuration} onChange={e => setSelectedDuration(e.target.value)} className="glass-input allow-select w-full sm:w-36 font-bold uppercase tracking-wider text-[10px]">
-                                <option value="15 minutes" className="bg-[#111]">15 Minutes</option>
-                                <option value="3 days" className="bg-[#111]">3 Days</option>
-                                <option value="7 days" className="bg-[#111]">7 Days</option>
-                                <option value="14 days" className="bg-[#111]">14 Days</option>
-                                <option value="25 days" className="bg-[#111]">25 Days</option>
-                            </select>
-                            
-                            <select value={selectedCountry} onChange={e => setSelectedCountry(e.target.value)} className="glass-input allow-select w-full sm:w-32 font-bold uppercase tracking-wider text-[10px]">
-                                <option value="USA" className="bg-[#111]">USA (+1)</option>
-                                <option value="UK" className="bg-[#111]">UK (+44)</option>
-                                <option value="Canada" className="bg-[#111]">Canada (+1)</option>
-                                <option value="Russia" className="bg-[#111]">Russia (+7)</option>
-                                <option value="Germany" className="bg-[#111]">Germany (+49)</option>
-                                {/* Add more countries here based on API support */}
-                            </select>
-                            <div className="relative flex-grow sm:w-64">
-                                <Search className="w-4 h-4 text-white absolute left-4 top-3.5" />
-                                <input type="text" placeholder="Search service..." value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)} className="glass-input allow-select !pl-12 !py-3 rounded-2xl bg-[rgba(0,0,0,0.5)] text-xs" />
-                            </div>
-                        </div>
+                <div className="space-y-8 w-full relative z-10 animate-matrix-in max-w-4xl mx-auto">
+                    
+                    {/* Header Title */}
+                    <div className="text-center mb-10">
+                        <h1 className="text-3xl sm:text-5xl font-bold text-white tracking-[0.25em] uppercase mb-2 drop-shadow-lg">
+                            SMS <span className="font-light text-[#eab308] animate-pulse">Gateway</span>
+                        </h1>
+                        <p className="text-gray-400 text-xs sm:text-sm font-mono tracking-widest uppercase">Instant OTP & Virtual Numbers</p>
                     </div>
 
-                    {/* Active Order Panel */}
-                    {activeOrder && (
-                        <div className="glass-panel p-6 rounded-3xl border-2 border-brand-primary animate-bouncy-pop relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-full h-1 bg-white/10">
-                                {/* 🟢 Timer duration based on selection 🟢 */}
+                    {/* Active Order Panel - Shows only if there's an active order */}
+                    {activeOrder ? (
+                        <div className="glass-panel p-8 rounded-3xl border-2 border-brand-primary shadow-[0_0_40px_rgba(6,182,212,0.2)] animate-bouncy-pop relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-1.5 bg-white/10">
                                 {activeOrder.status === 'Active' && (
                                     <div className="h-full timer-bar" style={{
                                         animationDuration: activeOrder.duration === '15 minutes' ? '900s' : 
@@ -1235,78 +1231,151 @@
                                 )}
                             </div>
                             
-                            <div className="flex flex-col sm:flex-row justify-between items-center gap-6 text-center sm:text-left">
-                                <div>
-                                    <p className="text-[10px] font-bold text-brand-primary uppercase tracking-widest mb-1">{activeOrder.service} Verification</p>
-                                    <div className="text-3xl sm:text-4xl font-mono font-bold tracking-widest text-white flex items-center gap-3">
+                            <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
+                                <div className="flex-grow">
+                                    <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
+                                        <div className="w-2.5 h-2.5 bg-brand-primary rounded-full animate-pulse"></div>
+                                        <p className="text-xs font-bold text-brand-primary uppercase tracking-widest">{activeOrder.service} Verification</p>
+                                    </div>
+                                    <div className="text-4xl sm:text-5xl font-mono font-bold tracking-widest text-white flex items-center justify-center md:justify-start gap-4 my-4 drop-shadow-lg">
                                         {activeOrder.phone}
                                         <button onClick={() => {
                                             if(navigator.clipboard) navigator.clipboard.writeText(activeOrder.phone).then(()=>triggerToast("Number copied!"));
-                                        }} className="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-colors"><Copy className="w-5 h-5"/></button>
+                                        }} className="btn-animate p-3 bg-white/10 hover:bg-brand-primary hover:text-black rounded-xl transition-all"><Copy className="w-6 h-6"/></button>
                                     </div>
-                                    <p className="text-[9px] text-gray-500 font-mono mt-2 uppercase tracking-widest">Duration: <span className="text-white">{activeOrder.duration}</span></p>
-                                    {activeOrder.status === 'Active' && <p className="text-xs text-gray-400 mt-2 flex items-center gap-2 justify-center sm:justify-start"><RefreshCw className="w-3.5 h-3.5 animate-spin"/> Waiting for SMS...</p>}
+                                    <div className="flex gap-4 justify-center md:justify-start">
+                                        <span className="text-[10px] text-gray-400 font-mono uppercase bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">Duration: {activeOrder.duration}</span>
+                                        <span className="text-[10px] text-gray-400 font-mono uppercase bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">Price: ${activeOrder.originalPrice.toFixed(2)}</span>
+                                    </div>
+                                    {activeOrder.status === 'Active' && <p className="text-sm text-yellow-400 mt-6 flex items-center gap-2 justify-center md:justify-start animate-pulse"><RefreshCw className="w-4 h-4 animate-spin"/> Listening for incoming SMS...</p>}
                                 </div>
                                 
-                                <div className="bg-[rgba(0,0,0,0.5)] p-5 rounded-2xl border border-white/10 min-w-[200px] flex flex-col items-center justify-center min-h-[100px]">
+                                <div className="bg-[rgba(0,0,0,0.6)] p-8 rounded-3xl border border-white/10 min-w-[280px] w-full md:w-auto flex flex-col items-center justify-center min-h-[160px] shadow-inner">
                                     {activeOrder.code ? (
-                                        <div className="text-center animate-pop-in">
-                                            <p className="text-[10px] text-green-400 font-bold uppercase tracking-widest mb-1">Code Received</p>
-                                            <p className="text-2xl font-mono font-bold text-white break-all">{activeOrder.code}</p>
+                                        <div className="text-center animate-spring-card">
+                                            <p className="text-xs text-green-400 font-bold uppercase tracking-[0.3em] mb-3">Code Received</p>
+                                            <p className="text-4xl font-mono font-black text-white break-all drop-shadow-[0_0_15px_rgba(74,222,128,0.5)]">{activeOrder.code}</p>
                                         </div>
                                     ) : activeOrder.status === 'Cancelled' ? (
-                                        <p className="text-red-400 font-bold uppercase tracking-widest text-xs">Cancelled</p>
+                                        <p className="text-red-400 font-bold uppercase tracking-widest text-sm">Operation Cancelled</p>
                                     ) : (
-                                        <p className="text-gray-500 font-mono tracking-widest text-xs uppercase animate-pulse">Awaiting Code</p>
+                                        <div className="flex flex-col items-center gap-3 opacity-50">
+                                            <MessageSquare className="w-8 h-8 text-white animate-bounce"/>
+                                            <p className="text-gray-400 font-mono tracking-widest text-xs uppercase">Awaiting Code</p>
+                                        </div>
                                     )}
                                 </div>
                             </div>
                             
                             {activeOrder.status === 'Active' && (
-                                <div className="mt-6 flex gap-3 justify-end border-t border-white/10 pt-4">
-                                    <button onClick={cancelNumber} className="btn-animate px-6 py-2.5 bg-red-900/20 hover:bg-red-900/40 text-red-400 font-bold text-[10px] uppercase tracking-widest rounded-xl border border-red-900/50">Cancel & Refund</button>
+                                <div className="mt-8 flex justify-center md:justify-end border-t border-white/10 pt-6">
+                                    <button onClick={cancelNumber} className="btn-animate px-8 py-3.5 bg-red-900/20 hover:bg-red-500 text-red-400 hover:text-white font-bold text-xs uppercase tracking-widest rounded-xl border border-red-900/50 transition-colors">Cancel & Refund</button>
                                 </div>
                             )}
                             {activeOrder.status === 'Completed' && (
-                                <div className="mt-6 flex justify-end border-t border-white/10 pt-4">
-                                    <button onClick={() => setActiveOrder(null)} className="btn-animate px-6 py-2.5 bg-white text-black font-bold text-[10px] uppercase tracking-widest rounded-xl">Close</button>
+                                <div className="mt-8 flex justify-center md:justify-end border-t border-white/10 pt-6">
+                                    <button onClick={() => setActiveOrder(null)} className="btn-animate px-10 py-3.5 bg-white text-black font-bold text-xs uppercase tracking-widest rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.3)]">Complete</button>
                                 </div>
                             )}
                         </div>
-                    )}
-
-                    {/* Services Grid */}
-                    {isLoadingRates ? (
-                        <div className="py-20 flex justify-center"><RefreshCw className="w-8 h-8 text-brand-primary animate-spin" /></div>
-                    ) : filteredServices.length === 0 ? (
-                        <div className="text-center py-16 text-gray-600 font-mono text-[10px] uppercase tracking-widest">No services found for this country.</div>
                     ) : (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                            {filteredServices.map((service, idx) => {
-                                // Calculate display price based on duration for UI info
-                                let displayPrice = service.finalPrice;
-                                if (selectedDuration === '3 days') displayPrice *= 2;
-                                if (selectedDuration === '7 days') displayPrice *= 3;
-                                if (selectedDuration === '14 days') displayPrice *= 4;
-                                if (selectedDuration === '25 days') displayPrice *= 5;
-
-                                return (
-                                    <div key={service.code} className="glass-panel p-4 rounded-2xl flex flex-col hover:border-brand-primary/40 hover:bg-[rgba(255,255,255,0.02)] transition-all group animate-fade-in-up" style={{animationDelay: `${(idx%20) * 0.03}s`}}>
-                                        <div className="flex items-center gap-3 mb-4">
-                                            <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:bg-brand-primary/10 shrink-0">
-                                                <MessageSquare className="w-5 h-5 text-brand-primary"/>
+                        /* Configuration & Purchase Area */
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            
+                            {/* Left Side: Configuration Controls */}
+                            <div className="lg:col-span-2 space-y-6">
+                                <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 shadow-lg">
+                                    <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-white mb-6 flex items-center gap-3 border-b border-white/10 pb-4">
+                                        <Settings className="w-5 h-5 text-brand-primary"/> Configuration
+                                    </h3>
+                                    
+                                    <div className="space-y-5">
+                                        {/* Country Select */}
+                                        <div>
+                                            <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em] pl-1">Target Country</label>
+                                            <div className="relative">
+                                                <select value={selectedCountry} onChange={e => setSelectedCountry(e.target.value)} className="glass-input allow-select font-bold uppercase tracking-wider text-sm py-4 appearance-none cursor-pointer hover:border-brand-primary/50 transition-colors">
+                                                    {COUNTRIES.map(c => <option key={c} value={c} className="bg-[#111]">{c}</option>)}
+                                                </select>
+                                                <ChevronDown className="w-5 h-5 text-gray-400 absolute right-4 top-4 pointer-events-none"/>
                                             </div>
-                                            <p className="font-bold text-[11px] text-white uppercase tracking-wide truncate" title={service.name}>{service.name}</p>
                                         </div>
-                                        <div className="mt-auto flex items-center justify-between">
-                                            <span className="font-mono font-bold text-white text-sm">${displayPrice.toFixed(2)}</span>
-                                            <button onClick={() => buyNumber(service)} disabled={isBuying || (activeOrder && activeOrder.status === 'Active')} className="btn-animate bg-white/10 hover:bg-white text-white hover:text-black p-2 rounded-lg transition-colors disabled:opacity-50">
-                                                <ShoppingCart className="w-4 h-4"/>
-                                            </button>
+
+                                        {/* Duration Select */}
+                                        <div>
+                                            <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em] pl-1">Rental Duration</label>
+                                            <div className="relative">
+                                                <select value={selectedDuration} onChange={e => setSelectedDuration(e.target.value)} className="glass-input allow-select font-bold uppercase tracking-wider text-sm py-4 appearance-none cursor-pointer hover:border-brand-primary/50 transition-colors">
+                                                    <option value="15 minutes" className="bg-[#111]">15 Minutes (Standard OTP)</option>
+                                                    <option value="3 days" className="bg-[#111]">3 Days</option>
+                                                    <option value="7 days" className="bg-[#111]">7 Days</option>
+                                                    <option value="14 days" className="bg-[#111]">14 Days</option>
+                                                    <option value="25 days" className="bg-[#111]">25 Days</option>
+                                                </select>
+                                                <Clock className="w-5 h-5 text-gray-400 absolute right-4 top-4 pointer-events-none"/>
+                                            </div>
+                                        </div>
+
+                                        {/* Service Select */}
+                                        <div>
+                                            <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em] pl-1">Platform / Service</label>
+                                            {isLoadingRates ? (
+                                                <div className="glass-input py-4 flex items-center justify-center opacity-50">
+                                                    <RefreshCw className="w-5 h-5 animate-spin"/>
+                                                </div>
+                                            ) : services.length === 0 ? (
+                                                <div className="glass-input py-4 text-center text-red-400 font-mono text-xs uppercase">No services available</div>
+                                            ) : (
+                                                <div className="relative animate-fade-in-up">
+                                                    <select value={selectedServiceCode} onChange={e => setSelectedServiceCode(e.target.value)} className="glass-input allow-select font-bold uppercase tracking-wider text-sm py-4 appearance-none cursor-pointer hover:border-brand-primary/50 transition-colors border-brand-primary/30">
+                                                        {services.map(s => <option key={s.code} value={s.code} className="bg-[#111]">{s.name}</option>)}
+                                                    </select>
+                                                    <Smartphone className="w-5 h-5 text-brand-primary absolute right-4 top-4 pointer-events-none"/>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
-                                )
-                            })}
+                                </div>
+                            </div>
+
+                            {/* Right Side: Buy Card */}
+                            <div className="lg:col-span-1">
+                                <div className="glass-effect p-8 rounded-3xl text-center flex flex-col items-center justify-center h-full min-h-[300px] border border-brand-primary/30 animate-glow-pulse group relative overflow-hidden">
+                                    
+                                    <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                    
+                                    {isLoadingRates ? (
+                                        <RefreshCw className="w-10 h-10 text-brand-primary animate-spin"/>
+                                    ) : !currentServiceObj ? (
+                                        <p className="text-gray-500 font-mono uppercase text-xs tracking-widest">Select a valid configuration</p>
+                                    ) : (
+                                        <div className="relative z-10 flex flex-col items-center w-full animate-spring-card">
+                                            <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 mb-6 shadow-lg group-hover:scale-110 transition-transform duration-500">
+                                                <MessageSquare className="w-8 h-8 text-brand-primary"/>
+                                            </div>
+                                            
+                                            <h2 className="text-xl sm:text-2xl font-black uppercase tracking-widest text-white mb-2">{currentServiceObj.name}</h2>
+                                            
+                                            <div className="flex flex-wrap justify-center gap-2 mb-6">
+                                                <span className="text-[9px] bg-black/50 text-gray-300 px-2 py-1 rounded border border-white/10 uppercase tracking-widest">{selectedCountry}</span>
+                                                <span className="text-[9px] bg-black/50 text-gray-300 px-2 py-1 rounded border border-white/10 uppercase tracking-widest">{selectedDuration}</span>
+                                            </div>
+                                            
+                                            <div className="text-5xl font-mono font-light text-white mb-8 drop-shadow-md">
+                                                <span className="text-2xl text-brand-primary">$</span>{displayPrice.toFixed(2)}
+                                            </div>
+                                            
+                                            <button onClick={() => buyNumber(currentServiceObj)} disabled={isBuying} className="btn-animate relative w-full overflow-hidden rounded-2xl p-[2px] disabled:opacity-50">
+                                                <span className="absolute inset-0 bg-gradient-to-r from-brand-primary via-[#fcf6ba] to-brand-primary bg-[length:200%_100%] animate-shimmer rounded-2xl"></span>
+                                                <span className="relative flex items-center justify-center gap-3 bg-black hover:bg-transparent text-white hover:text-black font-black py-4 px-6 rounded-[14px] text-sm tracking-[0.2em] uppercase transition-all duration-300">
+                                                    {isBuying ? <RefreshCw className="w-5 h-5 animate-spin"/> : <ShoppingCart className="w-5 h-5"/>}
+                                                    {isBuying ? 'PROCESSING' : 'BUY NOW'}
+                                                </span>
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>
