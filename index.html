@@ -3595,13 +3595,13 @@
 
             const toggleListening = () => {
                 // 🟢 FIX: স্ক্রিনে বাবল আটকে থাকলেও বাটনে ক্লিক করলেই মুছে যাবে 🟢
-                if (isListening || isSpeaking || isProcessing || transcript) {
+                if (isListening || isSpeaking || isProcessing || transcript !== '') {
                     recognitionRef.current?.stop();
                     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
                     setIsListening(false);
                     setIsSpeaking(false);
                     setIsProcessing(false);
-                    setTranscript('');
+                    setTranscript(''); // 👈 ক্লিক করলেই সাথে সাথে বাবল ভ্যানিশ হবে
                 } else {
                     // 🟢 iOS/Mobile Hack: ক্লিক করার সাথে সাথেই স্পিচ ইঞ্জিন আনলক করা 🟢
                     if ('speechSynthesis' in window) {
@@ -3622,12 +3622,12 @@
                 }
             };
 
-            // 🟢 AUTO-CLEAR TRANSCRIPT IF STUCK 🟢
+            // 🟢 AUTO-CLEAR TRANSCRIPT AFTER 10 SECONDS 🟢
             useEffect(() => {
                 let timeout;
-                // যদি কথা বলা বা শোনা বন্ধ থাকে, কিন্তু বাবল স্ক্রিনে থাকে, তবে ৪ সেকেন্ড পর মুছে যাবে
+                // কথা বলা শেষ হলে লেখাটি ঠিক ১০ সেকেন্ড স্ক্রিনে থাকবে
                 if (transcript && !isSpeaking && !isProcessing && !isListening) {
-                    timeout = setTimeout(() => setTranscript(''), 4000);
+                    timeout = setTimeout(() => setTranscript(''), 10000); // 10000ms = 10 Seconds
                 }
                 return () => clearTimeout(timeout);
             }, [transcript, isSpeaking, isProcessing, isListening]);
@@ -3712,7 +3712,7 @@
                 utterance.onend = () => {
                     clearInterval(window.speechResumeInterval);
                     setIsSpeaking(false);
-                    setTimeout(() => setTranscript(''), 3000);
+                    // টাইমার এখন উপরের ১০ সেকেন্ডের useEffect দ্বারা কন্ট্রোল হবে
                 };
                 
                 utterance.onerror = () => {
@@ -3739,7 +3739,7 @@
                     checkInterval = setInterval(() => {
                         if (!window.speechSynthesis.speaking) {
                             setIsSpeaking(false);
-                            setTimeout(() => setTranscript(''), 3000);
+                            // টাইমার এখন উপরের ১০ সেকেন্ডের useEffect দ্বারা কন্ট্রোল হবে
                             clearInterval(checkInterval);
                         }
                     }, 500);
