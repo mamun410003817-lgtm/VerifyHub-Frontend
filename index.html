@@ -153,6 +153,12 @@
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         
+        html, body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: #020617; /* বেস কালার যাতে সাদা দেখা না যায় */
+        }
         body {
             /* 🟢 Premium Deep Navy Blue & Ocean Cyan Gradient (Non-Black) 🟢 */
             background: radial-gradient(circle at 0% 0%, #1e3a8a 0%, transparent 60%),
@@ -3550,8 +3556,14 @@
                     setIsProcessing(false);
                     setTranscript('');
                 } else {
-                    // নতুন করে শুরু করা
-                    window.speechSynthesis.cancel();
+                    // 🟢 iOS/Mobile Hack: ক্লিক করার সাথে সাথেই স্পিচ ইঞ্জিন আনলক করা 🟢
+                    if ('speechSynthesis' in window) {
+                        window.speechSynthesis.cancel();
+                        const unlockUtterance = new SpeechSynthesisUtterance('');
+                        unlockUtterance.volume = 0; // সাইলেন্ট
+                        window.speechSynthesis.speak(unlockUtterance);
+                    }
+
                     setIsSpeaking(false);
                     setTranscript('Listening...');
                     try {
@@ -3652,6 +3664,8 @@
                     setIsSpeaking(false);
                 };
                 
+                // 🟢 মোবাইল ব্রাউজার ঘুমে থাকলে জাগানোর জন্য Force Resume 🟢
+                window.speechSynthesis.resume();
                 window.speechSynthesis.speak(utterance);
             };
 
