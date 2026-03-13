@@ -3568,14 +3568,42 @@
                 setIsProcessing(false);
             };
 
+            // 🟢 UPDATED: Better Voice Quality Logic 🟢
             const speakText = (text) => {
                 if (!('speechSynthesis' in window)) return;
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
                 
                 const isBengali = /[\u0980-\u09FF]/.test(text);
-                if(isBengali) utterance.lang = 'bn-BD';
-                else utterance.lang = 'en-US';
+                const targetLang = isBengali ? 'bn-BD' : 'en-US';
+                utterance.lang = targetLang;
+                
+                // পিচ এবং স্পিড একটু ন্যাচারাল করার চেষ্টা
+                utterance.pitch = 1.05; 
+                utterance.rate = 0.95; 
+
+                // ডিভাইসের সেরা ভয়েসটি খুঁজে বের করা
+                const voices = window.speechSynthesis.getVoices();
+                if (voices && voices.length > 0) {
+                    let bestVoice = null;
+                    
+                    // ১. প্রথমে Google এর নিজস্ব ন্যাচারাল ভয়েস খুঁজবে
+                    bestVoice = voices.find(v => v.lang.includes(isBengali ? 'bn' : 'en') && v.name.includes('Google'));
+                    
+                    // ২. যদি Google এর ভয়েস না পায়, তাহলে ন্যাটিভ/ন্যাচারাল অন্য কোনো ভয়েস খুঁজবে
+                    if (!bestVoice) {
+                        bestVoice = voices.find(v => v.lang.includes(isBengali ? 'bn' : 'en') && (v.name.includes('Natural') || v.name.includes('Premium')));
+                    }
+                    
+                    // ৩. যদি তাও না পায়, তাহলে ওই ভাষার যেকোনো ডিফল্ট ভয়েস নেবে
+                    if (!bestVoice) {
+                        bestVoice = voices.find(v => v.lang.includes(isBengali ? 'bn' : 'en'));
+                    }
+
+                    if (bestVoice) {
+                        utterance.voice = bestVoice;
+                    }
+                }
                 
                 utterance.onstart = () => setIsSpeaking(true);
                 utterance.onend = () => {
@@ -3585,6 +3613,13 @@
                 utterance.onerror = () => setIsSpeaking(false);
                 window.speechSynthesis.speak(utterance);
             };
+
+            // কিছু ব্রাউজারে (যেমন ক্রোম) ভয়েস লোড হতে একটু সময় নেয়, তাই এটি আগে থেকেই কল করে রাখা ভালো
+            useEffect(() => {
+                if (typeof window !== 'undefined' && window.speechSynthesis) {
+                    window.speechSynthesis.getVoices();
+                }
+            }, []);
 
             if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) return null;
 
