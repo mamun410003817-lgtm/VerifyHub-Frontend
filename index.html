@@ -58,7 +58,7 @@
               'glow-pulse': 'glowPulse 3s alternate infinite',
               'border-flow': 'borderFlow 4s linear infinite',
               'water-drop': 'waterDropRise 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
-              'bubble-fade-out': 'bubbleFadeOut 0.4s ease-in forwards',
+              'suck-into-button': 'suckIntoButton 0.5s cubic-bezier(0.36, 0, 0.66, -0.56) forwards',
             },
             keyframes: {
               matrixIn: {
@@ -84,13 +84,13 @@
                 '50%': { transform: 'translateY(-15px) rotate(2deg)' }
               },
               waterDropRise: {
-                '0%': { transform: 'translateY(30px) scale(0)', opacity: '0' },
-                '60%': { transform: 'translateY(-8px) scale(1.1)', opacity: '1' },
+                '0%': { transform: 'translateY(50px) scale(0)', opacity: '0' },
+                '60%': { transform: 'translateY(-10px) scale(1.05)', opacity: '1' },
                 '100%': { transform: 'translateY(0px) scale(1)', opacity: '1' }
               },
-              bubbleFadeOut: {
+              suckIntoButton: {
                 '0%': { transform: 'translateY(0px) scale(1)', opacity: '1' },
-                '100%': { transform: 'translateY(20px) scale(0.7)', opacity: '0', filter: 'blur(5px)' }
+                '100%': { transform: 'translateY(60px) scale(0)', opacity: '0' }
               },
               fadeInUp: {
                 '0%': { opacity: '0', transform: 'translateY(30px) scale(0.98)' },
@@ -154,10 +154,10 @@
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         
         body {
-            background: radial-gradient(circle at 10% 20%, rgba(6, 182, 212, 0.12) 0%, transparent 35%),
-                        radial-gradient(circle at 90% 80%, rgba(191, 149, 63, 0.08) 0%, transparent 35%),
-                        radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.4) 0%, transparent 100%),
-                        linear-gradient(180deg, #02040a 0%, #090e17 50%, #010205 100%);
+            /* 🟢 Premium Deep Navy Blue & Ocean Cyan Gradient (Non-Black) 🟢 */
+            background: radial-gradient(circle at 0% 0%, #1e3a8a 0%, transparent 60%),
+                        radial-gradient(circle at 100% 100%, #0f766e 0%, transparent 60%),
+                        linear-gradient(135deg, #172554 0%, #082f49 100%);
             background-attachment: fixed;
             background-size: cover;
             color: #ffffff;
@@ -1146,7 +1146,7 @@
               {showCart && user.role === 'customer' && <CartModal cart={cart} setCart={setCart} setShowCart={setShowCart} balance={currentUserBalance} user={user} promoSettings={promoSettings} triggerToast={triggerToast} addNotification={addNotification} />}
               
               {/* 🟢 CENTERED AI VOICE CHATBOT (Live Chat Removed) 🟢 */}
-              {user && user.role === 'customer' && <AiVoiceAssistant />}
+              {user && user.role === 'customer' && <AiVoiceAssistant isLoggedIn={true} activeTab={activeTab} />}
             </div>
           );
         }
@@ -3489,7 +3489,7 @@
           );
         }
 
-        function AiVoiceAssistant() {
+        function AiVoiceAssistant({ isLoggedIn, activeTab }) {
             const [isListening, setIsListening] = useState(false);
             const [isProcessing, setIsProcessing] = useState(false);
             const [isSpeaking, setIsSpeaking] = useState(false);
@@ -3500,17 +3500,18 @@
 
             useEffect(() => {
                 const interval = setInterval(() => {
-                    if (!isListening && !isSpeaking && !isProcessing && !transcript) {
+                    // শুধুমাত্র যখন ইউজার লগইন থাকবে, 'store' (Main Dashboard) ট্যাবে থাকবে এবং ভয়েস ইঞ্জিন ফ্রি থাকবে
+                    if (isLoggedIn && activeTab === 'store' && !isListening && !isSpeaking && !isProcessing && !transcript) {
                         setShowBubble(true);
                         setBubbleExiting(false);
                         setTimeout(() => {
-                            setBubbleExiting(true);
-                            setTimeout(() => setShowBubble(false), 400); // Wait for exit anim
-                        }, 3000); // 3 সেকেন্ড দৃশ্যমান থাকবে
+                            setBubbleExiting(true); // ব্যাগের ভেতর ঢুকে যাওয়ার অ্যানিমেশন শুরু
+                            setTimeout(() => setShowBubble(false), 500); // অ্যানিমেশন শেষ হলে রিমুভ
+                        }, 4000); // ৪ সেকেন্ড দৃশ্যমান থাকবে
                     }
-                }, 5000); // ৫ সেকেন্ড পর পর আসবে
+                }, 10000); // ১০ সেকেন্ড পর পর আসবে
                 return () => clearInterval(interval);
-            }, [isListening, isSpeaking, isProcessing, transcript]);
+            }, [isListening, isSpeaking, isProcessing, transcript, isLoggedIn, activeTab]);
 
             useEffect(() => {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -3540,10 +3541,16 @@
             }, []);
 
             const toggleListening = () => {
-                if (isListening) {
+                if (isListening || isSpeaking || isProcessing) {
+                    // যদি কথা বলছে, শুনছে বা প্রসেস করছে, তবে ক্লিক করলে সব বন্ধ হয়ে যাবে
                     recognitionRef.current?.stop();
+                    window.speechSynthesis.cancel();
                     setIsListening(false);
+                    setIsSpeaking(false);
+                    setIsProcessing(false);
+                    setTranscript('');
                 } else {
+                    // নতুন করে শুরু করা
                     window.speechSynthesis.cancel();
                     setIsSpeaking(false);
                     setTranscript('Listening...');
@@ -3590,6 +3597,9 @@
                 
                 const utterance = new SpeechSynthesisUtterance(cleanTextForSpeech);
                 
+                // 🟢 FIX: ব্রাউজার যাতে মাঝপথে কথা থামিয়ে না দেয় (Prevent Garbage Collection) 🟢
+                window.speechUtteranceRef = utterance;
+                
                 const isBengali = /[\u0980-\u09FF]/.test(text);
                 const targetLang = isBengali ? 'bn-BD' : 'en-US';
                 utterance.lang = targetLang;
@@ -3603,15 +3613,12 @@
                 if (voices && voices.length > 0) {
                     let bestVoice = null;
                     
-                    // ১. প্রথমে Google এর নিজস্ব ন্যাচারাল ভয়েস খুঁজবে
                     bestVoice = voices.find(v => v.lang.includes(isBengali ? 'bn' : 'en') && v.name.includes('Google'));
                     
-                    // ২. যদি Google এর ভয়েস না পায়, তাহলে ন্যাটিভ/ন্যাচারাল অন্য কোনো ভয়েস খুঁজবে
                     if (!bestVoice) {
                         bestVoice = voices.find(v => v.lang.includes(isBengali ? 'bn' : 'en') && (v.name.includes('Natural') || v.name.includes('Premium')));
                     }
                     
-                    // ৩. যদি তাও না পায়, তাহলে ওই ভাষার যেকোনো ডিফল্ট ভয়েস নেবে
                     if (!bestVoice) {
                         bestVoice = voices.find(v => v.lang.includes(isBengali ? 'bn' : 'en'));
                     }
@@ -3621,12 +3628,30 @@
                     }
                 }
                 
-                utterance.onstart = () => setIsSpeaking(true);
+                utterance.onstart = () => {
+                    setIsSpeaking(true);
+                    // Chrome 15-second speech cutoff bug fix
+                    window.speechResumeInterval = setInterval(() => {
+                        if (window.speechSynthesis.speaking) {
+                            window.speechSynthesis.pause();
+                            window.speechSynthesis.resume();
+                        } else {
+                            clearInterval(window.speechResumeInterval);
+                        }
+                    }, 10000);
+                };
+                
                 utterance.onend = () => {
+                    clearInterval(window.speechResumeInterval);
                     setIsSpeaking(false);
                     setTimeout(() => setTranscript(''), 3000);
-                }
-                utterance.onerror = () => setIsSpeaking(false);
+                };
+                
+                utterance.onerror = () => {
+                    clearInterval(window.speechResumeInterval);
+                    setIsSpeaking(false);
+                };
+                
                 window.speechSynthesis.speak(utterance);
             };
 
@@ -3637,14 +3662,29 @@
                 }
             }, []);
 
+            // 🟢 FORCE STOP FIX: স্পিচ ইঞ্জিন থেমে গেলে জোরপূর্বক UI আপডেট করার চেকার 🟢
+            useEffect(() => {
+                let checkInterval;
+                if (isSpeaking) {
+                    checkInterval = setInterval(() => {
+                        if (!window.speechSynthesis.speaking) {
+                            setIsSpeaking(false);
+                            setTimeout(() => setTranscript(''), 3000);
+                            clearInterval(checkInterval);
+                        }
+                    }, 500);
+                }
+                return () => clearInterval(checkInterval);
+            }, [isSpeaking]);
+
             if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) return null;
 
             return (
                 <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[160] flex flex-col items-center gap-3 w-full px-4">
                     
-                    {/* Welcome / Instruction Bubble (Water Drop Animation) */}
+                    {/* Welcome / Instruction Bubble (Water Drop Animation & Suck into Button) */}
                     {showBubble && !isListening && !isSpeaking && !isProcessing && !transcript && (
-                        <div className={`relative mb-2 origin-bottom transform-gpu ${bubbleExiting ? 'animate-bubble-fade-out' : 'animate-water-drop'}`}>
+                        <div className={`relative mb-2 origin-bottom transform-gpu ${bubbleExiting ? 'animate-suck-into-button' : 'animate-water-drop'}`}>
                             <div className="glass-effect px-4 py-2.5 rounded-2xl text-[10px] sm:text-xs font-medium tracking-wide text-brand-primary shadow-[0_10px_30px_rgba(0,0,0,0.8)] flex items-center justify-center gap-2 border border-brand-primary/40 max-w-[280px] text-center bg-black/60 backdrop-blur-md">
                                 <Sparkles className="w-4 h-4 animate-pulse shrink-0" />
                                 <span>If you don't understand anything, talk to me. I will help you.</span>
@@ -3655,17 +3695,17 @@
 
                     {/* Active Transcript Bubble */}
                     {transcript && (
-                        <div className="glass-effect p-4 rounded-2xl text-[11px] sm:text-xs font-medium tracking-wide text-white w-full max-w-[320px] shadow-[0_20px_50px_rgba(0,0,0,0.9)] animate-fade-in-up leading-relaxed text-center border border-white/20">
-                            <span className="text-brand-primary mb-2 flex items-center justify-center gap-1.5 font-bold uppercase tracking-[0.2em] text-[9px]"><Zap className="w-3 h-3"/> AI Agent</span>
+                        <div className="glass-effect p-3 rounded-2xl text-[10px] sm:text-[11px] font-medium tracking-wide text-white w-max max-w-[260px] shadow-[0_20px_50px_rgba(0,0,0,0.9)] animate-fade-in-up leading-relaxed text-center border border-white/20">
+                            <span className="text-brand-primary mb-1.5 flex items-center justify-center gap-1.5 font-bold uppercase tracking-[0.2em] text-[8px]"><Zap className="w-2.5 h-2.5"/> AI Agent</span>
                             {transcript}
                         </div>
                     )}
 
                     <button 
                         onClick={toggleListening} 
-                        className={`btn-animate w-16 h-16 rounded-full shadow-[0_10px_40px_rgba(0,0,0,0.8)] flex items-center justify-center transition-all border-2 backdrop-blur-xl ${isListening ? 'bg-red-500/20 border-red-500 text-red-500 animate-pulse shadow-[0_0_30px_rgba(239,68,68,0.5)]' : isSpeaking ? 'bg-brand-primary/20 border-brand-primary text-brand-primary animate-bounce shadow-[0_0_30px_rgba(6,182,212,0.5)]' : 'bg-white/10 border-white/30 text-white hover:bg-white hover:text-black hover:border-white'}`}
+                        className={`btn-animate w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-[0_10px_40px_rgba(0,0,0,0.8)] flex items-center justify-center transition-all border-2 backdrop-blur-xl ${isListening ? 'bg-red-500/20 border-red-500 text-red-500 animate-pulse shadow-[0_0_30px_rgba(239,68,68,0.5)]' : isSpeaking ? 'bg-brand-primary/20 border-brand-primary text-brand-primary animate-bounce shadow-[0_0_30px_rgba(6,182,212,0.5)]' : 'bg-white/10 border-white/30 text-white hover:bg-white hover:text-black hover:border-white'}`}
                     >
-                        {isProcessing ? <RefreshCw className="w-7 h-7 animate-spin"/> : isListening ? <Mic className="w-7 h-7 animate-ping" /> : isSpeaking ? <Volume2 className="w-7 h-7 animate-pulse" /> : <Mic className="w-7 h-7" />}
+                        {isProcessing ? <RefreshCw className="w-5 h-5 animate-spin"/> : isListening ? <Mic className="w-5 h-5 animate-ping" /> : isSpeaking ? <Volume2 className="w-5 h-5 animate-pulse" /> : <Mic className="w-5 h-5" />}
                     </button>
                 </div>
             );
