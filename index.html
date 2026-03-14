@@ -1077,9 +1077,26 @@
 
           if (!user) {
             return (
-              <div className="min-h-screen flex items-center justify-center p-4 relative font-sans w-full bg-transparent text-white">
-                <FloatingLogos />
-                <div className="w-full max-w-[400px] animate-matrix-in z-10">
+              <div className="min-h-screen flex items-center justify-center p-4 relative font-sans w-full text-white overflow-hidden bg-[#0b120c]">
+                
+                {/* 🟢 Custom Cartoon Video Background (Mobile Fix) 🟢 */}
+                <video 
+                    autoPlay 
+                    loop 
+                    muted 
+                    playsInline 
+                    disablePictureInPicture
+                    preload="auto"
+                    className="absolute inset-0 w-full h-full object-cover md:object-center z-[0]"
+                    style={{ objectPosition: "50% 50%" }}
+                >
+                    <source src="https://qdeadbqoawsqhnliikhw.supabase.co/storage/v1/object/public/videos/2bg-video.mp4.mp4" type="video/mp4" />
+                </video>
+                
+                {/* 🟢 Light Overlay (লগইন বক্স স্পষ্ট করার জন্য) 🟢 */}
+                <div className="absolute inset-0 bg-black/30 sm:bg-black/40 z-[1] backdrop-blur-[1px] sm:backdrop-blur-none"></div>
+
+                <div className="w-full max-w-[400px] animate-matrix-in z-10 relative">
                   <div className="flex flex-col items-center mb-8">
                     <EliteLogo className="w-20 h-20 mb-4 drop-shadow-[0_0_15px_rgba(191,149,63,0.5)]" />
                     <h2 className="text-4xl sm:text-5xl font-bold tracking-[0.2em] text-white uppercase text-center w-full drop-shadow-lg">
@@ -1195,13 +1212,13 @@
 
                 {(!maintenanceSettings?.active || user.role === 'admin') && (
                     <div className="w-full relative z-30 mb-8 px-1 sm:px-0">
-                      <div className="bg-[#162316]/80 backdrop-blur-md rounded-2xl p-1 sm:p-1.5 flex flex-nowrap overflow-x-hidden justify-between sm:justify-center gap-1 w-full border border-brand-primary/20 mx-auto max-w-5xl shadow-md">
+                      <div className="bg-[#162316]/80 backdrop-blur-md rounded-2xl p-1 flex flex-nowrap overflow-x-auto scrollbar-hide justify-between sm:justify-center gap-0.5 sm:gap-1 w-full border border-brand-primary/20 mx-auto max-w-5xl shadow-md">
                         {(user.role === 'admin' ? ADMIN_TABS : CUSTOMER_TABS).map(tab => (
-                          <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`btn-animate shrink-0 flex-1 relative flex flex-col items-center justify-center py-2 px-1 sm:px-2 rounded-xl min-w-[55px] sm:min-w-[70px] group transition-all duration-300 ${activeTab === tab.id ? 'bg-brand-primary text-[#0b120c] shadow-inner' : 'border border-transparent hover:bg-white/5 text-gray-400'}`}>
-                              <div className="relative z-10 flex flex-col items-center justify-center w-full">
-                                  <tab.icon className={`w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 ${activeTab === tab.id ? 'scale-110 mb-0.5 text-[#0b120c]' : 'mb-0.5 text-gray-400 group-hover:text-brand-primary'}`} strokeWidth={activeTab === tab.id ? 2 : 1.5} /> 
-                                  <span className={`text-[7px] sm:text-[9px] leading-tight uppercase tracking-widest text-center whitespace-nowrap transition-colors duration-300 ${activeTab === tab.id ? 'font-bold text-[#0b120c]' : 'font-medium text-gray-400 group-hover:text-white'}`}>
-                                      {tab.label}
+                          <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`btn-animate shrink-0 flex-1 relative flex flex-col items-center justify-center py-2 px-0.5 sm:px-2 rounded-xl min-w-[50px] sm:min-w-[70px] group transition-all duration-300 ${activeTab === tab.id ? 'bg-brand-primary text-[#0b120c] shadow-inner' : 'border border-transparent hover:bg-white/5 text-gray-400'}`}>
+                              <div className="relative z-10 flex flex-col items-center justify-center w-full h-full">
+                                  <tab.icon className={`w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 ${activeTab === tab.id ? 'scale-110 mb-1 text-[#0b120c]' : 'mb-1 text-gray-400 group-hover:text-brand-primary'}`} strokeWidth={activeTab === tab.id ? 2 : 1.5} /> 
+                                  <span className={`text-[7px] sm:text-[9px] leading-[1.1] uppercase tracking-wider text-center whitespace-normal break-words w-full transition-colors duration-300 ${activeTab === tab.id ? 'font-bold text-[#0b120c]' : 'font-medium text-gray-400 group-hover:text-white'}`}>
+                                      {tab.label === 'SMS Verifications' ? 'SMS Verify' : tab.label}
                                   </span>
                               </div>
                           </button>
