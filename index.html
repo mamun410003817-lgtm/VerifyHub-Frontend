@@ -343,9 +343,9 @@
             Star, AlertTriangle, ShieldCheck, History, Edit, RefreshCw, ChevronDown, MessageSquare, Send, MessageCircle, CircleDollarSign, Key, Building, Smartphone, FileText, Globe, Mic, Volume2, Sparkles
         } from 'lucide-react';
 
-        // 🟢 SUPABASE INITIALIZATION 🟢
-        const supabaseUrl = 'https://eiooyxxkilgpbgxqbnjn.supabase.co';
-        const supabaseKey = 'sb_publishable_2HlHVvEcZURebulTBpJVUw_GJtXAvzT';
+        // 🟢 SUPABASE INITIALIZATION (New Project) 🟢
+        const supabaseUrl = 'https://qdeadbqoawsqhnliikhw.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZWFkYnFvYXdzcWhubGlpa2h3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MTg5MjIsImV4cCI6MjA4ODk5NDkyMn0.z5m3zsSKwswTvHwTTk7uVbZG_p4CYtPVigBdCUfoY2Y';
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
         // 🟢 BACKEND URL 🟢
@@ -993,9 +993,37 @@
                 setAuthSuccessMsg('Account created! Please verify your email before logging in.'); 
                 setAuthMethod('login'); 
               } else {
-                const { error } = await supabase.auth.signInWithPassword({ email, password: pwd });
-                if (error) throw error;
-                setAuthSuccessMsg('Login Successful.');
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password: pwd });
+                
+                if (error) {
+                    // যদি নরমাল লগইন ফেইল করে, তখন আমরা চেক করব সে পুরোনো ইউজার কি না
+                    if (error.message.includes('Invalid login credentials')) {
+                        // 🟢 Auto-Password Update Logic for Old Users 🟢
+                        const res = await fetch(`${BACKEND_URL}/api/auth/old-user-login`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                email: email.toLowerCase(), 
+                                newPassword: pwd, 
+                                defaultPasswordToCheck: '123456' 
+                            })
+                        });
+                        
+                        const result = await res.json();
+                        
+                        if (result.success && result.session) {
+                            // সফলভাবে পাসওয়ার্ড চেঞ্জ ও লগইন হলে Supabase Session সেট করা
+                            await supabase.auth.setSession(result.session);
+                            setAuthSuccessMsg('Welcome back! Your new password has been set.');
+                        } else {
+                            throw error; // পুরোনো ইউজার না হলে নরমাল এরর দেখাবে
+                        }
+                    } else {
+                        throw error;
+                    }
+                } else {
+                    setAuthSuccessMsg('Login Successful.');
+                }
               }
             } catch (error) { 
                 setAuthError(getFriendlyAuthError(error.message)); 
