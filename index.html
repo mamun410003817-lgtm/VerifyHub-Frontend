@@ -760,14 +760,19 @@
 
           useEffect(() => { setTimeout(() => setShowSplash(false), 800); }, []);
 
-          // 🟢 CHECK FOR EMAIL VERIFICATION SUCCESS 🟢
+          // 🟢 CHECK FOR EMAIL VERIFICATION SUCCESS & AUTO-LOGIN 🟢
           useEffect(() => {
               const hash = window.location.hash;
-              // যদি কাস্টমার ইমেইল ভেরিফাই করে সাইটে আসে, তবে URL এ access_token থাকবে
-              if (hash && hash.includes('access_token')) {
+              const query = window.location.search;
+              
+              // নতুন এবং পুরোনো দুই ধরনের লিংকই চেক করবে
+              if (hash.includes('access_token') || query.includes('code=')) {
                   setShowVerificationSuccess(true);
-                  // URL থেকে টোকেন হাইড করে সাইট ক্লিন করার কোড
-                  window.history.replaceState(null, '', window.location.pathname);
+                  
+                  // Supabase-কে অটো-লগইন করার জন্য ২ সেকেন্ড সময় দেওয়া হলো, তারপর লিংক ক্লিন হবে
+                  setTimeout(() => {
+                      window.history.replaceState(null, '', window.location.pathname);
+                  }, 2000);
               }
           }, []);
 
