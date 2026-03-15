@@ -1393,6 +1393,13 @@
             
             const [selectedDuration, setSelectedDuration] = useState('15 minutes'); 
             const [selectedServiceCode, setSelectedServiceCode] = useState('');
+            
+            // 🟢 NEW: USA State Selection Variables 🟢
+            const [selectedUsaState, setSelectedUsaState] = useState('');
+            const usaStatesList = [
+                { value: "", label: "Any State (Random)" },
+                { value: "AL", label: "Alabama (AL)" }, { value: "AK", label: "Alaska (AK)" }, { value: "AZ", label: "Arizona (AZ)" }, { value: "AR", label: "Arkansas (AR)" }, { value: "CA", label: "California (CA)" }, { value: "CO", label: "Colorado (CO)" }, { value: "CT", label: "Connecticut (CT)" }, { value: "DE", label: "Delaware (DE)" }, { value: "DC", label: "District Of Columbia (DC)" }, { value: "FL", label: "Florida (FL)" }, { value: "GA", label: "Georgia (GA)" }, { value: "HI", label: "Hawaii (HI)" }, { value: "ID", label: "Idaho (ID)" }, { value: "IL", label: "Illinois (IL)" }, { value: "IN", label: "Indiana (IN)" }, { value: "IA", label: "Iowa (IA)" }, { value: "KS", label: "Kansas (KS)" }, { value: "KY", label: "Kentucky (KY)" }, { value: "LA", label: "Louisiana (LA)" }, { value: "ME", label: "Maine (ME)" }, { value: "MD", label: "Maryland (MD)" }, { value: "MA", label: "Massachusetts (MA)" }, { value: "MI", label: "Michigan (MI)" }, { value: "MN", label: "Minnesota (MN)" }, { value: "MS", label: "Mississippi (MS)" }, { value: "MO", label: "Missouri (MO)" }, { value: "MT", label: "Montana (MT)" }, { value: "NE", label: "Nebraska (NE)" }, { value: "NV", label: "Nevada (NV)" }, { value: "NH", label: "New Hampshire (NH)" }, { value: "NJ", label: "New Jersey (NJ)" }, { value: "NM", label: "New Mexico (NM)" }, { value: "NY", label: "New York (NY)" }, { value: "NC", label: "North Carolina (NC)" }, { value: "ND", label: "North Dakota (ND)" }, { value: "OH", label: "Ohio (OH)" }, { value: "OK", label: "Oklahoma (OK)" }, { value: "OR", label: "Oregon (OR)" }, { value: "PA", label: "Pennsylvania (PA)" }, { value: "RI", label: "Rhode Island (RI)" }, { value: "SC", label: "South Carolina (SC)" }, { value: "SD", label: "South Dakota (SD)" }, { value: "TN", label: "Tennessee (TN)" }, { value: "TX", label: "Texas (TX)" }, { value: "UT", label: "Utah (UT)" }, { value: "VT", label: "Vermont (VT)" }, { value: "VA", label: "Virginia (VA)" }, { value: "WA", label: "Washington (WA)" }, { value: "WV", label: "West Virginia (WV)" }, { value: "WI", label: "Wisconsin (WI)" }, { value: "WY", label: "Wyoming (WY)" }, { value: "PR", label: "Puerto Rico (PR)" }
+            ];
             const [currentProvider, setCurrentProvider] = useState('');
             const [reuseNumberInput, setReuseNumberInput] = useState('');
             
@@ -1609,6 +1616,11 @@
                     };
                     if (smsMode === 'panda' && reuseNumberInput.trim() !== '') {
                         reqBody.reuseNumber = reuseNumberInput.trim();
+                    }
+                    
+                    // 🟢 NEW: Add state to request body if USA and standard mode 🟢
+                    if (smsMode === 'standard' && (selectedCountry === 'USA' || selectedCountry === 'United States') && selectedUsaState) {
+                        reqBody.state = selectedUsaState;
                     }
 
                     const res = await fetch(`${BACKEND_URL}/api/sms/getNumber`, {
@@ -1860,6 +1872,19 @@
                                                    <input type="text" value={reuseNumberInput} onChange={e => setReuseNumberInput(e.target.value)} placeholder="e.g. 447123456789" className="glass-input allow-select !pl-12 text-xs font-mono" />
                                                 </div>
                                                 <p className="text-[9px] text-brand-primary mt-1.5 uppercase tracking-widest pl-1">Leave blank to get a new number.</p>
+                                            </div>
+                                        )}
+
+                                        {/* 🟢 NEW: USA State Select (Only for Standard Mode & USA) 🟢 */}
+                                        {smsMode === 'standard' && (selectedCountry === 'USA' || selectedCountry === 'United States') && (
+                                            <div className="relative z-30 mb-6">
+                                                <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em] pl-1">Select State <span className="text-brand-primary lowercase tracking-normal">(6s Search Loop)</span></label>
+                                                <div className="relative">
+                                                    <select value={selectedUsaState} onChange={e => setSelectedUsaState(e.target.value)} className="glass-input allow-select font-bold uppercase tracking-wider text-[10px] sm:text-xs py-4 appearance-none cursor-pointer hover:border-brand-primary/50 transition-colors shadow-inner">
+                                                        {usaStatesList.map(st => <option key={st.value} value={st.value} className="bg-[#111]">{st.label}</option>)}
+                                                    </select>
+                                                    <ChevronDown className="w-4 h-4 text-brand-primary absolute right-4 top-4 pointer-events-none"/>
+                                                </div>
                                             </div>
                                         )}
 
