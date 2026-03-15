@@ -3864,6 +3864,7 @@
             const silenceTimerRef = useRef(null);
             const autoWakeTimerRef = useRef(null);
             const recognitionRef = useRef(null);
+            const hasFollowedUpRef = useRef(false); // 🟢 FIX: একবারই প্রশ্ন করার ট্র্যাকার
 
             // Initial greeting bubble logic
             useEffect(() => {
@@ -3880,21 +3881,23 @@
                 return () => clearInterval(interval);
             }, [isListening, isSpeaking, isProcessing, transcript, isLoggedIn, activeTab, chatHistory.length]);
 
-            // 🟢 NEW: Proactive Timers Logic 🟢
+            // 🟢 NEW: Proactive Timers Logic (Ask Only Once) 🟢
             const resetProactiveTimers = useCallback(() => {
                 if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
                 if (autoWakeTimerRef.current) clearTimeout(autoWakeTimerRef.current);
 
-                // If AI just finished speaking, wait 20 seconds for user response. If none, ask if they understood.
-                if (!isSpeaking && chatHistory.length > 0 && !isListening && !isProcessing) {
+                // AI কথা শেষ করার ২০ সেকেন্ড পর চেক করবে। যদি আগে জিজ্ঞেস না করে থাকে, তবেই করবে।
+                if (!isSpeaking && chatHistory.length > 0 && !isListening && !isProcessing && !hasFollowedUpRef.current) {
                     silenceTimerRef.current = setTimeout(() => {
+                        hasFollowedUpRef.current = true; // 👈 মার্ক করে দিলাম যে একবার জিজ্ঞেস করা হয়েছে
                         handleSendToAI("[SYSTEM_SILENCE_TIMEOUT]", true);
                     }, 20000); // 20 Seconds silence timeout
                 }
 
-                // If completely idle for 60 seconds (even if manually stopped), wake up and say hello
-                if (!isSpeaking && !isListening && !isProcessing) {
+                // যদি ইউজার চুপচাপ বসে থাকে, তবে ৬০ সেকেন্ড পর একবারই নক করবে
+                if (!isSpeaking && !isListening && !isProcessing && !hasFollowedUpRef.current) {
                     autoWakeTimerRef.current = setTimeout(() => {
+                        hasFollowedUpRef.current = true; // 👈 মার্ক করে দিলাম
                         handleSendToAI("[SYSTEM_AUTO_WAKE]", true);
                     }, 60000); // 60 Seconds auto-wake
                 }
@@ -3918,7 +3921,8 @@
                     recognitionRef.current.onresult = async (event) => {
                         const text = event.results[0][0].transcript;
                         setTranscript(text);
-                        handleSendToAI(text);
+                        hasFollowedUpRef.current = false; // 👈 ইউজার নিজে থেকে কথা বললে ট্র্যাকার আবার ফ্রেশ হয়ে যাবে
+                        handleSendToAI(text, false);
                     };
 
                     recognitionRef.current.onerror = (event) => {
