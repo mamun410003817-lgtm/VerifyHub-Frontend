@@ -3858,22 +3858,55 @@
             const [transcript, setTranscript] = useState('');
             const [showBubble, setShowBubble] = useState(false);
             const [bubbleExiting, setBubbleExiting] = useState(false);
+            
+            // 🟢 NEW: Memory & Proactive State Variables 🟢
+            const [chatHistory, setChatHistory] = useState([]);
+            const silenceTimerRef = useRef(null);
+            const autoWakeTimerRef = useRef(null);
             const recognitionRef = useRef(null);
 
+            // Initial greeting bubble logic
             useEffect(() => {
                 const interval = setInterval(() => {
-                    // শুধুমাত্র যখন ইউজার লগইন থাকবে, 'store' (Main Dashboard) ট্যাবে থাকবে এবং ভয়েস ইঞ্জিন ফ্রি থাকবে
-                    if (isLoggedIn && activeTab === 'store' && !isListening && !isSpeaking && !isProcessing && !transcript) {
+                    if (isLoggedIn && activeTab === 'store' && !isListening && !isSpeaking && !isProcessing && !transcript && chatHistory.length === 0) {
                         setShowBubble(true);
                         setBubbleExiting(false);
                         setTimeout(() => {
-                            setBubbleExiting(true); // ব্যাগের ভেতর ঢুকে যাওয়ার অ্যানিমেশন শুরু
-                            setTimeout(() => setShowBubble(false), 500); // অ্যানিমেশন শেষ হলে রিমুভ
-                        }, 4000); // ৪ সেকেন্ড দৃশ্যমান থাকবে
+                            setBubbleExiting(true);
+                            setTimeout(() => setShowBubble(false), 500);
+                        }, 4000);
                     }
-                }, 10000); // ১০ সেকেন্ড পর পর আসবে
+                }, 15000); // Initial welcome bubble interval
                 return () => clearInterval(interval);
-            }, [isListening, isSpeaking, isProcessing, transcript, isLoggedIn, activeTab]);
+            }, [isListening, isSpeaking, isProcessing, transcript, isLoggedIn, activeTab, chatHistory.length]);
+
+            // 🟢 NEW: Proactive Timers Logic 🟢
+            const resetProactiveTimers = useCallback(() => {
+                if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+                if (autoWakeTimerRef.current) clearTimeout(autoWakeTimerRef.current);
+
+                // If AI just finished speaking, wait 20 seconds for user response. If none, ask if they understood.
+                if (!isSpeaking && chatHistory.length > 0 && !isListening && !isProcessing) {
+                    silenceTimerRef.current = setTimeout(() => {
+                        handleSendToAI("[SYSTEM_SILENCE_TIMEOUT]", true);
+                    }, 20000); // 20 Seconds silence timeout
+                }
+
+                // If completely idle for 60 seconds (even if manually stopped), wake up and say hello
+                if (!isSpeaking && !isListening && !isProcessing) {
+                    autoWakeTimerRef.current = setTimeout(() => {
+                        handleSendToAI("[SYSTEM_AUTO_WAKE]", true);
+                    }, 60000); // 60 Seconds auto-wake
+                }
+            }, [isSpeaking, isListening, isProcessing, chatHistory]);
+
+            useEffect(() => {
+                resetProactiveTimers();
+                return () => {
+                    if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+                    if (autoWakeTimerRef.current) clearTimeout(autoWakeTimerRef.current);
+                };
+            }, [resetProactiveTimers]);
 
             useEffect(() => {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -3903,14 +3936,17 @@
             }, []);
 
             const toggleListening = () => {
-                // 🟢 FIX: স্ক্রিনে বাবল আটকে থাকলেও বাটনে ক্লিক করলেই মুছে যাবে 🟢
+                // User interaction resets timers
+                if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+                if (autoWakeTimerRef.current) clearTimeout(autoWakeTimerRef.current);
+
                 if (isListening || isSpeaking || isProcessing || transcript !== '') {
                     recognitionRef.current?.stop();
                     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
                     setIsListening(false);
                     setIsSpeaking(false);
                     setIsProcessing(false);
-                    setTranscript(''); // 👈 ক্লিক করলেই সাথে সাথে বাবল ভ্যানিশ হবে
+                    setTranscript(''); 
                 } else {
                     // 🟢 iOS/Mobile Hack: ক্লিক করার সাথে সাথেই স্পিচ ইঞ্জিন আনলক করা 🟢
                     if ('speechSynthesis' in window) {
@@ -3941,28 +3977,40 @@
                 return () => clearTimeout(timeout);
             }, [transcript, isSpeaking, isProcessing, isListening]);
 
-            const handleSendToAI = async (text) => {
+            const handleSendToAI = async (text, isSystemEvent = false) => {
                 setIsProcessing(true);
+                
+                // Only show transcript for user input, not system events
+                if (!isSystemEvent) {
+                    setChatHistory(prev => [...prev, { role: 'user', content: text }]);
+                }
+
                 try {
                     const token = await getAuthToken();
                     const res = await fetch(`${BACKEND_URL}/api/ai-chat`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                        body: JSON.stringify({ message: text })
+                        body: JSON.stringify({ message: text, history: chatHistory })
                     });
                     const data = await res.json();
+                    
                     if (data.success && data.reply) {
-                        // 🟢 FIX: ডিসপ্লে এবং স্পিচ উভয়ের জন্যই সব সিম্বল রিমুভ করা হলো 🟢
                         const cleanText = data.reply.replace(/[*#_~`>-]/g, '').replace(/\n/g, ' ').trim();
                         setTranscript(cleanText);
                         speakText(cleanText);
+                        
+                        // Save AI response to history (keep only last 6 messages to avoid token limit)
+                        setChatHistory(prev => {
+                            const newHistory = [...prev, { role: 'assistant', content: cleanText }];
+                            return newHistory.slice(-6); 
+                        });
                     } else {
                         setTranscript("Sorry, couldn't get a response.");
-                        speakText("দুঃখিত, বুঝতে পারিনি। আবার বলুন।");
+                        speakText("Sorry, I didn't catch that. Please try again.");
                     }
                 } catch (err) {
                     setTranscript("Network Error.");
-                    speakText("নেটওয়ার্ক সমস্যা হচ্ছে।");
+                    speakText("Network issue occurred. Please try again.");
                 }
                 setIsProcessing(false);
             };
