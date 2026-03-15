@@ -1357,9 +1357,9 @@
                           </div>
                         ) : (
                           <>
-                              {activeTab === 'store' && <CustomerDashboardStore inventory={inventory} categories={categories} cart={cart} setCart={setCart} triggerToast={triggerToast} />}
+                              {activeTab === 'store' && <CustomerDashboardStore inventory={inventory} categories={categories} cart={cart} setCart={setCart} triggerToast={triggerToast} bankSettings={bankSettings} />}
                               {/* 🟢 SMS STORE TAB RENDER 🟢 */}
-                              {activeTab === 'sms_store' && <CustomerDashboardSMS user={user} balance={currentUserBalance} setUsersDB={setUsersDB} triggerToast={triggerToast} />}
+                              {activeTab === 'sms_store' && <CustomerDashboardSMS user={user} balance={currentUserBalance} setUsersDB={setUsersDB} triggerToast={triggerToast} bankSettings={bankSettings} />}
                               {activeTab === 'add_funds' && <CustomerDashboardFunds user={user} triggerToast={triggerToast} addNotification={addNotification} bankSettings={bankSettings} cryptoSettings={cryptoSettings} customPayments={customPayments} deposits={deposits} setDeposits={setDeposits} />}
                               {activeTab === 'my_accounts' && <CustomerDashboardVault user={user} purchases={purchases} triggerToast={triggerToast} categories={categories} />}
                               {activeTab === 'profile' && <CustomerDashboardProfile user={user} balance={currentUserBalance} tier={currentUserTier} userInfo={usersDB[user.email]} allOrders={allOrders} deposits={deposits} purchases={purchases} tickets={tickets.filter(t => t && t.email === user.email)} featureSettings={featureSettings} triggerToast={triggerToast} />}
@@ -1369,7 +1369,7 @@
                 </div>
               </main>
 
-              {showCart && user.role === 'customer' && <CartModal cart={cart} setCart={setCart} setShowCart={setShowCart} balance={currentUserBalance} user={user} promoSettings={promoSettings} triggerToast={triggerToast} addNotification={addNotification} />}
+              {showCart && user.role === 'customer' && <CartModal cart={cart} setCart={setCart} setShowCart={setShowCart} balance={currentUserBalance} user={user} promoSettings={promoSettings} triggerToast={triggerToast} addNotification={addNotification} bankSettings={bankSettings} />}
               
               {/* 🟢 CENTERED AI VOICE CHATBOT (Live Chat Removed) 🟢 */}
               {user && user.role === 'customer' && <AiVoiceAssistant isLoggedIn={true} activeTab={activeTab} />}
@@ -1380,7 +1380,7 @@
         // ==========================================
         // 📱 CUSTOMER SMS STORE MODULE (UPDATED UI & SEARCH) 📱
         // ==========================================
-        function CustomerDashboardSMS({ user, balance, setUsersDB, triggerToast }) {
+        function CustomerDashboardSMS({ user, balance, setUsersDB, triggerToast, bankSettings }) {
             const [smsMode, setSmsMode] = useState('standard'); // 'standard' | 'panda'
             
             const [services, setServices] = useState([]);
@@ -1926,10 +1926,17 @@
                                                 <span className="text-[9px] bg-black/50 text-gray-300 px-2 py-1 rounded border border-white/10 uppercase tracking-widest">{selectedDuration}</span>
                                             </div>
                                             
-                                            <div className="text-5xl font-mono font-light text-white mb-8 drop-shadow-md flex items-center justify-center gap-1">
-                                                <span className="text-2xl text-brand-primary">$</span>
-                                                {displayPrice ? displayPrice.toFixed(2) : (
-                                                    <span className="text-xl text-gray-500 tracking-widest uppercase">Select to view</span>
+                                            <div className="flex flex-col items-center mb-8">
+                                                <div className="text-5xl font-mono font-light text-white drop-shadow-md flex items-center justify-center gap-1">
+                                                    <span className="text-2xl text-brand-primary">$</span>
+                                                    {displayPrice ? displayPrice.toFixed(2) : (
+                                                        <span className="text-xl text-gray-500 tracking-widest uppercase">Select to view</span>
+                                                    )}
+                                                </div>
+                                                {displayPrice > 0 && (
+                                                    <span className="text-[10px] text-gray-400 font-mono mt-2 tracking-widest uppercase bg-white/5 px-3 py-1 rounded-full border border-white/10">
+                                                        ~ ₦{(displayPrice * (bankSettings?.nairaRate || 1500)).toLocaleString('en-US', {maximumFractionDigits: 0})}
+                                                    </span>
                                                 )}
                                             </div>
                                             
@@ -2046,7 +2053,7 @@
         // ==========================================
         // 🌟 ASSET STORE MODULE
         // ==========================================
-        function CustomerDashboardStore({ inventory, categories, cart, setCart, triggerToast }) {
+        function CustomerDashboardStore({ inventory, categories, cart, setCart, triggerToast, bankSettings }) {
           const [searchQuery, setSearchQuery] = useState('');
           const [selectedStates, setSelectedStates] = useState({}); 
           const filteredCategories = categories.filter(c => (c?.name || '').toLowerCase().includes((searchQuery || '').toLowerCase()));
@@ -2137,7 +2144,8 @@
                                   </div>
                                   <div className="text-right flex flex-col items-end">
                                       <span className="text-white text-xl font-mono font-bold tracking-wider">${Number(product.price).toFixed(2)}</span>
-                                      <span className="text-[8px] text-brand-primary uppercase tracking-widest mt-1 font-mono bg-brand-primary/10 px-2.5 py-1 rounded-full border border-brand-primary/20">{stockCount} Units</span>
+                                      <span className="text-[9px] text-gray-400 font-mono tracking-widest mt-0.5">~ ₦{(Number(product.price) * (bankSettings?.nairaRate || 1500)).toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
+                                      <span className="text-[8px] text-brand-primary uppercase tracking-widest mt-1.5 font-mono bg-brand-primary/10 px-2.5 py-1 rounded-full border border-brand-primary/20">{stockCount} Units</span>
                                   </div>
                               </div>
                               
@@ -2698,7 +2706,7 @@
         // ==========================================
         // CART MODAL
         // ==========================================
-        function CartModal({ cart, setCart, setShowCart, balance, user, promoSettings, triggerToast, addNotification }) {
+        function CartModal({ cart, setCart, setShowCart, balance, user, promoSettings, triggerToast, addNotification, bankSettings }) {
             const [isCheckingOut, setIsCheckingOut] = useState(false);
             const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
             const discountAmount = promoSettings?.isActive ? (totalAmount * (promoSettings.discount / 100)) : 0;
@@ -2751,7 +2759,10 @@
                                                 )}
                                             </div>
                                             <div className="flex items-center gap-4">
-                                                <span className="text-sm font-mono font-bold text-white">${item.price.toFixed(2)}</span>
+                                                <div className="flex flex-col items-end">
+                                                    <span className="text-sm font-mono font-bold text-white">${item.price.toFixed(2)}</span>
+                                                    <span className="text-[8px] text-gray-400 font-mono">~ ₦{(item.price * (bankSettings?.nairaRate || 1500)).toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
+                                                </div>
                                                 <button type="button" onClick={() => setCart(cart.filter((_, i) => i !== idx))} className="btn-animate p-2 bg-red-900/20 text-red-500 hover:bg-red-900/50 rounded-lg border border-red-900/30"><Trash2 className="w-3.5 h-3.5"/></button>
                                             </div>
                                         </div>
@@ -2760,7 +2771,13 @@
                                 <div className="border-t border-white/10 pt-5 space-y-3">
                                     <div className="flex justify-between text-[10px] text-gray-400 font-mono uppercase tracking-widest"><span>Subtotal:</span><span>${totalAmount.toFixed(2)}</span></div>
                                     {promoSettings?.isActive && discountAmount > 0 && <div className="flex justify-between text-[10px] text-green-400 font-mono uppercase tracking-widest"><span>Discount ({promoSettings.discount}%):</span><span>-${discountAmount.toFixed(2)}</span></div>}
-                                    <div className="flex justify-between text-xl font-bold font-mono text-white pt-4 border-t border-white/10"><span>Total:</span><span>${finalAmount.toFixed(2)}</span></div>
+                                    <div className="flex justify-between text-xl font-bold font-mono text-white pt-4 border-t border-white/10">
+                                        <span>Total:</span>
+                                        <div className="flex flex-col items-end">
+                                            <span>${finalAmount.toFixed(2)}</span>
+                                            <span className="text-[10px] text-brand-primary font-medium mt-1">~ ₦{(finalAmount * (bankSettings?.nairaRate || 1500)).toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <button type="button" onClick={handleCheckout} disabled={isCheckingOut || balance < finalAmount} className="btn-animate w-full bg-white text-black font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 tracking-widest uppercase text-xs mt-6">
                                     {isCheckingOut ? 'Processing...' : (balance < finalAmount ? 'Not Enough Balance' : 'Confirm Purchase')}
