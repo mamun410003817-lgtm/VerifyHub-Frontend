@@ -295,28 +295,25 @@
             100% { transform: translate3d(-10vw, -30vh, 0) scale(1.2); }
         }
         
-        /* 🟢 NEXT-LEVEL 3D SCROLL REVEAL ANIMATION 🟢 */
+        /* 🟢 ELEGANT ONE-TIME SCROLL REVEAL 🟢 */
         .reveal-card {
             opacity: 0;
-            transform: perspective(1500px) rotateX(20deg) translateY(80px) scale(0.85);
-            filter: blur(15px);
+            transform: translateY(40px);
             transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), 
                         transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
-                        filter 0.8s ease-out,
-                        box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease !important;
-            will-change: transform, opacity, filter;
+                        box-shadow 0.3s ease, border-color 0.3s ease !important;
+            will-change: transform, opacity;
         }
         .reveal-card.visible {
             opacity: 1;
-            transform: perspective(1500px) rotateX(0deg) translateY(0) scale(1);
-            filter: blur(0px);
+            transform: translateY(0);
         }
-        /* কার্ডে হোভার করার এক্সট্রা প্রিমিয়াম ইফেক্ট */
+        /* 🟢 Hover Effect (Only active when fully visible) 🟢 */
         .reveal-card.visible.hover-enabled:hover {
-            transform: perspective(1500px) rotateX(0deg) translateY(-10px) scale(1.02);
-            box-shadow: 0 25px 50px -12px rgba(6, 182, 212, 0.35);
-            border-color: rgba(6, 182, 212, 0.5);
-            background: rgba(255,255,255,0.04);
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 20px 40px -10px rgba(189, 250, 22, 0.15);
+            border-color: rgba(189, 250, 22, 0.4);
+            background: rgba(255,255,255,0.02);
         }
 
         /* 🟢 SMS Timer Animation 🟢 */
@@ -390,10 +387,10 @@
         );
 
         const DEFAULT_CATEGORIES = [
-          { id: 'new', name: 'New Google Voice', description: 'Fresh account with recovery email.', price: 5.00 },
-          { id: 'old', name: 'Old Google Voice', description: 'Aged and highly trusted account.', price: 15.00 },
-          { id: 'textplus', name: 'TextPlus Account', description: 'Verified USA texting account.', price: 2.50 },
-          { id: 'gv_bulk', name: 'Bulk Google Voice', description: 'Wholesale package of 10 accounts.', price: 45.00 }
+          { id: 'new', name: 'New Google Voice', description: 'Fresh account with recovery email.', price: 5.00, instructions: 'Important Usage Guidelines & Warranty Policy\nTo ensure a smooth experience and the longevity of your account, please strictly follow the instructions below:\n\n⏳ 30-Minute Replacement Guarantee: Please verify your account within 30 minutes of receiving it. No complaints or replacement requests will be entertained after this 30-minute window.\n🌐 VPN Requirement: You must connect to a USA-location VPN before logging into the account.\n📞 Usage Restriction: This account is intended for calling purposes only. Please do not use it for texting.\n🔒 24-Hour Restriction on Account Changes: To maintain account stability, do not change the password or recovery email within the first 24 hours. Additionally, refrain from adding any passkeys, recovery phone numbers, or new recovery emails during this time.\n\nNote: Strictly following these rules will ensure your account lasts a long time. Thank you for your cooperation!' },
+          { id: 'old', name: 'Old Google Voice', description: 'Aged and highly trusted account.', price: 15.00, instructions: 'Important Guidelines & Warranty Policy\nPlease read the following instructions carefully to ensure a smooth experience and to keep your warranty valid:\n\n🛡️ 30-Minute Replacement Guarantee: We offer a 30-minute replacement guarantee from the time of delivery. Please check your account immediately upon receiving it. Note that no complaints or replacement requests will be accepted after 30 minutes.\n🌐 VPN Requirement: You must use a USA location VPN before logging into the account for the first time.\n⏳ 24-Hour Security Hold: For account safety, please strictly follow these rules for the first 24 hours:\n• Do not change the password or recovery email.\n• Do not add any passkeys, recovery phone numbers, or secondary recovery emails.' },
+          { id: 'textplus', name: 'TextPlus Account', description: 'Verified USA texting account.', price: 2.50, instructions: '' },
+          { id: 'gv_bulk', name: 'Bulk Google Voice', description: 'Wholesale package of 10 accounts.', price: 45.00, instructions: '' }
         ];
 
         const CUSTOMER_TABS = [
@@ -565,7 +562,7 @@
             }
         }
 
-        const VaultItem = ({ acc, idx, triggerToast }) => {
+        const VaultItem = ({ acc, idx, triggerToast, categories }) => {
             const [totpCode, setTotpCode] = useState('');
             const [timeLeft, setTimeLeft] = useState(30);
             const [twoFaSecret, setTwoFaSecret] = useState(null);
@@ -682,6 +679,25 @@
                             <Copy className="w-3 h-3"/> Copy Data
                         </button>
                     </div>
+
+                    {/* 🟢 ACCOUNT USAGE GUIDELINES / RULES 🟢 */}
+                    {(!isSMS && categories) && (() => {
+                        const matchedCat = categories.find(c => c.name === acc.type);
+                        if (matchedCat && matchedCat.instructions) {
+                            return (
+                                <div className="mt-5 bg-brand-primary/10 border border-brand-primary/30 p-4 sm:p-5 rounded-xl shadow-inner relative overflow-hidden">
+                                    <div className="absolute top-0 left-0 w-1 h-full bg-brand-primary"></div>
+                                    <h4 className="text-[11px] font-bold text-brand-primary uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+                                        <AlertTriangle className="w-4 h-4"/> Important Guidelines
+                                    </h4>
+                                    <div className="text-[10px] text-gray-300 font-mono whitespace-pre-wrap leading-relaxed allow-select">
+                                        {matchedCat.instructions}
+                                    </div>
+                                </div>
+                            );
+                        }
+                        return null;
+                    })()}
                     
                     {/* 🟢 RENEW NUMBER SECTION (For SMS numbers only) 🟢 */}
                     {canRenew && (
@@ -1345,7 +1361,7 @@
                               {/* 🟢 SMS STORE TAB RENDER 🟢 */}
                               {activeTab === 'sms_store' && <CustomerDashboardSMS user={user} balance={currentUserBalance} setUsersDB={setUsersDB} triggerToast={triggerToast} />}
                               {activeTab === 'add_funds' && <CustomerDashboardFunds user={user} triggerToast={triggerToast} addNotification={addNotification} bankSettings={bankSettings} cryptoSettings={cryptoSettings} customPayments={customPayments} deposits={deposits} setDeposits={setDeposits} />}
-                              {activeTab === 'my_accounts' && <CustomerDashboardVault user={user} purchases={purchases} triggerToast={triggerToast} />}
+                              {activeTab === 'my_accounts' && <CustomerDashboardVault user={user} purchases={purchases} triggerToast={triggerToast} categories={categories} />}
                               {activeTab === 'profile' && <CustomerDashboardProfile user={user} balance={currentUserBalance} tier={currentUserTier} userInfo={usersDB[user.email]} allOrders={allOrders} deposits={deposits} purchases={purchases} tickets={tickets.filter(t => t && t.email === user.email)} featureSettings={featureSettings} triggerToast={triggerToast} />}
                           </>
                         )}
@@ -2010,18 +2026,16 @@
           const [selectedStates, setSelectedStates] = useState({}); 
           const filteredCategories = categories.filter(c => (c?.name || '').toLowerCase().includes((searchQuery || '').toLowerCase()));
 
-          // 🟢 SCROLL REVEAL OBSERVER LOGIC 🟢
+          // 🟢 ELEGANT SCROLL REVEAL OBSERVER (ONE-TIME ONLY) 🟢
           useEffect(() => {
-              const observer = new IntersectionObserver((entries) => {
+              const observer = new IntersectionObserver((entries, obs) => {
                   entries.forEach(entry => {
                       if (entry.isIntersecting) {
                           entry.target.classList.add('visible');
-                      } else {
-                          // উপরে বা নিচে স্ক্রল করে চলে গেলে ক্লাস রিমুভ হবে, যাতে পুনরায় আসলে আবার অ্যানিমেশন হয়
-                          entry.target.classList.remove('visible');
+                          obs.unobserve(entry.target); // 👈 ম্যাজিক: একবার অ্যানিমেশন হওয়ার পর অবজার্ভ করা বন্ধ করে দেবে
                       }
                   });
-              }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+              }, { threshold: 0.1, rootMargin: "0px 0px -20px 0px" });
 
               const elements = document.querySelectorAll('.reveal-card');
               elements.forEach(el => observer.observe(el));
@@ -2395,7 +2409,7 @@
           );
         }
 
-        function CustomerDashboardVault({ purchases, triggerToast, user }) {
+        function CustomerDashboardVault({ purchases, triggerToast, user, categories }) {
           const myPurchases = (purchases || []).filter(p => p && p.customer === user?.email);
 
           return (
@@ -2424,7 +2438,7 @@
                     {myPurchases.map((acc, idx) => {
                         if (!acc) return null;
                         return (
-                            <VaultItem key={acc.id || idx} acc={acc} idx={idx} triggerToast={triggerToast} />
+                            <VaultItem key={acc.id || idx} acc={acc} idx={idx} triggerToast={triggerToast} categories={categories} />
                         )
                     })}
                   </div>
@@ -2776,9 +2790,9 @@
           
           // 🟢 EDIT PRODUCT STATE 🟢
           const [editProductModal, setEditProductModal] = useState(false);
-          const [editingProduct, setEditingProduct] = useState({ id: '', name: '', description: '', price: 0 });
+          const [editingProduct, setEditingProduct] = useState({ id: '', name: '', description: '', price: 0, instructions: '' });
           
-          const [newProduct, setNewProduct] = useState({ id: '', name: '', description: '', price: 5.00 });
+          const [newProduct, setNewProduct] = useState({ id: '', name: '', description: '', price: 5.00, instructions: '' });
 
           const [newCustomPayment, setNewCustomPayment] = useState({ name: '', details: '', instruction: '' });
 
@@ -2825,7 +2839,7 @@
               
               const safeNewProduct = {
                   id: newProduct.id.toLowerCase().replace(/[^a-z0-9]/g, '_'),
-                  name: newProduct.name, description: newProduct.description, price: Number(newProduct.price), color: 'text-white'
+                  name: newProduct.name, description: newProduct.description, price: Number(newProduct.price), instructions: newProduct.instructions || '', color: 'text-white'
               };
               const updatedCategories = [...categories, safeNewProduct];
               
@@ -2837,7 +2851,7 @@
                   });
                   triggerToast('New card added successfully.');
                   setNewProductModal(false);
-                  setNewProduct({ id: '', name: '', description: '', price: 5.00 });
+                  setNewProduct({ id: '', name: '', description: '', price: 5.00, instructions: '' });
               } catch (err) { triggerToast('Failed to add card.'); }
           };
 
@@ -2847,7 +2861,7 @@
               if (!editingProduct.id || !editingProduct.name) return;
               
               const updatedCategories = categories.map(cat => 
-                  cat.id === editingProduct.id ? { ...cat, name: editingProduct.name, description: editingProduct.description, price: Number(editingProduct.price) } : cat
+                  cat.id === editingProduct.id ? { ...cat, name: editingProduct.name, description: editingProduct.description, price: Number(editingProduct.price), instructions: editingProduct.instructions || '' } : cat
               );
               
               try {
@@ -3238,6 +3252,10 @@
                              <label className="block text-[9px] font-bold text-gray-500 mb-2 uppercase tracking-[0.3em]">Price ($)</label>
                              <input type="number" step="0.01" required value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})} className="glass-input text-xs font-mono allow-select" />
                           </div>
+                          <div>
+                             <label className="block text-[9px] font-bold text-gray-500 mb-2 uppercase tracking-[0.3em]">Usage Rules / Instructions (Optional)</label>
+                             <textarea value={newProduct.instructions} onChange={e => setNewProduct({...newProduct, instructions: e.target.value})} className="glass-input text-xs font-mono min-h-[100px] resize-none allow-select" placeholder="Enter warranty rules for this item..."></textarea>
+                          </div>
                           <div className="pt-4 mt-2 border-t border-white/10">
                             <button type="submit" className="btn-animate w-full bg-white text-black font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 tracking-widest uppercase text-xs">Create Card</button>
                           </div>
@@ -3271,6 +3289,10 @@
                           <div>
                              <label className="block text-[9px] font-bold text-brand-primary mb-2 uppercase tracking-[0.3em]">Price ($)</label>
                              <input type="number" step="0.01" required value={editingProduct.price} onChange={e => setEditingProduct({...editingProduct, price: e.target.value})} className="glass-input text-xs font-mono allow-select border-brand-primary/30" />
+                          </div>
+                          <div>
+                             <label className="block text-[9px] font-bold text-brand-primary mb-2 uppercase tracking-[0.3em]">Usage Rules / Instructions (Optional)</label>
+                             <textarea value={editingProduct.instructions || ''} onChange={e => setEditingProduct({...editingProduct, instructions: e.target.value})} className="glass-input text-xs font-mono min-h-[100px] resize-none allow-select border-brand-primary/30" placeholder="Enter warranty rules for this item..."></textarea>
                           </div>
                           <div className="pt-4 mt-2 border-t border-white/10">
                             <button type="submit" className="btn-animate w-full bg-brand-primary hover:bg-white text-black font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 tracking-widest uppercase text-xs shadow-[0_0_15px_rgba(6,182,212,0.4)]">Update Card</button>
