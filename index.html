@@ -715,6 +715,7 @@
         };
 
         function App() {
+          const [showLanding, setShowLanding] = useState(true); // 🟢 Control Landing Page 🟢
           const [showSplash, setShowSplash] = useState(true);
           const [user, setUser] = useState(null); 
           const [isAuthChecking, setIsAuthChecking] = useState(true);
@@ -1076,10 +1077,103 @@
           if (isAuthChecking) return <div className="min-h-screen flex items-center justify-center bg-[#0b120c]"><RefreshCw className="w-8 h-8 text-brand-primary animate-spin"/></div>;
 
           if (!user) {
+            if (showLanding) {
+                return (
+                    <div className="min-h-screen w-full relative overflow-x-hidden font-sans bg-[#0b120c] text-white">
+                        {/* 🟢 High Quality Clear Video Background 🟢 */}
+                        <video autoPlay loop muted playsInline disablePictureInPicture preload="auto" className="absolute inset-0 w-full h-full object-cover object-center z-[0]">
+                            <source src="https://qdeadbqoawsqhnliikhw.supabase.co/storage/v1/object/public/videos/5bg-video.mp4.mp4" type="video/mp4" />
+                        </video>
+                        
+                        {/* 🟢 Ultra Light Overlay (Just enough to read text, max visibility for video) 🟢 */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-[#0b120c] z-[1]"></div>
+                        
+                        <FloatingLogos />
+
+                        {/* 🟢 NAVBAR 🟢 */}
+                        <nav className="w-full flex justify-between items-center p-6 sm:px-10 max-w-7xl mx-auto relative z-50">
+                            <div className="flex items-center gap-3">
+                                <EliteLogo className="w-8 h-8 sm:w-10 sm:h-10 drop-shadow-[0_0_10px_rgba(189,250,22,0.8)]" />
+                                <span className="text-xl sm:text-2xl font-bold tracking-[0.2em] uppercase text-3d">VerifyHub <span className="text-brand-primary font-light">Elite</span></span>
+                            </div>
+                            <button onClick={() => setShowLanding(false)} className="btn-animate bg-brand-primary text-black px-6 py-2.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-widest shadow-[0_0_20px_rgba(189,250,22,0.5)]">Login / Register</button>
+                        </nav>
+
+                        {/* 🟢 HERO SECTION 🟢 */}
+                        <div className="relative z-10 flex flex-col items-center justify-center min-h-[80vh] px-4 text-center max-w-5xl mx-auto animate-matrix-in">
+                            <div className="mb-6 px-4 py-1.5 rounded-full border border-brand-primary/30 bg-brand-primary/10 text-brand-primary text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.3em] animate-pulse shadow-lg">
+                                Premium Digital Assets Platform
+                            </div>
+                            <h1 className="text-4xl sm:text-7xl font-black uppercase tracking-[0.1em] mb-6 leading-tight drop-shadow-2xl text-3d">
+                                Elite Tools For <br className="hidden sm:block"/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary via-white to-brand-primary animate-shimmer" style={{backgroundSize: '200% auto'}}>Digital Masters</span>
+                            </h1>
+                            <p className="text-gray-100 text-xs sm:text-sm font-mono mb-10 max-w-2xl leading-relaxed tracking-wide drop-shadow-lg font-bold">
+                                Instant SMS verifications and premium aged accounts. Bypass restrictions globally with our ultra-secure and fully automated infrastructure.
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                                <button onClick={() => setShowLanding(false)} className="btn-animate bg-brand-primary text-[#0b120c] px-10 py-4 rounded-2xl text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(189,250,22,0.4)]">
+                                    Access Terminal
+                                </button>
+                                <button onClick={() => window.scrollTo({top: window.innerHeight, behavior: 'smooth'})} className="btn-animate glass-panel text-white border border-white/20 px-10 py-4 rounded-2xl text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] bg-black/40 backdrop-blur-md hover:bg-white/10">
+                                    Explore Features
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* 🟢 FEATURES SECTION 🟢 */}
+                        <div className="relative z-10 bg-[#0b120c] border-t border-brand-primary/20 pt-20 pb-16">
+                            <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                                <div className="text-center mb-16 reveal-card visible">
+                                    <h2 className="text-2xl sm:text-4xl font-bold uppercase tracking-[0.2em] mb-4 text-3d">Why Choose <span className="text-brand-primary">Elite?</span></h2>
+                                    <div className="w-20 h-1 bg-brand-primary mx-auto rounded-full shadow-[0_0_10px_rgba(189,250,22,0.8)]"></div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                    <div className="glass-panel p-8 rounded-3xl border border-brand-primary/10 hover:border-brand-primary/50 transition-colors group reveal-card visible bg-[#050806]/80">
+                                        <Smartphone className="w-12 h-12 text-brand-primary mb-6 group-hover:scale-110 transition-transform drop-shadow-[0_0_10px_rgba(189,250,22,0.5)]"/>
+                                        <h3 className="text-lg font-bold uppercase tracking-widest mb-3 text-white">Global SMS API</h3>
+                                        <p className="text-xs font-mono text-gray-400 leading-relaxed">Real SIM and virtual numbers from 100+ countries. Instant OTP bypass for any platform.</p>
+                                    </div>
+                                    <div className="glass-panel p-8 rounded-3xl border border-brand-primary/10 hover:border-brand-primary/50 transition-colors group reveal-card visible bg-[#050806]/80">
+                                        <Package className="w-12 h-12 text-brand-primary mb-6 group-hover:scale-110 transition-transform drop-shadow-[0_0_10px_rgba(189,250,22,0.5)]"/>
+                                        <h3 className="text-lg font-bold uppercase tracking-widest mb-3 text-white">Aged Accounts</h3>
+                                        <p className="text-xs font-mono text-gray-400 leading-relaxed">High-trust premium accounts (Google Voice, TextPlus, etc.) ready for professional use.</p>
+                                    </div>
+                                    <div className="glass-panel p-8 rounded-3xl border border-brand-primary/10 hover:border-brand-primary/50 transition-colors group reveal-card visible bg-[#050806]/80">
+                                        <Zap className="w-12 h-12 text-brand-primary mb-6 group-hover:scale-110 transition-transform drop-shadow-[0_0_10px_rgba(189,250,22,0.5)]"/>
+                                        <h3 className="text-lg font-bold uppercase tracking-widest mb-3 text-white">Automated System</h3>
+                                        <p className="text-xs font-mono text-gray-400 leading-relaxed">24/7 instant delivery. Auto crypto deposits via NOWPayments. Zero human waiting time.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 🟢 SUPPORT & CONTACT SECTION 🟢 */}
+                        <div className="relative z-10 py-16 bg-[#050806] text-center flex flex-col items-center border-t border-white/5">
+                            <h3 className="text-lg sm:text-xl font-bold uppercase tracking-[0.3em] text-white mb-8 text-3d">Need Help? Contact Support</h3>
+                            <div className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto px-6">
+                                <a href="https://wa.me/8801913003817" target="_blank" rel="noopener noreferrer" className="btn-animate bg-[#25D366]/10 border border-[#25D366]/50 hover:bg-[#25D366] text-[#25D366] hover:text-[#050806] px-8 py-4 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-3 transition-all shadow-[0_0_20px_rgba(37,211,102,0.2)]">
+                                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.87-2.03-.97-.272-.099-.47-.149-.669.149-.198.297-.768.97-.941 1.168-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.305-.88-.653-1.474-1.46-1.647-1.758-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.396-.272.322-1.04 1.014-1.04 2.476 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+                                    WhatsApp: +8801913003817
+                                </a>
+                                <a href="https://t.me/+8801913003817" target="_blank" rel="noopener noreferrer" className="btn-animate bg-[#0088cc]/10 border border-[#0088cc]/50 hover:bg-[#0088cc] text-[#0088cc] hover:text-white px-8 py-4 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-3 transition-all shadow-[0_0_20px_rgba(0,136,204,0.2)]">
+                                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                                    Telegram: @Admin
+                                </a>
+                            </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="relative z-10 border-t border-white/5 bg-[#030504] py-6 text-center">
+                            <p className="text-[9px] text-gray-600 font-mono uppercase tracking-[0.3em]">&copy; 2026 VerifyHub Elite. All Systems Operational.</p>
+                        </div>
+                    </div>
+                );
+            }
+
             return (
               <div className="min-h-screen flex items-center justify-center p-4 relative font-sans w-full text-white overflow-hidden bg-[#0b120c]">
                 
-                {/* 🟢 Custom Cartoon Video Background (Mobile Fix) 🟢 */}
+                {/* 🟢 High Quality Clear Video Background for App/Login 🟢 */}
                 <video 
                     autoPlay 
                     loop 
@@ -1087,29 +1181,33 @@
                     playsInline 
                     disablePictureInPicture
                     preload="auto"
-                    className="absolute inset-0 w-full h-full object-cover md:object-center z-[0]"
-                    style={{ objectPosition: "50% 50%" }}
+                    className="absolute inset-0 w-full h-full object-cover object-center z-[0]"
                 >
-                    <source src="https://qdeadbqoawsqhnliikhw.supabase.co/storage/v1/object/public/videos/2bg-video.mp4.mp4" type="video/mp4" />
+                    <source src="https://qdeadbqoawsqhnliikhw.supabase.co/storage/v1/object/public/videos/5bg-video.mp4.mp4" type="video/mp4" />
                 </video>
                 
-                {/* 🟢 Light Overlay (লগইন বক্স স্পষ্ট করার জন্য) 🟢 */}
-                <div className="absolute inset-0 bg-black/30 sm:bg-black/40 z-[1] backdrop-blur-[1px] sm:backdrop-blur-none"></div>
+                {/* 🟢 Transparent Overlay (Max clarity) 🟢 */}
+                <div className="absolute inset-0 bg-black/10 z-[1]"></div>
 
-                <div className="w-full max-w-[400px] animate-matrix-in z-10 relative">
+                <div className="absolute top-6 left-6 z-50">
+                    <button onClick={() => setShowLanding(true)} className="btn-animate glass-panel text-white hover:text-brand-primary px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 border border-white/20 hover:border-brand-primary/50 transition-colors bg-[#0b120c]/70 backdrop-blur-md shadow-lg">
+                        <X className="w-3 h-3"/> Back to Home
+                    </button>
+                </div>
+
+                <div className="w-full max-w-[400px] animate-matrix-in z-10 relative mt-10 sm:mt-0">
                   <div className="flex flex-col items-center mb-8">
-                    <EliteLogo className="w-20 h-20 mb-4 drop-shadow-[0_0_15px_rgba(191,149,63,0.5)]" />
-                    <h2 className="text-4xl sm:text-5xl font-bold tracking-[0.2em] text-white uppercase text-center w-full drop-shadow-lg">
-                      Verify<span className="text-brand-primary font-light">Hub</span>
+                    <EliteLogo className="w-20 h-20 mb-4 drop-shadow-[0_0_15px_rgba(189,250,22,0.6)]" />
+                    <h2 className="text-4xl sm:text-5xl font-bold tracking-[0.2em] text-white uppercase text-center w-full drop-shadow-2xl text-3d">
+                      VerifyHub <br/> <span className="text-brand-primary font-light text-3xl sm:text-4xl">Elite</span>
                     </h2>
-                    <div className="text-sm tracking-[0.5em] text-yellow-500 font-bold mt-2">ELITE</div>
                   </div>
                   
-                  <div className="glass-effect rounded-3xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
+                  <div className="glass-effect rounded-3xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-brand-primary/20">
                     {authMethod !== 'admin' && (
                         <div className="grid grid-cols-2 gap-2 glass-panel p-1 rounded-xl mb-8 border border-white/5">
-                             <button type="button" onClick={() => { setAuthMethod('login'); setAuthError(''); setAuthSuccessMsg(''); }} className={`btn-animate flex items-center justify-center py-3 rounded-lg text-xs font-bold uppercase tracking-widest ${authMethod === 'login' ? 'bg-white text-black shadow-lg' : 'text-gray-400 hover:text-white'}`}>Login</button>
-                             <button type="button" onClick={() => { setAuthMethod('signup'); setAuthError(''); setAuthSuccessMsg(''); }} className={`btn-animate flex items-center justify-center py-3 rounded-lg text-xs font-bold uppercase tracking-widest ${authMethod === 'signup' ? 'bg-white text-black shadow-lg' : 'text-gray-400 hover:text-white'}`}>Sign Up</button>
+                             <button type="button" onClick={() => { setAuthMethod('login'); setAuthError(''); setAuthSuccessMsg(''); }} className={`btn-animate flex items-center justify-center py-3 rounded-lg text-xs font-bold uppercase tracking-widest ${authMethod === 'login' ? 'bg-brand-primary text-black shadow-lg' : 'text-gray-400 hover:text-white'}`}>Login</button>
+                             <button type="button" onClick={() => { setAuthMethod('signup'); setAuthError(''); setAuthSuccessMsg(''); }} className={`btn-animate flex items-center justify-center py-3 rounded-lg text-xs font-bold uppercase tracking-widest ${authMethod === 'signup' ? 'bg-brand-primary text-black shadow-lg' : 'text-gray-400 hover:text-white'}`}>Sign Up</button>
                         </div>
                     )}
                     {authMethod === 'admin' && <div className="text-center mb-8 pb-4 border-b border-white/10"><span className="text-[10px] font-bold text-brand-primary uppercase tracking-[0.3em] flex items-center justify-center gap-2"><ShieldCheck className="w-4 h-4"/> Admin Portal</span></div>}
@@ -1130,7 +1228,7 @@
                         <input type="password" value={passwordInput} onChange={e=>setPasswordInput(e.target.value)} placeholder="••••••••" required className="glass-input allow-select" />
                       </div>
                       <div className="pt-6">
-                        <button type="submit" disabled={isLoading} className="btn-animate w-full glass-effect hover:bg-white text-white hover:text-black border border-white/20 font-bold py-4 rounded-2xl text-xs tracking-widest uppercase flex items-center justify-center gap-2 shadow-[0_5px_20px_rgba(255,255,255,0.2)]">
+                        <button type="submit" disabled={isLoading} className="btn-animate w-full bg-brand-primary hover:bg-white text-black border border-brand-primary/20 font-bold py-4 rounded-2xl text-xs tracking-widest uppercase flex items-center justify-center gap-2 shadow-[0_5px_20px_rgba(189,250,22,0.3)]">
                             {isLoading ? <span className="flex items-center gap-2"><RefreshCw className="w-4 h-4 animate-spin"/> Processing...</span> : (authMethod === 'signup' ? 'Create Account' : authMethod === 'login' ? 'Access Terminal' : 'Admin Login')}
                         </button>
                       </div>
