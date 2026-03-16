@@ -182,6 +182,34 @@
         }
 
         /* 🟢 ELITE TIER BUTTON ANIMATIONS 🟢 */
+        .btn-neon-auth {
+            background: linear-gradient(90deg, #bdfa16, #eab308, #bdfa16);
+            background-size: 200% auto;
+            color: #0b120c;
+            border: none;
+            animation: shimmerFlow 3s linear infinite, hardGlow 2s alternate infinite;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .btn-neon-auth:hover {
+            transform: scale(1.08) translateY(-2px);
+            letter-spacing: 0.1em;
+            box-shadow: 0 15px 30px rgba(189, 250, 22, 0.6), 0 0 20px rgba(234, 179, 8, 0.5);
+            filter: brightness(1.1);
+        }
+        .btn-neon-auth:active {
+            transform: scale(0.95);
+        }
+        @keyframes shimmerFlow {
+            to { background-position: 200% center; }
+        }
+        @keyframes hardGlow {
+            from { box-shadow: 0 0 10px rgba(189,250,22,0.4); }
+            to { box-shadow: 0 0 25px rgba(189,250,22,0.9), inset 0 0 10px rgba(255,255,255,0.4); }
+        }
+
         .btn-animate {
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
@@ -212,32 +240,51 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(6, 182, 212, 0.3); border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: rgba(6, 182, 212, 0.8); }
 
+        /* 🟢 UPGRADED GLASSMORPHISM & NEON GLOW 🟢 */
         .glass-effect {
-            background: rgba(10, 15, 30, 0.6); 
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 15px 35px 0 rgba(0, 0, 0, 0.8);
+            background: rgba(11, 18, 12, 0.4); /* Darker, more transparent */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.2); /* Light catch effect */
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             transform: translateZ(0);
         }
         .glass-effect:hover {
-            border-color: rgba(6, 182, 212, 0.5);
-            background: rgba(15, 20, 40, 0.7);
-            transform: translateY(-6px) scale(1.01);
-            box-shadow: 0 30px 50px -15px rgba(6, 182, 212, 0.25), inset 0 0 20px rgba(191, 149, 63, 0.05);
+            border-color: rgba(189, 250, 22, 0.5); /* Brand primary glow border */
+            background: rgba(11, 18, 12, 0.6);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -10px rgba(189, 250, 22, 0.3), inset 0 0 20px rgba(189, 250, 22, 0.05);
         }
 
         .glass-panel {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px); 
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px);
             border-radius: 16px;
-            box-shadow: inset 0 1px 1px rgba(255,255,255,0.15), 0 4px 16px rgba(0,0,0,0.3);
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 8px 24px rgba(0,0,0,0.4);
             transform: translateZ(0);
             transition: all 0.3s ease;
         }
+        .glass-panel:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* 🟢 TYPEWRITER ANIMATION 🟢 */
+        .typewriter-text {
+            display: inline-block;
+            overflow: hidden;
+            border-right: 0.15em solid #bdfa16;
+            white-space: nowrap;
+            margin: 0 auto;
+            animation: typing 2.5s steps(30, end), blink-caret 0.75s step-end infinite;
+        }
+        @keyframes typing { from { width: 0 } to { width: 100% } }
+        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: #bdfa16; } }
 
         .glass-input {
             width: 100%;
@@ -1128,8 +1175,9 @@
                                 <EliteLogo className="w-8 h-8 sm:w-10 sm:h-10 text-white opacity-90" />
                                 <span className="text-lg sm:text-xl font-bold tracking-[0.2em] uppercase text-white">VerifyHub <span className="text-brand-primary font-light">Elite</span></span>
                             </div>
-                            <button onClick={() => setShowLanding(false)} className="btn-animate bg-brand-primary text-[#0b120c] px-6 py-2.5 rounded-xl text-[10px] sm:text-xs font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(189,250,22,0.3)] hover:shadow-[0_0_25px_rgba(189,250,22,0.5)]">
-                                Enter Portal
+                            <button onClick={() => setShowLanding(false)} className="btn-neon-auth px-6 py-3 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest flex items-center gap-2 group">
+                                LOGIN OR SIGN UP
+                                <svg className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                             </button>
                         </nav>
 
@@ -1139,19 +1187,22 @@
                                 Your Secure Digital Arsenal
                             </div>
                             
-                            <h1 className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tighter mb-6 leading-[1.1] animate-fade-in-up" style={{animationDelay: '0.1s'}}>
-                                Premium Accounts <br className="hidden sm:block"/> & <span className="text-brand-primary drop-shadow-[0_0_20px_rgba(189,250,22,0.3)]">SMS Verifications</span>
-                            </h1>
+                            <div className="min-h-[120px] sm:min-h-[160px] flex items-center justify-center w-full mb-6">
+                                <h1 className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tighter leading-[1.1] animate-fade-in-up text-center flex flex-col items-center" style={{animationDelay: '0.1s'}}>
+                                    <span>Premium Accounts &</span>
+                                    <span className="text-brand-primary drop-shadow-[0_0_20px_rgba(189,250,22,0.4)] typewriter-text mt-2 sm:mt-4">SMS Verifications</span>
+                                </h1>
+                            </div>
                             
                             <p className="text-gray-300 text-xs sm:text-sm md:text-base font-light mb-10 max-w-2xl leading-relaxed tracking-wide animate-fade-in-up" style={{animationDelay: '0.2s'}}>
                                 Get instant, fully verified digital assets. Fast OTP bypass and high-trust accounts delivered automatically, 24/7.
                             </p>
                             
-                            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto animate-fade-in-up" style={{animationDelay: '0.3s'}}>
-                                <button onClick={() => setShowLanding(false)} className="btn-animate bg-brand-primary text-[#0b120c] px-10 py-4 rounded-xl text-xs font-bold uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(189,250,22,0.4)]">
+                            <div className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto animate-fade-in-up" style={{animationDelay: '0.3s'}}>
+                                <button onClick={() => setShowLanding(false)} className="btn-animate bg-brand-primary text-[#0b120c] px-10 py-4 rounded-xl text-xs font-bold uppercase tracking-[0.2em] shadow-[0_0_25px_rgba(189,250,22,0.5)] hover:shadow-[0_0_40px_rgba(189,250,22,0.7)] transition-all">
                                     Access Dashboard
                                 </button>
-                                <button onClick={() => window.scrollTo({top: window.innerHeight, behavior: 'smooth'})} className="btn-animate glass-panel text-white border border-white/20 hover:border-brand-primary px-10 py-4 rounded-xl text-xs font-bold uppercase tracking-[0.2em] transition-colors">
+                                <button onClick={() => window.scrollTo({top: window.innerHeight, behavior: 'smooth'})} className="btn-animate glass-effect text-white px-10 py-4 rounded-xl text-xs font-bold uppercase tracking-[0.2em] hover:text-brand-primary">
                                     Explore Platform
                                 </button>
                             </div>
@@ -1168,7 +1219,7 @@
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
                                     
                                     {/* Large Card */}
-                                    <div className="md:col-span-2 glass-effect p-8 sm:p-10 rounded-3xl reveal-card visible group overflow-hidden relative border border-white/10 hover:border-brand-primary/50 transition-colors">
+                                    <div className="md:col-span-2 glass-effect p-8 sm:p-10 rounded-3xl reveal-card visible group overflow-hidden relative border border-white/10 hover:border-brand-primary/50 transition-all duration-500 hover:-translate-y-2">
                                         <div className="absolute -right-10 -top-10 w-40 h-40 bg-brand-primary/10 rounded-full blur-3xl group-hover:bg-brand-primary/20 transition-all duration-700"></div>
                                         <Smartphone className="w-10 h-10 text-brand-primary mb-6 opacity-90"/>
                                         <h3 className="text-xl sm:text-2xl font-bold tracking-wide text-white mb-3 uppercase">Global SMS Verifications</h3>
