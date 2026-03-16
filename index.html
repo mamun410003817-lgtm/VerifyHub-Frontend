@@ -740,24 +740,26 @@
             }
         }
 
-        const VaultItem = ({ acc, idx, triggerToast, categories }) => {
+       const VaultItem = ({ acc, idx, triggerToast, categories }) => {
             const [totpCode, setTotpCode] = useState('');
             const [timeLeft, setTimeLeft] = useState(30);
             const [twoFaSecret, setTwoFaSecret] = useState(null);
             
-            // 🟢 Renew State 🟢
-            const isSMS = acc.type && acc.type.includes('SMS Verify');
+            // 🟢 CRASH FIX: Safe Parsing to prevent React errors 🟢
+            const safeType = String(acc?.type || 'Account');
+            const isSMS = safeType.includes('SMS Verify');
+            const displayData = typeof acc?.data === 'object' ? (acc.data?.data || JSON.stringify(acc.data, null, 2)) : String(acc?.data || '');
+
             const [isRenewing, setIsRenewing] = useState(false);
             const [renewDuration, setRenewDuration] = useState('3 days');
             const [renewStatus, setRenewStatus] = useState('');
 
             useEffect(() => {
                 try {
-                    const rawData = String(acc?.data || '');
-                    const match = rawData.match(/🔐 2FA INFO:\s*\n?([a-zA-Z0-9\s]+)/i);
+                    const match = displayData.match(/🔐 2FA INFO:\s*\n?([a-zA-Z0-9\s]+)/i);
                     if (match && match[1]) setTwoFaSecret(match[1].replace(/\s+/g, '').toUpperCase());
                 } catch(e) {}
-            }, [acc]);
+            }, [displayData]);
 
             useEffect(() => {
                 if (!twoFaSecret) return;
@@ -776,7 +778,7 @@
             }, [twoFaSecret]);
 
             const handleRenew = async () => {
-                const phoneMatch = String(acc.data || '').match(/📱 Phone:\s*(\d+)/i);
+                const phoneMatch = displayData.match(/📱 Phone:\s*(\d+)/i);
                 if(!phoneMatch) {
                     triggerToast('Phone number not found');
                     return;
@@ -791,46 +793,39 @@
                         body: JSON.stringify({ number: phoneStr, duration: renewDuration })
                     });
                     const data = await res.json();
-                    if(data.success) {
-                        triggerToast(`Renewed for ${renewDuration}`);
-                        setIsRenewing(false);
-                    } else {
-                        triggerToast(data.message || 'Failed to renew');
-                    }
-                } catch(e) {
-                    triggerToast('Network Error');
-                }
+                    if(data.success) { triggerToast(`Renewed for ${renewDuration}`); setIsRenewing(false); } 
+                    else { triggerToast(data.message || 'Failed to renew'); }
+                } catch(e) { triggerToast('Network Error'); }
                 setRenewStatus('');
             };
 
             if (!acc) return null;
-            
-            const canRenew = isSMS && acc.data && !String(acc.data).includes('Duration: 5 minutes'); // PandaSMS UK cannot be renewed
+            const canRenew = isSMS && displayData && !displayData.includes('Duration: 5 minutes');
 
             return (
-                <div className="glass-panel p-6 flex flex-col animate-fade-in-up allow-select" style={{animationDelay: `${idx * 0.05}s`, animationFillMode: 'both'}}>
-                    <div className="flex justify-between items-start mb-5 pb-4 border-b border-white/10">
-                        <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-2xl flex flex-col animate-fade-in-up allow-select hover:border-brand-primary/40 hover:shadow-md transition-all duration-300" style={{animationDelay: `${idx * 0.05}s`, animationFillMode: 'both'}}>
+                    <div className="flex justify-between items-start mb-5 pb-4 border-b border-gray-100">
+                        <span className="text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-2">
                             {isSMS ? <Smartphone className="w-4 h-4 text-brand-primary"/> : <Package className="w-4 h-4 text-brand-primary"/>} 
-                            {String(acc.type || 'Account').replace('PUR-SMS-', 'SMS: ')}
+                            {safeType.replace('PUR-SMS-', 'SMS: ')}
                         </span>
-                        <span className="text-[8px] font-mono text-gray-400 uppercase tracking-widest bg-[rgba(255,255,255,0.05)] px-2.5 py-1 rounded border border-white/10">
+                        <span className="text-[8px] font-mono text-gray-500 uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-full border border-gray-200 font-bold">
                             {safeFormatDate(acc.date)}
                         </span>
                     </div>
 
                     {twoFaSecret && (
-                        <div className="mb-5 bg-[rgba(0,0,0,0.4)] border border-white/5 p-4 rounded-xl flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
-                            <div className="absolute bottom-0 left-0 w-full h-[1px] bg-white/10">
-                                <div className="bg-brand-primary h-full transition-all duration-1000 ease-linear shadow-[0_0_10px_rgba(6,182,212,0.8)]" style={{width: `${(timeLeft/30)*100}%`}}></div>
+                        <div className="mb-5 bg-gray-50 border border-gray-200 p-4 rounded-xl flex flex-col items-center justify-center relative overflow-hidden">
+                            <div className="absolute bottom-0 left-0 w-full h-[3px] bg-gray-200">
+                                <div className="bg-brand-primary h-full transition-all duration-1000 ease-linear" style={{width: `${(timeLeft/30)*100}%`}}></div>
                             </div>
-                            <p className="text-[8px] text-gray-400 font-bold mb-1 uppercase tracking-[0.3em]">Auth Code</p>
-                            <div className="text-2xl font-bold text-white tracking-[0.2em] font-mono">{totpCode || '------'}</div>
+                            <p className="text-[8px] text-gray-500 font-bold mb-1 uppercase tracking-[0.3em]">Auth Code</p>
+                            <div className="text-2xl font-bold text-gray-900 tracking-[0.2em] font-mono">{totpCode || '------'}</div>
                         </div>
                     )}
 
-                    <div className="w-full bg-[rgba(0,0,0,0.4)] border border-white/5 p-4 rounded-xl mb-5 overflow-x-auto flex-grow shadow-inner custom-scrollbar">
-                        <pre className="font-mono text-[11px] text-white font-medium whitespace-pre-wrap break-words leading-relaxed drop-shadow-md">{String(acc.data || '')}</pre>
+                    <div className="w-full bg-gray-50 border border-gray-200 p-4 rounded-xl mb-5 overflow-x-auto flex-grow custom-scrollbar">
+                        <pre className="font-mono text-[11px] text-gray-800 font-medium whitespace-pre-wrap break-words leading-relaxed">{displayData}</pre>
                     </div>
                     
                     <div className="flex justify-between mt-auto items-center pt-2">
@@ -840,35 +835,31 @@
                                try {
                                    const token = await getAuthToken();
                                    await fetch(`${BACKEND_URL}/api/secure-action`, {
-                                       method: 'POST',
-                                       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                                       body: JSON.stringify({ action: 'create_ticket', id: id, subject: `Reported Item`, message: `I have an issue with this item: ${acc.type}` })
+                                       method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                       body: JSON.stringify({ action: 'create_ticket', id: id, subject: `Reported Item`, message: `I have an issue with this item: ${safeType}` })
                                    });
                                    triggerToast('Report sent to admin.');
-                               } catch(e) {
-                                   triggerToast('Failed to send report.');
-                               }
+                               } catch(e) { triggerToast('Failed to send report.'); }
                            }
-                        }} className="text-[9px] font-mono text-gray-500 hover:text-red-400 uppercase tracking-widest transition-colors">Report Issue</button>
+                        }} className="text-[9px] font-mono text-gray-400 hover:text-red-500 uppercase tracking-widest transition-colors font-bold">Report Issue</button>
                         <button onClick={() => {
-                           if (navigator.clipboard) navigator.clipboard.writeText(String(acc.data || '')).then(() => triggerToast("Copied!"));
-                           else { const t = document.createElement("textarea"); t.value = String(acc.data || ''); document.body.appendChild(t); t.select(); document.execCommand("copy"); document.body.removeChild(t); triggerToast("Copied!"); }
-                        }} className="btn-animate bg-white text-black px-5 py-2.5 rounded-lg text-[9px] uppercase tracking-widest font-bold flex items-center gap-2 shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+                           if (navigator.clipboard) navigator.clipboard.writeText(displayData).then(() => triggerToast("Copied!"));
+                           else { const t = document.createElement("textarea"); t.value = displayData; document.body.appendChild(t); t.select(); document.execCommand("copy"); document.body.removeChild(t); triggerToast("Copied!"); }
+                        }} className="btn-animate bg-gray-900 hover:bg-black text-white px-5 py-2.5 rounded-xl text-[9px] uppercase tracking-widest font-bold flex items-center gap-2 shadow-sm">
                             <Copy className="w-3 h-3"/> Copy Data
                         </button>
                     </div>
 
-                    {/* 🟢 ACCOUNT USAGE GUIDELINES / RULES 🟢 */}
-                    {(!isSMS && categories) && (() => {
-                        const matchedCat = categories.find(c => c.name === acc.type);
+                    {(!isSMS && Array.isArray(categories)) && (() => {
+                        const matchedCat = categories.find(c => c.name === safeType);
                         if (matchedCat && matchedCat.instructions) {
                             return (
-                                <div className="mt-5 bg-brand-primary/10 border border-brand-primary/30 p-4 sm:p-5 rounded-xl shadow-inner relative overflow-hidden">
+                                <div className="mt-5 bg-brand-primary/5 border border-brand-primary/20 p-4 sm:p-5 rounded-xl relative overflow-hidden">
                                     <div className="absolute top-0 left-0 w-1 h-full bg-brand-primary"></div>
                                     <h4 className="text-[11px] font-bold text-brand-primary uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
                                         <AlertTriangle className="w-4 h-4"/> Important Guidelines
                                     </h4>
-                                    <div className="text-[10px] text-gray-300 font-mono whitespace-pre-wrap leading-relaxed allow-select">
+                                    <div className="text-[10px] text-gray-600 font-mono whitespace-pre-wrap leading-relaxed allow-select">
                                         {matchedCat.instructions}
                                     </div>
                                 </div>
@@ -877,28 +868,27 @@
                         return null;
                     })()}
                     
-                    {/* 🟢 RENEW NUMBER SECTION (For SMS numbers only) 🟢 */}
                     {canRenew && (
-                        <div className="mt-4 border-t border-white/10 pt-4">
+                        <div className="mt-5 border-t border-gray-100 pt-5">
                             {!isRenewing ? (
-                                <button onClick={() => setIsRenewing(true)} className="btn-animate w-full bg-[#111] hover:bg-brand-primary text-gray-300 hover:text-black border border-white/10 font-bold py-2.5 rounded-lg text-[9px] uppercase tracking-widest flex items-center justify-center gap-2 transition-colors shadow-inner">
+                                <button onClick={() => setIsRenewing(true)} className="btn-animate w-full bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 font-bold py-2.5 rounded-xl text-[9px] uppercase tracking-widest flex items-center justify-center gap-2 transition-colors shadow-sm">
                                     <RefreshCw className="w-3 h-3"/> Renew Number
                                 </button>
                             ) : (
-                                <div className="bg-black/50 p-3 rounded-xl border border-brand-primary/30 animate-fade-in-up">
-                                    <p className="text-[9px] text-gray-400 mb-2 uppercase tracking-widest">Select Duration:</p>
-                                    <select value={renewDuration} onChange={e=>setRenewDuration(e.target.value)} className="glass-input allow-select mb-3 text-[10px] py-2 font-bold uppercase tracking-wider">
-                                        <option value="15 minutes" className="bg-black">15 Minutes</option>
-                                        <option value="3 days" className="bg-black">3 Days</option>
-                                        <option value="7 days" className="bg-black">7 Days</option>
-                                        <option value="14 days" className="bg-black">14 Days</option>
-                                        <option value="25 days" className="bg-black">25 Days</option>
+                                <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 animate-fade-in-up">
+                                    <p className="text-[9px] text-gray-500 font-bold mb-2 uppercase tracking-widest">Select Duration:</p>
+                                    <select value={renewDuration} onChange={e=>setRenewDuration(e.target.value)} className="w-full bg-white border border-gray-200 text-gray-900 text-[10px] rounded-lg px-3 py-2 mb-3 outline-none font-bold uppercase tracking-wider">
+                                        <option value="15 minutes">15 Minutes</option>
+                                        <option value="3 days">3 Days</option>
+                                        <option value="7 days">7 Days</option>
+                                        <option value="14 days">14 Days</option>
+                                        <option value="25 days">25 Days</option>
                                     </select>
                                     <div className="flex gap-2">
-                                        <button onClick={handleRenew} disabled={renewStatus==='processing'} className="flex-1 bg-brand-primary hover:bg-white text-black font-bold py-2 rounded-lg text-[9px] uppercase tracking-widest transition-colors flex justify-center items-center btn-animate">
+                                        <button onClick={handleRenew} disabled={renewStatus==='processing'} className="flex-1 bg-brand-primary hover:bg-brand-primary/90 text-white font-bold py-2 rounded-lg text-[9px] uppercase tracking-widest transition-colors flex justify-center items-center">
                                             {renewStatus==='processing' ? <RefreshCw className="w-3 h-3 animate-spin"/> : 'Confirm'}
                                         </button>
-                                        <button onClick={() => setIsRenewing(false)} className="flex-1 bg-red-900/30 hover:bg-red-900/50 text-red-400 font-bold py-2 rounded-lg text-[9px] uppercase tracking-widest border border-red-900/50 transition-colors btn-animate">Cancel</button>
+                                        <button onClick={() => setIsRenewing(false)} className="flex-1 bg-white hover:bg-red-50 text-red-500 font-bold py-2 rounded-lg text-[9px] uppercase tracking-widest border border-gray-200 hover:border-red-200 transition-colors">Cancel</button>
                                     </div>
                                 </div>
                             )}
@@ -3005,7 +2995,58 @@
             </div>
           );
         }
+// ==========================================
+        // CUSTOMER VAULT MODULE (PURCHASED ACCOUNTS)
+        // ==========================================
+        function CustomerDashboardVault({ user, purchases, triggerToast, categories }) {
+            // শুধুমাত্র এই ইউজারের পারচেস গুলো ফিল্টার করা হচ্ছে
+            const myPurchases = (purchases || []).filter(p => p && p.customer === user?.email);
 
+            return (
+                <div className="space-y-6 w-full relative z-10 animate-matrix-in max-w-5xl mx-auto">
+                    {/* Header Section */}
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 w-full bg-white p-5 rounded-3xl border border-gray-200 shadow-sm relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-1.5 h-full bg-brand-primary"></div>
+                        <div className="text-center sm:text-left w-full pl-4 py-1">
+                            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-[0.25em] uppercase mb-1">
+                                My <span className="font-light text-brand-primary">Vault</span>
+                            </h1>
+                            <p className="text-gray-500 text-[9px] sm:text-[10px] font-mono tracking-widest uppercase">
+                                Your Purchased Assets & Accounts
+                            </p>
+                        </div>
+                        <div className="flex items-center gap-3 shrink-0 pr-2">
+                            <span className="text-[10px] font-bold text-brand-primary uppercase tracking-widest bg-brand-primary/10 px-4 py-2 rounded-lg border border-brand-primary/20">
+                                {myPurchases.length} Items Owned
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Content Section */}
+                    {myPurchases.length === 0 ? (
+                        <div className="bg-white rounded-3xl p-12 border border-gray-200 shadow-sm flex flex-col items-center justify-center text-center min-h-[300px]">
+                            <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6 border border-gray-100">
+                                <Key className="w-10 h-10 text-gray-300" strokeWidth={1.5} />
+                            </div>
+                            <h3 className="text-lg font-bold text-gray-600 uppercase tracking-widest mb-2">Vault is Empty</h3>
+                            <p className="text-xs text-gray-400 font-mono tracking-wide">You haven't purchased any accounts or SMS yet.</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                            {myPurchases.map((acc, idx) => (
+                                <VaultItem 
+                                    key={acc.id || idx} 
+                                    acc={acc} 
+                                    idx={idx} 
+                                    triggerToast={triggerToast} 
+                                    categories={categories} 
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
         function CustomerDashboardProfile({ user, balance, tier, userInfo, allOrders, deposits, purchases, tickets, featureSettings, triggerToast }) {
           const [profileSubTab, setProfileSubTab] = useState('overview');
           const [ticketSubject, setTicketSubject] = useState('');
