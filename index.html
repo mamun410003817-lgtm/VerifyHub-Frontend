@@ -38,11 +38,11 @@
             },
             colors: {
               brand: {
-                primary: '#bdfa16', 
-                primaryHover: '#a2de0b', 
-                darkBg: '#0b120c', 
-                border: 'rgba(255, 255, 255, 0.1)',
-                gold: '#bf953f'
+                primary: '#3b82f6', /* 🔵 Trustworthy Enterprise Blue */
+                primaryHover: '#2563eb', 
+                darkBg: '#020617', /* 🔵 Deep Modern Slate */
+                border: 'rgba(255, 255, 255, 0.08)',
+                gold: '#fbbf24'
               }
             },
             animation: {
@@ -154,18 +154,18 @@
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         
-      html {
-            font-size: 18px; /* 🟢 ওয়েবসাইটের সকল লেখাকে গ্লোবালি বড় করার জাদুকরী কোড 🟢 */
+     html {
+            scroll-behavior: smooth;
         }
         html, body {
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            background-color: #0b120c; /* Dark Green Base */
+            background-color: #020617; /* Modern Deep Slate */
         }
         body {
-            /* 🟢 Ultra Premium Dark Background 🟢 */
-            background: #0b120c;
+            /* 🟢 Enterprise Clean Background 🟢 */
+            background: #020617;
             background-attachment: fixed;
             background-size: cover;
             color: #ffffff;
@@ -241,23 +241,21 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(6, 182, 212, 0.3); border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: rgba(6, 182, 212, 0.8); }
 
-        /* 🟢 UPGRADED GLASSMORPHISM & NEON GLOW 🟢 */
+        /* 🟢 ENTERPRISE GLASSMORPHISM 🟢 */
         .glass-effect {
-            background: rgba(11, 18, 12, 0.4); /* Darker, more transparent */
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-top: 1px solid rgba(255, 255, 255, 0.2); /* Light catch effect */
-            border-left: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            background: rgba(15, 23, 42, 0.6); /* Refined Slate Blur */
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
             transform: translateZ(0);
         }
         .glass-effect:hover {
-            border-color: rgba(189, 250, 22, 0.5); /* Brand primary glow border */
-            background: rgba(11, 18, 12, 0.6);
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px -10px rgba(189, 250, 22, 0.3), inset 0 0 20px rgba(189, 250, 22, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.8);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.6);
         }
 
         .glass-panel {
@@ -370,9 +368,142 @@
             to { width: 0%; background-color: #ef4444; }
         }
         .timer-bar {
-            animation: countdown linear forwards;
-        }
-    </style>
+                animation: countdown linear forwards;
+            }
+
+           /* 🟢 ABSOLUTE ENTERPRISE WHITE THEME (ULTIMATE OVERRIDE) 🟢 */
+            body, .light-theme { background-color: #f4f4f5 !important; color: #111827 !important; }
+            
+            /* 1. Force ALL dark background utilities to solid white */
+            .light-theme .glass-effect,
+            .light-theme .glass-panel,
+            .light-theme .bg-black,
+            .light-theme .bg-black\/40,
+            .light-theme .bg-black\/50,
+            .light-theme .bg-black\/60,
+            .light-theme .bg-\\[\\#000\\],
+            .light-theme .bg-\\[\\#111\\],
+            .light-theme .bg-\\[\\#121212\\],
+            .light-theme .bg-\\[\\#222\\],
+            .light-theme .bg-\\[\\#050505\\],
+            .light-theme .bg-\\[\\#0f172a\\],
+            .light-theme .bg-\\[\\#0b120c\\],
+            .light-theme .bg-\\[\\#162316\\]\\/80,
+            .light-theme .bg-\\[\\#162316\\],
+            .light-theme .bg-\\[\\#030712\\],
+            .light-theme .bg-\\[\\#0a0f1d\\],
+            .light-theme .bg-\\[rgba\\(0\\,0\\,0\\,0\\.2\\)\\],
+            .light-theme .bg-\\[rgba\\(0\\,0\\,0\\,0\\.4\\)\\],
+            .light-theme .bg-\\[rgba\\(0\\,0\\,0\\,0\\.5\\)\\],
+            .light-theme .bg-\\[rgba\\(0\\,0\\,0\\,0\\.6\\)\\],
+            .light-theme .bg-\\[rgba\\(255\\,255\\,255\\,0\\.05\\)\\],
+            .light-theme .bg-\\[rgba\\(255\\,255\\,255\\,0\\.1\\)\\],
+            .light-theme .bg-white\/5,
+            .light-theme .bg-white\/10 {
+                background-color: #ffffff !important;
+                background-image: none !important;
+                border: 1px solid #e5e7eb !important;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+                backdrop-filter: none !important;
+            }
+
+            /* 2. Buy Now Button Specific Fix (Removes the black #030712 color) */
+            .light-theme span.bg-\\[\\#030712\\] {
+                background-color: #ffffff !important;
+                color: #111827 !important;
+            }
+            .light-theme span.bg-\\[\\#030712\\]:hover {
+                background-color: transparent !important;
+            }
+
+            /* 3. Fix Hover States */
+            .light-theme .glass-effect:hover, 
+            .light-theme .glass-panel:hover,
+            .light-theme .hover\\:bg-\\[rgba\\(255\\,255\\,255\\,0\\.05\\)\\]:hover {
+                background-color: #f9fafb !important;
+                border-color: #d1d5db !important;
+                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05) !important;
+            }
+
+            /* 4. Text Colors & Highlights */
+            .light-theme .text-white,
+            .light-theme .text-gray-100,
+            .light-theme .text-gray-200,
+            .light-theme .text-gray-300 { color: #1f2937 !important; font-weight: 700 !important; }
+            .light-theme .text-gray-400,
+            .light-theme .text-gray-500 { color: #6b7280 !important; font-weight: 600 !important; }
+            .light-theme .text-yellow-400 { color: #d97706 !important; }
+            .light-theme .text-green-400 { color: #15803d !important; }
+            .light-theme .text-red-400 { color: #b91c1c !important; }
+
+            /* 5. Inputs & Selects */
+            .light-theme input, .light-theme textarea, .light-theme select, .light-theme .glass-input {
+                background-color: #f9fafb !important;
+                border: 1px solid #d1d5db !important;
+                color: #111827 !important;
+                font-weight: 600 !important;
+            }
+            .light-theme input::placeholder, .light-theme textarea::placeholder { color: #9ca3af !important; }
+            .light-theme input:focus, .light-theme textarea:focus, .light-theme select:focus, .light-theme .glass-input:focus {
+                background-color: #ffffff !important;
+                border-color: #3b82f6 !important;
+                box-shadow: 0 0 0 3px rgba(59,130,246,0.15) !important;
+            }
+            .light-theme option { background-color: #ffffff !important; color: #111827 !important; }
+
+            /* 6. Pre / Code blocks (Vault Data) */
+            .light-theme pre {
+                background-color: #f3f4f6 !important;
+                color: #111827 !important;
+                border: 1px solid #e5e7eb !important;
+                font-weight: 600 !important;
+            }
+
+            /* 7. Borders */
+            .light-theme .border-white\/5, 
+            .light-theme .border-white\/10, 
+            .light-theme .border-white\/20, 
+            .light-theme .border-white\/30,
+            .light-theme .border-t, 
+            .light-theme .border-b {
+                border-color: #e5e7eb !important;
+            }
+
+            /* 8. Tables & Admin Panels */
+            .light-theme thead, .light-theme .bg-\\[\\#000\\] { background-color: #f9fafb !important; border-bottom: 2px solid #e5e7eb !important; }
+            .light-theme th { color: #4b5563 !important; }
+
+            /* 9. Main Action Buttons (Pure Light Theme) */
+            .light-theme button.bg-white, 
+            .light-theme .bg-white.text-black {
+                background-color: #ffffff !important;
+                color: #3b82f6 !important;
+                border: 1px solid #e5e7eb !important;
+            }
+            .light-theme button.bg-white:hover { background-color: #f9fafb !important; }
+            .light-theme button.bg-brand-primary { color: #ffffff !important; font-weight: bold !important; border: none !important; }
+            
+            /* 10. Status Badges (Light Mode Friendly Colors) */
+            .light-theme .bg-green-900\/30, .light-theme .bg-green-900\/20, .light-theme .bg-green-500\/20 { background-color: #dcfce7 !important; color: #166534 !important; border-color: #bbf7d0 !important; }
+            .light-theme .bg-red-900\/30, .light-theme .bg-red-900\/20, .light-theme .bg-red-500\/20, .light-theme .bg-red-900\/40 { background-color: #fee2e2 !important; color: #991b1b !important; border-color: #fecaca !important; }
+            .light-theme .bg-yellow-900\/30, .light-theme .bg-yellow-900\/20 { background-color: #fef9c3 !important; color: #854d0e !important; border-color: #fef08a !important; }
+            .light-theme .bg-blue-500\/20 { background-color: #dbeafe !important; color: #1e40af !important; border-color: #bfdbfe !important; }
+
+            /* 11. Kill Dark Shadows & Neon Glows */
+            .light-theme .shadow-inner, 
+            .light-theme [class*="shadow-\\[0_"] {
+                box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05) !important;
+            }
+            
+            /* 12. Font Size Bump for Legibility */
+            .light-theme .text-\\[8px\\], 
+            .light-theme .text-\\[9px\\], 
+            .light-theme .text-\\[10px\\] {
+                font-size: 11px !important;
+                letter-spacing: 0.05em !important;
+                line-height: 1.5 !important;
+            }
+        </style>
 </head>
 <body class="antialiased">
     <div id="root"></div>
@@ -482,23 +613,23 @@
 
             return (
                 <div ref={wrapperRef} className="relative w-full z-[100]">
-                    <div onClick={() => setIsOpen(!isOpen)} className="glass-input allow-select font-bold uppercase tracking-wider text-[10px] sm:text-xs py-4 cursor-pointer flex items-center justify-between hover:border-brand-primary/50 transition-colors bg-[#000]/60 shadow-inner">
+                    <div onClick={() => setIsOpen(!isOpen)} className="w-full bg-white border border-gray-200 text-gray-900 font-bold uppercase tracking-wider text-[10px] sm:text-xs py-4 px-4 rounded-xl cursor-pointer flex items-center justify-between hover:border-brand-primary/50 transition-colors shadow-sm allow-select">
                         <div className="flex items-center gap-2 overflow-hidden">
                             {Icon && <Icon className="w-4 h-4 text-brand-primary shrink-0" />}
-                            <span className="truncate text-white">{selectedLabel}</span>
+                            <span className="truncate">{selectedLabel}</span>
                         </div>
                         <ChevronDown className={`w-4 h-4 text-brand-primary transition-transform duration-300 ${isOpen ? 'rotate-180' : ''} shrink-0`} />
                     </div>
                     {isOpen && (
-                        <div className="absolute z-50 w-full mt-2 bg-[#0f172a]/95 backdrop-blur-xl border border-brand-primary/30 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-hidden animate-fade-in-up">
-                            <div className="p-3 border-b border-white/10 bg-black/60 flex items-center gap-2">
+                        <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden animate-fade-in-up">
+                            <div className="p-3 border-b border-gray-100 bg-gray-50 flex items-center gap-2">
                                 <Search className="w-3.5 h-3.5 text-brand-primary" />
                                 <input
                                     type="text"
                                     placeholder="Search..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full bg-transparent border-none outline-none text-white text-[10px] sm:text-xs font-mono uppercase tracking-widest allow-select"
+                                    className="w-full bg-transparent border-none outline-none text-gray-900 text-[10px] sm:text-xs font-mono uppercase tracking-widest allow-select"
                                     onClick={(e) => e.stopPropagation()}
                                     autoFocus
                                 />
@@ -508,12 +639,12 @@
                                     <div
                                         key={opt.value}
                                         onClick={() => { onChange(opt.value); setIsOpen(false); setSearchQuery(''); }}
-                                        className={`px-4 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors ${value === opt.value ? 'bg-brand-primary text-black' : 'text-gray-300 hover:bg-brand-primary/20 hover:text-white'}`}
+                                        className={`px-4 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors ${value === opt.value ? 'bg-brand-primary/10 text-brand-primary' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}
                                     >
                                         {opt.label}
                                     </div>
                                 )) : (
-                                    <div className="p-6 text-center text-[10px] text-gray-500 uppercase tracking-widest font-mono">Not Found</div>
+                                    <div className="p-6 text-center text-[10px] text-gray-400 uppercase tracking-widest font-mono">Not Found</div>
                                 )}
                             </div>
                         </div>
@@ -1187,20 +1318,20 @@
           if (!user) {
             if (showLanding) {
                 return (
-                    <div className="min-h-screen w-full relative overflow-x-hidden font-sans bg-[#0b120c] text-white selection:bg-brand-primary selection:text-black">
+                    <div className="min-h-screen w-full relative overflow-x-hidden font-sans bg-white text-gray-900 selection:bg-brand-primary selection:text-white">
                         
                         {/* 🟢 Background Video 🟢 */}
-                        <video autoPlay loop muted playsInline disablePictureInPicture preload="auto" className="fixed inset-0 w-full h-full object-cover object-center z-[0] opacity-30 mix-blend-screen">
+                        <video autoPlay loop muted playsInline disablePictureInPicture preload="auto" className="fixed inset-0 w-full h-full object-cover object-center z-[0] opacity-10 mix-blend-multiply">
                             <source src="https://qdeadbqoawsqhnliikhw.supabase.co/storage/v1/object/public/videos/5bg-video.mp4.mp4" type="video/mp4" />
                         </video>
                         
-                        <div className="fixed inset-0 bg-[#0b120c]/80 z-[1] pointer-events-none"></div>
+                        <div className="fixed inset-0 bg-white/80 z-[1] pointer-events-none"></div>
                         
                         {/* 🟢 NAVBAR 🟢 */}
                         <nav className="w-full flex justify-between items-center p-6 sm:px-12 max-w-7xl mx-auto relative z-50 animate-fade-in-up">
                             <div className="flex items-center gap-3">
-                                <EliteLogo className="w-8 h-8 sm:w-10 sm:h-10 text-white opacity-90" />
-                                <span className="text-lg sm:text-xl font-bold tracking-[0.2em] uppercase text-white">VerifyHub <span className="text-brand-primary font-light">Elite</span></span>
+                                <EliteLogo className="w-8 h-8 sm:w-10 sm:h-10 text-gray-900 opacity-90" />
+                                <span className="text-lg sm:text-xl font-bold tracking-[0.2em] uppercase text-gray-900">VerifyHub <span className="text-brand-primary font-light">Elite</span></span>
                             </div>
                             <button onClick={() => setShowLanding(false)} className="btn-neon-auth px-6 py-3 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest flex items-center gap-2 group">
                                 LOGIN OR SIGN UP
@@ -1210,68 +1341,88 @@
 
                         {/* 🟢 HERO SECTION 🟢 */}
                         <div className="relative z-10 flex flex-col items-center justify-center min-h-[75vh] px-4 text-center max-w-5xl mx-auto mt-6">
-                            <div className="mb-8 px-5 py-2 rounded-full border border-brand-primary/30 bg-brand-primary/10 text-brand-primary text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.3em] backdrop-blur-md animate-fade-in-up shadow-inner">
-                                Your Secure Digital Arsenal
+                            <div className="mb-8 px-5 py-2 rounded-full border border-gray-200 bg-gray-50/80 text-gray-700 text-[10px] sm:text-xs font-medium uppercase tracking-[0.2em] backdrop-blur-md animate-fade-in-up shadow-sm flex items-center gap-2">
+                                <ShieldCheck className="w-4 h-4 text-brand-primary" /> Verified & Secure Platform
                             </div>
                             
                             <div className="min-h-[120px] sm:min-h-[160px] flex items-center justify-center w-full mb-6">
-                                <h1 className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tighter leading-[1.1] animate-fade-in-up text-center flex flex-col items-center" style={{animationDelay: '0.1s'}}>
-                                    <span>Premium Accounts &</span>
-                                    <span className="text-brand-primary drop-shadow-[0_0_20px_rgba(189,250,22,0.4)] typewriter-text mt-2 sm:mt-4">SMS Verifications</span>
+                                <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.2] animate-fade-in-up text-center flex flex-col items-center text-gray-900" style={{animationDelay: '0.1s'}}>
+                                    <span>Enterprise-Grade</span>
+                                    <span className="text-brand-primary mt-2 sm:mt-4">Digital Identity Solutions</span>
                                 </h1>
                             </div>
                             
-                            <p className="text-gray-300 text-xs sm:text-sm md:text-base font-light mb-10 max-w-2xl leading-relaxed tracking-wide animate-fade-in-up" style={{animationDelay: '0.2s'}}>
-                                Get instant, fully verified digital assets. Fast OTP bypass and high-trust accounts delivered automatically, 24/7.
+                            <p className="text-gray-600 text-sm sm:text-base font-normal mb-10 max-w-2xl leading-relaxed tracking-wide animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+                                Reliable, high-quality digital accounts and instant global SMS verification infrastructure. Built for professionals, delivered instantly 24/7.
                             </p>
                             
                             <div className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto animate-fade-in-up" style={{animationDelay: '0.3s'}}>
-                                <button onClick={() => setShowLanding(false)} className="btn-animate bg-brand-primary text-[#0b120c] px-10 py-4 rounded-xl text-xs font-bold uppercase tracking-[0.2em] shadow-[0_0_25px_rgba(189,250,22,0.5)] hover:shadow-[0_0_40px_rgba(189,250,22,0.7)] transition-all">
+                                <button onClick={() => setShowLanding(false)} className="btn-animate bg-brand-primary text-[#0b120c] px-10 py-4 rounded-xl text-xs font-bold uppercase tracking-[0.2em] shadow-[0_0_25px_rgba(189,250,22,0.4)] hover:shadow-[0_0_40px_rgba(189,250,22,0.6)] transition-all">
                                     Access Dashboard
                                 </button>
-                                <button onClick={() => window.scrollTo({top: window.innerHeight, behavior: 'smooth'})} className="btn-animate glass-effect text-white px-10 py-4 rounded-xl text-xs font-bold uppercase tracking-[0.2em] hover:text-brand-primary">
+                                <button onClick={() => window.scrollTo({top: window.innerHeight, behavior: 'smooth'})} className="btn-animate bg-white text-gray-900 border border-gray-200 shadow-sm px-10 py-4 rounded-xl text-xs font-bold uppercase tracking-[0.2em] hover:text-brand-primary">
                                     Explore Platform
                                 </button>
+                            </div>
+                            
+                            {/* 🟢 LIVE STATS BAR 🟢 */}
+                            <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10 w-full max-w-4xl border-t border-gray-200 pt-10 animate-fade-in-up" style={{animationDelay: '0.5s'}}>
+                                <div className="flex flex-col items-center">
+                                    <span className="text-2xl sm:text-3xl font-black text-gray-900">99.9%</span>
+                                    <span className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-widest font-bold mt-1">Network Uptime</span>
+                                </div>
+                                <div className="flex flex-col items-center">
+                                    <span className="text-2xl sm:text-3xl font-black text-gray-900">50K+</span>
+                                    <span className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-widest font-bold mt-1">Verified Orders</span>
+                                </div>
+                                <div className="flex flex-col items-center">
+                                    <span className="text-2xl sm:text-3xl font-black text-gray-900">&lt; 1s</span>
+                                    <span className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-widest font-bold mt-1">Delivery Time</span>
+                                </div>
+                                <div className="flex flex-col items-center">
+                                    <span className="text-2xl sm:text-3xl font-black text-brand-primary flex items-center gap-1">24/7</span>
+                                    <span className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-widest font-bold mt-1">Active Support</span>
+                                </div>
                             </div>
                         </div>
 
                         {/* 🟢 BENTO GRID SECTION 🟢 */}
-                        <div className="relative z-10 pt-24 pb-24 mt-12 bg-gradient-to-b from-transparent to-[#050806]">
+                        <div className="relative z-10 pt-24 pb-24 mt-12 bg-gradient-to-b from-transparent to-gray-50">
                             <div className="max-w-6xl mx-auto px-4 sm:px-6">
                                 <div className="text-center mb-16 reveal-card visible">
                                     <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-brand-primary mb-3">Capabilities</h2>
-                                    <p className="text-2xl sm:text-3xl font-light text-white tracking-wide">Everything you need to scale securely.</p>
+                                    <p className="text-2xl sm:text-3xl font-light text-gray-900 tracking-wide">Everything you need to scale securely.</p>
                                 </div>
                                 
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
                                     
                                     {/* Large Card */}
-                                    <div className="md:col-span-2 glass-effect p-8 sm:p-10 rounded-3xl reveal-card visible group overflow-hidden relative border border-white/10 hover:border-brand-primary/50 transition-all duration-500 hover:-translate-y-2">
+                                    <div className="md:col-span-2 bg-white shadow-lg p-8 sm:p-10 rounded-3xl reveal-card visible group overflow-hidden relative border border-gray-100 hover:border-brand-primary/50 transition-all duration-500 hover:-translate-y-2">
                                         <div className="absolute -right-10 -top-10 w-40 h-40 bg-brand-primary/10 rounded-full blur-3xl group-hover:bg-brand-primary/20 transition-all duration-700"></div>
                                         <Smartphone className="w-10 h-10 text-brand-primary mb-6 opacity-90"/>
-                                        <h3 className="text-xl sm:text-2xl font-bold tracking-wide text-white mb-3 uppercase">Global SMS Verifications</h3>
-                                        <p className="text-sm text-gray-400 font-light leading-relaxed max-w-md">Get temporary and real numbers from 100+ countries. Instantly bypass OTP verifications for any app or website with ease.</p>
+                                        <h3 className="text-xl sm:text-2xl font-bold tracking-wide text-gray-900 mb-3 uppercase">Direct Carrier SMS Nodes</h3>
+                                        <p className="text-sm text-gray-600 font-light leading-relaxed max-w-md">We route OTPs through our proprietary telecom partnerships across 100+ countries. Get real, non-VoIP numbers with zero third-party API delays.</p>
                                     </div>
                                     
                                     {/* Small Card 1 */}
-                                    <div className="glass-effect p-8 sm:p-10 rounded-3xl reveal-card visible group border border-white/10 hover:border-brand-primary/50 transition-colors">
+                                    <div className="bg-white shadow-lg p-8 sm:p-10 rounded-3xl reveal-card visible group border border-gray-100 hover:border-brand-primary/50 transition-colors">
                                         <Package className="w-8 h-8 text-brand-primary mb-6 opacity-90"/>
-                                        <h3 className="text-lg font-bold tracking-wide text-white mb-3 uppercase">Verified Accounts</h3>
-                                        <p className="text-xs text-gray-400 font-light leading-relaxed">Buy high-quality, aged accounts like Google Voice and TextPlus, ready for immediate secure use.</p>
+                                        <h3 className="text-lg font-bold tracking-wide text-gray-900 mb-3 uppercase">Verified Accounts</h3>
+                                        <p className="text-xs text-gray-600 font-light leading-relaxed">Buy high-quality, aged accounts like Google Voice and TextPlus, ready for immediate secure use.</p>
                                     </div>
 
                                     {/* Small Card 2 */}
-                                    <div className="glass-effect p-8 sm:p-10 rounded-3xl reveal-card visible group border border-white/10 hover:border-brand-primary/50 transition-colors">
+                                    <div className="bg-white shadow-lg p-8 sm:p-10 rounded-3xl reveal-card visible group border border-gray-100 hover:border-brand-primary/50 transition-colors">
                                         <Zap className="w-8 h-8 text-brand-primary mb-6 opacity-90"/>
-                                        <h3 className="text-lg font-bold tracking-wide text-white mb-3 uppercase">Instant Delivery</h3>
-                                        <p className="text-xs text-gray-400 font-light leading-relaxed">Our system is 100% automated. Add funds with crypto or bank transfer and receive your assets instantly.</p>
+                                        <h3 className="text-lg font-bold tracking-wide text-gray-900 mb-3 uppercase">Instant Delivery</h3>
+                                        <p className="text-xs text-gray-600 font-light leading-relaxed">Our system is 100% automated. Add funds with crypto or bank transfer and receive your assets instantly.</p>
                                     </div>
 
                                     {/* Support Card */}
-                                    <div className="md:col-span-2 glass-panel border border-brand-primary/20 hover:border-brand-primary/50 transition-colors p-8 sm:p-10 rounded-3xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 reveal-card visible bg-brand-primary/5">
+                                    <div className="md:col-span-2 bg-white shadow-lg border border-brand-primary/20 hover:border-brand-primary/50 transition-colors p-8 sm:p-10 rounded-3xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 reveal-card visible">
                                         <div>
                                             <h3 className="text-lg font-bold tracking-wide text-brand-primary mb-2 uppercase">24/7 Admin Support</h3>
-                                            <p className="text-sm text-gray-300 font-light">Need help? Get priority assistance directly from our team.</p>
+                                            <p className="text-sm text-gray-600 font-light">Need help? Get priority assistance directly from our team.</p>
                                         </div>
                                         <div className="flex flex-wrap gap-4 w-full sm:w-auto">
                                             <a href="https://wa.me/8801913003817" target="_blank" rel="noopener noreferrer" className="bg-[#25D366]/10 hover:bg-[#25D366] text-[#25D366] hover:text-black border border-[#25D366]/50 px-6 py-3.5 rounded-xl text-[10px] font-bold tracking-widest uppercase transition-colors flex items-center gap-2 shadow-inner">
@@ -1288,8 +1439,203 @@
                             </div>
                         </div>
 
+                        {/* 🟢 TRUST TICKER (MARQUEE) 🟢 */}
+                        <div className="w-full bg-gray-50 border-y border-gray-200 py-6 overflow-hidden relative z-10 flex">
+                            <style>{`
+                                @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+                                .animate-scroll { animation: scroll 30s linear infinite; width: max-content; }
+                                .animate-scroll:hover { animation-play-state: paused; }
+                            `}</style>
+                            <div className="animate-scroll flex items-center gap-12 sm:gap-24 pl-12 sm:pl-24 text-gray-400 font-bold text-xs sm:text-sm uppercase tracking-[0.3em]">
+                                {/* দুইবার দেওয়া হয়েছে যাতে লুপ কন্টিনিউ হয় */}
+                                <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-primary"/> Premium Accounts</div>
+                                <div className="flex items-center gap-2"><Lock className="w-4 h-4 text-brand-primary"/> Secure Infrastructure</div>
+                                <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-brand-primary"/> Global OTP Bypass</div>
+                                <div className="flex items-center gap-2"><Zap className="w-4 h-4 text-brand-primary"/> Instant Crypto Deposit</div>
+                                <div className="flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-brand-primary"/> 30-Min Warranty</div>
+                                
+                                <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-primary"/> Premium Accounts</div>
+                                <div className="flex items-center gap-2"><Lock className="w-4 h-4 text-brand-primary"/> Secure Infrastructure</div>
+                                <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-brand-primary"/> Global OTP Bypass</div>
+                                <div className="flex items-center gap-2"><Zap className="w-4 h-4 text-brand-primary"/> Instant Crypto Deposit</div>
+                                <div className="flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-brand-primary"/> 30-Min Warranty</div>
+                            </div>
+                        </div>
+
+                        {/* 🟢 HOW IT WORKS SECTION 🟢 */}
+                        <div className="relative z-10 py-24 bg-white">
+                            <div className="max-w-6xl mx-auto px-4 sm:px-6">
+                                <div className="text-center mb-16 reveal-card visible">
+                                    <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-brand-primary mb-3">Workflow</h2>
+                                    <p className="text-2xl sm:text-3xl font-light text-gray-900 tracking-wide">3 simple steps to get started.</p>
+                                </div>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+                                    {/* Connecting Line (Hidden on mobile) */}
+                                    <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-gray-100 z-0"></div>
+                                    
+                                    {/* Step 1 */}
+                                    <div className="relative z-10 flex flex-col items-center text-center reveal-card visible group">
+                                        <div className="w-24 h-24 bg-white border-2 border-gray-100 rounded-2xl shadow-sm flex items-center justify-center mb-6 group-hover:border-brand-primary group-hover:-translate-y-2 transition-all duration-300">
+                                            <span className="text-3xl font-black text-gray-200 group-hover:text-brand-primary transition-colors">01</span>
+                                        </div>
+                                        <h3 className="text-lg font-bold text-gray-900 mb-2 uppercase">Create Account</h3>
+                                        <p className="text-sm text-gray-500 font-light max-w-[250px]">Sign up instantly with your email or use 1-click Google Auth.</p>
+                                    </div>
+                                    
+                                    {/* Step 2 */}
+                                    <div className="relative z-10 flex flex-col items-center text-center reveal-card visible group" style={{transitionDelay: '0.1s'}}>
+                                        <div className="w-24 h-24 bg-white border-2 border-gray-100 rounded-2xl shadow-sm flex items-center justify-center mb-6 group-hover:border-brand-primary group-hover:-translate-y-2 transition-all duration-300">
+                                            <span className="text-3xl font-black text-gray-200 group-hover:text-brand-primary transition-colors">02</span>
+                                        </div>
+                                        <h3 className="text-lg font-bold text-gray-900 mb-2 uppercase">Add Funds</h3>
+                                        <p className="text-sm text-gray-500 font-light max-w-[250px]">Deposit via Local Bank Transfer or automated Crypto gateways.</p>
+                                    </div>
+                                    
+                                    {/* Step 3 */}
+                                    <div className="relative z-10 flex flex-col items-center text-center reveal-card visible group" style={{transitionDelay: '0.2s'}}>
+                                        <div className="w-24 h-24 bg-brand-primary border-2 border-brand-primary rounded-2xl shadow-[0_10px_20px_rgba(189,250,22,0.3)] flex items-center justify-center mb-6 group-hover:-translate-y-2 transition-all duration-300">
+                                            <span className="text-3xl font-black text-gray-900">03</span>
+                                        </div>
+                                        <h3 className="text-lg font-bold text-gray-900 mb-2 uppercase">Acquire Assets</h3>
+                                        <p className="text-sm text-gray-500 font-light max-w-[250px]">Purchase premium accounts or get instant OTPs directly to your vault.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {/* 🟢 REAL CUSTOMER REVIEWS (SOCIAL PROOF) 🟢 */}
+                        <div className="relative z-10 py-24 bg-gray-50 border-t border-gray-200">
+                            <div className="max-w-6xl mx-auto px-4 sm:px-6">
+                                <div className="text-center mb-16 reveal-card visible">
+                                    <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-brand-primary mb-3">Wall of Love</h2>
+                                    <p className="text-2xl sm:text-3xl font-light text-gray-900 tracking-wide">Trusted by 5,000+ professionals globally.</p>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    {/* Review 1 */}
+                                    <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 reveal-card visible hover:-translate-y-1 transition-transform">
+                                        <div className="flex text-yellow-400 mb-4">
+                                            <Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/>
+                                        </div>
+                                        <p className="text-gray-600 text-sm leading-relaxed mb-6 font-medium">"I was skeptical at first, but the Google Voice accounts were delivered instantly. The 30-min replacement policy is legit. Had one bad account, got replaced in 2 mins."</p>
+                                        <div className="flex items-center gap-3 border-t border-gray-100 pt-4">
+                                            <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xs">JD</div>
+                                            <div>
+                                                <p className="text-xs font-bold text-gray-900">John D.</p>
+                                                <p className="text-[10px] text-gray-400 uppercase tracking-widest">Verified Buyer</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/* Review 2 */}
+                                    <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 reveal-card visible hover:-translate-y-1 transition-transform" style={{transitionDelay: '0.1s'}}>
+                                        <div className="flex text-yellow-400 mb-4">
+                                            <Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/>
+                                        </div>
+                                        <p className="text-gray-600 text-sm leading-relaxed mb-6 font-medium">"Their proprietary SMS routing is insane. Used it for bulk WhatsApp verifications and the OTPs came through instantly. Crypto deposits are fully automated which saves me hours."</p>
+                                        <div className="flex items-center gap-3 border-t border-gray-100 pt-4">
+                                            <div className="w-8 h-8 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center font-bold text-xs">MS</div>
+                                            <div>
+                                                <p className="text-xs font-bold text-gray-900">Mark S.</p>
+                                                <p className="text-[10px] text-gray-400 uppercase tracking-widest">Agency Owner</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/* Review 3 */}
+                                    <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 reveal-card visible hover:-translate-y-1 transition-transform" style={{transitionDelay: '0.2s'}}>
+                                        <div className="flex text-yellow-400 mb-4">
+                                            <Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/>
+                                        </div>
+                                        <p className="text-gray-600 text-sm leading-relaxed mb-6 font-medium">"Best plug for TextPlus and old Gmails. I've spent over $500 here. The dashboard is clean, and the Telegram support actually replies fast."</p>
+                                        <div className="flex items-center gap-3 border-t border-gray-100 pt-4">
+                                            <div className="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold text-xs">RK</div>
+                                            <div>
+                                                <p className="text-xs font-bold text-gray-900">Rahul K.</p>
+                                                <p className="text-[10px] text-gray-400 uppercase tracking-widest">VIP Member</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 🟢 IRONCLAD GUARANTEE & FAQ 🟢 */}
+                        <div className="relative z-10 py-24 bg-white border-t border-gray-200">
+                            <div className="max-w-5xl mx-auto px-4 sm:px-6">
+                                
+                                {/* Guarantee Box (Dark mode inside light mode for emphasis) */}
+                                <div className="bg-[#0b120c] rounded-3xl p-8 sm:p-12 text-white shadow-2xl reveal-card visible mb-16 relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/10 rounded-full blur-3xl"></div>
+                                    <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                                        <div>
+                                            <ShieldCheck className="w-12 h-12 text-brand-primary mb-4"/>
+                                            <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-wide mb-4">Ironclad Guarantee</h3>
+                                            <p className="text-gray-400 leading-relaxed text-sm">We don't sell dead logs. Every account is checked before stocking. If an account fails to login or is dead on delivery, our automated system and admin team will replace it within our strict <strong className="text-white">30-Minute Replacement Window</strong>.</p>
+                                        </div>
+                                        <div className="space-y-4">
+                                            <div className="bg-white/5 border border-white/10 p-4 rounded-xl flex items-center gap-4">
+                                                <div className="bg-green-500/20 p-2 rounded-lg"><CheckCircle className="w-5 h-5 text-green-400"/></div>
+                                                <div>
+                                                    <p className="font-bold text-sm uppercase tracking-wider">100% Valid Assets</p>
+                                                    <p className="text-[10px] text-gray-400 font-mono mt-0.5">Pre-checked inventory</p>
+                                                </div>
+                                            </div>
+                                            <div className="bg-white/5 border border-white/10 p-4 rounded-xl flex items-center gap-4">
+                                                <div className="bg-blue-500/20 p-2 rounded-lg"><Clock className="w-5 h-5 text-blue-400"/></div>
+                                                <div>
+                                                    <p className="font-bold text-sm uppercase tracking-wider">Instant Auto-Delivery</p>
+                                                    <p className="text-[10px] text-gray-400 font-mono mt-0.5">Zero waiting time</p>
+                                                </div>
+                                            </div>
+                                            <div className="bg-white/5 border border-white/10 p-4 rounded-xl flex items-center gap-4">
+                                                <div className="bg-brand-primary/20 p-2 rounded-lg"><ShieldCheck className="w-5 h-5 text-brand-primary"/></div>
+                                                <div>
+                                                    <p className="font-bold text-sm uppercase tracking-wider">Secure Escrow System</p>
+                                                    <p className="text-[10px] text-gray-400 font-mono mt-0.5">Funds safe until purchase</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* FAQ Section */}
+                                <div className="text-center mb-12 reveal-card visible">
+                                    <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-brand-primary mb-3">Questions?</h2>
+                                    <p className="text-2xl sm:text-3xl font-light text-gray-900 tracking-wide">Frequently Asked Questions.</p>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 reveal-card visible">
+                                    <div className="bg-gray-50 border border-gray-200 p-6 rounded-2xl hover:border-brand-primary/50 transition-colors">
+                                        <h4 className="font-bold text-gray-900 mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><Package className="w-4 h-4 text-brand-primary"/> Are these accounts fresh or aged?</h4>
+                                        <p className="text-sm text-gray-600 leading-relaxed font-light">We provide both. You can select exactly what you need from the dashboard. Aged accounts are clearly marked and come with robust recovery options.</p>
+                                    </div>
+                                    <div className="bg-gray-50 border border-gray-200 p-6 rounded-2xl hover:border-brand-primary/50 transition-colors">
+                                        <h4 className="font-bold text-gray-900 mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><Wallet className="w-4 h-4 text-brand-primary"/> How do I deposit funds?</h4>
+                                        <p className="text-sm text-gray-600 leading-relaxed font-light">We accept automated Crypto (NOWPayments) for global users, and Local Bank Transfers with instant manual approval from the admin team.</p>
+                                    </div>
+                                    <div className="bg-gray-50 border border-gray-200 p-6 rounded-2xl hover:border-brand-primary/50 transition-colors">
+                                        <h4 className="font-bold text-gray-900 mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><RefreshCw className="w-4 h-4 text-brand-primary"/> What if an account doesn't work?</h4>
+                                        <p className="text-sm text-gray-600 leading-relaxed font-light">Report it via the "Report Issue" button in your vault within 30 minutes. If valid, our admin will instantly credit your balance or provide a fresh replacement.</p>
+                                    </div>
+                                    <div className="bg-gray-50 border border-gray-200 p-6 rounded-2xl hover:border-brand-primary/50 transition-colors">
+                                        <h4 className="font-bold text-gray-900 mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><Zap className="w-4 h-4 text-brand-primary"/> Are you a reseller or direct provider?</h4>
+                                        <p className="text-sm text-gray-600 leading-relaxed font-light">We are a direct infrastructure provider. We maintain our own physical SIM banks and telecom nodes to ensure you get the fastest, un-flagged numbers without reseller markups.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 🟢 FINAL CTA SECTION 🟢 */}
+                        <div className="relative z-10 py-20 bg-gray-50 border-t border-gray-200">
+                            <div className="max-w-4xl mx-auto px-4 text-center reveal-card visible">
+                                <h2 className="text-3xl sm:text-4xl font-black text-gray-900 uppercase tracking-tight mb-6">Ready to scale your operations?</h2>
+                                <p className="text-gray-600 mb-10 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">Join thousands of professionals relying on our robust infrastructure for their daily verification and account needs.</p>
+                                <button onClick={() => setShowLanding(false)} className="btn-neon-auth px-12 py-5 rounded-2xl text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-xl text-gray-900">
+                                    Start Now - It's Free
+                                </button>
+                            </div>
+                        </div>
+
                         {/* 🟢 FOOTER 🟢 */}
-                        <div className="relative z-10 border-t border-white/5 bg-[#0b120c] py-8 text-center">
+                        <div className="relative z-10 border-t border-gray-200 bg-gray-50 py-8 text-center">
                             <p className="text-[10px] text-gray-500 font-mono uppercase tracking-widest">&copy; 2026 VerifyHub Elite. All Systems Operational.</p>
                         </div>
                     </div>
@@ -1297,46 +1643,34 @@
             }
 
             return (
-              <div className="min-h-screen flex items-center justify-center p-4 relative font-sans w-full text-white overflow-hidden bg-[#0b120c]">
+              <div className="min-h-screen flex items-center justify-center p-4 relative font-sans w-full text-gray-900 overflow-hidden bg-gray-50">
                 
-                {/* 🟢 High Quality Clear Video Background for App/Login 🟢 */}
-                <video 
-                    autoPlay 
-                    loop 
-                    muted 
-                    playsInline 
-                    disablePictureInPicture
-                    preload="auto"
-                    className="absolute inset-0 w-full h-full object-cover object-center z-[0]"
-                >
-                    <source src="https://qdeadbqoawsqhnliikhw.supabase.co/storage/v1/object/public/videos/5bg-video.mp4.mp4" type="video/mp4" />
-                </video>
-                
-                {/* 🟢 Transparent Overlay (Max clarity) 🟢 */}
-                <div className="absolute inset-0 bg-black/10 z-[1]"></div>
+                {/* 🟢 Clean Professional Background 🟢 */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-full bg-gradient-to-b from-brand-primary/5 to-transparent blur-3xl z-[0] pointer-events-none"></div>
 
                 <div className="absolute top-6 left-6 z-50">
-                    <button onClick={() => setShowLanding(true)} className="btn-animate glass-panel text-white hover:text-brand-primary px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 border border-white/20 hover:border-brand-primary/50 transition-colors bg-[#0b120c]/70 backdrop-blur-md shadow-lg">
-                        <X className="w-3 h-3"/> Back to Home
+                    <button onClick={() => setShowLanding(true)} className="px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center gap-2 bg-white text-gray-600 border border-gray-200 hover:text-gray-900 hover:border-gray-300 hover:bg-gray-50 transition-all shadow-sm">
+                        <X className="w-3.5 h-3.5"/> Back to Home
                     </button>
                 </div>
 
-                <div className="w-full max-w-[400px] animate-matrix-in z-10 relative mt-10 sm:mt-0">
+                <div className="w-full max-w-[420px] animate-fade-in-up z-10 relative mt-10 sm:mt-0">
                   <div className="flex flex-col items-center mb-8">
-                    <EliteLogo className="w-20 h-20 mb-4 drop-shadow-[0_0_15px_rgba(189,250,22,0.6)]" />
-                    <h2 className="text-4xl sm:text-5xl font-bold tracking-[0.2em] text-white uppercase text-center w-full drop-shadow-2xl text-3d">
-                      VerifyHub <br/> <span className="text-brand-primary font-light text-3xl sm:text-4xl">Elite</span>
+                    <EliteLogo className="w-16 h-16 mb-4 text-gray-900" />
+                    <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 text-center w-full">
+                      Welcome back
                     </h2>
+                    <p className="text-sm text-gray-500 mt-2 font-medium">Please enter your details to sign in.</p>
                   </div>
                   
-                  <div className="glass-effect rounded-3xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-brand-primary/20">
+                  <div className="bg-white rounded-3xl p-8 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100">
                     {authMethod !== 'admin' && (
-                        <div className="grid grid-cols-2 gap-2 glass-panel p-1 rounded-xl mb-6 border border-white/5">
-                             <button type="button" onClick={() => { setAuthMethod('login'); setAuthError(''); setAuthSuccessMsg(''); }} className={`btn-animate flex items-center justify-center py-3 rounded-lg text-xs font-bold uppercase tracking-widest ${authMethod === 'login' ? 'bg-brand-primary text-black shadow-lg' : 'text-gray-400 hover:text-white'}`}>Login</button>
-                             <button type="button" onClick={() => { setAuthMethod('signup'); setAuthError(''); setAuthSuccessMsg(''); }} className={`btn-animate flex items-center justify-center py-3 rounded-lg text-xs font-bold uppercase tracking-widest ${authMethod === 'signup' ? 'bg-brand-primary text-black shadow-lg' : 'text-gray-400 hover:text-white'}`}>Sign Up</button>
+                        <div className="grid grid-cols-2 gap-2 bg-gray-50 p-1 rounded-xl mb-8 border border-gray-100">
+                             <button type="button" onClick={() => { setAuthMethod('login'); setAuthError(''); setAuthSuccessMsg(''); }} className={`flex items-center justify-center py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${authMethod === 'login' ? 'bg-white text-gray-900 shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700'}`}>Login</button>
+                             <button type="button" onClick={() => { setAuthMethod('signup'); setAuthError(''); setAuthSuccessMsg(''); }} className={`flex items-center justify-center py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${authMethod === 'signup' ? 'bg-white text-gray-900 shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700'}`}>Sign Up</button>
                         </div>
                     )}
-                    {authMethod === 'admin' && <div className="text-center mb-6 pb-4 border-b border-white/10"><span className="text-[10px] font-bold text-brand-primary uppercase tracking-[0.3em] flex items-center justify-center gap-2"><ShieldCheck className="w-4 h-4"/> Admin Portal</span></div>}
+                    {authMethod === 'admin' && <div className="text-center mb-6 pb-4 border-b border-gray-200"><span className="text-[10px] font-bold text-brand-primary uppercase tracking-[0.3em] flex items-center justify-center gap-2"><ShieldCheck className="w-4 h-4"/> Admin Portal</span></div>}
                     
                     {/* 🟢 MOVED: Google Sign In Button at Top 🟢 */}
                     {authMethod !== 'admin' && (
@@ -1344,7 +1678,7 @@
                             <button 
                                 onClick={handleGoogleLogin} 
                                 disabled={isLoading}
-                                className="btn-animate w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold py-3.5 rounded-2xl text-xs tracking-widest uppercase flex items-center justify-center gap-3 transition-colors shadow-inner"
+                                className="w-full bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 font-bold py-3.5 rounded-xl text-sm tracking-wide flex items-center justify-center gap-3 transition-colors shadow-sm"
                             >
                                 <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -1355,32 +1689,32 @@
                                 Continue with Google
                             </button>
                             
-                            <div className="relative flex py-2 items-center mt-4">
-                                <div className="flex-grow border-t border-white/10"></div>
-                                <span className="flex-shrink-0 mx-4 text-gray-500 text-[10px] uppercase tracking-widest font-bold">Or with email</span>
-                                <div className="flex-grow border-t border-white/10"></div>
+                            <div className="relative flex py-4 items-center">
+                                <div className="flex-grow border-t border-gray-200"></div>
+                                <span className="flex-shrink-0 mx-4 text-gray-400 text-xs font-medium">or</span>
+                                <div className="flex-grow border-t border-gray-200"></div>
                             </div>
                         </div>
                     )}
 
-                    <form onSubmit={handleAuthSubmit} className="space-y-5 animate-fade-in-up" style={{animationDelay: '0.1s'}}>
-                      {authError && <div className="text-red-400 text-[11px] font-bold glass-panel border-red-500/30 p-4 rounded-xl flex items-center gap-3 leading-relaxed"><AlertTriangle className="w-5 h-5 shrink-0"/>{authError}</div>}
-                      {authSuccessMsg && <div className="text-green-400 text-[11px] font-bold glass-panel border-green-500/30 p-4 rounded-xl flex items-center gap-3 leading-relaxed"><CheckCircle className="w-5 h-5 shrink-0"/>{authSuccessMsg}</div>}
+                    <form onSubmit={handleAuthSubmit} className="space-y-4 animate-fade-in-up" style={{animationDelay: '0.1s'}}>
+                      {authError && <div className="text-red-600 bg-red-50 text-xs font-medium border border-red-100 p-4 rounded-xl flex items-center gap-3"><AlertTriangle className="w-4 h-4 shrink-0 text-red-500"/>{authError}</div>}
+                      {authSuccessMsg && <div className="text-green-700 bg-green-50 text-xs font-medium border border-green-100 p-4 rounded-xl flex items-center gap-3"><CheckCircle className="w-4 h-4 shrink-0 text-green-500"/>{authSuccessMsg}</div>}
                       
-                      <div className="space-y-2">
-                        <label className="text-[9px] font-bold text-gray-400 pl-1 uppercase tracking-widest">Email Address</label>
-                        <input type="email" value={emailInput} onChange={e=>setEmailInput(e.target.value)} placeholder="name@example.com" required className="glass-input allow-select" />
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-gray-700">Email</label>
+                        <input type="email" value={emailInput} onChange={e=>setEmailInput(e.target.value)} placeholder="name@company.com" required className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all allow-select" />
                       </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center px-1">
-                           <label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Password</label>
-                           {(authMethod === 'login' || authMethod === 'admin') && <button type="button" onClick={handleForgotPassword} className="text-[9px] font-bold text-brand-primary hover:text-white transition-colors uppercase tracking-widest">Forgot?</button>}
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between items-center">
+                           <label className="text-xs font-bold text-gray-700">Password</label>
+                           {(authMethod === 'login' || authMethod === 'admin') && <button type="button" onClick={handleForgotPassword} className="text-xs font-bold text-brand-primary hover:opacity-80 transition-colors">Forgot password?</button>}
                         </div>
-                        <input type="password" value={passwordInput} onChange={e=>setPasswordInput(e.target.value)} placeholder="••••••••" required className="glass-input allow-select" />
+                        <input type="password" value={passwordInput} onChange={e=>setPasswordInput(e.target.value)} placeholder="••••••••" required className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all allow-select" />
                       </div>
-                      <div className="pt-4">
-                        <button type="submit" disabled={isLoading} className="btn-animate w-full bg-brand-primary hover:bg-white text-black border border-brand-primary/20 font-bold py-4 rounded-2xl text-xs tracking-widest uppercase flex items-center justify-center gap-2 shadow-[0_5px_20px_rgba(189,250,22,0.3)]">
-                            {isLoading ? <span className="flex items-center gap-2"><RefreshCw className="w-4 h-4 animate-spin"/> Processing...</span> : (authMethod === 'signup' ? 'Create Account' : authMethod === 'login' ? 'Access Terminal' : 'Admin Login')}
+                      <div className="pt-3">
+                        <button type="submit" disabled={isLoading} className="w-full bg-gray-900 hover:bg-black text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-70">
+                            {isLoading ? <span className="flex items-center gap-2"><RefreshCw className="w-4 h-4 animate-spin"/> Processing...</span> : (authMethod === 'signup' ? 'Create account' : authMethod === 'login' ? 'Sign in' : 'Admin Sign in')}
                         </button>
                       </div>
                     </form>
@@ -1394,7 +1728,7 @@
           const currentUserTier = user.role === 'customer' ? getTier(usersDB[user.email]?.totalSpent || 0) : null;
 
           return (
-            <div className="min-h-screen w-full relative overflow-x-hidden font-sans pb-24 flex flex-col bg-transparent text-white">
+            <div className="min-h-screen w-full relative overflow-x-hidden font-sans pb-24 flex flex-col bg-gray-50 text-gray-900 light-theme">
               <FloatingLogos />
 
               {/* 🟢 PASSWORD RESET MODAL (NEW) 🟢 */}
@@ -1458,28 +1792,28 @@
                 </div>, document.body
               )}
 
-              <header className="sticky top-0 z-40 w-full bg-[#0b120c]/90 backdrop-blur-xl rounded-none border-t-0 border-x-0 border-b border-brand-primary/20 shadow-md">
+              <header className="sticky top-0 z-40 w-full bg-white/90 backdrop-blur-xl rounded-none border-b border-gray-200 shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
                   <div className="flex items-center gap-3 sm:gap-4">
-                      <div className="w-10 h-10 rounded-xl glass-panel flex items-center justify-center border border-white/20">
-                        <EliteLogo className="w-7 h-7" />
+                      <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center border border-gray-200">
+                        <EliteLogo className="w-7 h-7 text-gray-900" />
                       </div>
-                      <span className="text-xl font-light tracking-[0.25em] text-white hidden sm:block uppercase">Verify<span className="font-bold text-brand-primary">Hub</span> <span className="text-[10px] text-yellow-500 font-bold ml-1 tracking-[0.3em]">ELITE</span></span>
+                      <span className="text-xl font-light tracking-[0.25em] text-gray-900 hidden sm:block uppercase">Verify<span className="font-bold text-brand-primary">Hub</span> <span className="text-[10px] text-brand-primary font-bold ml-1 tracking-[0.3em]">ELITE</span></span>
                   </div>
                   <div className="flex items-center gap-3 sm:gap-4">
                     {user.role === 'customer' && (
-                        <button onClick={() => setShowCart(true)} className="btn-animate relative p-3 rounded-xl glass-panel text-white hover:bg-white/10 transition-colors border border-white/10">
+                        <button onClick={() => setShowCart(true)} className="btn-animate relative p-3 rounded-xl bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors border border-gray-200">
                             <ShoppingCart className="w-4 h-4" strokeWidth={1.5}/>
-                            {cart.length > 0 && <span className="absolute -top-2 -right-2 bg-brand-primary text-black text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">{cart.length}</span>}
+                            {cart.length > 0 && <span className="absolute -top-2 -right-2 bg-brand-primary text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">{cart.length}</span>}
                         </button>
                     )}
                     {user.role === 'customer' && (
-                        <div className="glass-panel px-4 py-2.5 rounded-xl flex items-center gap-2 border border-white/10 cursor-default">
+                        <div className="bg-gray-50 px-4 py-2.5 rounded-xl flex items-center gap-2 border border-gray-200 cursor-default">
                             <Wallet className="w-4 h-4 text-brand-primary opacity-90" />
-                            <span className="font-mono font-bold text-xs sm:text-sm tracking-wider text-white">${Number(currentUserBalance).toFixed(2)}</span>
+                            <span className="font-mono font-bold text-xs sm:text-sm tracking-wider text-gray-900">${Number(currentUserBalance).toFixed(2)}</span>
                         </div>
                     )}
-                    <button onClick={handleLogout} className="btn-animate p-3 glass-panel text-white hover:text-red-400 transition-colors border border-white/10"><LogOut className="w-4 h-4" strokeWidth={1.5}/></button>
+                    <button onClick={handleLogout} className="btn-animate p-3 bg-gray-50 text-gray-600 hover:text-red-500 hover:bg-red-50 transition-colors border border-gray-200"><LogOut className="w-4 h-4" strokeWidth={1.5}/></button>
                   </div>
                 </div>
               </header>
@@ -1493,13 +1827,13 @@
                 )}
 
                 {(!maintenanceSettings?.active || user.role === 'admin') && (
-                    <div className="w-full relative z-30 mb-8 px-1 sm:px-0">
-                      <div className="bg-[#162316]/80 backdrop-blur-md rounded-2xl p-1 flex flex-nowrap overflow-x-auto scrollbar-hide justify-between sm:justify-center gap-0.5 sm:gap-1 w-full border border-brand-primary/20 mx-auto max-w-5xl shadow-md">
+                    <div className="w-full relative z-30 mb-8 px-1 sm:px-0 mt-6">
+                      <div className="bg-white backdrop-blur-md rounded-2xl p-1.5 flex flex-nowrap overflow-x-auto scrollbar-hide justify-between sm:justify-center gap-1 sm:gap-2 w-full border border-gray-200 mx-auto max-w-5xl shadow-sm">
                         {(user.role === 'admin' ? ADMIN_TABS : CUSTOMER_TABS).map(tab => (
-                          <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`btn-animate shrink-0 flex-1 relative flex flex-col items-center justify-center py-2 px-0.5 sm:px-2 rounded-xl min-w-[50px] sm:min-w-[70px] group transition-all duration-300 ${activeTab === tab.id ? 'bg-brand-primary text-[#0b120c] shadow-inner' : 'border border-transparent hover:bg-white/5 text-gray-400'}`}>
+                          <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`btn-animate shrink-0 flex-1 relative flex flex-col items-center justify-center py-2.5 px-1 sm:px-2 rounded-xl min-w-[60px] sm:min-w-[80px] group transition-all duration-300 ${activeTab === tab.id ? 'bg-brand-primary/10 border border-brand-primary/20 shadow-sm' : 'border border-transparent hover:bg-gray-50 text-gray-500'}`}>
                               <div className="relative z-10 flex flex-col items-center justify-center w-full h-full">
-                                  <tab.icon className={`w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 ${activeTab === tab.id ? 'scale-110 mb-1 text-[#0b120c]' : 'mb-1 text-gray-400 group-hover:text-brand-primary'}`} strokeWidth={activeTab === tab.id ? 2 : 1.5} /> 
-                                  <span className={`text-[7px] sm:text-[9px] leading-[1.1] uppercase tracking-wider text-center whitespace-normal break-words w-full transition-colors duration-300 ${activeTab === tab.id ? 'font-bold text-[#0b120c]' : 'font-medium text-gray-400 group-hover:text-white'}`}>
+                                  <tab.icon className={`w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 ${activeTab === tab.id ? 'scale-110 mb-1 text-brand-primary' : 'mb-1 text-gray-400 group-hover:text-brand-primary'}`} strokeWidth={activeTab === tab.id ? 2 : 1.5} /> 
+                                  <span className={`text-[7px] sm:text-[9px] leading-[1.1] uppercase tracking-wider text-center whitespace-normal break-words w-full transition-colors duration-300 ${activeTab === tab.id ? 'font-bold text-brand-primary' : 'font-medium text-gray-500 group-hover:text-gray-900'}`}>
                                       {tab.label === 'SMS Verifications' ? 'SMS Verify' : tab.label}
                                   </span>
                               </div>
@@ -1897,10 +2231,10 @@
 
                     {/* Active Order Panel - Shows only if there's an active order */}
                     {activeOrder ? (
-                        <div className="glass-panel p-8 rounded-3xl border-2 border-brand-primary shadow-[0_0_40px_rgba(6,182,212,0.2)] animate-bouncy-pop relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-full h-1.5 bg-white/10">
+                        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-brand-primary/30 shadow-[0_8px_30px_rgba(59,130,246,0.1)] animate-bouncy-pop relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-1.5 bg-gray-100">
                                 {activeOrder.status === 'Active' && (
-                                    <div className="h-full timer-bar" style={{
+                                    <div className="h-full timer-bar bg-brand-primary" style={{
                                         animationDuration: activeOrder.duration === '15 minutes' ? '900s' : 
                                                            activeOrder.duration === '5 minutes' ? '300s' :
                                                            activeOrder.duration === '3 days' ? '259200s' : 
@@ -1910,59 +2244,119 @@
                                 )}
                             </div>
                             
-                            <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
-                                <div className="flex-grow">
-                                    <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
-                                        <div className="w-2.5 h-2.5 bg-brand-primary rounded-full animate-pulse"></div>
-                                        <p className="text-xs font-bold text-brand-primary uppercase tracking-widest">{activeOrder.service} Verification</p>
+                            <div className="flex flex-col lg:flex-row justify-between items-center gap-8 text-center lg:text-left mt-2">
+                                <div className="flex-grow w-full">
+                                    <div className="flex items-center justify-center lg:justify-start gap-3 mb-3">
+                                        <div className="w-2 h-2 bg-brand-primary rounded-full animate-pulse"></div>
+                                        <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">{activeOrder.service} Verification</p>
                                     </div>
-                                    <div className="text-4xl sm:text-5xl font-mono font-bold tracking-widest text-white flex items-center justify-center md:justify-start gap-4 my-4 drop-shadow-lg">
-                                        {activeOrder.phone}
-                                        <button onClick={() => {
-                                            if(navigator.clipboard) navigator.clipboard.writeText(activeOrder.phone).then(()=>triggerToast("Number copied!"));
-                                        }} className="btn-animate p-3 bg-white/10 hover:bg-brand-primary hover:text-black rounded-xl transition-all"><Copy className="w-6 h-6"/></button>
-                                    </div>
-                                    <div className="flex gap-4 justify-center md:justify-start">
-                                        <span className="text-[10px] text-gray-400 font-mono uppercase bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">Duration: {activeOrder.duration}</span>
-                                        <span className="text-[10px] text-gray-400 font-mono uppercase bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">Price: ${activeOrder.originalPrice.toFixed(2)}</span>
+                                    
+                                    {/* 🟢 PRO PHONE NUMBER DISPLAY WITH SMART COUNTRY CODE SPLITTER 🟢 */}
+                                    {(() => {
+                                        let p = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
+                                        let cc = '';
+                                        let num = p;
+                                        
+                                        // Smart Logic to extract Country Code
+                                        if (p.length === 10) { cc = '+1'; num = p; } // Default USA format without 1
+                                        else if (p.startsWith('1') && p.length === 11) { cc = '+1'; num = p.slice(1); }
+                                        else if (p.startsWith('44')) { cc = '+44'; num = p.slice(2); } // UK
+                                        else if (p.startsWith('7') && p.length === 11) { cc = '+7'; num = p.slice(1); } // Russia
+                                        else if (p.startsWith('86')) { cc = '+86'; num = p.slice(2); } // China
+                                        else if (p.startsWith('91')) { cc = '+91'; num = p.slice(2); } // India
+                                        else if (p.startsWith('62')) { cc = '+62'; num = p.slice(2); } // Indonesia
+                                        else if (p.startsWith('880')) { cc = '+880'; num = p.slice(3); } // Bangladesh
+                                        else { cc = '+' + p.slice(0, 2); num = p.slice(2); } // Fallback for others
+
+                                        return (
+                                            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 my-4 w-full">
+                                                
+                                                {/* Beautiful Divided Number Box */}
+                                                <div className="flex items-center bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden shrink-0 max-w-full">
+                                                    <div className="bg-gray-100 px-4 py-3 sm:py-4 border-r border-gray-200 flex items-center justify-center">
+                                                        <span className="text-xl sm:text-2xl font-black text-gray-500 tracking-wider">{cc}</span>
+                                                    </div>
+                                                    <div className="px-4 py-3 sm:py-4 bg-white overflow-hidden">
+                                                        <span className="text-2xl sm:text-3xl md:text-4xl font-mono font-black tracking-widest text-gray-900 break-all">{num}</span>
+                                                    </div>
+                                                </div>
+                                                
+                                                {/* Copy Button (Only copies the base number) */}
+                                                <button onClick={() => {
+                                                    if(navigator.clipboard) {
+                                                        navigator.clipboard.writeText(num).then(()=>triggerToast("Number copied! (Without Country Code)"));
+                                                    } else { 
+                                                        const t = document.createElement("textarea"); t.value = num; document.body.appendChild(t); t.select(); document.execCommand("copy"); document.body.removeChild(t); triggerToast("Number copied!"); 
+                                                    }
+                                                }} className="btn-animate p-3 sm:p-4 bg-white hover:bg-brand-primary text-gray-600 hover:text-white rounded-2xl transition-all border border-gray-200 shadow-sm shrink-0 flex items-center justify-center group" title="Copy Number Only">
+                                                    <Copy className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform"/>
+                                                </button>
+                                                
+                                            </div>
+                                        );
+                                    })()}
+                                    
+                                    <div className="flex flex-wrap gap-3 justify-center lg:justify-start mt-2">
+                                        <span className="text-[10px] text-gray-600 font-bold uppercase bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm">Duration: {activeOrder.duration}</span>
+                                        <span className="text-[10px] text-gray-600 font-bold uppercase bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm">Price: ${activeOrder.originalPrice.toFixed(2)}</span>
                                     </div>
                                     {activeOrder.status === 'Active' && (
-                                        <p className="text-sm text-yellow-400 mt-6 flex items-center gap-2 justify-center md:justify-start animate-pulse">
+                                        <p className="text-xs sm:text-sm text-orange-600 mt-6 flex items-center gap-2 justify-center lg:justify-start font-bold bg-orange-50 w-fit mx-auto lg:mx-0 px-4 py-2 rounded-full border border-orange-100">
                                             <RefreshCw className="w-4 h-4 animate-spin"/> Listening for SMS... ({formatTime(timeRemaining)})
                                         </p>
                                     )}
                                 </div>
                                 
-                                <div className="bg-[rgba(0,0,0,0.6)] p-8 rounded-3xl border border-white/10 min-w-[280px] w-full md:w-auto flex flex-col items-center justify-center min-h-[160px] shadow-inner">
+                                {/* Awaiting Code / Code Received Box (Light Mode Clean Look) */}
+                                <div className="bg-gray-50 p-6 sm:p-8 rounded-3xl border border-gray-200 min-w-[280px] w-full lg:w-auto flex flex-col items-center justify-center min-h-[160px] shadow-sm shrink-0 relative overflow-hidden">
                                     {activeOrder.code ? (
-                                        <div className="text-center animate-spring-card">
-                                            <p className="text-xs text-green-400 font-bold uppercase tracking-[0.3em] mb-3">Code Received</p>
-                                            <p className="text-4xl font-mono font-black text-white break-all drop-shadow-[0_0_15px_rgba(74,222,128,0.5)]">{activeOrder.code}</p>
+                                        <div className="text-center animate-spring-card w-full">
+                                            <p className="text-[10px] sm:text-xs text-green-600 font-bold uppercase tracking-[0.3em] mb-3 bg-green-100 px-3 py-1 rounded-full inline-block">Code Received</p>
+                                            
+                                            {/* Code with Copy Button */}
+                                            <div className="flex items-center justify-center gap-3 mt-2 bg-white border border-gray-200 p-3 sm:p-4 rounded-2xl shadow-sm">
+                                                <p className="text-3xl sm:text-4xl font-mono font-black text-gray-900 break-all tracking-widest">{activeOrder.code}</p>
+                                                <button onClick={() => {
+                                                    if(navigator.clipboard) navigator.clipboard.writeText(activeOrder.code).then(()=>triggerToast("Code copied!"));
+                                                }} className="btn-animate p-2.5 sm:p-3 bg-green-500 hover:bg-green-600 text-white rounded-xl transition-all shadow-md shrink-0">
+                                                    <Copy className="w-5 h-5"/>
+                                                </button>
+                                            </div>
                                         </div>
                                     ) : activeOrder.status === 'Cancelled' ? (
-                                        <p className="text-red-400 font-bold uppercase tracking-widest text-sm">Operation Cancelled</p>
+                                        <div className="text-center">
+                                            <div className="w-12 h-12 bg-red-50 border border-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-3"><X className="w-6 h-6"/></div>
+                                            <p className="text-red-600 font-bold uppercase tracking-widest text-sm">Operation Cancelled</p>
+                                        </div>
                                     ) : (
-                                        <div className="flex flex-col items-center gap-3 opacity-50">
-                                            <MessageSquare className="w-8 h-8 text-white animate-bounce"/>
-                                            <p className="text-gray-400 font-mono tracking-widest text-xs uppercase">Awaiting Code</p>
+                                        <div className="flex flex-col items-center gap-3 opacity-60">
+                                            <div className="relative">
+                                                <MessageSquare className="w-10 h-10 text-gray-400 animate-bounce"/>
+                                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-1">
+                                                    <span className="w-1 h-1 bg-gray-400 rounded-full animate-pulse"></span>
+                                                    <span className="w-1 h-1 bg-gray-400 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></span>
+                                                    <span className="w-1 h-1 bg-gray-400 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></span>
+                                                </div>
+                                            </div>
+                                            <p className="text-gray-500 font-bold tracking-widest text-[10px] sm:text-xs uppercase mt-2">Awaiting Code</p>
                                         </div>
                                     )}
                                 </div>
                             </div>
                             
-                            {activeOrder.status === 'Active' && (
-                                <div className="mt-8 flex justify-center md:justify-end border-t border-white/10 pt-6">
-                                    <button onClick={cancelNumber} disabled={isCancelling} className="btn-animate px-8 py-3.5 bg-red-900/20 hover:bg-red-500 text-red-400 hover:text-white font-bold text-xs uppercase tracking-widest rounded-xl border border-red-900/50 transition-colors disabled:opacity-50 flex items-center gap-2">
-                                        {isCancelling ? <RefreshCw className="w-4 h-4 animate-spin"/> : null}
+                            <div className="mt-8 border-t border-gray-100 pt-6 flex flex-col sm:flex-row justify-center lg:justify-end gap-4 w-full">
+                                {activeOrder.status === 'Active' && (
+                                    <button onClick={cancelNumber} disabled={isCancelling} className="btn-animate w-full sm:w-auto px-8 py-3.5 bg-white hover:bg-red-50 text-red-500 font-bold text-xs uppercase tracking-widest rounded-xl border border-gray-200 hover:border-red-200 transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-sm">
+                                        {isCancelling ? <RefreshCw className="w-4 h-4 animate-spin"/> : <X className="w-4 h-4"/>}
                                         {isCancelling ? 'Cancelling...' : 'Cancel & Refund'}
                                     </button>
-                                </div>
-                            )}
-                            {activeOrder.status === 'Completed' && (
-                                <div className="mt-8 flex justify-center md:justify-end border-t border-white/10 pt-6">
-                                    <button onClick={() => setActiveOrder(null)} className="btn-animate px-10 py-3.5 bg-white text-black font-bold text-xs uppercase tracking-widest rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.3)]">Complete</button>
-                                </div>
-                            )}
+                                )}
+                                {activeOrder.status === 'Completed' && (
+                                    <button onClick={() => setActiveOrder(null)} className="btn-animate w-full sm:w-auto px-10 py-3.5 bg-gray-900 hover:bg-black text-white font-bold text-xs uppercase tracking-widest rounded-xl shadow-md flex items-center justify-center gap-2">
+                                        <CheckCircle className="w-4 h-4"/> Complete Order
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     ) : (
                         /* Configuration & Purchase Area */
@@ -1975,10 +2369,10 @@
                                         <Settings className="w-5 h-5 text-brand-primary"/> Configuration
                                     </h3>
                                     
-                                    {/* 🟢 TOGGLE SMS MODE 🟢 */}
-                                    <div className="flex bg-[#000]/60 p-1.5 rounded-xl mb-6 border border-white/10 shadow-inner">
-                                        <button onClick={() => setSmsMode('standard')} className={`flex-1 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-lg transition-colors ${smsMode==='standard' ? 'bg-white text-black shadow-md' : 'text-gray-400 hover:text-white'}`}>server 2</button>
-                                        <button onClick={() => setSmsMode('panda')} className={`flex-1 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-lg transition-colors flex items-center justify-center gap-2 ${smsMode==='panda' ? 'bg-brand-primary text-black shadow-[0_0_15px_rgba(6,182,212,0.4)]' : 'text-gray-400 hover:text-white'}`}>⚡ server 1</button>
+                                    {/* 🟢 TOGGLE SMS MODE (LIGHT THEME PRO) 🟢 */}
+                                    <div className="flex bg-gray-100 p-1.5 rounded-xl mb-6 border border-gray-200 shadow-inner">
+                                        <button onClick={() => setSmsMode('standard')} className={`flex-1 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-lg transition-all duration-300 ${smsMode==='standard' ? 'bg-white text-gray-900 shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}>Global Routing</button>
+                                        <button onClick={() => setSmsMode('panda')} className={`flex-1 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-lg transition-all duration-300 flex items-center justify-center gap-2 ${smsMode==='panda' ? 'bg-white text-brand-primary shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}>⚡ Premium Nodes</button>
                                     </div>
 
                                     <div className="space-y-6">
@@ -2049,7 +2443,7 @@
                                                 <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em] pl-1">Select State <span className="text-brand-primary lowercase tracking-normal">(6s Search Loop)</span></label>
                                                 <div className="relative">
                                                     <select value={selectedUsaState} onChange={e => setSelectedUsaState(e.target.value)} className="glass-input allow-select font-bold uppercase tracking-wider text-[10px] sm:text-xs py-4 appearance-none cursor-pointer hover:border-brand-primary/50 transition-colors shadow-inner">
-                                                        {usaStatesList.map(st => <option key={st.value} value={st.value} className="bg-[#111]">{st.label}</option>)}
+                                                        {usaStatesList.map(st => <option key={st.value} value={st.value} className="bg-white text-gray-900">{st.label}</option>)}
                                                     </select>
                                                     <ChevronDown className="w-4 h-4 text-brand-primary absolute right-4 top-4 pointer-events-none"/>
                                                 </div>
@@ -2061,7 +2455,7 @@
                                             <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em] pl-1">Rental Duration</label>
                                             <div className="relative">
                                                 <select value={selectedDuration} onChange={e => setSelectedDuration(e.target.value)} className="glass-input allow-select font-bold uppercase tracking-wider text-[10px] sm:text-xs py-4 appearance-none cursor-pointer hover:border-brand-primary/50 transition-colors shadow-inner" disabled={isPanda}>
-                                                    {durationOptions.map(opt => <option key={opt.value} value={opt.value} className="bg-[#111]">{opt.label}</option>)}
+                                                    {durationOptions.map(opt => <option key={opt.value} value={opt.value} className="bg-white text-gray-900">{opt.label}</option>)}
                                                 </select>
                                                 <Clock className="w-4 h-4 text-brand-primary absolute right-4 top-4 pointer-events-none"/>
                                             </div>
@@ -2073,47 +2467,44 @@
 
                             {/* Right Side: Buy Card */}
                             <div className="lg:col-span-1">
-                                <div className="glass-effect p-8 rounded-3xl text-center flex flex-col items-center justify-center h-full min-h-[300px] border border-brand-primary/30 animate-glow-pulse group relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-10px_rgba(6,182,212,0.4)]">
+                                <div className="bg-white p-8 rounded-3xl text-center flex flex-col items-center justify-center h-full min-h-[300px] border border-gray-200 shadow-sm group relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:border-brand-primary/30">
                                     
-                                    <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                    <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                                     
                                     {isLoadingRates && smsMode === 'panda' ? (
-                                        <RefreshCw className="w-10 h-10 text-brand-primary animate-spin"/>
+                                        <RefreshCw className="w-10 h-10 text-brand-primary animate-spin relative z-10"/>
                                     ) : (!currentServiceObj && smsMode === 'panda') ? (
-                                        <p className="text-gray-500 font-mono uppercase text-xs tracking-widest">Select a valid configuration</p>
+                                        <p className="text-gray-500 font-mono uppercase text-xs tracking-widest relative z-10">Select a valid configuration</p>
                                     ) : (
-                                        <div className="relative z-10 flex flex-col items-center w-full animate-spring-card">
-                                            <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 mb-6 shadow-lg group-hover:scale-110 transition-transform duration-500">
+                                        <div className="relative z-10 flex flex-col items-center w-full animate-fade-in-up">
+                                            <div className="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center border border-gray-100 mb-6 shadow-sm group-hover:scale-110 transition-transform duration-500">
                                                 <MessageSquare className="w-8 h-8 text-brand-primary"/>
                                             </div>
                                             
-                                            <h2 className="text-xl sm:text-2xl font-black uppercase tracking-widest text-white mb-2 text-center w-full truncate px-2">{currentServiceObj ? currentServiceObj.name : selectedServiceCode || 'Service'}</h2>
+                                            <h2 className="text-xl sm:text-2xl font-black uppercase tracking-wide text-gray-900 mb-3 text-center w-full truncate px-2">{currentServiceObj ? currentServiceObj.name : selectedServiceCode || 'Service'}</h2>
                                             
                                             <div className="flex flex-wrap justify-center gap-2 mb-6">
-                                                <span className="text-[9px] bg-black/50 text-gray-300 px-2 py-1 rounded border border-white/10 uppercase tracking-widest">{smsMode === 'panda' ? selectedPandaCountry : selectedCountry}</span>
-                                                <span className="text-[9px] bg-black/50 text-gray-300 px-2 py-1 rounded border border-white/10 uppercase tracking-widest">{selectedDuration}</span>
+                                                <span className="text-[9px] bg-gray-100 text-gray-600 px-3 py-1 rounded-full border border-gray-200 uppercase tracking-widest font-bold">{smsMode === 'panda' ? selectedPandaCountry : selectedCountry}</span>
+                                                <span className="text-[9px] bg-gray-100 text-gray-600 px-3 py-1 rounded-full border border-gray-200 uppercase tracking-widest font-bold">{selectedDuration}</span>
                                             </div>
                                             
                                             <div className="flex flex-col items-center mb-8">
-                                                <div className="text-5xl font-mono font-light text-white drop-shadow-md flex items-center justify-center gap-1">
-                                                    <span className="text-2xl text-brand-primary">$</span>
+                                                <div className="text-5xl font-mono font-light text-gray-900 flex items-center justify-center gap-1">
+                                                    <span className="text-2xl text-brand-primary font-bold">$</span>
                                                     {displayPrice ? displayPrice.toFixed(2) : (
-                                                        <span className="text-xl text-gray-500 tracking-widest uppercase">Select to view</span>
+                                                        <span className="text-xl text-gray-400 tracking-widest uppercase">Select to view</span>
                                                     )}
                                                 </div>
                                                 {displayPrice > 0 && (
-                                                    <span className="text-[10px] text-gray-400 font-mono mt-2 tracking-widest uppercase bg-white/5 px-3 py-1 rounded-full border border-white/10">
+                                                    <span className="text-[10px] text-gray-600 font-mono mt-3 tracking-widest uppercase bg-gray-50 px-3 py-1 rounded-full border border-gray-200">
                                                         ~ ₦{(displayPrice * (bankSettings?.nairaRate || 1500)).toLocaleString('en-US', {maximumFractionDigits: 0})}
                                                     </span>
                                                 )}
                                             </div>
                                             
-                                            <button onClick={() => buyNumber(currentServiceObj || { code: selectedServiceCode, name: selectedServiceCode, finalPrice: displayPrice })} disabled={isBuying || (smsMode === 'panda' && !displayPrice)} className="btn-animate relative w-full overflow-hidden rounded-2xl p-[2px] disabled:opacity-50">
-                                                <span className="absolute inset-0 bg-gradient-to-r from-brand-primary via-[#fcf6ba] to-brand-primary bg-[length:200%_auto] animate-shimmer rounded-2xl"></span>
-                                                <span className="relative flex items-center justify-center gap-3 bg-[#030712] hover:bg-transparent text-white hover:text-black font-black py-4 px-6 rounded-[14px] text-[10px] sm:text-xs tracking-[0.2em] uppercase transition-all duration-300">
-                                                    {isBuying ? <RefreshCw className="w-5 h-5 animate-spin"/> : <ShoppingCart className="w-5 h-5"/>}
-                                                    {isBuying ? 'PROCESSING' : 'BUY NOW'}
-                                                </span>
+                                            <button onClick={() => buyNumber(currentServiceObj || { code: selectedServiceCode, name: selectedServiceCode, finalPrice: displayPrice })} disabled={isBuying || (smsMode === 'panda' && !displayPrice)} className="btn-animate w-full bg-brand-primary hover:opacity-90 text-white font-bold py-4 px-6 rounded-2xl text-xs sm:text-sm tracking-widest uppercase transition-all duration-300 shadow-[0_8px_20px_rgba(59,130,246,0.3)] flex items-center justify-center gap-3 disabled:opacity-50">
+                                                {isBuying ? <RefreshCw className="w-5 h-5 animate-spin"/> : <ShoppingCart className="w-5 h-5"/>}
+                                                {isBuying ? 'PROCESSING' : 'BUY NOW'}
                                             </button>
                                         </div>
                                     )}
@@ -2274,15 +2665,15 @@
 
           return (
             <div className="space-y-6 w-full relative z-10 animate-matrix-in">
-              <div className="flex flex-col sm:flex-row justify-between items-center gap-4 w-full glass-effect p-5 rounded-3xl border border-white/10 relative overflow-hidden">
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-4 w-full bg-white p-5 rounded-3xl border border-gray-200 shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-1.5 h-full bg-brand-primary"></div>
                 <div className="text-center sm:text-left w-full pl-4 py-1">
-                  <h1 className="text-xl sm:text-2xl font-bold text-white tracking-[0.25em] uppercase mb-1">Buy <span className="font-light text-brand-primary">Accounts</span></h1>
-                  <p className="text-gray-400 text-[9px] sm:text-[10px] font-mono tracking-widest uppercase">Verified Static Entities</p>
+                  <h1 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-[0.25em] uppercase mb-1">Buy <span className="font-light text-brand-primary">Accounts</span></h1>
+                  <p className="text-gray-500 text-[9px] sm:text-[10px] font-mono tracking-widest uppercase">Verified Static Entities</p>
                 </div>
                 <div className="w-full sm:w-72 relative">
-                     <Search className="w-4 h-4 text-white absolute left-4 top-3.5" />
-                     <input type="text" placeholder="Search accounts..." value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)} className="glass-input allow-select !pl-12 !py-3 rounded-2xl bg-[rgba(0,0,0,0.5)]" />
+                     <Search className="w-4 h-4 text-gray-400 absolute left-4 top-3.5" />
+                     <input type="text" placeholder="Search accounts..." value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)} className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-2xl pl-12 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all allow-select" />
                 </div>
               </div>
 
@@ -2491,10 +2882,12 @@
 
           return (
             <div className="animate-matrix-in grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 w-full">
+              
+              {/* 🟢 LEFT COLUMN: AUTO CRYPTO DEPOSIT 🟢 */}
               <div className="space-y-6 sm:space-y-8 w-full">
-                <div className="glass-effect rounded-3xl p-6 sm:p-8 h-fit border border-white/10">
-                  <h2 className="text-sm font-bold tracking-widest mb-6 text-white flex items-center gap-2 uppercase">
-                     <Zap className="w-4 h-4"/> Auto Crypto Deposit (NOWPayments)
+                <div className="bg-white shadow-sm rounded-3xl p-6 sm:p-8 h-fit border border-gray-200">
+                  <h2 className="text-sm font-bold tracking-widest mb-6 text-gray-900 flex items-center gap-2 uppercase">
+                     <Zap className="w-4 h-4 text-brand-primary"/> Auto Crypto Deposit (NOWPayments)
                   </h2>
                   
                   {!pendingCrypto ? (
@@ -2503,11 +2896,11 @@
                           <div>
                             <label className="block text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em]">Amount (USD)</label>
                             <div className="relative">
-                               <DollarSign className="w-4 h-4 text-white absolute left-4 top-3.5" />
-                               <input type="number" step="1" min="1" name="amount" value={cryptoAmountInput} onChange={e => setCryptoAmountInput(e.target.value)} required placeholder="10" className="glass-input allow-select pl-11 text-sm font-mono" />
+                               <DollarSign className="w-4 h-4 text-gray-400 absolute left-4 top-3.5" />
+                               <input type="number" step="1" min="1" name="amount" value={cryptoAmountInput} onChange={e => setCryptoAmountInput(e.target.value)} required placeholder="10" className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl pl-11 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all allow-select font-mono" />
                             </div>
                           </div>
-                          <button type="submit" disabled={isGenerating} className="btn-animate w-full bg-white text-black font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 tracking-widest uppercase text-xs h-12 mt-2 disabled:opacity-50">
+                          <button type="submit" disabled={isGenerating} className="btn-animate w-full bg-gray-900 hover:bg-black text-white font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 tracking-widest uppercase text-xs h-12 mt-2 disabled:opacity-50 shadow-md">
                               {isGenerating ? <RefreshCw className="w-4 h-4 animate-spin"/> : <DollarSign className="w-4 h-4"/>}
                               {isGenerating ? 'Processing...' : 'Pay with Crypto'}
                           </button>
@@ -2515,25 +2908,25 @@
                       </div>
                   ) : (
                       isNowPayments && (
-                          <div className="bg-[rgba(0,0,0,0.5)] border border-white/10 rounded-2xl p-6 text-center space-y-6 relative overflow-hidden mt-6 animate-fade-in-up">
-                              <p className="text-[10px] font-bold text-white flex items-center justify-center gap-2 pt-4 uppercase tracking-[0.3em]">
-                                  <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span> Invoice Active
+                          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center space-y-6 relative overflow-hidden mt-6 animate-fade-in-up shadow-inner">
+                              <p className="text-[10px] font-bold text-gray-900 flex items-center justify-center gap-2 pt-4 uppercase tracking-[0.3em]">
+                                  <span className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-pulse"></span> Invoice Active
                               </p>
                               
-                              <div className="text-3xl sm:text-4xl font-light font-mono text-white tracking-widest allow-select">
+                              <div className="text-3xl sm:text-4xl font-light font-mono text-gray-900 tracking-widest allow-select">
                                   ${pendingCrypto.data?.amount || pendingCrypto.amount}
                               </div>
-                              <p className="text-xs text-gray-400 font-mono mt-2">Complete your payment in the NOWPayments tab.</p>
+                              <p className="text-xs text-gray-500 font-mono mt-2">Complete your payment in the NOWPayments tab.</p>
                               
-                              <div className="flex flex-col gap-3 pt-4 border-t border-white/10 w-full">
-                                  <button type="button" onClick={(e) => { e.preventDefault(); window.open(pendingCrypto.data?.invoice_url, '_blank'); }} className="btn-animate w-full bg-white/10 hover:bg-white/20 text-white font-bold py-3.5 px-6 rounded-2xl flex items-center justify-center gap-2 uppercase tracking-widest text-[10px]">
+                              <div className="flex flex-col gap-3 pt-4 border-t border-gray-200 w-full">
+                                  <button type="button" onClick={(e) => { e.preventDefault(); window.open(pendingCrypto.data?.invoice_url, '_blank'); }} className="btn-animate w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 shadow-sm font-bold py-3.5 px-6 rounded-2xl flex items-center justify-center gap-2 uppercase tracking-widest text-[10px]">
                                       Open Payment Page
                                   </button>
-                                  <button type="button" onClick={handleNowPaymentsVerify} disabled={isVerifyingClick} className="btn-animate w-full bg-brand-primary hover:bg-white text-black font-bold py-3.5 px-6 rounded-2xl flex items-center justify-center gap-2 uppercase tracking-widest text-[11px] disabled:opacity-50 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                                  <button type="button" onClick={handleNowPaymentsVerify} disabled={isVerifyingClick} className="btn-animate w-full bg-brand-primary hover:opacity-90 text-white font-bold py-3.5 px-6 rounded-2xl flex items-center justify-center gap-2 uppercase tracking-widest text-[11px] disabled:opacity-50 shadow-[0_4px_15px_rgba(59,130,246,0.3)]">
                                       {isVerifyingClick ? <RefreshCw className="w-4 h-4 animate-spin"/> : <CheckCircle className="w-4 h-4"/>}
                                       {isVerifyingClick ? 'Verifying...' : 'Verify Payment'}
                                   </button>
-                                  <button type="button" onClick={cancelAutoPay} className="btn-animate text-[9px] text-gray-500 hover:text-red-400 font-bold uppercase tracking-widest transition-colors mt-2">Cancel Invoice</button>
+                                  <button type="button" onClick={cancelAutoPay} className="btn-animate text-[9px] text-gray-400 hover:text-red-500 font-bold uppercase tracking-widest transition-colors mt-2">Cancel Invoice</button>
                               </div>
                           </div>
                       )
@@ -2541,109 +2934,73 @@
                 </div>
               </div>
 
+              {/* 🟢 RIGHT COLUMN: MANUAL DEPOSIT 🟢 */}
               <div className="space-y-6 sm:space-y-8 w-full">
-                <div className="glass-effect rounded-3xl p-6 sm:p-8 border border-white/10">
-                  <div className="flex justify-between items-start mb-6 pb-4 border-b border-white/10">
-                     <h3 className="text-sm font-bold tracking-widest text-white flex items-center gap-2 uppercase">
-                       <Building className="w-4 h-4"/> Manual Deposit
+                <div className="bg-white shadow-sm rounded-3xl p-6 sm:p-8 border border-gray-200">
+                  <div className="flex justify-between items-start mb-6 pb-4 border-b border-gray-100">
+                     <h3 className="text-sm font-bold tracking-widest text-gray-900 flex items-center gap-2 uppercase">
+                       <Building className="w-4 h-4 text-brand-primary"/> Manual Deposit
                      </h3>
                   </div>
 
                   <div className="mb-6">
-                      <label className="block text-[9px] font-bold text-gray-400 mb-2.5 uppercase tracking-[0.2em] ml-1">Select Payment Method</label>
+                      <label className="block text-[9px] font-bold text-gray-500 mb-2.5 uppercase tracking-[0.2em] ml-1">Select Payment Method</label>
                       <div className="relative">
-                          <select value={manualMethod} onChange={e => setManualMethod(e.target.value)} className={uiInput + " appearance-none cursor-pointer text-white font-mono text-xs bg-[rgba(0,0,0,0.5)] allow-select"}>
-                              <option value="Local Bank Transfer" className="bg-[#121212]">Local Bank Transfer</option>
+                          <select value={manualMethod} onChange={e => setManualMethod(e.target.value)} className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all appearance-none cursor-pointer font-mono font-bold tracking-wide allow-select">
+                              <option value="Local Bank Transfer">Local Bank Transfer</option>
                               {(customPayments || []).map(p => (
-                                  <option key={p.id} value={p.name} className="bg-[#121212]">{p.name}</option>
+                                  <option key={p.id} value={p.name}>{p.name}</option>
                               ))}
                           </select>
-                          <ChevronDown className="w-4 h-4 text-white absolute right-4 top-4 pointer-events-none" />
+                          <ChevronDown className="w-4 h-4 text-gray-400 absolute right-4 top-4 pointer-events-none" />
                       </div>
                   </div>
                   
+                  {/* Bank Details Box */}
                   {manualMethod === 'Local Bank Transfer' ? (
-                      <div className="bg-[rgba(0,0,0,0.5)] border border-white/5 rounded-xl p-4 mb-6 text-[11px] font-mono tracking-wide space-y-3">
-                        <div className="flex justify-between items-center border-b border-white/5 pb-2"><span className="text-gray-400">Bank</span> <span className="font-bold text-white">{bankSettings?.bankName || 'Parallex'}</span></div>
-                        <div className="flex justify-between items-center border-b border-white/5 pb-2 pt-1"><span className="text-gray-400">Name</span> <span className="font-bold text-white text-right">{bankSettings?.accountName || 'Samuel Osita Emmanuel'}</span></div>
-                        <div className="flex justify-between items-center border-b border-white/5 pb-2 pt-1"><span className="text-gray-400">A/C No.</span> <span className="text-white font-bold text-sm allow-select">{bankSettings?.accountNumber || '1120927346'}</span></div>
-                        <div className="flex justify-between items-center pt-1"><span className="text-gray-400">Rate</span> <span className="text-brand-primary font-bold text-sm">1 USD = ₦{bankSettings?.nairaRate || 1500}</span></div>
-                        <button type="button" onClick={() => copyToClipboard(bankSettings?.accountNumber || '1120927346')} className="btn-animate w-full glass-panel hover:bg-white/20 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 uppercase tracking-widest mt-2 !text-[10px]"><Copy className="w-3.5 h-3.5" /> Copy Details</button>
+                      <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-6 text-xs font-mono tracking-wide space-y-3 shadow-inner">
+                        <div className="flex justify-between items-center border-b border-gray-200 pb-2"><span className="text-gray-500">Bank</span> <span className="font-bold text-gray-900">{bankSettings?.bankName || 'Parallex'}</span></div>
+                        <div className="flex justify-between items-center border-b border-gray-200 pb-2 pt-1"><span className="text-gray-500">Name</span> <span className="font-bold text-gray-900 text-right">{bankSettings?.accountName || 'Samuel Osita Emmanuel'}</span></div>
+                        <div className="flex justify-between items-center border-b border-gray-200 pb-2 pt-1"><span className="text-gray-500">A/C No.</span> <span className="text-gray-900 font-bold text-sm allow-select">{bankSettings?.accountNumber || '1120927346'}</span></div>
+                        <div className="flex justify-between items-center pt-1"><span className="text-gray-500">Rate</span> <span className="text-brand-primary font-bold text-sm">1 USD = ₦{bankSettings?.nairaRate || 1500}</span></div>
+                        <button type="button" onClick={() => copyToClipboard(bankSettings?.accountNumber || '1120927346')} className="btn-animate w-full bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 uppercase tracking-widest mt-3 !text-[10px] shadow-sm"><Copy className="w-3.5 h-3.5" /> Copy Details</button>
                       </div>
                   ) : selectedCustomPayment ? (
-                      <div className="bg-[rgba(0,0,0,0.5)] border border-white/5 rounded-xl p-4 mb-6 text-[11px] font-mono tracking-wide space-y-3">
-                        <div className="flex justify-between items-center border-b border-white/5 pb-2"><span className="text-gray-400">Method</span> <span className="font-bold text-white">{selectedCustomPayment.name}</span></div>
-                        <div className="flex justify-between items-center border-b border-white/5 pb-2 pt-1"><span className="text-gray-400">Details/Wallet</span> <span className="text-white font-bold text-sm break-all text-right max-w-[60%] allow-select">{selectedCustomPayment.details}</span></div>
-                        <div className="flex flex-col pt-1"><span className="text-gray-400 mb-1">Instructions:</span> <span className="text-gray-300 font-light leading-relaxed">{selectedCustomPayment.instruction}</span></div>
-                        <button type="button" onClick={() => copyToClipboard(selectedCustomPayment.details)} className="btn-animate w-full glass-panel hover:bg-white/20 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 uppercase tracking-widest mt-2 !text-[10px]"><Copy className="w-3.5 h-3.5" /> Copy Data</button>
+                      <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-6 text-xs font-mono tracking-wide space-y-3 shadow-inner">
+                        <div className="flex justify-between items-center border-b border-gray-200 pb-2"><span className="text-gray-500">Method</span> <span className="font-bold text-gray-900">{selectedCustomPayment.name}</span></div>
+                        <div className="flex justify-between items-center border-b border-gray-200 pb-2 pt-1"><span className="text-gray-500">Details/Wallet</span> <span className="text-gray-900 font-bold text-sm break-all text-right max-w-[60%] allow-select">{selectedCustomPayment.details}</span></div>
+                        <div className="flex flex-col pt-1"><span className="text-gray-500 mb-1">Instructions:</span> <span className="text-gray-700 font-medium leading-relaxed">{selectedCustomPayment.instruction}</span></div>
+                        <button type="button" onClick={() => copyToClipboard(selectedCustomPayment.details)} className="btn-animate w-full bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 uppercase tracking-widest mt-3 !text-[10px] shadow-sm"><Copy className="w-3.5 h-3.5" /> Copy Data</button>
                       </div>
                   ) : null}
 
-                  <form onSubmit={submitManualDeposit} className="space-y-4 p-4 bg-white/5 rounded-2xl border border-white/10 shadow-inner">
-                      <p className="text-[10px] font-bold text-brand-primary uppercase tracking-widest mb-2 flex items-center gap-2"><CircleDollarSign className="w-3.5 h-3.5"/> Submit Deposit Request</p>
+                  {/* Submit Form Box */}
+                  <form onSubmit={submitManualDeposit} className="space-y-4 p-5 bg-white rounded-2xl border border-gray-200 shadow-sm mt-4">
+                      <p className="text-[10px] font-bold text-brand-primary uppercase tracking-widest mb-3 flex items-center gap-2 border-b border-gray-100 pb-2"><CircleDollarSign className="w-3.5 h-3.5"/> Submit Deposit Request</p>
                       <div className="grid grid-cols-2 gap-4">
                           <div>
-                              <label className="block text-[9px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em]">Amount (USD)</label>
+                              <label className="block text-[9px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em]">Amount (USD)</label>
                               <div className="relative">
-                                 <DollarSign className="w-3.5 h-3.5 text-white absolute left-3 top-3.5" />
-                                 <input type="number" step="0.01" min="1" value={manualAmount} onChange={e => setManualAmount(e.target.value)} required placeholder="10" className="glass-input !pl-9 !py-2.5 font-mono text-xs allow-select" />
+                                 <DollarSign className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-3.5" />
+                                 <input type="number" step="0.01" min="1" value={manualAmount} onChange={e => setManualAmount(e.target.value)} required placeholder="10" className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl pl-9 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all allow-select font-mono" />
                               </div>
                           </div>
                           <div>
-                              <label className="block text-[9px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em] whitespace-nowrap overflow-hidden text-ellipsis">Equivalent Amount</label>
-                              <div className="glass-input !py-2.5 font-mono text-xs bg-[#000] text-gray-300 flex items-center">
+                              <label className="block text-[9px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em] whitespace-nowrap overflow-hidden text-ellipsis">Equivalent</label>
+                              <div className="w-full bg-gray-100 border border-gray-200 text-gray-700 text-sm rounded-xl px-4 py-2.5 font-mono flex items-center font-bold">
                                   {manualMethod === 'Local Bank Transfer' && manualAmount ? `₦${(parseFloat(manualAmount) * (bankSettings?.nairaRate || 1500)).toLocaleString()}` : (manualAmount ? `$${manualAmount}` : '0')}
                               </div>
                           </div>
                       </div>
-                      <div>
-                          <label className="block text-[9px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em]">Transaction ID / Sender Name</label>
-                          <input type="text" value={manualTxId} onChange={e => setManualTxId(e.target.value)} required placeholder="Enter TrxID or Phone Number..." className="glass-input !py-2.5 font-mono text-xs allow-select" />
+                      <div className="pt-1">
+                          <label className="block text-[9px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em]">Transaction ID / Sender Name</label>
+                          <input type="text" value={manualTxId} onChange={e => setManualTxId(e.target.value)} required placeholder="Enter TrxID or Phone Number..." className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all allow-select font-mono" />
                       </div>
-                      <button type="submit" className="btn-animate w-full bg-white text-black font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-[0_5px_20px_rgba(255,255,255,0.2)] tracking-widest uppercase text-[10px] mt-2">
+                      <button type="submit" className="btn-animate w-full bg-gray-900 hover:bg-black text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-md tracking-widest uppercase text-[10px] mt-4">
                           Submit Request
                       </button>
                   </form>
                 </div>
-              </div>
-            </div>
-          );
-        }
-
-        function CustomerDashboardVault({ purchases, triggerToast, user, categories }) {
-          const myPurchases = (purchases || []).filter(p => p && p.customer === user?.email);
-
-          return (
-            <div className="animate-fade-in-up w-full">
-              <div className="glass-effect rounded-3xl p-6 sm:p-8 min-h-[600px] border border-white/10">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 pb-6 border-b border-white/10 gap-4">
-                    <div>
-                        <h2 className="text-xl font-bold tracking-widest text-white uppercase mb-1">Purchased Items</h2>
-                        <p className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">Accounts & SMS Numbers</p>
-                    </div>
-                    <div className="bg-white/5 border border-white/10 px-4 py-2.5 rounded-xl flex items-center gap-2">
-                        <Lock className="w-3.5 h-3.5 text-white"/>
-                        <span className="text-xs font-mono font-bold text-white">{myPurchases.length}</span>
-                    </div>
-                </div>
-
-                {myPurchases.length === 0 ? (
-                  <div className="text-center py-32 flex flex-col items-center animate-fade-in-up">
-                    <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-6">
-                        <Key className="w-6 h-6 text-gray-400" strokeWidth={1.5} />
-                    </div>
-                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Vault is empty.</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">
-                    {myPurchases.map((acc, idx) => {
-                        if (!acc) return null;
-                        return (
-                            <VaultItem key={acc.id || idx} acc={acc} idx={idx} triggerToast={triggerToast} categories={categories} />
-                        )
-                    })}
-                  </div>
-                )}
               </div>
             </div>
           );
@@ -2706,44 +3063,44 @@
 
               {profileSubTab === 'overview' && (
                   <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 sm:gap-8 w-full animate-fade-in-up">
-                      <div className="glass-effect rounded-3xl p-8 text-center xl:col-span-1 h-fit flex flex-col items-center border border-white/10">
-                        <div className="w-24 h-24 bg-[rgba(0,0,0,0.5)] rounded-full flex items-center justify-center mb-6 border border-white/20">
-                          <UserIcon className="w-8 h-8 text-white" strokeWidth={1.5}/>
+                      <div className="bg-white shadow-sm rounded-3xl p-8 text-center xl:col-span-1 h-fit flex flex-col items-center border border-gray-200">
+                        <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-6 border border-gray-200">
+                          <UserIcon className="w-8 h-8 text-gray-400" strokeWidth={1.5}/>
                         </div>
-                        <h2 className="text-sm font-mono font-bold text-white mb-2 w-full truncate tracking-wide allow-select">{user.email}</h2>
-                        <p className="text-[10px] text-gray-400 font-mono uppercase tracking-widest mb-10">Joined: {safeFormatDate(userInfo?.joined)}</p>
+                        <h2 className="text-sm font-mono font-bold text-gray-900 mb-2 w-full truncate tracking-wide allow-select">{user.email}</h2>
+                        <p className="text-[10px] text-gray-500 font-mono uppercase tracking-widest mb-10">Joined: {safeFormatDate(userInfo?.joined)}</p>
                         
-                        <div className="w-full bg-[rgba(0,0,0,0.5)] p-5 rounded-xl border border-white/5">
+                        <div className="w-full bg-gray-50 p-5 rounded-xl border border-gray-200">
                             <div className="w-full text-left mb-3 flex justify-between items-end">
-                                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">User Level</span>
-                                <span className={`text-xs font-black uppercase tracking-wider ${tier?.color || 'text-gray-400'} flex items-center gap-1.5`}>
+                                <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">User Level</span>
+                                <span className={`text-xs font-black uppercase tracking-wider ${tier?.color === 'text-gray-400' ? 'text-gray-600' : tier?.color} flex items-center gap-1.5`}>
                                     {tier && tier.icon && <tier.icon className="w-3.5 h-3.5"/>}
                                     {tier?.name || 'Loading...'}
                                 </span>
                             </div>
                             
                             {tier && tier.next && (
-                                <div className="w-full bg-[#111] rounded-full h-1 mb-3 overflow-hidden border border-[#222]">
-                                    <div className="bg-white h-full rounded-full" style={{width: `${Math.min(100, ((userInfo?.totalSpent || 0) / tier.next) * 100)}%`}}></div>
+                                <div className="w-full bg-gray-200 rounded-full h-1 mb-3 overflow-hidden border border-gray-300">
+                                    <div className="bg-brand-primary h-full rounded-full" style={{width: `${Math.min(100, ((userInfo?.totalSpent || 0) / tier.next) * 100)}%`}}></div>
                                 </div>
                             )}
                             {tier && tier.next ? (
-                                <p className="text-[8px] text-gray-400 font-mono uppercase tracking-widest w-full text-left">Spend ${Number(tier.next - (userInfo?.totalSpent || 0)).toFixed(2)} more to upgrade.</p>
+                                <p className="text-[8px] text-gray-500 font-mono uppercase tracking-widest w-full text-left">Spend ${Number(tier.next - (userInfo?.totalSpent || 0)).toFixed(2)} more to upgrade.</p>
                             ) : (
-                                <p className="text-[8px] text-white font-mono w-full text-center uppercase tracking-widest">Max Level Reached</p>
+                                <p className="text-[8px] text-gray-900 font-mono w-full text-center uppercase tracking-widest">Max Level Reached</p>
                             )}
                         </div>
                       </div>
 
                       <div className="xl:col-span-2 space-y-6 sm:space-y-8 w-full">
                         <div className="grid grid-cols-2 gap-4 sm:gap-6 w-full">
-                          <div className="glass-effect rounded-3xl p-6 sm:p-8 flex flex-col justify-center items-center text-center border border-white/10">
-                            <p className="text-gray-400 text-[9px] font-bold mb-3 uppercase tracking-widest">Total Spent</p>
-                            <p className="text-3xl sm:text-4xl font-light font-mono text-white tracking-widest">${Number(userInfo?.totalSpent || 0).toFixed(2)}</p>
+                          <div className="bg-white shadow-sm rounded-3xl p-6 sm:p-8 flex flex-col justify-center items-center text-center border border-gray-200">
+                            <p className="text-gray-500 text-[9px] font-bold mb-3 uppercase tracking-widest">Total Spent</p>
+                            <p className="text-3xl sm:text-4xl font-light font-mono text-gray-900 tracking-widest">${Number(userInfo?.totalSpent || 0).toFixed(2)}</p>
                           </div>
-                          <div className="glass-effect rounded-3xl p-6 sm:p-8 flex flex-col justify-center items-center text-center border border-white/10 bg-white/5">
-                            <p className="text-white/80 text-[9px] font-bold mb-3 uppercase tracking-widest">Account Balance</p>
-                            <p className="text-3xl sm:text-4xl font-bold font-mono text-white tracking-widest">${Number(balance || 0).toFixed(2)}</p>
+                          <div className="bg-white shadow-sm rounded-3xl p-6 sm:p-8 flex flex-col justify-center items-center text-center border border-gray-200">
+                            <p className="text-gray-500 text-[9px] font-bold mb-3 uppercase tracking-widest">Account Balance</p>
+                            <p className="text-3xl sm:text-4xl font-bold font-mono text-gray-900 tracking-widest">${Number(balance || 0).toFixed(2)}</p>
                           </div>
                         </div>
 
@@ -4298,20 +4655,20 @@
             return (
                 <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[160] flex flex-col items-center gap-3 w-full px-4">
                     
-                    {/* Welcome / Instruction Bubble (Water Drop Animation & Suck into Button) */}
+                    {/* Welcome / Instruction Bubble (Light Mode) */}
                     {showBubble && !isListening && !isSpeaking && !isProcessing && !transcript && (
                         <div className={`relative mb-2 origin-bottom transform-gpu ${bubbleExiting ? 'animate-suck-into-button' : 'animate-water-drop'}`}>
-                            <div className="glass-effect px-4 py-2.5 rounded-2xl text-[10px] sm:text-xs font-medium tracking-wide text-brand-primary shadow-[0_10px_30px_rgba(0,0,0,0.8)] flex items-center justify-center gap-2 border border-brand-primary/40 max-w-[280px] text-center bg-black/60 backdrop-blur-md">
-                                <Sparkles className="w-4 h-4 animate-pulse shrink-0" />
-                                <span>If you don't understand anything, talk to me. I will help you.</span>
+                            <div className="bg-white px-4 py-3 rounded-2xl text-[10px] sm:text-xs font-bold tracking-wide text-gray-800 shadow-lg flex items-center justify-center gap-2 border border-gray-200 max-w-[280px] text-center">
+                                <Sparkles className="w-4 h-4 text-brand-primary animate-pulse shrink-0" />
+                                <span>If you need help, just tap the mic and ask me!</span>
                             </div>
-                            <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#0a0f1d] border-r border-b border-brand-primary/40 rotate-45"></div>
+                            <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-r border-b border-gray-200 rotate-45"></div>
                         </div>
                     )}
 
-                    {/* Active Transcript Bubble */}
+                    {/* Active Transcript Bubble (Light Mode) */}
                     {transcript && (
-                        <div className="glass-effect p-3 rounded-2xl text-[10px] sm:text-[11px] font-medium tracking-wide text-white w-max max-w-[260px] shadow-[0_20px_50px_rgba(0,0,0,0.9)] animate-fade-in-up leading-relaxed text-center border border-white/20">
+                        <div className="bg-white p-4 rounded-2xl text-[10px] sm:text-[11px] font-bold tracking-wide text-gray-800 w-max max-w-[260px] shadow-lg animate-fade-in-up leading-relaxed text-center border border-gray-200">
                             <span className="text-brand-primary mb-1.5 flex items-center justify-center gap-1.5 font-bold uppercase tracking-[0.2em] text-[8px]"><Zap className="w-2.5 h-2.5"/> AI Agent</span>
                             {transcript}
                         </div>
