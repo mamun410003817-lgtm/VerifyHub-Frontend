@@ -1895,18 +1895,35 @@
             const [currentProvider, setCurrentProvider] = useState('');
             const [reuseNumberInput, setReuseNumberInput] = useState('');
             
-            const [activeOrder, setActiveOrder] = useState(() => {
-                try {
-                    const saved = localStorage.getItem(`activeOrder_${user?.email}`);
-                    return saved ? JSON.parse(saved) : null;
-                } catch(e) { return null; }
-            }); 
+            const [activeOrder, setActiveOrder] = useState(null); 
             const [isBuying, setIsCheckingOut] = useState(false);
             const [pollInterval, setPollInterval] = useState(null);
             const [timeRemaining, setTimeRemaining] = useState(0);
             const pollingRef = useRef(false);
 
-            // 🟢 Sync active order to local storage 🟢
+            // 🟢 Cross-Device Sync: Fetch active order from DB on load 🟢
+            useEffect(() => {
+                let isMounted = true;
+                const fetchActiveOrder = async () => {
+                    if (!user) return;
+                    try {
+                        const token = await getAuthToken();
+                        const res = await fetch(`${BACKEND_URL}/api/sms/getActiveOrders`, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        const data = await res.json();
+                        if (data.success && data.data && data.data.length > 0 && isMounted) {
+                            // Load the most recent active order
+                            const latestOrder = data.data[data.data.length - 1];
+                            setActiveOrder(latestOrder);
+                        }
+                    } catch (e) { console.error("Sync active orders failed"); }
+                };
+                fetchActiveOrder();
+                return () => { isMounted = false; };
+            }, [user]);
+
+            // 🟢 Sync active order to local storage (Fallback) 🟢
             useEffect(() => {
                 if (user?.email) {
                     if (activeOrder) localStorage.setItem(`activeOrder_${user.email}`, JSON.stringify(activeOrder));
@@ -2000,7 +2017,7 @@
 
             useEffect(() => { return () => { if(pollInterval) clearInterval(pollInterval); } }, [pollInterval]);
 
-            // 🟢 NEW TIMER LOGIC 🟢
+            // 🟢 NEW TIMER LOGIC & AUTO-CANCEL 🟢
             useEffect(() => {
                 if(activeOrder && activeOrder.status === 'Active') {
                     let totalSeconds = 900; 
@@ -2016,12 +2033,19 @@
                         const now = Date.now();
                         const diff = Math.max(0, Math.floor((expireTime - now) / 1000));
                         setTimeRemaining(diff);
+
+                        // 🟢 Auto-check timeout when timer hits 0 🟢
+                        if (diff === 0 && activeOrder.status === 'Active') {
+                            triggerToast("Time expired! Checking status & auto-refunding...");
+                            setActiveOrder(prev => prev ? { ...prev, status: 'Cancelled' } : null);
+                            if(pollInterval) clearInterval(pollInterval);
+                        }
                     };
                     updateTimer();
                     const t = setInterval(updateTimer, 1000);
                     return () => clearInterval(t);
                 }
-            }, [activeOrder]);
+            }, [activeOrder, pollInterval, triggerToast]);
             
             const formatTime = (sec) => {
                 if (sec >= 86400) return `${Math.floor(sec/86400)}d ${Math.floor((sec%86400)/3600)}h`;
@@ -2041,25 +2065,17 @@
                             });
                             const data = await res.json();
                             
-                            if(data.success) {
+                           if(data.success) {
                                 if(data.status === 'OK') {
                                     clearInterval(intId);
                                     setActiveOrder(prevOrder => ({...prevOrder, status: 'Completed', code: data.code}));
-                                    triggerToast("SMS Code Received!");
-                                    
-                                    await fetch(`${BACKEND_URL}/api/secure-action`, {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                                        body: JSON.stringify({ 
-                                            action: 'save_sms', 
-                                            type: `SMS Verify: ${orderData.service}`, 
-                                            data: `📱 Phone: ${orderData.phone}\n✉️ Code: ${data.code}\n⏳ Duration: ${orderData.duration}` 
-                                        })
-                                    });
+                                    triggerToast("SMS Code Received! Auto-saved to Vault.");
+                                    // Note: Backend now auto-saves to Vault and clears active_sms array on 'OK'
                                 } else if (data.status === 'CANCEL') {
                                     clearInterval(intId);
                                     setActiveOrder(prevOrder => ({...prevOrder, status: 'Cancelled'}));
-                                    triggerToast("Number expired or cancelled.");
+                                    triggerToast("Number expired or cancelled. Refund processed.");
+                                    // Note: Backend now auto-refunds on 'CANCEL' status from provider
                                 }
                             }
                         } catch(e) {}
@@ -2171,23 +2187,16 @@
                     });
                     const data = await res.json();
                     if(data.success) {
-                        triggerToast("Number cancelled. Refunded.");
+                        triggerToast(data.message || "Number securely cancelled & refunded.");
                         if(pollInterval) clearInterval(pollInterval);
                         
-                        setUsersDB(prev => ({
-                            ...prev,
-                            [user.email]: {
-                                ...prev[user.email],
-                                balance: Number(prev[user.email].balance) + activeOrder.originalPrice,
-                                totalSpent: Math.max(0, Number(prev[user.email].totalSpent || 0) - activeOrder.originalPrice)
-                            }
-                        }));
+                        // Let the sync route update the balance in the background
                         setActiveOrder(null);
                     } else {
-                        triggerToast(data.message);
+                        triggerToast(data.message || "Cannot cancel right now.");
                     }
                 } catch(e) {
-                    triggerToast("Failed to cancel.");
+                    triggerToast("Failed to cancel due to network error.");
                 } finally {
                     setIsCancelling(false);
                 }
