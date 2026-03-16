@@ -2057,6 +2057,7 @@
             const startPolling = (orderData) => {
                 setPollInterval(prev => {
                     if(prev) clearInterval(prev);
+                    // 🟢 FIX: পোলিং টাইম ১০ সেকেন্ড থেকে কমিয়ে ৩ সেকেন্ড করা হলো 🟢
                     const intId = setInterval(async () => {
                         try {
                             const token = await getAuthToken();
@@ -2065,21 +2066,19 @@
                             });
                             const data = await res.json();
                             
-                           if(data.success) {
+                            if(data.success) {
                                 if(data.status === 'OK') {
                                     clearInterval(intId);
                                     setActiveOrder(prevOrder => ({...prevOrder, status: 'Completed', code: data.code}));
                                     triggerToast("SMS Code Received! Auto-saved to Vault.");
-                                    // Note: Backend now auto-saves to Vault and clears active_sms array on 'OK'
                                 } else if (data.status === 'CANCEL') {
                                     clearInterval(intId);
                                     setActiveOrder(prevOrder => ({...prevOrder, status: 'Cancelled'}));
                                     triggerToast("Number expired or cancelled. Refund processed.");
-                                    // Note: Backend now auto-refunds on 'CANCEL' status from provider
                                 }
                             }
                         } catch(e) {}
-                    }, 10000); 
+                    }, 3000); // 👈 এখানে 3000 মানে ৩ সেকেন্ড
                     return intId;
                 });
             };
