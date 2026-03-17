@@ -1990,9 +1990,23 @@
 
                         // 🟢 Auto-check timeout when timer hits 0 🟢
                         if (diff === 0 && activeOrder.status === 'Active') {
-                            triggerToast("Time expired! Checking status & auto-refunding...");
-                            setActiveOrder(prev => prev ? { ...prev, status: 'Cancelled' } : null);
+                            triggerToast("Time expired! Auto-cancelling & refunding...");
                             if(pollInterval) clearInterval(pollInterval);
+                            
+                            // 🟢 ব্যাকএন্ডে ক্যানসেল রিকোয়েস্ট পাঠিয়ে প্যানেলটি বন্ধ করে দেওয়া 🟢
+                            (async () => {
+                                try {
+                                    const token = await getAuthToken();
+                                    await fetch(`${BACKEND_URL}/api/sms/cancel`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                        body: JSON.stringify({ orderId: activeOrder.orderId, n_id: activeOrder.n_id, provider: activeOrder.provider })
+                                    });
+                                    setActiveOrder(null); // 👈 প্যানেল গায়েব করে দেবে
+                                } catch(e) {
+                                    setActiveOrder(null);
+                                }
+                            })();
                         }
                     };
                     updateTimer();
@@ -2027,7 +2041,7 @@
                                     triggerToast("SMS Code Received! Auto-saved to Vault.");
                                 } else if (data.status === 'CANCEL') {
                                     clearInterval(intId);
-                                    setActiveOrder(prevOrder => ({...prevOrder, status: 'Cancelled'}));
+                                    setActiveOrder(null); // 👈 স্ক্রিন থেকে সাথে সাথে সরিয়ে দেবে
                                     triggerToast("Number expired or cancelled. Refund processed.");
                                 }
                             }
@@ -2306,6 +2320,11 @@
                                 {activeOrder.status === 'Completed' && (
                                     <button onClick={() => setActiveOrder(null)} className="btn-animate w-full sm:w-auto px-10 py-3.5 bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 font-bold text-xs uppercase tracking-widest rounded-xl shadow-sm flex items-center justify-center gap-2 transition-colors">
                                         <CheckCircle className="w-4 h-4 text-green-500"/> Complete Order
+                                    </button>
+                                )}
+                                {activeOrder.status === 'Cancelled' && (
+                                    <button onClick={() => setActiveOrder(null)} className="btn-animate w-full sm:w-auto px-10 py-3.5 bg-white hover:bg-red-50 text-red-500 border border-gray-200 font-bold text-xs uppercase tracking-widest rounded-xl shadow-sm flex items-center justify-center gap-2 transition-colors">
+                                        <X className="w-4 h-4"/> Close
                                     </button>
                                 )}
                             </div>
