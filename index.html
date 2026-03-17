@@ -4442,27 +4442,12 @@
                 return () => clearInterval(interval);
             }, [isListening, isSpeaking, isProcessing, transcript, isLoggedIn, activeTab, chatHistory.length]);
 
-            // 🟢 NEW: Proactive Timers Logic (Ask Only Once) 🟢
+            // 🟢 Proactive Timers Logic Disabled (Stops Random Speaking) 🟢
             const resetProactiveTimers = useCallback(() => {
                 if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
                 if (autoWakeTimerRef.current) clearTimeout(autoWakeTimerRef.current);
-
-                // AI কথা শেষ করার ২০ সেকেন্ড পর চেক করবে। যদি আগে জিজ্ঞেস না করে থাকে, তবেই করবে।
-                if (!isSpeaking && chatHistory.length > 0 && !isListening && !isProcessing && !hasFollowedUpRef.current) {
-                    silenceTimerRef.current = setTimeout(() => {
-                        hasFollowedUpRef.current = true; // 👈 মার্ক করে দিলাম যে একবার জিজ্ঞেস করা হয়েছে
-                        handleSendToAI("[SYSTEM_SILENCE_TIMEOUT]", true);
-                    }, 20000); // 20 Seconds silence timeout
-                }
-
-                // যদি ইউজার চুপচাপ বসে থাকে, তবে ৬০ সেকেন্ড পর একবারই নক করবে
-                if (!isSpeaking && !isListening && !isProcessing && !hasFollowedUpRef.current) {
-                    autoWakeTimerRef.current = setTimeout(() => {
-                        hasFollowedUpRef.current = true; // 👈 মার্ক করে দিলাম
-                        handleSendToAI("[SYSTEM_AUTO_WAKE]", true);
-                    }, 60000); // 60 Seconds auto-wake
-                }
-            }, [isSpeaking, isListening, isProcessing, chatHistory]);
+                // অটোমেটিক কথা বলা বন্ধ করা হয়েছে। এখন শুধু ইউজার কল করলেই AI রেসপন্স করবে।
+            }, []);
 
             useEffect(() => {
                 resetProactiveTimers();
