@@ -361,7 +361,7 @@
             }
 
            /* 🟢 ABSOLUTE ENTERPRISE WHITE THEME (ULTIMATE OVERRIDE) 🟢 */
-            body, .light-theme { background-color: #f4f4f5 !important; color: #111827 !important; }
+            body, .light-theme { background-color: #f4f4f5 !important; color: #020617 !important; font-weight: 500 !important; }
             
             /* 1. Force ALL dark background utilities to solid white */
             .light-theme .glass-effect,
@@ -414,25 +414,26 @@
                 box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05) !important;
             }
 
-            /* 4. Text Colors & Highlights */
+            /* 4. Text Colors & Highlights (Darker & Crisper) */
             .light-theme .text-white,
             .light-theme .text-gray-100,
             .light-theme .text-gray-200,
-            .light-theme .text-gray-300 { color: #1f2937 !important; font-weight: 700 !important; }
+            .light-theme .text-gray-300 { color: #020617 !important; font-weight: 800 !important; }
             .light-theme .text-gray-400,
-            .light-theme .text-gray-500 { color: #6b7280 !important; font-weight: 600 !important; }
-            .light-theme .text-yellow-400 { color: #d97706 !important; }
-            .light-theme .text-green-400 { color: #15803d !important; }
-            .light-theme .text-red-400 { color: #b91c1c !important; }
+            .light-theme .text-gray-500 { color: #334155 !important; font-weight: 700 !important; }
+            .light-theme .text-gray-600 { color: #0f172a !important; font-weight: 700 !important; }
+            .light-theme .text-yellow-400 { color: #b45309 !important; font-weight: 700 !important; }
+            .light-theme .text-green-400 { color: #166534 !important; font-weight: 700 !important; }
+            .light-theme .text-red-400 { color: #991b1b !important; font-weight: 700 !important; }
 
             /* 5. Inputs & Selects */
             .light-theme input, .light-theme textarea, .light-theme select, .light-theme .glass-input {
-                background-color: #f9fafb !important;
-                border: 1px solid #d1d5db !important;
-                color: #111827 !important;
-                font-weight: 600 !important;
+                background-color: #ffffff !important;
+                border: 1px solid #cbd5e1 !important;
+                color: #020617 !important;
+                font-weight: 700 !important;
             }
-            .light-theme input::placeholder, .light-theme textarea::placeholder { color: #9ca3af !important; }
+            .light-theme input::placeholder, .light-theme textarea::placeholder { color: #64748b !important; font-weight: 600 !important; }
             .light-theme input:focus, .light-theme textarea:focus, .light-theme select:focus, .light-theme .glass-input:focus {
                 background-color: #ffffff !important;
                 border-color: #3b82f6 !important;
@@ -2345,8 +2346,8 @@
                                     
                                     {/* 🟢 TOGGLE SMS MODE (LIGHT THEME PRO) 🟢 */}
                                     <div className="flex bg-gray-100 p-1.5 rounded-xl mb-6 border border-gray-200 shadow-inner">
-                                        <button onClick={() => setSmsMode('standard')} className={`flex-1 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-lg transition-all duration-300 ${smsMode==='standard' ? 'bg-white text-gray-900 shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}>Global Routing</button>
-                                        <button onClick={() => setSmsMode('panda')} className={`flex-1 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-lg transition-all duration-300 flex items-center justify-center gap-2 ${smsMode==='panda' ? 'bg-white text-brand-primary shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}>⚡ Premium Nodes</button>
+                                        <button onClick={() => setSmsMode('standard')} className={`flex-1 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-lg transition-all duration-300 ${smsMode==='standard' ? 'bg-white text-gray-900 shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}>Extended Term</button>
+                                        <button onClick={() => setSmsMode('panda')} className={`flex-1 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-lg transition-all duration-300 flex items-center justify-center gap-2 ${smsMode==='panda' ? 'bg-white text-brand-primary shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}>Short Term</button>
                                     </div>
 
                                     <div className="space-y-6">
