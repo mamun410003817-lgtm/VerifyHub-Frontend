@@ -1975,7 +1975,7 @@
 
             useEffect(() => { return () => { if(pollInterval) clearInterval(pollInterval); } }, [pollInterval]);
 
-            // 🟢 NEW TIMER LOGIC & AUTO-CANCEL 🟢
+      // 🟢 NEW TIMER LOGIC & AUTO-CANCEL (FIXED REPEATED POPUPS) 🟢
             useEffect(() => {
                 if(activeOrder && activeOrder.status === 'Active') {
                     let totalSeconds = 900; 
@@ -1986,6 +1986,7 @@
                     else if(activeOrder.duration === '25 days') totalSeconds = 2160000;
                     
                     const expireTime = activeOrder.startTime + (totalSeconds * 1000);
+                    let isExpiredHandled = false; // 👈 একাধিকবার ট্রিগার হওয়া ঠেকাতে ফ্ল্যাগ
 
                     const updateTimer = () => {
                         const now = Date.now();
@@ -1993,11 +1994,14 @@
                         setTimeRemaining(diff);
 
                         // 🟢 Auto-check timeout when timer hits 0 🟢
-                        if (diff === 0 && activeOrder.status === 'Active') {
+                        if (diff === 0 && activeOrder.status === 'Active' && !isExpiredHandled) {
+                            isExpiredHandled = true; // 👈 ফ্ল্যাগ ট্রু করে দিলাম যাতে দ্বিতীয়বার না ঢোকে
                             triggerToast("Time expired! Auto-cancelling & refunding...");
-                            if(pollInterval) clearInterval(pollInterval);
                             
-                            // 🟢 ব্যাকএন্ডে ক্যানসেল রিকোয়েস্ট পাঠিয়ে প্যানেলটি বন্ধ করে দেওয়া 🟢
+                            if(pollInterval) clearInterval(pollInterval);
+                            setActiveOrder(null); // 👈 স্ক্রিন থেকে প্যানেলটি সাথে সাথে সরিয়ে দিলাম
+                            
+                            // 🟢 ব্যাকএন্ডে ক্যানসেল রিকোয়েস্ট পাঠানো (Background process) 🟢
                             (async () => {
                                 try {
                                     const token = await getAuthToken();
@@ -2006,9 +2010,8 @@
                                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                                         body: JSON.stringify({ orderId: activeOrder.orderId, n_id: activeOrder.n_id, provider: activeOrder.provider })
                                     });
-                                    setActiveOrder(null); // 👈 প্যানেল গায়েব করে দেবে
                                 } catch(e) {
-                                    setActiveOrder(null);
+                                    console.error("Auto cancel error", e);
                                 }
                             })();
                         }
