@@ -1859,7 +1859,7 @@
             const [timeRemaining, setTimeRemaining] = useState(0);
             const pollingRef = useRef(false);
 
-            // 🟢 Cross-Device Sync: Fetch active order from DB on load 🟢
+            // 🟢 Cross-Device Sync & Dead Order Filter 🟢
             useEffect(() => {
                 let isMounted = true;
                 const fetchActiveOrder = async () => {
@@ -1871,9 +1871,31 @@
                         });
                         const data = await res.json();
                         if (data.success && data.data && data.data.length > 0 && isMounted) {
-                            // Load the most recent active order
                             const latestOrder = data.data[data.data.length - 1];
-                            setActiveOrder(latestOrder);
+                            
+                            // 🟢 FIX: চেক করা হচ্ছে নম্বরটির মেয়াদ আগেই শেষ কি না 🟢
+                            let totalSeconds = 900; 
+                            if(latestOrder.duration === '5 minutes') totalSeconds = 300;
+                            else if(latestOrder.duration === '3 days') totalSeconds = 259200;
+                            else if(latestOrder.duration === '7 days') totalSeconds = 604800;
+                            else if(latestOrder.duration === '14 days') totalSeconds = 1209600;
+                            else if(latestOrder.duration === '25 days') totalSeconds = 2160000;
+                            
+                            const expireTime = latestOrder.startTime + (totalSeconds * 1000);
+                            
+                            if (Date.now() >= expireTime) {
+                                // মেয়াদ আগেই শেষ! স্ক্রিনে কোনো পপআপ দেখাবে না। 
+                                // নীরবে ব্যাকগ্রাউন্ডে ক্যানসেল রিকোয়েস্ট পাঠিয়ে দেবে।
+                                fetch(`${BACKEND_URL}/api/sms/cancel`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                    body: JSON.stringify({ orderId: latestOrder.orderId, n_id: latestOrder.n_id, provider: latestOrder.provider })
+                                }).catch(()=>{});
+                                
+                                setActiveOrder(null);
+                            } else {
+                                setActiveOrder(latestOrder);
+                            }
                         }
                     } catch (e) { console.error("Sync active orders failed"); }
                 };
