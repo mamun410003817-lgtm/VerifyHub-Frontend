@@ -1845,7 +1845,7 @@
                           </div>
                         ) : (
                           <>
-                              {activeTab === 'store' && <CustomerDashboardStore inventory={inventory} categories={categories} cart={cart} setCart={setCart} triggerToast={triggerToast} bankSettings={bankSettings} />}
+                              {activeTab === 'store' && <CustomerDashboardStore inventory={inventory} categories={categories} cart={cart} setCart={setCart} setShowCart={setShowCart} triggerToast={triggerToast} bankSettings={bankSettings} />}
                               {/* 🟢 SMS STORE TAB RENDER 🟢 */}
                               {activeTab === 'sms_store' && <CustomerDashboardSMS user={user} balance={currentUserBalance} setUsersDB={setUsersDB} triggerToast={triggerToast} bankSettings={bankSettings} />}
                               {activeTab === 'add_funds' && <CustomerDashboardFunds user={user} triggerToast={triggerToast} addNotification={addNotification} bankSettings={bankSettings} cryptoSettings={cryptoSettings} customPayments={customPayments} deposits={deposits} setDeposits={setDeposits} />}
@@ -2652,7 +2652,7 @@
         // ==========================================
         // 🌟 ASSET STORE MODULE
         // ==========================================
-        function CustomerDashboardStore({ inventory, categories, cart, setCart, triggerToast, bankSettings }) {
+        function CustomerDashboardStore({ inventory, categories, cart, setCart, setShowCart, triggerToast, bankSettings }) {
           const [searchQuery, setSearchQuery] = useState('');
           const [selectedStates, setSelectedStates] = useState({}); 
           const filteredCategories = categories.filter(c => (c?.name || '').toLowerCase().includes((searchQuery || '').toLowerCase()));
@@ -2671,6 +2671,7 @@
               
               setCart([...cart, cartItem]); 
               triggerToast(`Added to cart.`);
+              setShowCart(true); // 👈 🟢 অটোমেটিক কার্ট পপ-আপ ওপেন করবে
           };
 
           const handleStateChange = (productId, stateStr) => {
@@ -4520,20 +4521,32 @@
             const recognitionRef = useRef(null);
             const hasFollowedUpRef = useRef(false); // 🟢 FIX: একবারই প্রশ্ন করার ট্র্যাকার
 
-            // Initial greeting bubble logic
+            // 🟢 Initial greeting & 1-minute logic 🟢
+            const hasTriggeredRef = useRef(false);
+            
             useEffect(() => {
-                const interval = setInterval(() => {
-                    if (isLoggedIn && activeTab === 'store' && !isListening && !isSpeaking && !isProcessing && !transcript && chatHistory.length === 0) {
-                        setShowBubble(true);
-                        setBubbleExiting(false);
-                        setTimeout(() => {
-                            setBubbleExiting(true);
-                            setTimeout(() => setShowBubble(false), 500);
-                        }, 4000);
-                    }
-                }, 15000); // Initial welcome bubble interval
-                return () => clearInterval(interval);
-            }, [isListening, isSpeaking, isProcessing, transcript, isLoggedIn, activeTab, chatHistory.length]);
+                if (isLoggedIn && activeTab === 'store' && !hasTriggeredRef.current) {
+                    hasTriggeredRef.current = true;
+
+                    const triggerPopup = () => {
+                        // চেক করছি ইউজার এর মধ্যে কথা বলা শুরু করেছে কি না
+                        if (!isListening && !isSpeaking && !isProcessing && !transcript && chatHistory.length === 0) {
+                            setShowBubble(true);
+                            setBubbleExiting(false);
+                            setTimeout(() => {
+                                setBubbleExiting(true);
+                                setTimeout(() => setShowBubble(false), 500);
+                            }, 5000); // ৫ সেকেন্ড স্ক্রিনে থাকবে
+                        }
+                    };
+
+                    // ওয়েবসাইটে ঢোকার ২ সেকেন্ড পর একবার দেখাবে
+                    setTimeout(triggerPopup, 2000);
+
+                    // ঠিক ১ মিনিট (৬০,০০০ মিলিসেকেন্ড) পর আবার দেখাবে
+                    setTimeout(triggerPopup, 62000);
+                }
+            }, [isLoggedIn, activeTab, isListening, isSpeaking, isProcessing, transcript, chatHistory.length]);
 
             // 🟢 Proactive Timers Logic Disabled (Stops Random Speaking) 🟢
             const resetProactiveTimers = useCallback(() => {
@@ -4752,14 +4765,14 @@
             return (
                 <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[160] flex flex-col items-center gap-3 w-full px-4">
                     
-                    {/* Welcome / Instruction Bubble (Light Mode) */}
+                    {/* Welcome / Instruction Bubble (Glassmorphism Mode) */}
                     {showBubble && !isListening && !isSpeaking && !isProcessing && !transcript && (
                         <div className={`relative mb-2 origin-bottom transform-gpu ${bubbleExiting ? 'animate-suck-into-button' : 'animate-water-drop'}`}>
-                            <div className="bg-white px-4 py-3 rounded-2xl text-[10px] sm:text-xs font-bold tracking-wide text-gray-800 shadow-lg flex items-center justify-center gap-2 border border-gray-200 max-w-[280px] text-center">
+                            <div className="glass-panel !bg-white/50 !backdrop-blur-xl px-5 py-3.5 rounded-3xl text-[10px] sm:text-xs font-extrabold tracking-wide text-gray-900 shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex items-center justify-center gap-2 border border-white max-w-[280px] text-center">
                                 <Sparkles className="w-4 h-4 text-brand-primary animate-pulse shrink-0" />
                                 <span>If you need help, just tap the mic and ask me!</span>
                             </div>
-                            <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-r border-b border-gray-200 rotate-45"></div>
+                            <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white/60 backdrop-blur-xl border-r border-b border-white rotate-45"></div>
                         </div>
                     )}
 
