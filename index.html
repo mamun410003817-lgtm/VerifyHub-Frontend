@@ -1094,23 +1094,25 @@
                               if (syncData.myUser) {
                                   const dbData = syncData.myUser.data || {};
                                   
-                                  // 🟢 SINGLE ACTIVE DEVICE LOGIC (Check Session - RACE CONDITION FIXED) 🟢
                                   const dbSessionId = dbData.activeSessionId;
                                   const localSessionId = localStorage.getItem('mySessionId');
                                   const sessionAge = parseInt(localStorage.getItem('mySessionAge') || '0');
                                   
-                                  // 👈 ১০ সেকেন্ডের গ্রেস পিরিয়ড: নতুন লগইন করা ডিভাইসকে সময় দেওয়া হচ্ছে ডাটাবেস আপডেট করার জন্য
                                   if (dbSessionId && localSessionId && dbSessionId !== localSessionId && (Date.now() - sessionAge > 10000)) {
                                       handleLogout();
                                       alert("⚠️ Session Expired: Your account was logged in from another device. You have been logged out securely.");
                                       window.location.reload();
-                                      return; // Stop rendering
+                                      return; 
                                   }
                                   
                                   setUsersDB({ [user.email]: dbData });
                               }
                               
+                              // 🟢 FIX: RESTORING DELETED SETTERS FOR VAULT & HISTORY 🟢
                               setAllOrders((syncData.orders || []).map(d => ({id: d.id, ...(d.data || {}), date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                              setDeposits((syncData.deposits || []).map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                              setPurchases((syncData.purchases || []).map(d => ({id: d.id, ...(d.data || {}), customer: d.customer || d.data?.customer || d.email, type: d.type || d.data?.type, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                              setTickets((syncData.tickets || []).map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
                           }
                       }
                   } catch(e) {
