@@ -1837,7 +1837,7 @@
             const [isLoadingRates, setIsLoadingRates] = useState(true);
             
             const [selectedCountry, setSelectedCountry] = useState('USA');
-            const [selectedPandaCountry, setSelectedPandaCountry] = useState('GB');
+            const [selectedPandaCountry, setSelectedPandaCountry] = useState('US');
             const [pandaCountries, setPandaCountries] = useState([]);
             const [isLoadingCountries, setIsLoadingCountries] = useState(false);
             
@@ -1977,9 +1977,11 @@
                         setCurrentProvider(data.provider);
                         
                         if(data.data.length > 0) {
-                            setSelectedServiceCode(data.data[0].code);
+                            // 🟢 FIX: ডিফল্ট হিসেবে WhatsApp সিলেক্ট করা, না পেলে প্রথমটা 🟢
+                            const whatsappApp = data.data.find(s => String(s.name).toLowerCase().includes('whatsapp'));
+                            setSelectedServiceCode(whatsappApp ? whatsappApp.code : data.data[0].code);
                         } else {
-                            setSelectedServiceCode('');
+                            setSelectedServiceCode('WhatsApp');
                         }
                     } else {
                         triggerToast(data.message || 'Failed to load SMS services.');
@@ -3358,6 +3360,16 @@
           const [uploadCategory, setUploadCategory] = useState('new');
           const [uploadText, setUploadText] = useState('');
           const [customerSearch, setCustomerSearch] = useState('');
+
+          // 🟢 BUG FIX: Prevent ghost category upload mismatch when switching tabs 🟢
+          useEffect(() => {
+              if (categories && categories.length > 0) {
+                  const exists = categories.find(c => c.id === uploadCategory);
+                  if (!exists) {
+                      setUploadCategory(categories[0].id);
+                  }
+              }
+          }, [categories, uploadCategory]);
 
           const [promoInput, setPromoInput] = useState('');
           const [discountInput, setDiscountInput] = useState(0);
