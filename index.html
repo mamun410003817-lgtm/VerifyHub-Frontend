@@ -3040,8 +3040,8 @@
         // CUSTOMER VAULT MODULE (PURCHASED ACCOUNTS)
         // ==========================================
         function CustomerDashboardVault({ user, purchases, triggerToast, categories }) {
-            // শুধুমাত্র এই ইউজারের পারচেস গুলো ফিল্টার করা হচ্ছে
-            const myPurchases = (purchases || []).filter(p => p && p.customer === user?.email);
+            // 🟢 BUG FIX: Case Insensitive Filtering (সব ইমেইল ছোট হাতের করে মেলানো হচ্ছে) 🟢
+            const myPurchases = (purchases || []).filter(p => p && String(p.customer).toLowerCase() === String(user?.email).toLowerCase());
 
             return (
                 <div className="space-y-6 w-full relative z-10 animate-matrix-in max-w-5xl mx-auto">
@@ -3121,9 +3121,10 @@
 
           const referralCode = `REF-${(user?.email || '').split('@')[0].toUpperCase()}`;
           
-          const myDeposits = (deposits || []).filter(d => d && d.email === user?.email);
-          const myOrders = (allOrders || []).filter(o => o && o.customer === user?.email);
-          const myPurchases = (purchases || []).filter(p => p && p.customer === user?.email);
+          // 🟢 BUG FIX: Case Insensitive History Filtering 🟢
+          const myDeposits = (deposits || []).filter(d => d && String(d.email).toLowerCase() === String(user?.email).toLowerCase());
+          const myOrders = (allOrders || []).filter(o => o && String(o.customer).toLowerCase() === String(user?.email).toLowerCase());
+          const myPurchases = (purchases || []).filter(p => p && String(p.customer).toLowerCase() === String(user?.email).toLowerCase());
 
           const unifiedHistory = [
               ...myDeposits.map(d => ({ id: d.id, type: d.status === 'Approved' || d.data?.status === 'Approved' ? 'Funds Added' : 'Deposit Processing', amount: d.data?.amount || d.amount, date: d.data?.date || d.date, status: d.data?.status || d.status, method: d.data?.method || d.method })),
