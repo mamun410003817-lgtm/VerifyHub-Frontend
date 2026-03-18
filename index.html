@@ -986,20 +986,20 @@
           const checkUserRole = async (supaUser) => {
               if (supaUser && supaUser.email) {
                   
-                  // 🟢 SINGLE DEVICE LOGIN LOGIC (Set Session) 🟢
+                  // 🟢 SINGLE DEVICE LOGIN LOGIC (Set Session - FIXED) 🟢
                   let localSessionId = localStorage.getItem('mySessionId');
                   if (!localSessionId) {
                       localSessionId = 'SESS-' + Date.now().toString(36);
                       localStorage.setItem('mySessionId', localSessionId);
-                      setTimeout(async () => {
-                          try {
-                              const token = await getAuthToken();
-                              fetch(`${BACKEND_URL}/api/secure-action`, {
-                                  method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                                  body: JSON.stringify({ action: 'update_session', sessionId: localSessionId })
-                              });
-                          } catch(e) {}
-                      }, 1500);
+                      localStorage.setItem('mySessionAge', Date.now().toString()); // 👈 সেশন তৈরির সময় সেভ করা হলো
+                      
+                      // কোনো বিলম্ব ছাড়াই সরাসরি ব্যাকএন্ডে পাঠানো
+                      getAuthToken().then(token => {
+                          fetch(`${BACKEND_URL}/api/secure-action`, {
+                              method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                              body: JSON.stringify({ action: 'update_session', sessionId: localSessionId })
+                          }).catch(()=>{});
+                      });
                   }
 
                   let currentAdminEmail = 'mdmunnachowdhury0003817@gmail.com';
@@ -1094,11 +1094,13 @@
                               if (syncData.myUser) {
                                   const dbData = syncData.myUser.data || {};
                                   
-                                  // 🟢 SINGLE ACTIVE DEVICE LOGIC (Check Session) 🟢
+                                  // 🟢 SINGLE ACTIVE DEVICE LOGIC (Check Session - RACE CONDITION FIXED) 🟢
                                   const dbSessionId = dbData.activeSessionId;
                                   const localSessionId = localStorage.getItem('mySessionId');
+                                  const sessionAge = parseInt(localStorage.getItem('mySessionAge') || '0');
                                   
-                                  if (dbSessionId && localSessionId && dbSessionId !== localSessionId) {
+                                  // 👈 ১০ সেকেন্ডের গ্রেস পিরিয়ড: নতুন লগইন করা ডিভাইসকে সময় দেওয়া হচ্ছে ডাটাবেস আপডেট করার জন্য
+                                  if (dbSessionId && localSessionId && dbSessionId !== localSessionId && (Date.now() - sessionAge > 10000)) {
                                       handleLogout();
                                       alert("⚠️ Session Expired: Your account was logged in from another device. You have been logged out securely.");
                                       window.location.reload();
