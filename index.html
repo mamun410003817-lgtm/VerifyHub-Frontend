@@ -359,133 +359,130 @@
         .timer-bar {
                 animation: countdown linear forwards;
             }
-/* 🟢 THE ULTIMATE DAY MODE (LIGHT THEME) OVERRIDE 🟢 */
-            body, html, #root, .light-theme { 
-                background-color: #F4F4F5 !important; /* Soft minimal background */
-                color: #0F172A !important; 
-            }
+/* 🟢 TOGGLEABLE DAY/NIGHT MODE 🟢 */
+            body { transition: background-color 0.4s ease, color 0.4s ease; }
+            body.light-mode { background-color: #F4F4F5 !important; color: #0F172A !important; }
             
-            /* 1. FORCE ALL DARK BACKGROUNDS TO WHITE/LIGHT GRAY */
-            [class*="bg-[#0F172A]"], [class*="bg-[#0b1219]"], [class*="bg-[#151e29]"], 
-            [class*="bg-[#0B1121]"], [class*="bg-[#090E17]"], [class*="bg-[#050505]"],
-            [class*="bg-[rgba(0,0,0"], [class*="bg-black/"], .glass-effect, .glass-panel {
+            .light-mode [class*="bg-[#0F172A]"], .light-mode [class*="bg-[#0b1219]"], .light-mode [class*="bg-[#151e29]"], 
+            .light-mode [class*="bg-[#0B1121]"], .light-mode [class*="bg-[#090E17]"], .light-mode [class*="bg-[#050505]"],
+            .light-mode [class*="bg-[rgba(0,0,0"], .light-mode [class*="bg-black/"], .light-mode .glass-effect, .light-mode .glass-panel {
                 background-color: #FFFFFF !important;
                 box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
                 backdrop-filter: none !important;
             }
 
-            /* Exception: Keep Modals Overlay Background Semi-Dark */
-            .fixed.inset-0[class*="bg-[#000]"], .fixed.inset-0[class*="bg-black"] {
+            .light-mode .fixed.inset-0[class*="bg-[#000]"], .light-mode .fixed.inset-0[class*="bg-black"] {
                 background-color: rgba(0, 0, 0, 0.4) !important;
                 backdrop-filter: blur(4px) !important;
             }
 
-            /* 2. FORCE ALL WHITE/LIGHT TEXT TO DARK */
-            .text-white, .text-gray-200, .text-gray-300 { color: #0F172A !important; font-weight: 600 !important; }
-            .text-gray-400 { color: #475569 !important; font-weight: 500 !important; }
-            .text-gray-500 { color: #64748B !important; font-weight: 500 !important; }
+            .light-mode .text-white, .light-mode .text-gray-200, .light-mode .text-gray-300 { color: #0F172A !important; font-weight: 600 !important; }
+            .light-mode .text-gray-400 { color: #475569 !important; font-weight: 500 !important; }
+            .light-mode .text-gray-500 { color: #64748B !important; font-weight: 500 !important; }
 
-            /* Maintain Branding & Status Colors */
-            .text-brand-primary { color: #2563EB !important; }
-            .text-green-400, .text-green-500 { color: #16A34A !important; }
-            .text-red-400, .text-red-500 { color: #DC2626 !important; }
-            .text-yellow-400, .text-yellow-500 { color: #CA8A04 !important; }
+            .light-mode .text-brand-primary { color: #2563EB !important; }
+            .light-mode .text-green-400, .light-mode .text-green-500 { color: #16A34A !important; }
+            .light-mode .text-red-400, .light-mode .text-red-500 { color: #DC2626 !important; }
+            .light-mode .text-yellow-400, .light-mode .text-yellow-500 { color: #CA8A04 !important; }
 
-            /* Fix Buttons Text (Primary buttons should stay white text) */
-            button.bg-brand-primary, button.bg-brand-primary .text-white,
-            button.bg-green-500, button.bg-green-500 .text-white,
-            button.bg-red-500, button.bg-red-500 .text-white,
-            button.bg-gray-900, button.bg-gray-900 .text-white {
-                color: #FFFFFF !important;
-            }
+            .light-mode button.bg-brand-primary, .light-mode button.bg-brand-primary .text-white,
+            .light-mode button.bg-green-500, .light-mode button.bg-green-500 .text-white,
+            .light-mode button.bg-red-500, .light-mode button.bg-red-500 .text-white,
+            .light-mode button.bg-gray-900, .light-mode button.bg-gray-900 .text-white { color: #FFFFFF !important; }
 
-            /* 3. FORCE ALL WHITE/DARK BORDERS TO LIGHT GRAY */
-            [class*="border-white"], [class*="border-gray-700"], [class*="border-gray-800"] {
-                border-color: rgba(0, 0, 0, 0.08) !important;
-            }
+            .light-mode [class*="border-white"], .light-mode [class*="border-gray-700"], .light-mode [class*="border-gray-800"] { border-color: rgba(0, 0, 0, 0.08) !important; }
 
-            /* 4. FIX MENU BAR ACTIVE BUTTON & HOVERS */
-            [class*="bg-white/10"] {
-                background-color: #E2E8F0 !important; /* Active Menu Item Background */
-            }
-            [class*="bg-white/10"] .text-white, [class*="bg-white/10"] svg {
-                color: #2563EB !important; /* Blue text for active menu */
-            }
-            [class*="hover:bg-white/5"]:hover, [class*="hover:bg-[rgba(255,255,255,0.05)]"]:hover {
-                background-color: #F1F5F9 !important;
-                color: #0F172A !important;
-            }
+            .light-mode [class*="bg-white/10"] { background-color: #E2E8F0 !important; }
+            .light-mode [class*="bg-white/10"] .text-white, .light-mode [class*="bg-white/10"] svg { color: #2563EB !important; }
+            .light-mode [class*="hover:bg-white/5"]:hover, .light-mode [class*="hover:bg-[rgba(255,255,255,0.05)]"]:hover { background-color: #F1F5F9 !important; color: #0F172A !important; }
 
-            /* 5. FIX INPUTS & SELECTS */
-            input, textarea, select, .glass-input, .bg-transparent {
-                background-color: #FFFFFF !important;
-                border: 1px solid rgba(0, 0, 0, 0.15) !important;
-                color: #0F172A !important;
+            .light-mode input, .light-mode textarea, .light-mode select, .light-mode .glass-input, .light-mode .bg-transparent {
+                background-color: #FFFFFF !important; border: 1px solid rgba(0, 0, 0, 0.15) !important; color: #0F172A !important;
             }
-            input:focus, textarea:focus, select:focus {
-                border-color: #2563EB !important;
-                box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1) !important;
-            }
-            select option { background-color: #FFFFFF !important; color: #0F172A !important; }
+            .light-mode input:focus, .light-mode textarea:focus, .light-mode select:focus { border-color: #2563EB !important; box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1) !important; }
+            .light-mode select option { background-color: #FFFFFF !important; color: #0F172A !important; }
 
-            /* 6. Remove Blurs and Bouncy animations for ultra-minimalist feel */
-            .blur-3xl { display: none !important; }
-            .animate-bouncy-pop { animation: fadeInUp 0.3s ease forwards !important; }
-
-            /* 7. GLOBAL FONT SIZE INCREASE (READABILITY UPGRADE - MAX) */
+            /* GLOBAL FONT SIZE INCREASE */
             .text-xs { font-size: 0.95rem !important; line-height: 1.4rem !important; } 
             .text-sm { font-size: 1.05rem !important; line-height: 1.5rem !important; } 
             .text-base { font-size: 1.15rem !important; line-height: 1.6rem !important; } 
-            .text-\[8px\] { font-size: 11px !important; }
-            .text-\[9px\] { font-size: 13px !important; }
-            .text-\[10px\] { font-size: 14px !important; }
-            .text-\[11px\] { font-size: 15px !important; }
-            .text-\[12px\] { font-size: 16px !important; }
-            .text-\[13px\] { font-size: 17px !important; }
-            p, span, div, button, a { letter-spacing: 0.01em; } /* Clean, balanced spacing */
+            .text-\\[8px\\] { font-size: 11px !important; }
+            .text-\\[9px\\] { font-size: 13px !important; }
+            .text-\\[10px\\] { font-size: 14px !important; }
+            .text-\\[11px\\] { font-size: 15px !important; }
+            .text-\\[12px\\] { font-size: 16px !important; }
+            .text-\\[13px\\] { font-size: 17px !important; }
+            p, span, div, button, a { letter-spacing: 0.01em; }
 
-            /* 8. ENTERPRISE MINIMALISM (STRIPE/VERCEL INSPIRED UI) */
-            .glass-effect, .glass-panel, .bg-white {
-                border-radius: 12px !important; /* Less rounded, more professional corners */
-                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03) !important;
-                border: 1px solid #E2E8F0 !important;
+            /* ENTERPRISE MINIMALISM */
+            .light-mode .glass-effect, .light-mode .glass-panel, .light-mode .bg-white {
+                border-radius: 12px !important; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03) !important; border: 1px solid #E2E8F0 !important;
             }
-            /* Flatten excessive rounding globally */
             .rounded-3xl { border-radius: 16px !important; }
             .rounded-2xl { border-radius: 12px !important; }
             .rounded-xl { border-radius: 8px !important; }
-            .rounded-full { border-radius: 9999px !important; } /* Keep pills pill-shaped */
+            .rounded-full { border-radius: 9999px !important; }
             
-            /* Flatten bouncy buttons for a sleek feel */
             .btn-animate { box-shadow: none !important; transform: none !important; }
             .btn-animate:hover { transform: translateY(-1px) !important; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important; }
             .btn-animate:active { transform: translateY(0) !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05) !important; }
 
-            /* Modern, crisp Inputs */
-            .glass-input, input, select, textarea {
-                border-radius: 8px !important;
-                border: 1px solid #CBD5E1 !important;
-                background-color: #F8FAFC !important;
-                box-shadow: inset 0 1px 2px rgba(0,0,0,0.01) !important;
-                transition: all 0.2s ease !important;
-                color: #0F172A !important;
-            }
-            .glass-input:focus, input:focus, select:focus, textarea:focus {
-                background-color: #FFFFFF !important;
-                border-color: #3b82f6 !important;
-                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
-                outline: none !important;
+            .light-mode .glass-input, .light-mode input, .light-mode select, .light-mode textarea {
+                border-radius: 8px !important; border: 1px solid #CBD5E1 !important; background-color: #F8FAFC !important; color: #0F172A !important;
             }
             
-            /* Typography Refinements */
             h1, h2, h3, h4, h5, h6 { font-weight: 700 !important; letter-spacing: -0.02em !important; }
             .uppercase { font-weight: 600 !important; }
-            .tracking-widest { letter-spacing: 0.05em !important; } /* Stop letters from flying away */
+            .tracking-widest { letter-spacing: 0.05em !important; }
             
             /* Clean Table Styling */
-            table th { background-color: #F8FAFC !important; color: #475569 !important; font-weight: 600 !important; border-bottom: 1px solid #E2E8F0 !important; }
-            table td { border-bottom: 1px solid #F1F5F9 !important; }
-            tr:hover td { background-color: #F8FAFC !important; }
+            .light-mode table th { background-color: #F8FAFC !important; color: #475569 !important; font-weight: 600 !important; border-bottom: 1px solid #E2E8F0 !important; }
+            .light-mode table td { border-bottom: 1px solid #F1F5F9 !important; }
+            .light-mode tr:hover td { background-color: #F8FAFC !important; }
+
+            /* 🟢 NIGHT MODE (DARK THEME) AUTO-INVERT FIXES 🟢 */
+            /* Backgrounds */
+            body:not(.light-mode) .bg-white,
+            body:not(.light-mode) .bg-white\/90,
+            body:not(.light-mode) .bg-white\/95 { 
+                background-color: #0F172A !important; 
+                border-color: rgba(255,255,255,0.05) !important; 
+            }
+            body:not(.light-mode) .bg-gray-50,
+            body:not(.light-mode) .bg-gray-50\/50 { 
+                background-color: #1E293B !important; 
+                border-color: rgba(255,255,255,0.05) !important; 
+            }
+            body:not(.light-mode) .bg-gray-100 { 
+                background-color: #334155 !important; 
+                border-color: rgba(255,255,255,0.05) !important; 
+            }
+            
+            /* Text Colors */
+            body:not(.light-mode) .text-gray-900, 
+            body:not(.light-mode) .text-gray-800,
+            body:not(.light-mode) .text-black { color: #F8FAFC !important; }
+            body:not(.light-mode) .text-gray-700, 
+            body:not(.light-mode) .text-gray-600 { color: #CBD5E1 !important; }
+            body:not(.light-mode) .text-gray-500 { color: #94A3B8 !important; }
+            
+            /* Borders & Shadows */
+            body:not(.light-mode) .border-gray-100, 
+            body:not(.light-mode) .border-gray-200 { border-color: rgba(255,255,255,0.08) !important; }
+            body:not(.light-mode) .shadow-sm { box-shadow: 0 4px 25px rgba(0,0,0,0.5) !important; }
+            
+            /* Inputs & Forms */
+            body:not(.light-mode) input, 
+            body:not(.light-mode) select, 
+            body:not(.light-mode) textarea { background-color: #020617 !important; color: #F8FAFC !important; border-color: rgba(255,255,255,0.15) !important; }
+            body:not(.light-mode) input:focus, 
+            body:not(.light-mode) select:focus, 
+            body:not(.light-mode) textarea:focus { border-color: #3B82F6 !important; background-color: #0F172A !important; }
+            
+            /* Dark Mode Table Fixes */
+            body:not(.light-mode) table th { background-color: #0F172A !important; color: #94A3B8 !important; border-bottom: 1px solid rgba(255,255,255,0.1) !important; }
+            body:not(.light-mode) table td { border-bottom: 1px solid rgba(255,255,255,0.05) !important; }
+            body:not(.light-mode) tr:hover td { background-color: #1E293B !important; }
         </style>
 </head>
 <body class="antialiased">
@@ -500,7 +497,7 @@
             ShoppingCart, LogOut, Package, Users, DollarSign, Settings, Plus, Trash2, CheckCircle, 
             X, Wallet, CreditCard, Clock, Copy, Bell, User as UserIcon, 
             Activity, BarChart, Lock, Search, Megaphone, Award, Zap, Headset, 
-            Star, AlertTriangle, ShieldCheck, History, Edit, RefreshCw, ChevronDown, MessageSquare, Send, MessageCircle, CircleDollarSign, Key, Building, Smartphone, FileText, Globe, Mic, Volume2, Sparkles
+            Star, AlertTriangle, ShieldCheck, History, Edit, RefreshCw, ChevronDown, MessageSquare, Send, MessageCircle, CircleDollarSign, Key, Building, Smartphone, FileText, Globe, Mic, Volume2, Sparkles, Sun, Moon
         } from 'lucide-react';
 
         // 🟢 SUPABASE INITIALIZATION (New Project) 🟢
@@ -555,20 +552,20 @@
         ];
 
         const CUSTOMER_TABS = [
-            { id: 'store', label: 'Buy Account', imgUrl: 'https://cdn-icons-png.flaticon.com/512/3144/3144456.png' },
-            { id: 'sms_store', label: 'SMS Verifications', imgUrl: 'https://cdn-icons-png.flaticon.com/512/9135/9135759.png' }, /* 🟢 New Premium 3D Verified SMS Logo */
-            { id: 'add_funds', label: 'Add Fund', imgUrl: 'https://cdn-icons-png.flaticon.com/512/2953/2953536.png' },
-            { id: 'my_accounts', label: 'Purchased', imgUrl: 'https://cdn-icons-png.flaticon.com/512/2913/2913008.png' },
-            { id: 'profile', label: 'Profile', imgUrl: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' } 
+            { id: 'store', label: 'Buy Account', icon: ShoppingCart },
+            { id: 'sms_store', label: 'SMS Verify', icon: Smartphone },
+            { id: 'add_funds', label: 'Add Fund', icon: Wallet },
+            { id: 'my_accounts', label: 'Purchased', icon: Key },
+            { id: 'profile', label: 'Profile', icon: UserIcon } 
         ];
 
         const ADMIN_TABS = [
-            { id: 'inventory', label: 'Stock', imgUrl: 'https://cdn-icons-png.flaticon.com/512/3150/3150702.png' },
-            { id: 'deposits', label: 'Deposits', imgUrl: 'https://cdn-icons-png.flaticon.com/512/2830/2830284.png' },
-            { id: 'users', label: 'Users', imgUrl: 'https://cdn-icons-png.flaticon.com/512/1256/1256650.png' },
-            { id: 'support', label: 'Comms', imgUrl: 'https://cdn-icons-png.flaticon.com/512/4233/4233830.png' },
-            { id: 'analytics', label: 'Analytics', imgUrl: 'https://cdn-icons-png.flaticon.com/512/2936/2936690.png' },
-            { id: 'settings', label: 'Settings', imgUrl: 'https://cdn-icons-png.flaticon.com/512/2965/2965306.png' }
+            { id: 'inventory', label: 'Stock', icon: Package },
+            { id: 'deposits', label: 'Deposits', icon: CreditCard },
+            { id: 'users', label: 'Users', icon: Users },
+            { id: 'support', label: 'Comms', icon: Headset },
+            { id: 'analytics', label: 'Analytics', icon: BarChart },
+            { id: 'settings', label: 'Settings', icon: Settings }
         ];
 
         const uiCard = "glass-effect rounded-3xl relative transition-all duration-300 w-full";
@@ -926,77 +923,81 @@
             const canRenew = isSMS && displayData && !displayData.includes('Duration: 5 minutes');
 
             return (
-                <div className="bg-white border border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] p-6 sm:p-8 rounded-3xl flex flex-col animate-fade-in-up allow-select hover:shadow-[0_15px_40px_rgba(0,0,0,0.06)] hover:-translate-y-1 hover:border-brand-primary/20 transition-all duration-500 group" style={{animationDelay: `${idx * 0.05}s`, animationFillMode: 'both'}}>
-                    <div className="flex justify-between items-start mb-5 pb-4 border-b border-gray-50 transition-colors group-hover:border-gray-100">
-                        <span className="text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-2">
-                            {isSMS ? <Smartphone className="w-4 h-4 text-brand-primary"/> : <Package className="w-4 h-4 text-brand-primary"/>} 
-                            {safeType.replace('PUR-SMS-', 'SMS: ')}
-                        </span>
-                        <span className="text-[8px] font-mono text-gray-500 uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-full border border-gray-200 font-bold">
-                            {safeFormatDate(acc.date)}
-                        </span>
+                <div className="bg-white border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-md hover:border-brand-primary/30 p-5 sm:p-6 rounded-2xl flex flex-col transition-all duration-300 animate-fade-in-up group" style={{animationDelay: `${idx * 0.05}s`}}>
+                    
+                    {/* Header */}
+                    <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-100">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center shrink-0 shadow-sm">
+                                {isSMS ? <Smartphone className="w-4 h-4 text-brand-primary"/> : <Key className="w-4 h-4 text-brand-primary"/>} 
+                            </div>
+                            <div>
+                                <h3 className="text-[12px] sm:text-[13px] font-bold text-gray-900 tracking-wide uppercase">{safeType.replace('PUR-SMS-', 'SMS: ')}</h3>
+                                <p className="text-[9px] sm:text-[10px] text-gray-500 font-mono mt-1 uppercase tracking-widest">{safeFormatDate(acc.date)}</p>
+                            </div>
+                        </div>
                     </div>
 
+                    {/* 2FA Timer (If Available) */}
                     {twoFaSecret && (
-                        <div className="mb-5 bg-gray-50 border border-gray-200 p-4 rounded-xl flex flex-col items-center justify-center relative overflow-hidden">
-                            <div className="absolute bottom-0 left-0 w-full h-[3px] bg-gray-200">
-                                <div className="bg-brand-primary h-full transition-all duration-1000 ease-linear" style={{width: `${(timeLeft/30)*100}%`}}></div>
-                            </div>
-                            <p className="text-[8px] text-gray-500 font-bold mb-1 uppercase tracking-[0.3em]">Auth Code</p>
-                            <div className="text-2xl font-bold text-gray-900 tracking-[0.2em] font-mono">{totpCode || '------'}</div>
+                        <div className="mb-4 bg-gray-50/50 border border-gray-200 rounded-xl p-3 sm:p-4 flex justify-between items-center relative overflow-hidden shadow-inner">
+                            <div className="absolute bottom-0 left-0 h-[2px] bg-brand-primary transition-all duration-1000 ease-linear" style={{width: `${(timeLeft/30)*100}%`}}></div>
+                            <span className="text-[9px] sm:text-[10px] font-bold text-gray-500 uppercase tracking-widest">2FA Auth Code</span>
+                            <span className="text-lg sm:text-xl font-black text-gray-900 tracking-widest font-mono">{totpCode || '------'}</span>
                         </div>
                     )}
 
-                    <div className="w-full bg-gray-50 border border-gray-200 p-4 rounded-xl mb-5 overflow-x-auto flex-grow custom-scrollbar">
-                        <pre className="font-mono text-[11px] text-gray-800 font-medium whitespace-pre-wrap break-words leading-relaxed">{displayData}</pre>
+                    {/* Credentials Data Box */}
+                    <div className="w-full bg-gray-50/50 border border-gray-200 p-4 rounded-xl mb-5 overflow-x-auto flex-grow custom-scrollbar shadow-inner">
+                        <pre className="font-mono text-[10px] sm:text-[11px] text-gray-800 font-medium whitespace-pre-wrap break-words leading-relaxed">{displayData}</pre>
                     </div>
                     
-                    <div className="flex justify-between mt-auto items-center pt-2">
-                        <button onClick={async () => {
-                           const id = 'REP-' + Date.now();
-                           if(acc.customer) {
-                               try {
-                                   const token = await getAuthToken();
-                                   await fetch(`${BACKEND_URL}/api/secure-action`, {
-                                       method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                                       body: JSON.stringify({ action: 'create_ticket', id: id, subject: `Reported Item`, message: `I have an issue with this item: ${safeType}` })
-                                   });
-                                   triggerToast('Report sent to admin.');
-                               } catch(e) { triggerToast('Failed to send report.'); }
-                           }
-                        }} className="text-[9px] font-mono text-gray-400 hover:text-red-500 uppercase tracking-widest transition-colors font-bold">Report Issue</button>
-                        <button onClick={() => {
-                           if (navigator.clipboard) navigator.clipboard.writeText(displayData).then(() => triggerToast("Copied!"));
-                           else { const t = document.createElement("textarea"); t.value = displayData; document.body.appendChild(t); t.select(); document.execCommand("copy"); document.body.removeChild(t); triggerToast("Copied!"); }
-                        }} className="btn-animate bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 px-5 py-2.5 rounded-xl text-[9px] uppercase tracking-widest font-bold flex items-center gap-2 shadow-sm transition-colors">
-                            <Copy className="w-3 h-3 text-brand-primary"/> Copy Data
-                        </button>
-                    </div>
-
+                    {/* Instructions (If Available) */}
                     {(!isSMS && Array.isArray(categories)) && (() => {
                         const matchedCat = categories.find(c => c.name === safeType);
                         if (matchedCat && matchedCat.instructions) {
                             return (
-                                <div className="mt-5 bg-brand-primary/5 border border-brand-primary/20 p-4 sm:p-5 rounded-xl relative overflow-hidden">
-                                    <div className="absolute top-0 left-0 w-1 h-full bg-brand-primary"></div>
-                                    <h4 className="text-[11px] font-bold text-brand-primary uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
-                                        <AlertTriangle className="w-4 h-4"/> Important Guidelines
-                                    </h4>
-                                    <div className="text-[10px] text-gray-600 font-mono whitespace-pre-wrap leading-relaxed allow-select">
-                                        {matchedCat.instructions}
-                                    </div>
+                                <div className="mb-5 bg-blue-50/50 border border-blue-100 p-3 sm:p-4 rounded-xl">
+                                    <h4 className="text-[9px] font-bold text-blue-600 uppercase tracking-widest mb-2 flex items-center gap-1.5"><AlertTriangle className="w-3 h-3"/> Important Rule</h4>
+                                    <div className="text-[9px] text-gray-600 font-mono whitespace-pre-wrap leading-relaxed">{matchedCat.instructions}</div>
                                 </div>
                             );
                         }
                         return null;
                     })()}
                     
-                    {/* Renew Number Button Removed */}
+                    {/* Footer Actions */}
+                    <div className="flex justify-between items-center mt-auto pt-2 border-t border-transparent group-hover:border-gray-100 transition-colors">
+                        <button onClick={async () => {
+                           const id = 'REP-' + Date.now();
+                           if(acc.customer) {
+                               try {
+                                   const token = await getAuthToken();
+                                   await fetch(`${BACKEND_URL}/api/secure-action`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ action: 'create_ticket', id: id, subject: `Reported Item`, message: `I have an issue with this item: ${safeType}` }) });
+                                   triggerToast('Report sent to admin.');
+                               } catch(e) { triggerToast('Failed to send report.'); }
+                           }
+                        }} className="text-[9px] font-bold text-gray-400 hover:text-red-500 uppercase tracking-widest transition-colors">Report Issue</button>
+                        
+                        <button onClick={() => {
+                           if (navigator.clipboard) navigator.clipboard.writeText(displayData).then(() => triggerToast("Copied!"));
+                           else { const t = document.createElement("textarea"); t.value = displayData; document.body.appendChild(t); t.select(); document.execCommand("copy"); document.body.removeChild(t); triggerToast("Copied!"); }
+                        }} className="btn-animate bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 px-4 py-2.5 rounded-lg text-[9px] uppercase tracking-widest font-bold flex items-center gap-2 transition-colors shadow-sm">
+                            <Copy className="w-3.5 h-3.5 text-brand-primary"/> Copy Data
+                        </button>
+                    </div>
                 </div>
             );
         };
 
         function App() {
+          const [isLightMode, setIsLightMode] = useState(() => localStorage.getItem('themeMode') !== 'dark');
+          
+          useEffect(() => {
+              if (isLightMode) { document.body.classList.add('light-mode'); localStorage.setItem('themeMode', 'light'); } 
+              else { document.body.classList.remove('light-mode'); localStorage.setItem('themeMode', 'dark'); }
+          }, [isLightMode]);
+
           const [showLanding, setShowLanding] = useState(true); // 🟢 Control Landing Page 🟢
           const [user, setUser] = useState(null); 
           const [isAuthChecking, setIsAuthChecking] = useState(true);
@@ -1847,7 +1848,7 @@
           const currentUserTier = user.role === 'customer' ? getTier(usersDB[user.email]?.totalSpent || 0) : null;
 
           return (
-            <div className="min-h-screen w-full relative overflow-x-hidden font-sans pb-24 flex flex-col bg-gray-50 text-gray-900 light-theme">
+            <div className="min-h-screen w-full relative overflow-x-hidden font-sans pb-24 flex flex-col transition-colors duration-500">
               <FloatingLogos />
 
               {/* 🟢 PASSWORD RESET MODAL (NEW) 🟢 */}
@@ -1932,6 +1933,9 @@
                             <span className="font-mono font-bold text-xs sm:text-sm tracking-wider text-gray-900">${Number(currentUserBalance).toFixed(2)}</span>
                         </div>
                     )}
+                    <button onClick={() => setIsLightMode(!isLightMode)} className="btn-animate p-3 bg-gray-50 text-gray-600 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors border border-gray-200" title="Toggle Theme">
+                        {isLightMode ? <Moon className="w-4 h-4" strokeWidth={1.5}/> : <Sun className="w-4 h-4" strokeWidth={1.5}/>}
+                    </button>
                     <button onClick={handleLogout} className="btn-animate p-3 bg-gray-50 text-gray-600 hover:text-red-500 hover:bg-red-50 transition-colors border border-gray-200"><LogOut className="w-4 h-4" strokeWidth={1.5}/></button>
                   </div>
                 </div>
@@ -1947,7 +1951,7 @@
 
                 {(!maintenanceSettings?.active || user.role === 'admin') && (
                     <div className="w-full relative z-30 mb-6 px-2 sm:px-0 mt-2">
-                        {/* 🟢 NO-SLIDER WRAPPED MENU (TWO ROWS ON MOBILE) 🟢 */}
+                        {/* 🟢 NO-SLIDER WRAPPED MENU (LUCIDE ICONS) 🟢 */}
                         <div className="bg-transparent flex flex-wrap justify-center sm:justify-between items-center w-full mx-auto max-w-3xl border-b-[3px] border-gray-200/60 mb-4 gap-y-2 sm:gap-y-0 pb-2 sm:pb-0">
                             {(user.role === 'admin' ? ADMIN_TABS : CUSTOMER_TABS).map(tab => (
                                 <button 
@@ -1955,13 +1959,9 @@
                                     onClick={() => setActiveTab(tab.id)} 
                                     className={`w-[31%] sm:w-auto sm:flex-1 relative flex flex-col items-center justify-center py-2 sm:py-3 transition-all duration-300 rounded-xl sm:rounded-none sm:border-b-[3px] sm:-mb-[3px] ${activeTab === tab.id ? 'bg-brand-primary/10 sm:bg-brand-primary/5 sm:border-brand-primary text-brand-primary z-10 shadow-sm sm:shadow-none' : 'border-transparent text-gray-500 hover:text-gray-800 hover:bg-gray-100/50'}`}
                                 >
-                                    <img 
-                                        src={tab.imgUrl} 
-                                        alt={tab.label} 
-                                        className={`w-6 h-6 sm:w-7 sm:h-7 mb-1.5 transition-all duration-300 ${activeTab === tab.id ? 'opacity-100 scale-110 drop-shadow-md' : 'opacity-70 hover:opacity-100 hover:scale-105'}`} 
-                                    />
+                                    <tab.icon className={`w-5 h-5 sm:w-6 sm:h-6 mb-1.5 transition-all duration-300 ${activeTab === tab.id ? 'scale-110 text-brand-primary' : 'opacity-70 hover:opacity-100 hover:scale-105 text-gray-500'}`} strokeWidth={activeTab === tab.id ? 2.5 : 2} />
                                     <span className={`text-[10px] sm:text-[12px] leading-tight uppercase tracking-wider text-center w-full px-1 ${activeTab === tab.id ? 'font-black text-brand-primary' : 'font-bold'}`}>
-                                        {tab.label === 'SMS Verifications' ? 'SMS Verify' : tab.label}
+                                        {tab.label}
                                     </span>
                                 </button>
                             ))}
@@ -1999,9 +1999,7 @@
 
               {showCart && user.role === 'customer' && <CartModal cart={cart} setCart={setCart} setShowCart={setShowCart} balance={currentUserBalance} user={user} promoSettings={promoSettings} triggerToast={triggerToast} addNotification={addNotification} bankSettings={bankSettings} />}
               
-              {/* 🟢 CENTERED AI VOICE CHATBOT (Live Chat Removed) 🟢 */}
-              {user && user.role === 'customer' && <AiVoiceAssistant isLoggedIn={true} activeTab={activeTab} />}
-            </div>
+              </div>
           );
         }
 
@@ -2691,13 +2689,16 @@
 
           return (
             <div className="w-full relative z-10 animate-fade-in-up max-w-5xl mx-auto mt-4">
-              {/* Ultra Minimal Header & Search */}
+              {/* 🟢 Premium 3D Header & Search 🟢 */}
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 w-full mb-8 px-2 sm:px-0">
-                <div>
-                  <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-wide">Buy Accounts</h1>
-                  <p className="text-gray-500 text-[10px] sm:text-xs font-mono mt-1">Select an asset from the inventory</p>
+                <div className="flex items-center gap-3">
+                  <img src="https://cdn-icons-png.flaticon.com/512/879/879815.png" alt="Store" className="w-10 h-10 sm:w-12 sm:h-12 drop-shadow-md" />
+                  <div>
+                    <h1 className="text-xl sm:text-2xl font-black text-brand-primary tracking-wide uppercase">Buy Accounts</h1>
+                    <p className="text-gray-500 text-[10px] sm:text-xs font-mono mt-1 font-bold">Select an asset from the inventory</p>
+                  </div>
                 </div>
-                <div className="w-full sm:w-64 border-b border-gray-700 pb-2 flex items-center group focus-within:border-brand-primary transition-colors">
+                <div className="w-full sm:w-64 border-b border-gray-400/50 pb-2 flex items-center group focus-within:border-brand-primary transition-colors">
                      <Search className="w-3.5 h-3.5 text-gray-500 mr-2 group-focus-within:text-brand-primary transition-colors" />
                      <input type="text" placeholder="Search..." value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)} className="bg-transparent border-none outline-none text-[11px] sm:text-xs text-white w-full placeholder-gray-600 font-mono tracking-wide" />
                 </div>
@@ -2950,126 +2951,141 @@
           const selectedCustomPayment = (customPayments || []).find(p => p.name === manualMethod);
 
           return (
-            <div className="animate-matrix-in grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 w-full">
+            <div className="w-full relative z-10 animate-fade-in-up max-w-5xl mx-auto mt-4">
               
-              {/* 🟢 LEFT COLUMN: AUTO CRYPTO DEPOSIT 🟢 */}
-              <div className="space-y-6 sm:space-y-8 w-full">
-                <div className="bg-white shadow-sm rounded-3xl p-6 sm:p-8 h-fit border border-gray-200">
-                  <h2 className="text-sm font-bold tracking-widest mb-6 text-gray-900 flex items-center gap-2 uppercase">
-                     <Zap className="w-4 h-4 text-brand-primary"/> Auto Crypto Deposit (NOWPayments)
-                  </h2>
-                  
-                  {!pendingCrypto ? (
-                      <div className="mt-4">
-                        <form onSubmit={startAutoDeposit} className="space-y-5 w-full">
-                          <div>
-                            <label className="block text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em]">Amount (USD)</label>
-                            <div className="relative">
-                               <DollarSign className="w-4 h-4 text-gray-400 absolute left-4 top-3.5" />
-                               <input type="number" step="1" min="1" name="amount" value={cryptoAmountInput} onChange={e => setCryptoAmountInput(e.target.value)} required placeholder="10" className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl pl-11 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all allow-select font-mono" />
-                            </div>
-                          </div>
-                         <button type="submit" disabled={isGenerating} className="btn-animate w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 tracking-widest uppercase text-xs h-12 mt-2 disabled:opacity-50 shadow-sm transition-colors">
-                              {isGenerating ? <RefreshCw className="w-4 h-4 text-brand-primary animate-spin"/> : <DollarSign className="w-4 h-4 text-brand-primary"/>}
-                              {isGenerating ? 'Processing...' : 'Pay with Crypto'}
-                          </button>
-                        </form>
-                      </div>
-                  ) : (
-                      isNowPayments && (
-                          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center space-y-6 relative overflow-hidden mt-6 animate-fade-in-up shadow-inner">
-                              <p className="text-[10px] font-bold text-gray-900 flex items-center justify-center gap-2 pt-4 uppercase tracking-[0.3em]">
-                                  <span className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-pulse"></span> Invoice Active
-                              </p>
-                              
-                              <div className="text-3xl sm:text-4xl font-light font-mono text-gray-900 tracking-widest allow-select">
-                                  ${pendingCrypto.data?.amount || pendingCrypto.amount}
-                              </div>
-                              <p className="text-xs text-gray-500 font-mono mt-2">Complete your payment in the NOWPayments tab.</p>
-                              
-                              <div className="flex flex-col gap-3 pt-4 border-t border-gray-200 w-full">
-                                  <button type="button" onClick={(e) => { e.preventDefault(); window.open(pendingCrypto.data?.invoice_url, '_blank'); }} className="btn-animate w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 shadow-sm font-bold py-3.5 px-6 rounded-2xl flex items-center justify-center gap-2 uppercase tracking-widest text-[10px]">
-                                      Open Payment Page
-                                  </button>
-                                  <button type="button" onClick={handleNowPaymentsVerify} disabled={isVerifyingClick} className="btn-animate w-full bg-brand-primary hover:opacity-90 text-white font-bold py-3.5 px-6 rounded-2xl flex items-center justify-center gap-2 uppercase tracking-widest text-[11px] disabled:opacity-50 shadow-[0_4px_15px_rgba(59,130,246,0.3)]">
-                                      {isVerifyingClick ? <RefreshCw className="w-4 h-4 animate-spin"/> : <CheckCircle className="w-4 h-4"/>}
-                                      {isVerifyingClick ? 'Verifying...' : 'Verify Payment'}
-                                  </button>
-                                  <button type="button" onClick={cancelAutoPay} className="btn-animate text-[9px] text-gray-400 hover:text-red-500 font-bold uppercase tracking-widest transition-colors mt-2">Cancel Invoice</button>
-                              </div>
-                          </div>
-                      )
-                  )}
+              {/* 🟢 Premium 3D Header 🟢 */}
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 w-full mb-8 px-2 sm:px-0">
+                <div className="flex items-center gap-3">
+                  <img src="https://cdn-icons-png.flaticon.com/512/2953/2953536.png" alt="Wallet" className="w-10 h-10 sm:w-12 sm:h-12 drop-shadow-md" />
+                  <div>
+                    <h1 className="text-xl sm:text-2xl font-black text-brand-primary tracking-wide uppercase">Add Funds</h1>
+                    <p className="text-gray-500 text-[10px] sm:text-xs font-mono mt-1 font-bold">Deposit via Crypto or Local Bank</p>
+                  </div>
                 </div>
               </div>
 
-              {/* 🟢 RIGHT COLUMN: MANUAL DEPOSIT 🟢 */}
-              <div className="space-y-6 sm:space-y-8 w-full">
-                <div className="bg-white shadow-sm rounded-3xl p-6 sm:p-8 border border-gray-200">
-                  <div className="flex justify-between items-start mb-6 pb-4 border-b border-gray-100">
-                     <h3 className="text-sm font-bold tracking-widest text-gray-900 flex items-center gap-2 uppercase">
-                       <Building className="w-4 h-4 text-brand-primary"/> Manual Deposit
-                     </h3>
-                  </div>
-
-                  <div className="mb-6">
-                      <label className="block text-[9px] font-bold text-gray-500 mb-2.5 uppercase tracking-[0.2em] ml-1">Select Payment Method</label>
-                      <div className="relative">
-                          <select value={manualMethod} onChange={e => setManualMethod(e.target.value)} className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all appearance-none cursor-pointer font-mono font-bold tracking-wide allow-select">
-                              <option value="Local Bank Transfer">Local Bank Transfer</option>
-                              {(customPayments || []).map(p => (
-                                  <option key={p.id} value={p.name}>{p.name}</option>
-                              ))}
-                          </select>
-                          <ChevronDown className="w-4 h-4 text-gray-400 absolute right-4 top-4 pointer-events-none" />
-                      </div>
-                  </div>
-                  
-                  {/* Bank Details Box */}
-                  {manualMethod === 'Local Bank Transfer' ? (
-                      <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-6 text-xs font-mono tracking-wide space-y-3 shadow-inner">
-                        <div className="flex justify-between items-center border-b border-gray-200 pb-2"><span className="text-gray-500">Bank</span> <span className="font-bold text-gray-900">{bankSettings?.bankName || 'Parallex'}</span></div>
-                        <div className="flex justify-between items-center border-b border-gray-200 pb-2 pt-1"><span className="text-gray-500">Name</span> <span className="font-bold text-gray-900 text-right">{bankSettings?.accountName || 'Samuel Osita Emmanuel'}</span></div>
-                        <div className="flex justify-between items-center border-b border-gray-200 pb-2 pt-1"><span className="text-gray-500">A/C No.</span> <span className="text-gray-900 font-bold text-sm allow-select">{bankSettings?.accountNumber || '1120927346'}</span></div>
-                        <div className="flex justify-between items-center pt-1"><span className="text-gray-500">Rate</span> <span className="text-brand-primary font-bold text-sm">1 USD = ₦{bankSettings?.nairaRate || 1500}</span></div>
-                        <button type="button" onClick={() => copyToClipboard(bankSettings?.accountNumber || '1120927346')} className="btn-animate w-full bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 uppercase tracking-widest mt-3 !text-[10px] shadow-sm"><Copy className="w-3.5 h-3.5" /> Copy Details</button>
-                      </div>
-                  ) : selectedCustomPayment ? (
-                      <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-6 text-xs font-mono tracking-wide space-y-3 shadow-inner">
-                        <div className="flex justify-between items-center border-b border-gray-200 pb-2"><span className="text-gray-500">Method</span> <span className="font-bold text-gray-900">{selectedCustomPayment.name}</span></div>
-                        <div className="flex justify-between items-center border-b border-gray-200 pb-2 pt-1"><span className="text-gray-500">Details/Wallet</span> <span className="text-gray-900 font-bold text-sm break-all text-right max-w-[60%] allow-select">{selectedCustomPayment.details}</span></div>
-                        <div className="flex flex-col pt-1"><span className="text-gray-500 mb-1">Instructions:</span> <span className="text-gray-700 font-medium leading-relaxed">{selectedCustomPayment.instruction}</span></div>
-                        <button type="button" onClick={() => copyToClipboard(selectedCustomPayment.details)} className="btn-animate w-full bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 uppercase tracking-widest mt-3 !text-[10px] shadow-sm"><Copy className="w-3.5 h-3.5" /> Copy Data</button>
-                      </div>
-                  ) : null}
-
-                  {/* Submit Form Box */}
-                  <form onSubmit={submitManualDeposit} className="space-y-4 p-5 bg-white rounded-2xl border border-gray-200 shadow-sm mt-4">
-                      <p className="text-[10px] font-bold text-brand-primary uppercase tracking-widest mb-3 flex items-center gap-2 border-b border-gray-100 pb-2"><CircleDollarSign className="w-3.5 h-3.5"/> Submit Deposit Request</p>
-                      <div className="grid grid-cols-2 gap-4">
-                          <div>
-                              <label className="block text-[9px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em]">Amount (USD)</label>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6 w-full">
+                
+                {/* 🟢 LEFT COLUMN: AUTO CRYPTO DEPOSIT 🟢 */}
+                <div className="w-full">
+                  <div className="bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 hover:border-brand-primary/40 transition-all duration-300 shadow-[0_2px_10px_rgba(0,0,0,0.02)] h-full flex flex-col">
+                    <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
+                       <Zap className="w-4 h-4 text-brand-primary"/>
+                       <h2 className="text-[13px] font-bold tracking-widest text-gray-900 uppercase">Auto Crypto Deposit</h2>
+                    </div>
+                    
+                    {!pendingCrypto ? (
+                        <div className="mt-2 flex-grow">
+                          <form onSubmit={startAutoDeposit} className="space-y-5 w-full flex flex-col h-full justify-between">
+                            <div>
+                              <label className="block text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em]">Amount (USD)</label>
                               <div className="relative">
-                                 <DollarSign className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-3.5" />
-                                 <input type="number" step="0.01" min="1" value={manualAmount} onChange={e => setManualAmount(e.target.value)} required placeholder="10" className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl pl-9 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all allow-select font-mono" />
+                                 <DollarSign className="w-4 h-4 text-gray-400 absolute left-4 top-3.5" />
+                                 <input type="number" step="1" min="1" name="amount" value={cryptoAmountInput} onChange={e => setCryptoAmountInput(e.target.value)} required placeholder="10" className="w-full bg-gray-50/50 border border-gray-200 text-gray-900 text-sm rounded-xl pl-11 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all font-mono" />
                               </div>
-                          </div>
-                          <div>
-                              <label className="block text-[9px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em] whitespace-nowrap overflow-hidden text-ellipsis">Equivalent</label>
-                              <div className="w-full bg-gray-100 border border-gray-200 text-gray-700 text-sm rounded-xl px-4 py-2.5 font-mono flex items-center font-bold">
-                                  {manualMethod === 'Local Bank Transfer' && manualAmount ? `₦${(parseFloat(manualAmount) * (bankSettings?.nairaRate || 1500)).toLocaleString()}` : (manualAmount ? `$${manualAmount}` : '0')}
-                              </div>
-                          </div>
-                      </div>
-                      <div className="pt-1">
-                          <label className="block text-[9px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em]">Transaction ID / Sender Name</label>
-                          <input type="text" value={manualTxId} onChange={e => setManualTxId(e.target.value)} required placeholder="Enter TrxID or Phone Number..." className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all allow-select font-mono" />
-                      </div>
-                      <button type="submit" className="btn-animate w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-sm tracking-widest uppercase text-[10px] mt-4 transition-colors">
-                          <CircleDollarSign className="w-4 h-4 text-brand-primary"/> Submit Request
-                      </button>
-                  </form>
+                            </div>
+                            <button type="submit" disabled={isGenerating} className="w-full bg-gray-900 hover:bg-black text-white font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 tracking-widest uppercase text-xs mt-6 disabled:opacity-50 transition-colors shadow-sm">
+                                {isGenerating ? <RefreshCw className="w-4 h-4 animate-spin"/> : <img src="https://cdn-icons-png.flaticon.com/512/5836/5836486.png" className="w-4 h-4 opacity-90" alt="crypto"/>}
+                                {isGenerating ? 'Processing...' : 'Pay with Crypto'}
+                            </button>
+                          </form>
+                        </div>
+                    ) : (
+                        isNowPayments && (
+                            <div className="bg-gray-50/50 border border-gray-200 rounded-xl p-6 text-center space-y-4 relative overflow-hidden mt-2">
+                                <p className="text-[10px] font-bold text-gray-900 flex items-center justify-center gap-2 uppercase tracking-[0.3em]">
+                                    <span className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-pulse"></span> Invoice Active
+                                </p>
+                                
+                                <div className="text-3xl sm:text-4xl font-light font-mono text-gray-900 tracking-widest">
+                                    ${pendingCrypto.data?.amount || pendingCrypto.amount}
+                                </div>
+                                <p className="text-[11px] text-gray-500 font-mono">Complete payment in the secure tab.</p>
+                                
+                                <div className="flex flex-col gap-2.5 pt-5 border-t border-gray-200 w-full mt-2">
+                                    <button type="button" onClick={(e) => { e.preventDefault(); window.open(pendingCrypto.data?.invoice_url, '_blank'); }} className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 uppercase tracking-widest text-[10px] transition-colors shadow-sm">
+                                        Open Payment Page
+                                    </button>
+                                    <button type="button" onClick={handleNowPaymentsVerify} disabled={isVerifyingClick} className="w-full bg-brand-primary hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 uppercase tracking-widest text-[11px] disabled:opacity-50 transition-colors shadow-sm">
+                                        {isVerifyingClick ? <RefreshCw className="w-4 h-4 animate-spin"/> : <CheckCircle className="w-4 h-4"/>}
+                                        {isVerifyingClick ? 'Verifying...' : 'Verify Payment'}
+                                    </button>
+                                    <button type="button" onClick={cancelAutoPay} className="text-[9px] text-gray-400 hover:text-red-500 font-bold uppercase tracking-widest transition-colors mt-2">Cancel Invoice</button>
+                                </div>
+                            </div>
+                        )
+                    )}
+                  </div>
                 </div>
+
+                {/* 🟢 RIGHT COLUMN: MANUAL DEPOSIT 🟢 */}
+                <div className="w-full">
+                  <div className="bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 hover:border-brand-primary/40 transition-all duration-300 shadow-[0_2px_10px_rgba(0,0,0,0.02)] h-full">
+                    <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
+                       <h2 className="text-[13px] font-bold tracking-widest text-gray-900 flex items-center gap-2 uppercase">
+                         <Building className="w-4 h-4 text-brand-primary"/> Manual Deposit
+                       </h2>
+                    </div>
+
+                    <div className="mb-6">
+                        <label className="block text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em]">Select Payment Method</label>
+                        <div className="relative">
+                            <select value={manualMethod} onChange={e => setManualMethod(e.target.value)} className="w-full bg-gray-50/50 border border-gray-200 text-gray-900 text-xs rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all appearance-none cursor-pointer font-mono font-bold tracking-wide">
+                                <option value="Local Bank Transfer">Local Bank Transfer</option>
+                                {(customPayments || []).map(p => (
+                                    <option key={p.id} value={p.name}>{p.name}</option>
+                                ))}
+                            </select>
+                            <ChevronDown className="w-4 h-4 text-gray-400 absolute right-4 top-3.5 pointer-events-none" />
+                        </div>
+                    </div>
+                    
+                    {/* Bank Details Box */}
+                    {manualMethod === 'Local Bank Transfer' ? (
+                        <div className="bg-gray-50/50 border border-gray-200 rounded-xl p-5 mb-6 text-[11px] font-mono tracking-wide space-y-3">
+                          <div className="flex justify-between items-center border-b border-gray-200 pb-2"><span className="text-gray-500">Bank</span> <span className="font-bold text-gray-900">{bankSettings?.bankName || 'Parallex'}</span></div>
+                          <div className="flex justify-between items-center border-b border-gray-200 pb-2 pt-1"><span className="text-gray-500">Name</span> <span className="font-bold text-gray-900 text-right">{bankSettings?.accountName || 'Samuel Osita Emmanuel'}</span></div>
+                          <div className="flex justify-between items-center border-b border-gray-200 pb-2 pt-1"><span className="text-gray-500">A/C No.</span> <span className="text-gray-900 font-bold text-sm">{bankSettings?.accountNumber || '1120927346'}</span></div>
+                          <div className="flex justify-between items-center pt-1"><span className="text-gray-500">Rate</span> <span className="text-brand-primary font-bold text-sm">1 USD = ₦{bankSettings?.nairaRate || 1500}</span></div>
+                          <button type="button" onClick={() => copyToClipboard(bankSettings?.accountNumber || '1120927346')} className="w-full bg-white hover:bg-gray-100 border border-gray-200 text-gray-800 font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 uppercase tracking-widest mt-3 text-[10px] transition-colors"><Copy className="w-3.5 h-3.5" /> Copy Details</button>
+                        </div>
+                    ) : selectedCustomPayment ? (
+                        <div className="bg-gray-50/50 border border-gray-200 rounded-xl p-5 mb-6 text-[11px] font-mono tracking-wide space-y-3">
+                          <div className="flex justify-between items-center border-b border-gray-200 pb-2"><span className="text-gray-500">Method</span> <span className="font-bold text-gray-900">{selectedCustomPayment.name}</span></div>
+                          <div className="flex justify-between items-center border-b border-gray-200 pb-2 pt-1"><span className="text-gray-500">Details/Wallet</span> <span className="text-gray-900 font-bold text-sm break-all text-right max-w-[60%]">{selectedCustomPayment.details}</span></div>
+                          <div className="flex flex-col pt-1"><span className="text-gray-500 mb-1">Instructions:</span> <span className="text-gray-700 font-medium leading-relaxed">{selectedCustomPayment.instruction}</span></div>
+                          <button type="button" onClick={() => copyToClipboard(selectedCustomPayment.details)} className="w-full bg-white hover:bg-gray-100 border border-gray-200 text-gray-800 font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 uppercase tracking-widest mt-3 text-[10px] transition-colors"><Copy className="w-3.5 h-3.5" /> Copy Data</button>
+                        </div>
+                    ) : null}
+
+                    {/* Submit Form Box */}
+                    <form onSubmit={submitManualDeposit} className="space-y-4 pt-2">
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em]">Amount (USD)</label>
+                                <div className="relative">
+                                   <DollarSign className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-3" />
+                                   <input type="number" step="0.01" min="1" value={manualAmount} onChange={e => setManualAmount(e.target.value)} required placeholder="10" className="w-full bg-gray-50/50 border border-gray-200 text-gray-900 text-sm rounded-xl pl-9 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all font-mono" />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em] truncate">Equivalent</label>
+                                <div className="w-full bg-gray-100 border border-gray-200 text-gray-700 text-sm rounded-xl px-4 py-2 font-mono flex items-center font-bold h-[38px]">
+                                    {manualMethod === 'Local Bank Transfer' && manualAmount ? `₦${(parseFloat(manualAmount) * (bankSettings?.nairaRate || 1500)).toLocaleString()}` : (manualAmount ? `$${manualAmount}` : '0')}
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em]">Transaction ID / Sender</label>
+                            <input type="text" value={manualTxId} onChange={e => setManualTxId(e.target.value)} required placeholder="Enter TrxID or Phone Number..." className="w-full bg-gray-50/50 border border-gray-200 text-gray-900 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all font-mono" />
+                        </div>
+                        <button type="submit" className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-sm tracking-widest uppercase text-[10px] transition-colors mt-2">
+                            <CircleDollarSign className="w-4 h-4 text-brand-primary"/> Submit Request
+                        </button>
+                    </form>
+                  </div>
+                </div>
+
               </div>
             </div>
           );
@@ -3078,45 +3094,41 @@
         // CUSTOMER VAULT MODULE (PURCHASED ACCOUNTS)
         // ==========================================
         function CustomerDashboardVault({ user, purchases, triggerToast, categories, isInitialSyncDone }) {
-            // 🟢 BUG FIX: Case Insensitive Filtering (সব ইমেইল ছোট হাতের করে মেলানো হচ্ছে) 🟢
             const myPurchases = (purchases || []).filter(p => p && String(p.customer).toLowerCase() === String(user?.email).toLowerCase());
 
             return (
-                <div className="space-y-6 w-full relative z-10 animate-matrix-in max-w-5xl mx-auto">
-                    {/* Header Section */}
-                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 w-full bg-white p-5 rounded-3xl border border-gray-200 shadow-sm relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-1.5 h-full bg-brand-primary"></div>
-                        <div className="text-center sm:text-left w-full pl-4 py-1">
-                            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-[0.25em] uppercase mb-1">
-                                My <span className="font-light text-brand-primary">Vault</span>
-                            </h1>
-                            <p className="text-gray-500 text-[9px] sm:text-[10px] font-mono tracking-widest uppercase">
-                                Your Purchased Assets & Accounts
-                            </p>
+                <div className="w-full relative z-10 animate-fade-in-up max-w-5xl mx-auto mt-4">
+                    
+                    {/* 🟢 Premium 3D Header 🟢 */}
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 w-full mb-8 px-2 sm:px-0">
+                        <div className="flex items-center gap-3">
+                            <img src="https://cdn-icons-png.flaticon.com/512/2838/2838883.png" alt="Vault" className="w-10 h-10 sm:w-12 sm:h-12 drop-shadow-md" />
+                            <div>
+                                <h1 className="text-xl sm:text-2xl font-black text-brand-primary tracking-wide uppercase">My Vault</h1>
+                                <p className="text-gray-500 text-[10px] sm:text-xs font-mono mt-1 font-bold">Your Purchased Assets & Accounts</p>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-3 shrink-0 pr-2">
-                            <span className="text-[10px] font-bold text-brand-primary uppercase tracking-widest bg-brand-primary/10 px-4 py-2 rounded-lg border border-brand-primary/20">
-                                {myPurchases.length} Items Owned
-                            </span>
+                        <div className="bg-white border border-gray-200 px-4 py-2.5 rounded-xl text-[10px] font-bold text-gray-700 uppercase tracking-widest shadow-sm flex items-center gap-2">
+                            <Key className="w-3.5 h-3.5 text-brand-primary" /> {myPurchases.length} Items Owned
                         </div>
                     </div>
 
                     {/* Content Section */}
                     {!isInitialSyncDone ? (
-                        <div className="bg-white rounded-3xl p-12 border border-gray-200 shadow-sm flex flex-col items-center justify-center text-center min-h-[300px]">
+                        <div className="bg-white rounded-2xl p-12 border border-gray-200 shadow-sm flex flex-col items-center justify-center text-center min-h-[300px]">
                             <RefreshCw className="w-8 h-8 text-brand-primary animate-spin mb-4" />
                             <p className="text-xs text-gray-400 font-mono tracking-wide uppercase">Syncing your vault...</p>
                         </div>
                     ) : myPurchases.length === 0 ? (
-                        <div className="bg-white rounded-3xl p-12 border border-gray-200 shadow-sm flex flex-col items-center justify-center text-center min-h-[300px]">
-                            <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6 border border-gray-100">
-                                <Key className="w-10 h-10 text-gray-300" strokeWidth={1.5} />
+                        <div className="bg-white rounded-2xl p-12 border border-gray-200 shadow-sm flex flex-col items-center justify-center text-center min-h-[300px]">
+                            <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mb-6 border border-gray-100 shadow-inner">
+                                <Package className="w-8 h-8 text-gray-300" strokeWidth={1.5} />
                             </div>
-                            <h3 className="text-lg font-bold text-gray-600 uppercase tracking-widest mb-2">Vault is Empty</h3>
-                            <p className="text-xs text-gray-400 font-mono tracking-wide">You haven't purchased any accounts or SMS yet.</p>
+                            <h3 className="text-[13px] font-bold text-gray-800 uppercase tracking-widest mb-2">Vault is Empty</h3>
+                            <p className="text-[10px] text-gray-400 font-mono tracking-wide">You haven't purchased any accounts or SMS yet.</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 w-full">
                             {myPurchases.map((acc, idx) => (
                                 <VaultItem 
                                     key={acc.id || idx} 
@@ -3131,7 +3143,7 @@
                 </div>
             );
         }
-        function CustomerDashboardProfile({ user, balance, tier, userInfo, allOrders, deposits, purchases, tickets, featureSettings, triggerToast }) {
+       function CustomerDashboardProfile({ user, balance, tier, userInfo, allOrders, deposits, purchases, tickets, featureSettings, triggerToast }) {
           const [profileSubTab, setProfileSubTab] = useState('overview');
           const [ticketSubject, setTicketSubject] = useState('');
           const [ticketMessage, setTicketMessage] = useState('');
@@ -3164,7 +3176,6 @@
 
           const referralCode = `REF-${(user?.email || '').split('@')[0].toUpperCase()}`;
           
-          // 🟢 BUG FIX: Case Insensitive History Filtering 🟢
           const myDeposits = (deposits || []).filter(d => d && String(d.email).toLowerCase() === String(user?.email).toLowerCase());
           const myOrders = (allOrders || []).filter(o => o && String(o.customer).toLowerCase() === String(user?.email).toLowerCase());
           const myPurchases = (purchases || []).filter(p => p && String(p.customer).toLowerCase() === String(user?.email).toLowerCase());
@@ -3180,76 +3191,91 @@
           });
 
           return (
-            <div className="animate-fade-in-up w-full">
-              <div className="flex space-x-1.5 mb-8 p-1.5 bg-gray-100 rounded-xl border border-gray-200 shadow-inner max-w-fit mx-auto md:mx-0">
-                  <button onClick={() => setProfileSubTab('overview')} className={`btn-animate px-5 py-2.5 rounded-lg text-[9px] uppercase tracking-widest font-bold transition-all ${profileSubTab === 'overview' ? 'bg-white text-brand-primary shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-900'}`}>My Profile</button>
-                  <button onClick={() => setProfileSubTab('history')} className={`btn-animate px-5 py-2.5 rounded-lg text-[9px] uppercase tracking-widest font-bold transition-all ${profileSubTab === 'history' ? 'bg-white text-brand-primary shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-900'}`}>History</button>
-                  <button onClick={() => setProfileSubTab('support')} className={`btn-animate px-5 py-2.5 rounded-lg text-[9px] uppercase tracking-widest font-bold transition-all ${profileSubTab === 'support' ? 'bg-white text-brand-primary shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-900'}`}>Support</button>
+            <div className="w-full relative z-10 animate-fade-in-up max-w-5xl mx-auto mt-4">
+              
+              {/* 🟢 Premium 3D Header 🟢 */}
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 w-full mb-6 px-2 sm:px-0">
+                  <div className="flex items-center gap-3">
+                      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" className="w-10 h-10 sm:w-12 sm:h-12 drop-shadow-md" />
+                      <div>
+                          <h1 className="text-xl sm:text-2xl font-black text-brand-primary tracking-wide uppercase">My Profile</h1>
+                          <p className="text-gray-500 text-[10px] sm:text-xs font-mono mt-1 font-bold">Manage Account & History</p>
+                      </div>
+                  </div>
+              </div>
+
+              {/* 🟢 Minimalist Sub-Tab Navigation 🟢 */}
+              <div className="flex space-x-1 mb-8 border-b border-gray-200 w-full overflow-x-auto scrollbar-hide">
+                  <button onClick={() => setProfileSubTab('overview')} className={`px-6 py-3 text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all border-b-[3px] ${profileSubTab === 'overview' ? 'border-brand-primary text-brand-primary' : 'border-transparent text-gray-500 hover:text-gray-800'}`}>Overview</button>
+                  <button onClick={() => setProfileSubTab('history')} className={`px-6 py-3 text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all border-b-[3px] ${profileSubTab === 'history' ? 'border-brand-primary text-brand-primary' : 'border-transparent text-gray-500 hover:text-gray-800'}`}>History</button>
+                  <button onClick={() => setProfileSubTab('support')} className={`px-6 py-3 text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all border-b-[3px] ${profileSubTab === 'support' ? 'border-brand-primary text-brand-primary' : 'border-transparent text-gray-500 hover:text-gray-800'}`}>Support</button>
               </div>
 
               {profileSubTab === 'overview' && (
-                  <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 sm:gap-8 w-full animate-fade-in-up">
-                      <div className="bg-white shadow-sm rounded-3xl p-8 text-center xl:col-span-1 h-fit flex flex-col items-center border border-gray-200">
-                        <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-6 border border-gray-200">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full animate-fade-in-up">
+                      
+                      {/* Left: User Card */}
+                      <div className="bg-white border border-gray-200 shadow-[0_2px_10px_rgba(0,0,0,0.02)] rounded-2xl p-6 sm:p-8 flex flex-col items-center text-center h-fit">
+                        <div className="w-20 h-20 bg-gray-50 border border-gray-200 rounded-full flex items-center justify-center mb-5 shadow-sm">
                           <UserIcon className="w-8 h-8 text-gray-400" strokeWidth={1.5}/>
                         </div>
-                        <h2 className="text-sm font-mono font-bold text-gray-900 mb-2 w-full truncate tracking-wide allow-select">{user.email}</h2>
-                        <p className="text-[10px] text-gray-500 font-mono uppercase tracking-widest mb-10">Joined: {safeFormatDate(userInfo?.joined)}</p>
+                        <h2 className="text-[13px] font-bold text-gray-900 mb-1 w-full truncate tracking-wide allow-select">{user.email}</h2>
+                        <p className="text-[10px] text-gray-500 font-mono uppercase tracking-widest mb-6">Joined: {safeFormatDate(userInfo?.joined)}</p>
                         
-                        <div className="w-full bg-gray-50 p-5 rounded-xl border border-gray-200">
-                            <div className="w-full text-left mb-3 flex justify-between items-end">
-                                <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">User Level</span>
-                                <span className={`text-xs font-black uppercase tracking-wider ${tier?.color === 'text-gray-400' ? 'text-gray-600' : tier?.color} flex items-center gap-1.5`}>
+                        <div className="w-full bg-gray-50 p-5 rounded-xl border border-gray-200 shadow-inner">
+                            <div className="w-full text-left mb-3 flex justify-between items-center">
+                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">User Tier</span>
+                                <span className={`text-[11px] font-black uppercase tracking-wider ${tier?.color === 'text-gray-400' ? 'text-gray-700' : tier?.color} flex items-center gap-1.5`}>
                                     {tier && tier.icon && <tier.icon className="w-3.5 h-3.5"/>}
                                     {tier?.name || 'Loading...'}
                                 </span>
                             </div>
-                            
                             {tier && tier.next && (
-                                <div className="w-full bg-gray-200 rounded-full h-1 mb-3 overflow-hidden border border-gray-300">
+                                <div className="w-full bg-gray-200 rounded-full h-1.5 mb-3 overflow-hidden">
                                     <div className="bg-brand-primary h-full rounded-full" style={{width: `${Math.min(100, ((userInfo?.totalSpent || 0) / tier.next) * 100)}%`}}></div>
                                 </div>
                             )}
                             {tier && tier.next ? (
-                                <p className="text-[8px] text-gray-500 font-mono uppercase tracking-widest w-full text-left">Spend ${Number(tier.next - (userInfo?.totalSpent || 0)).toFixed(2)} more to upgrade.</p>
+                                <p className="text-[9px] text-gray-500 font-mono uppercase tracking-widest text-left">Spend ${Number(tier.next - (userInfo?.totalSpent || 0)).toFixed(2)} more to upgrade.</p>
                             ) : (
-                                <p className="text-[8px] text-gray-900 font-mono w-full text-center uppercase tracking-widest">Max Level Reached</p>
+                                <p className="text-[9px] text-gray-800 font-mono text-center uppercase tracking-widest font-bold">Max Level Reached</p>
                             )}
                         </div>
                       </div>
 
-                      <div className="xl:col-span-2 space-y-6 sm:space-y-8 w-full">
-                        <div className="grid grid-cols-2 gap-4 sm:gap-6 w-full">
-                          <div className="bg-white shadow-sm rounded-3xl p-6 sm:p-8 flex flex-col justify-center items-center text-center border border-gray-200">
-                            <p className="text-gray-500 text-[9px] font-bold mb-3 uppercase tracking-widest">Total Spent</p>
-                            <p className="text-3xl sm:text-4xl font-light font-mono text-gray-900 tracking-widest">${Number(userInfo?.totalSpent || 0).toFixed(2)}</p>
+                      {/* Right: Stats & Features */}
+                      <div className="lg:col-span-2 space-y-6 w-full">
+                        <div className="grid grid-cols-2 gap-6 w-full">
+                          <div className="bg-white border border-gray-200 shadow-[0_2px_10px_rgba(0,0,0,0.02)] rounded-2xl p-6 sm:p-8 flex flex-col justify-center items-start">
+                            <p className="text-gray-500 text-[10px] font-bold mb-2 uppercase tracking-widest flex items-center gap-2"><ShoppingCart className="w-3.5 h-3.5"/> Total Spent</p>
+                            <p className="text-2xl sm:text-3xl font-black font-mono text-gray-900 tracking-wider">${Number(userInfo?.totalSpent || 0).toFixed(2)}</p>
                           </div>
-                          <div className="bg-white shadow-sm rounded-3xl p-6 sm:p-8 flex flex-col justify-center items-center text-center border border-gray-200">
-                            <p className="text-gray-500 text-[9px] font-bold mb-3 uppercase tracking-widest">Account Balance</p>
-                            <p className="text-3xl sm:text-4xl font-bold font-mono text-gray-900 tracking-widest">${Number(balance || 0).toFixed(2)}</p>
+                          <div className="bg-white border border-gray-200 shadow-[0_2px_10px_rgba(0,0,0,0.02)] rounded-2xl p-6 sm:p-8 flex flex-col justify-center items-start">
+                            <p className="text-gray-500 text-[10px] font-bold mb-2 uppercase tracking-widest flex items-center gap-2"><Wallet className="w-3.5 h-3.5"/> Balance</p>
+                            <p className="text-2xl sm:text-3xl font-black font-mono text-brand-primary tracking-wider">${Number(balance || 0).toFixed(2)}</p>
                           </div>
                         </div>
 
                         {featureSettings?.dailyReward && (
-                          <div className="glass-effect rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-l-[2px] border-l-white">
+                          <div className="bg-white border border-gray-200 shadow-[0_2px_10px_rgba(0,0,0,0.02)] rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                              <div>
-                               <h3 className="text-sm font-bold tracking-widest text-white flex items-center gap-2 mb-2 uppercase"><Star className="w-4 h-4"/> Daily Bonus</h3>
-                               <p className="text-[11px] text-gray-400 font-light">Claim <span className="font-mono text-white font-bold">$0.50</span> free bonus every 24 hours.</p>
+                               <h3 className="text-[12px] font-bold tracking-widest text-gray-900 flex items-center gap-2 mb-1.5 uppercase"><Star className="w-4 h-4 text-yellow-500"/> Daily Bonus</h3>
+                               <p className="text-[10px] text-gray-500 font-mono tracking-wide">Claim <span className="text-gray-800 font-bold">$0.50</span> free bonus every 24 hours.</p>
                              </div>
-                             <button onClick={claimDailyBonus} className="btn-animate bg-white text-black px-6 py-3.5 rounded-xl text-[10px] font-bold uppercase tracking-widest w-full sm:w-auto">Claim Now</button>
+                             <button onClick={claimDailyBonus} className="w-full sm:w-auto bg-gray-900 hover:bg-black text-white px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-colors">Claim Now</button>
                           </div>
                         )}
 
                         {featureSettings?.referral && (
-                          <div className="glass-effect rounded-3xl p-6 sm:p-8 border border-white/10">
-                             <h3 className="text-sm font-bold tracking-widest text-white mb-3 flex items-center gap-2 uppercase"><Users className="w-4 h-4 text-gray-300"/> Referral Code</h3>
-                             <p className="text-xs text-gray-400 font-light mb-6">Share your code with friends to earn commission.</p>
-                             <div className="bg-[#0f172a] border border-white/10 p-2 rounded-xl flex justify-between items-center shadow-inner">
-                               <span className="font-mono text-[11px] text-white font-bold px-4 break-all tracking-widest allow-select">{referralCode}</span>
+                          <div className="bg-white border border-gray-200 shadow-[0_2px_10px_rgba(0,0,0,0.02)] rounded-2xl p-6">
+                             <h3 className="text-[12px] font-bold tracking-widest text-gray-900 mb-1.5 flex items-center gap-2 uppercase"><Users className="w-4 h-4 text-brand-primary"/> Referral Code</h3>
+                             <p className="text-[10px] text-gray-500 font-mono tracking-wide mb-4">Share your code with friends to earn commission.</p>
+                             <div className="bg-gray-50 border border-gray-200 p-1.5 rounded-xl flex justify-between items-center">
+                               <span className="font-mono text-[12px] text-gray-800 font-bold px-4 tracking-widest allow-select">{referralCode}</span>
                                <button onClick={() => {
                                   if (navigator.clipboard) navigator.clipboard.writeText(referralCode).then(() => triggerToast("Copied!"));
                                   else { const t = document.createElement("textarea"); t.value = referralCode; document.body.appendChild(t); t.select(); document.execCommand("copy"); document.body.removeChild(t); triggerToast("Copied!"); }
-                               }} className="btn-animate bg-white text-black p-3 rounded-lg"><Copy className="w-4 h-4"/></button>
+                               }} className="bg-white text-gray-700 hover:text-brand-primary p-2.5 rounded-lg border border-gray-200 shadow-sm transition-colors"><Copy className="w-4 h-4"/></button>
                              </div>
                           </div>
                         )}
@@ -3258,92 +3284,97 @@
               )}
 
               {profileSubTab === 'history' && (
-                  <div className="glass-effect rounded-3xl p-6 sm:p-8 min-h-[600px] animate-swoosh-in border border-white/10">
-                    <h2 className="text-xl font-bold tracking-widest uppercase text-white mb-8 pb-4 border-b border-white/10 flex items-center gap-3"><History className="w-5 h-5"/> Transaction History</h2>
+                  <div className="bg-white border border-gray-200 shadow-[0_2px_10px_rgba(0,0,0,0.02)] rounded-2xl p-6 sm:p-8 min-h-[500px] animate-fade-in-up">
+                    <h2 className="text-[13px] font-bold tracking-widest uppercase text-gray-900 mb-6 flex items-center gap-2"><History className="w-4 h-4 text-brand-primary"/> Transaction History</h2>
                     
                     {unifiedHistory.length === 0 ? (
-                      <div className="text-center py-32 text-gray-500 flex flex-col items-center">
-                        <Activity className="w-12 h-12 mb-4 opacity-30" strokeWidth={1} />
+                      <div className="text-center py-20 text-gray-400 flex flex-col items-center">
+                        <Activity className="w-10 h-10 mb-3 opacity-50" strokeWidth={1.5} />
                         <p className="text-[10px] font-mono uppercase tracking-[0.2em]">No history yet.</p>
                       </div>
                     ) : (
-                      <div className="space-y-4 w-full">
-                        {unifiedHistory.map((item, idx) => {
-                            if (!item) return null;
-                            const isDeposit = item.type === 'Funds Added' || item.type === 'Deposit Processing';
-                            const isPending = item.status === 'Awaiting Payment' || item.status === 'Pending Review' || item.status === 'Pending';
-                            const isApproved = item.status === 'Approved' || item.status === 'Completed' || item.status === 'Acquired';
+                      <div className="w-full overflow-x-auto">
+                        <table className="w-full text-left text-sm whitespace-nowrap">
+                            <thead className="bg-gray-50 text-gray-500 font-bold border-b border-gray-200 text-[10px] uppercase tracking-[0.2em]">
+                                <tr>
+                                    <th className="p-4 rounded-tl-xl">Date & ID</th>
+                                    <th className="p-4">Type</th>
+                                    <th className="p-4">Amount</th>
+                                    <th className="p-4 text-right rounded-tr-xl">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-100">
+                                {unifiedHistory.map((item, idx) => {
+                                    if (!item) return null;
+                                    const isDeposit = item.type === 'Funds Added' || item.type === 'Deposit Processing';
+                                    const isPending = item.status === 'Awaiting Payment' || item.status === 'Pending Review' || item.status === 'Pending';
+                                    const isApproved = item.status === 'Approved' || item.status === 'Completed' || item.status === 'Acquired';
 
-                            return (
-                                <div key={idx} className="bg-white border border-gray-200 hover:border-brand-primary/40 shadow-sm hover:shadow-md p-4 sm:p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300 group animate-fade-in-up" style={{animationDelay: `${idx * 0.05}s`}}>
-                                    <div className="flex items-center gap-4">
-                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border ${isDeposit ? 'bg-blue-50 text-brand-primary border-blue-100' : 'bg-gray-50 text-gray-700 border-gray-200'}`}>
-                                            {isDeposit ? <Wallet className="w-5 h-5"/> : <ShoppingCart className="w-5 h-5 text-brand-primary"/>}
-                                        </div>
-                                        <div>
-                                            <p className="text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-2">
-                                                {item.type}
-                                            </p>
-                                            <p className="text-[9px] text-gray-500 font-mono mt-1.5 uppercase tracking-widest">{item.id}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto mt-2 sm:mt-0 pt-3 sm:pt-0 border-t border-gray-100 sm:border-0">
-                                        <p className={`text-base font-mono font-bold tracking-wider ${isDeposit ? (isApproved ? 'text-green-600' : isPending ? 'text-yellow-600' : 'text-gray-500') : 'text-gray-900'}`}>
-                                            {isDeposit ? '+' : '-'}${Number(item.amount || 0).toFixed(2)}
-                                        </p>
-                                        <div className="flex items-center gap-2 mt-1.5">
-                                            {isDeposit && (
-                                                <span className={`text-[8px] px-1.5 py-0.5 rounded font-bold uppercase tracking-widest ${isApproved ? 'bg-green-900/30 text-green-400 border border-green-900/50' : isPending ? 'bg-yellow-900/30 text-yellow-400 border border-yellow-900/50' : 'bg-red-900/30 text-red-400 border border-red-900/50'}`}>
+                                    return (
+                                        <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
+                                            <td className="p-4">
+                                                <p className="text-[10px] text-gray-500 font-mono uppercase tracking-widest">{safeFormatDate(item.date)}</p>
+                                                <p className="text-[9px] text-gray-400 font-mono mt-1">{item.id}</p>
+                                            </td>
+                                            <td className="p-4">
+                                                <div className="flex items-center gap-2">
+                                                    {isDeposit ? <Wallet className="w-3.5 h-3.5 text-blue-500"/> : <ShoppingCart className="w-3.5 h-3.5 text-brand-primary"/>}
+                                                    <span className="text-xs font-bold text-gray-800 tracking-wide">{item.type}</span>
+                                                </div>
+                                            </td>
+                                            <td className="p-4">
+                                                <span className={`font-mono font-bold ${isDeposit ? (isApproved ? 'text-green-600' : isPending ? 'text-yellow-600' : 'text-gray-500') : 'text-gray-900'}`}>
+                                                    {isDeposit ? '+' : '-'}${Number(item.amount || 0).toFixed(2)}
+                                                </span>
+                                            </td>
+                                            <td className="p-4 text-right">
+                                                <span className={`text-[9px] px-2.5 py-1 rounded-md font-bold uppercase tracking-widest ${isApproved ? 'bg-green-50 text-green-600 border border-green-100' : isPending ? 'bg-yellow-50 text-yellow-600 border border-yellow-100' : 'bg-red-50 text-red-600 border border-red-100'}`}>
                                                     {item.status}
                                                 </span>
-                                            )}
-                                            <span className="text-[8px] text-gray-500 font-mono uppercase tracking-[0.2em]">
-                                                {safeFormatDate(item.date)}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
                       </div>
                     )}
                   </div>
               )}
 
               {profileSubTab === 'support' && (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 w-full animate-swoosh-in">
-                      <div className="space-y-6 sm:space-y-8 w-full">
-                          <div className="glass-effect rounded-3xl p-6 sm:p-8 h-fit border border-white/10">
-                            <h2 className="text-lg font-bold tracking-widest text-white mb-2 flex items-center gap-2 pb-4 border-b border-white/10 uppercase"><Headset className="w-4 h-4"/> Contact Admin</h2>
-                            <p className="text-[10px] text-gray-400 font-mono mb-8 mt-4 tracking-[0.2em] uppercase">Send a direct message.</p>
-                            <form onSubmit={submitTicket} className="space-y-5 w-full">
-                              <div>
-                                <label className="block text-[9px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em]">Subject</label>
-                                <input type="text" value={ticketSubject} onChange={e => setTicketSubject(e.target.value)} required placeholder="What do you need help with?" className="glass-input allow-select" />
-                              </div>
-                              <div>
-                                <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em]">Message</label>
-                                <textarea value={ticketMessage} onChange={e => setTicketMessage(e.target.value)} required placeholder="Write your message here..." rows="4" className="glass-input resize-none allow-select" />
-                              </div>
-                              <button type="submit" className="btn-animate w-full bg-white text-black font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 tracking-widest uppercase text-xs">Send Message</button>
-                            </form>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full animate-fade-in-up">
+                      {/* Left: Contact Form */}
+                      <div className="bg-white border border-gray-200 shadow-[0_2px_10px_rgba(0,0,0,0.02)] rounded-2xl p-6 sm:p-8 h-fit">
+                        <h2 className="text-[13px] font-bold tracking-widest text-gray-900 mb-6 pb-4 border-b border-gray-100 flex items-center gap-2 uppercase"><Headset className="w-4 h-4 text-brand-primary"/> Contact Admin</h2>
+                        
+                        <form onSubmit={submitTicket} className="space-y-5">
+                          <div>
+                            <label className="block text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em]">Subject</label>
+                            <input type="text" value={ticketSubject} onChange={e => setTicketSubject(e.target.value)} required placeholder="Brief description of the issue" className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-xs rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all allow-select" />
                           </div>
+                          <div>
+                            <label className="block text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-[0.2em]">Message</label>
+                            <textarea value={ticketMessage} onChange={e => setTicketMessage(e.target.value)} required placeholder="Provide details here..." rows="5" className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-xs rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all resize-none allow-select" />
+                          </div>
+                          <button type="submit" className="w-full bg-gray-900 hover:bg-black text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 tracking-widest uppercase text-xs transition-colors shadow-sm"><Send className="w-3.5 h-3.5"/> Submit Ticket</button>
+                        </form>
                       </div>
 
-                      <div className="glass-effect rounded-3xl p-6 sm:p-8 flex flex-col w-full border border-white/10">
-                         <h3 className="text-sm font-bold tracking-widest text-white mb-6 pb-4 border-b border-white/10 uppercase">My Tickets</h3>
-                         <div className="space-y-4 overflow-y-auto scrollbar-hide pr-1">
-                           {tickets.length === 0 ? <p className="text-center text-gray-500 font-mono text-[10px] uppercase tracking-widest py-20">No tickets found.</p> : tickets.map((t, idx) => (
-                             <div key={t.id} className="bg-[rgba(0,0,0,0.5)] border border-white/10 p-4 rounded-2xl group hover:border-white/30 transition-colors relative overflow-hidden animate-fade-in-up" style={{animationDelay: `${idx * 0.1}s`}}>
-                               <div className="absolute top-0 left-0 w-1.5 h-full bg-white/10 group-hover:bg-white transition-colors"></div>
-                               <div className="flex justify-between items-start mb-4 pl-3">
-                                 <h4 className="font-bold text-gray-200 text-xs uppercase tracking-wider break-words w-[70%]">{t.data?.subject || t.subject}</h4>
-                                 <span className={`text-[8px] px-2 py-1 rounded border uppercase tracking-[0.2em] font-bold ${t.data?.status === 'Open' || t.status === 'Open' ? 'bg-red-900/20 text-red-400 border-red-900/50' : 'bg-green-900/20 text-green-400 border-green-900/50'}`}>{t.data?.status || t.status}</span>
+                      {/* Right: Tickets List */}
+                      <div className="bg-white border border-gray-200 shadow-[0_2px_10px_rgba(0,0,0,0.02)] rounded-2xl p-6 sm:p-8 flex flex-col h-[550px]">
+                         <h3 className="text-[13px] font-bold tracking-widest text-gray-900 mb-4 pb-4 border-b border-gray-100 uppercase">My Tickets</h3>
+                         <div className="space-y-4 overflow-y-auto flex-grow custom-scrollbar pr-2">
+                           {tickets.length === 0 ? <p className="text-center text-gray-400 font-mono text-[10px] uppercase tracking-widest py-20">No active tickets.</p> : tickets.map((t, idx) => (
+                             <div key={t.id} className="bg-gray-50 border border-gray-200 p-4 sm:p-5 rounded-xl hover:border-brand-primary/30 transition-colors animate-fade-in-up" style={{animationDelay: `${idx * 0.1}s`}}>
+                               <div className="flex justify-between items-start mb-3">
+                                 <h4 className="font-bold text-gray-800 text-xs uppercase tracking-wider break-words w-[70%]">{t.data?.subject || t.subject}</h4>
+                                 <span className={`text-[8px] px-2 py-1 rounded border uppercase tracking-[0.2em] font-bold ${t.data?.status === 'Open' || t.status === 'Open' ? 'bg-red-50 text-red-500 border-red-200' : 'bg-green-50 text-green-600 border-green-200'}`}>{t.data?.status || t.status}</span>
                                </div>
-                               <div className="bg-[#050505] p-3 rounded-lg mb-3 shadow-inner ml-3">
-                                 <p className="text-xs text-gray-300 font-light leading-relaxed break-words allow-select">{t.data?.message || t.message}</p>
+                               <div className="bg-white border border-gray-100 p-3 rounded-lg mb-3 shadow-sm">
+                                 <p className="text-[11px] text-gray-600 font-medium leading-relaxed break-words allow-select">{t.data?.message || t.message}</p>
                                </div>
-                               <p className="text-[9px] text-gray-500 font-mono flex items-center gap-1.5 uppercase tracking-widest ml-3"><Clock className="w-3 h-3"/> {safeFormatDate(t.data?.date || t.date)}</p>
+                               <p className="text-[9px] text-gray-400 font-mono flex items-center gap-1.5 uppercase tracking-widest"><Clock className="w-3 h-3"/> {safeFormatDate(t.data?.date || t.date)}</p>
                              </div>
                            ))}
                          </div>
