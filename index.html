@@ -359,140 +359,73 @@
         .timer-bar {
                 animation: countdown linear forwards;
             }
-
-           /* 🟢 ABSOLUTE ENTERPRISE WHITE THEME (ULTIMATE OVERRIDE) 🟢 */
-            body, .light-theme { background-color: #f4f4f5 !important; color: #020617 !important; font-weight: 500 !important; }
-            
-            /* 1. Force ALL dark background utilities to solid white */
-            .light-theme .glass-effect,
-            .light-theme .glass-panel,
-            .light-theme .bg-black,
-            .light-theme .bg-black\/40,
-            .light-theme .bg-black\/50,
-            .light-theme .bg-black\/60,
-            .light-theme .bg-\\[\\#000\\],
-            .light-theme .bg-\\[\\#111\\],
-            .light-theme .bg-\\[\\#121212\\],
-            .light-theme .bg-\\[\\#222\\],
-            .light-theme .bg-\\[\\#050505\\],
-            .light-theme .bg-\\[\\#0f172a\\],
-            .light-theme .bg-\\[\\#0b120c\\],
-            .light-theme .bg-\\[\\#162316\\]\\/80,
-            .light-theme .bg-\\[\\#162316\\],
-            .light-theme .bg-\\[\\#030712\\],
-            .light-theme .bg-\\[\\#0a0f1d\\],
-            .light-theme .bg-\\[rgba\\(0\\,0\\,0\\,0\\.2\\)\\],
-            .light-theme .bg-\\[rgba\\(0\\,0\\,0\\,0\\.4\\)\\],
-            .light-theme .bg-\\[rgba\\(0\\,0\\,0\\,0\\.5\\)\\],
-            .light-theme .bg-\\[rgba\\(0\\,0\\,0\\,0\\.6\\)\\],
-            .light-theme .bg-\\[rgba\\(255\\,255\\,255\\,0\\.05\\)\\],
-            .light-theme .bg-\\[rgba\\(255\\,255\\,255\\,0\\.1\\)\\],
-            .light-theme .bg-white\/5,
-            .light-theme .bg-white\/10 {
-                background-color: #ffffff !important;
-                background-image: none !important;
-                border: 1px solid #e5e7eb !important;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
-                backdrop-filter: none !important;
-            }
-
-            /* 2. Buy Now Button Specific Fix (Removes the black #030712 color) */
-            .light-theme span.bg-\\[\\#030712\\] {
-                background-color: #ffffff !important;
-                color: #111827 !important;
-            }
-            .light-theme span.bg-\\[\\#030712\\]:hover {
-                background-color: transparent !important;
-            }
-
-            /* 3. Fix Hover States */
-            .light-theme .glass-effect:hover, 
-            .light-theme .glass-panel:hover,
-            .light-theme .hover\\:bg-\\[rgba\\(255\\,255\\,255\\,0\\.05\\)\\]:hover {
-                background-color: #f9fafb !important;
-                border-color: #d1d5db !important;
-                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05) !important;
-            }
-
-            /* 4. Text Colors & Highlights (Darker & Crisper) */
-            .light-theme .text-white,
-            .light-theme .text-gray-100,
-            .light-theme .text-gray-200,
-            .light-theme .text-gray-300 { color: #020617 !important; font-weight: 800 !important; }
-            .light-theme .text-gray-400,
-            .light-theme .text-gray-500 { color: #334155 !important; font-weight: 700 !important; }
-            .light-theme .text-gray-600 { color: #0f172a !important; font-weight: 700 !important; }
-            .light-theme .text-yellow-400 { color: #b45309 !important; font-weight: 700 !important; }
-            .light-theme .text-green-400 { color: #166534 !important; font-weight: 700 !important; }
-            .light-theme .text-red-400 { color: #991b1b !important; font-weight: 700 !important; }
-
-            /* 5. Inputs & Selects */
-            .light-theme input, .light-theme textarea, .light-theme select, .light-theme .glass-input {
-                background-color: #ffffff !important;
-                border: 1px solid #cbd5e1 !important;
-                color: #020617 !important;
-                font-weight: 700 !important;
-            }
-            .light-theme input::placeholder, .light-theme textarea::placeholder { color: #64748b !important; font-weight: 600 !important; }
-            .light-theme input:focus, .light-theme textarea:focus, .light-theme select:focus, .light-theme .glass-input:focus {
-                background-color: #ffffff !important;
-                border-color: #3b82f6 !important;
-                box-shadow: 0 0 0 3px rgba(59,130,246,0.15) !important;
-            }
-            .light-theme option { background-color: #ffffff !important; color: #111827 !important; }
-
-            /* 6. Pre / Code blocks (Vault Data) */
-            .light-theme pre {
-                background-color: #f3f4f6 !important;
-                color: #111827 !important;
-                border: 1px solid #e5e7eb !important;
-                font-weight: 600 !important;
-            }
-
-            /* 7. Borders */
-            .light-theme .border-white\/5, 
-            .light-theme .border-white\/10, 
-            .light-theme .border-white\/20, 
-            .light-theme .border-white\/30,
-            .light-theme .border-t, 
-            .light-theme .border-b {
-                border-color: #e5e7eb !important;
-            }
-
-            /* 8. Tables & Admin Panels */
-            .light-theme thead, .light-theme .bg-\\[\\#000\\] { background-color: #f9fafb !important; border-bottom: 2px solid #e5e7eb !important; }
-            .light-theme th { color: #4b5563 !important; }
-
-            /* 9. Main Action Buttons (Pure Light Theme) */
-            .light-theme button.bg-white, 
-            .light-theme .bg-white.text-black {
-                background-color: #ffffff !important;
-                color: #3b82f6 !important;
-                border: 1px solid #e5e7eb !important;
-            }
-            .light-theme button.bg-white:hover { background-color: #f9fafb !important; }
-            .light-theme button.bg-brand-primary { color: #ffffff !important; font-weight: bold !important; border: none !important; }
-            
-            /* 10. Status Badges (Light Mode Friendly Colors) */
-            .light-theme .bg-green-900\/30, .light-theme .bg-green-900\/20, .light-theme .bg-green-500\/20 { background-color: #dcfce7 !important; color: #166534 !important; border-color: #bbf7d0 !important; }
-            .light-theme .bg-red-900\/30, .light-theme .bg-red-900\/20, .light-theme .bg-red-500\/20, .light-theme .bg-red-900\/40 { background-color: #fee2e2 !important; color: #991b1b !important; border-color: #fecaca !important; }
-            .light-theme .bg-yellow-900\/30, .light-theme .bg-yellow-900\/20 { background-color: #fef9c3 !important; color: #854d0e !important; border-color: #fef08a !important; }
-            .light-theme .bg-blue-500\/20 { background-color: #dbeafe !important; color: #1e40af !important; border-color: #bfdbfe !important; }
-
-            /* 11. Kill Dark Shadows & Neon Glows */
-            .light-theme .shadow-inner, 
-            .light-theme [class*="shadow-\\[0_"] {
-                box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05) !important;
+/* 🟢 PREMIUM DARK NAVY THEME 🟢 */
+            body, html, #root, .light-theme { 
+                background-color: #0B1121 !important; /* Deep Navy Background */
+                color: #F8FAFC !important; 
             }
             
-            /* 12. Font Size Bump for Legibility */
-            .light-theme .text-\\[8px\\], 
-            .light-theme .text-\\[9px\\], 
-            .light-theme .text-\\[10px\\] {
-                font-size: 11px !important;
-                letter-spacing: 0.05em !important;
-                line-height: 1.5 !important;
+            /* 1. Cards and Panels */
+            .bg-white, .light-theme .bg-white, .bg-gray-50 {
+                background-color: #131C2A !important; /* Slightly lighter navy for cards */
+                border-color: rgba(255, 255, 255, 0.05) !important;
+                color: #F8FAFC !important;
             }
+            
+            /* 2. Fix Hover States */
+            .hover\:bg-gray-50:hover, .hover\:bg-gray-100:hover, .hover\:bg-blue-50\/20:hover, .hover\:bg-blue-50\/50:hover {
+                background-color: #1E293B !important;
+                border-color: rgba(255, 255, 255, 0.1) !important;
+            }
+
+            /* 3. Text Colors */
+            .text-gray-900, .text-gray-800, .text-black { color: #FFFFFF !important; font-weight: 700 !important; }
+            .text-gray-700, .text-gray-600 { color: #E2E8F0 !important; font-weight: 600 !important; }
+            .text-gray-500, .text-gray-400 { color: #94A3B8 !important; font-weight: 500 !important; }
+            
+            /* 4. Inputs & Selects */
+            input, textarea, select, .glass-input {
+                background-color: #0F172A !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                color: #FFFFFF !important;
+            }
+            input:focus, textarea:focus, select:focus {
+                border-color: #3B82F6 !important;
+                box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+            }
+
+            /* 5. Borders & Dividers */
+            .border-gray-200, .border-gray-100, .border-gray-300, .border-t, .border-b {
+                border-color: rgba(255, 255, 255, 0.05) !important;
+            }
+
+            /* 6. Buttons */
+            button.bg-gray-900, .bg-gray-900 {
+                background-color: #3B82F6 !important; /* Primary Blue */
+                color: white !important;
+                border: none !important;
+            }
+            button.bg-white, .bg-white.text-black {
+                background-color: #1E293B !important;
+                color: #F8FAFC !important;
+                border: 1px solid rgba(255,255,255,0.1) !important;
+            }
+            button.bg-white:hover, .bg-white.text-black:hover {
+                background-color: #334155 !important;
+            }
+            
+            /* 7. Header & Top Nav */
+            header {
+                background-color: rgba(11, 17, 33, 0.8) !important;
+                border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+            }
+            
+            /* 8. Icons & Backgrounds */
+            .bg-blue-50, .bg-gray-100, .bg-gray-50\/50 { background-color: #1E293B !important; border-color: rgba(255,255,255,0.05) !important; }
+            
+            /* 9. Dropdown Fixes */
+            .bg-\\[\\#151e29\\] { background-color: #0F172A !important; }
+            .bg-\\[\\#0b1219\\] { background-color: #131C2A !important; }
         </style>
 </head>
 <body class="antialiased">
@@ -582,17 +515,15 @@
         const uiInput = "glass-input";
         const uiBtnPrimary = "btn-animate w-full bg-white text-black font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 shadow-[0_5px_20px_rgba(255,255,255,0.2)] tracking-widest uppercase text-xs";
 
-        // 🟢 CUSTOM SEARCHABLE DROPDOWN COMPONENT (WITH LOGOS & PRICES) 🟢
-        const SearchableDropdown = ({ options, value, onChange, placeholder, icon: Icon, showLogos = false }) => {
+        // 🟢 CUSTOM SEARCHABLE DROPDOWN COMPONENT (100% OFFICIAL LOGOS & FLAGS GUARANTEED) 🟢
+        const SearchableDropdown = ({ options, value, onChange, placeholder, icon: Icon, mode = 'default' }) => {
             const [isOpen, setIsOpen] = useState(false);
             const [searchTerm, setSearchQuery] = useState('');
             const wrapperRef = useRef(null);
 
             useEffect(() => {
                 function handleClickOutside(event) {
-                    if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-                        setIsOpen(false);
-                    }
+                    if (wrapperRef.current && !wrapperRef.current.contains(event.target)) setIsOpen(false);
                 }
                 document.addEventListener("mousedown", handleClickOutside);
                 return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -602,45 +533,121 @@
             const selectedOpt = options.find(opt => opt.value === value);
             const selectedLabel = selectedOpt?.label || placeholder;
 
-            // 🌐 ডাইনামিক ডোমেইন ম্যাপিং (লোগোর জন্য)
+            // 🌐 SMART DOMAIN MAPPER FOR SERVICE LOGOS (Massive Dictionary for 100% Accuracy)
             const getDomain = (name) => {
-                let clean = name.toLowerCase().trim();
-                if(clean.includes('whatsapp')) return 'whatsapp.com';
-                if(clean.includes('paypal')) return 'paypal.com';
-                if(clean.includes('google') || clean.includes('gmail')) return 'google.com';
-                if(clean.includes('facebook')) return 'facebook.com';
-                if(clean.includes('instagram')) return 'instagram.com';
-                if(clean.includes('walmart')) return 'walmart.com';
-                if(clean.includes('venmo')) return 'venmo.com';
-                if(clean.includes('tinder')) return 'tinder.com';
-                if(clean.includes('telegram')) return 'telegram.org';
-                if(clean.includes('tiktok')) return 'tiktok.com';
-                if(clean.includes('snapchat')) return 'snapchat.com';
-                if(clean.includes('amazon') || clean.includes('aws')) return 'amazon.com';
-                if(clean.includes('apple')) return 'apple.com';
-                if(clean.includes('netflix')) return 'netflix.com';
-                if(clean.includes('discord')) return 'discord.com';
-                if(clean.includes('uber')) return 'uber.com';
-                if(clean.includes('linkedin')) return 'linkedin.com';
-                if(clean.includes('twitter')) return 'twitter.com';
-                if(clean.includes('yahoo')) return 'yahoo.com';
-                if(clean.includes('match')) return 'match.com';
-                if(clean.includes('cashapp')) return 'cash.app';
-                if(clean.includes('credit karma')) return 'creditkarma.com';
-                if(clean.includes('bumble')) return 'bumble.com';
-                if(clean.includes('chime')) return 'chime.com';
-                if(clean.includes('identitytheft')) return 'identitytheft.gov';
-                return clean.split(' ')[0].replace(/[^a-z0-9]/g, '') + '.com';
+                let n = String(name).toLowerCase().trim();
+                const exactMatches = {
+                    'cashapp': 'cash.app', 'whatsapp': 'whatsapp.com', 'gmail': 'google.com', 'google': 'google.com',
+                    'telegram': 'telegram.org', 'credit karma': 'creditkarma.com', 'amazon': 'amazon.com', 'aws': 'aws.amazon.com',
+                    'paypal': 'paypal.com', 'apple': 'apple.com', 'bumble': 'bumble.com', 'aol': 'aol.com', 'adobe': 'adobe.com',
+                    'affirm': 'affirm.com', 'binance': 'binance.com', 'capital one': 'capitalone.com', 'current': 'current.com',
+                    'facebook': 'facebook.com', 'tinder': 'tinder.com', 'linode': 'linode.com', 'moonpay': 'moonpay.com',
+                    'pof': 'pof.com', 'venmo': 'venmo.com', 'yahoo': 'yahoo.com', 'blk': 'blk-app.com', 'tiktok': 'tiktok.com',
+                    'offerup': 'offerup.com', 'match': 'match.com', 'attapoll': 'attapoll.com', 'userinterviews': 'userinterviews.com',
+                    'ourtime': 'ourtime.com', 'instagram': 'instagram.com', 'wallethub': 'wallethub.com', 'ebay': 'ebay.com',
+                    'greendot': 'greendot.com', 'signal': 'signal.org', 'chispa': 'chispa-app.com', 'remitly': 'remitly.com',
+                    'stir': 'stir.com', 'linkedin': 'linkedin.com', 'craigslist': 'craigslist.org', 'fetch': 'fetch.com',
+                    'coinbase': 'coinbase.com', 'okcupid': 'okcupid.com', 'empower': 'empower.me', 'synchrony': 'synchrony.com',
+                    'fiverr': 'fiverr.com', 'uber': 'uber.com', 'discord': 'discord.com', 'doordash': 'doordash.com',
+                    'imo': 'imo.im', 'ipsos': 'ipsos.com', 'payoneer': 'payoneer.com', 'transferwise': 'wise.com',
+                    'walmart': 'walmart.com', 'chime': 'chime.com', 'credit sesame': 'creditsesame.com', 'microsoft': 'microsoft.com',
+                    'klarna': 'klarna.com', 'kraken': 'kraken.com', 'lyft': 'lyft.com', 'skrill': 'skrill.com', 'sofi': 'sofi.com',
+                    'surveymonkey': 'surveymonkey.com', 'twilio': 'twilio.com', 'wechat': 'wechat.com', 'afterpay': 'afterpay.com',
+                    'airbnb': 'airbnb.com', 'alibaba': 'alibaba.com', 'aliexpress': 'aliexpress.com', 'badoo': 'badoo.com',
+                    'bank of america': 'bankofamerica.com', 'bet365': 'bet365.com', 'chase': 'chase.com', 'citi': 'citi.com',
+                    'discover': 'discover.com', 'dunkin': 'dunkinbrands.com', 'fidelity': 'fidelity.com', 'grindr': 'grindr.com',
+                    'hinge': 'hinge.co', 'instacart': 'instacart.com', 'netflix': 'netflix.com', 'outlook': 'outlook.com',
+                    'plaid': 'plaid.com', 'pnc': 'pnc.com', 'revolut': 'revolut.com', 'schwab': 'schwab.com', 'snapchat': 'snapchat.com',
+                    'steam': 'steampowered.com', 'stripe': 'stripe.com', 'td': 'td.com', 'temu': 'temu.com', 'ticketmaster': 'ticketmaster.com',
+                    'twitch': 'twitch.tv', 'upwork': 'upwork.com', 'viber': 'viber.com', 'vk': 'vk.com', 'wells fargo': 'wellsfargo.com',
+                    'youtube': 'youtube.com', 'zillow': 'zillow.com', 'zoho': 'zoho.com', 'x': 'x.com', 'twitter': 'x.com',
+                    'freelancer': 'freelancer.com', 'bovada': 'bovada.lv', 'textplus': 'textplus.com', 'textnow': 'textnow.com',
+                    'zoosk': 'zoosk.com', 'yubo': 'yubo.live', 'yandex': 'yandex.com', 'worldremit': 'worldremit.com'
+                };
+
+                // Remove unwanted text (numbers, "US", "USA", "UK", "account", "rent", etc.)
+                let cleanName = n.replace(/\b(us|usa|uk|rent|account|reset|chat|app)\b/g, '').replace(/[0-9]/g, '').trim();
+                
+                // Match exact domains
+                for (let key in exactMatches) { if (cleanName.includes(key) || n.includes(key)) return exactMatches[key]; }
+                
+                // Fallback Domain format
+                return cleanName.replace(/[^a-z]/g, '') + '.com';
+            };
+
+            // 🌍 COMPLETE COUNTRY CODE MAPPER FOR 100% FLAGS
+            const getCountryCode = (name) => {
+                let n = String(name).toLowerCase().trim();
+                const countryMap = {
+                    'usa': 'us', 'united states': 'us', 'united kingdom': 'gb', 'uk': 'gb', 'hong kong': 'hk',
+                    'germany': 'de', 'russia': 'ru', 'india': 'in', 'pakistan': 'pk', 'brazil': 'br',
+                    'mozambique': 'mz', 'south africa': 'za', 'venezuela': 've', 'swaziland': 'sz', 'france': 'fr',
+                    'malawi': 'mw', 'nigeria': 'ng', 'china': 'cn', 'lesotho': 'ls', 'zambia': 'zm', 'egypt': 'eg',
+                    'peru': 'pe', 'mexico': 'mx', 'spain': 'es', 'ghana': 'gh', 'morocco': 'ma', 'algeria': 'dz',
+                    'myanmar': 'mm', 'argentina': 'ar', 'romania': 'ro', 'ukraine': 'ua', 'vietnam': 'vn',
+                    'canada': 'ca', 'tanzania': 'tz', 'namibia': 'na', 'switzerland': 'ch', 'italy': 'it',
+                    'colombia': 'co', 'botswana': 'bw', 'sweden': 'se', 'denmark': 'dk', 'ecuador': 'ec',
+                    'austria': 'at', 'czech republic': 'cz', 'norway': 'no', 'luxembourg': 'lu', 'belgium': 'be',
+                    'poland': 'pl', 'finland': 'fi', 'hungary': 'hu', 'ireland': 'ie', 'greece': 'gr',
+                    'bosnia': 'ba', 'bulgaria': 'bg', 'slovakia': 'sk', 'belarus': 'by', 'serbia': 'rs',
+                    'croatia': 'hr', 'moldova': 'md', 'israel': 'il', 'albania': 'al', 'lithuania': 'lt',
+                    'northmacedonia': 'mk', 'slovenia': 'si', 'latvia': 'lv', 'estonia': 'ee', 'montenegro': 'me',
+                    'malta': 'mt', 'iceland': 'is', 'andorra': 'ad', 'monaco': 'mc', 'liechtenstein': 'li',
+                    'san marino': 'sm', 'holy see': 'va', 'australia': 'au', 'new zealand': 'nz', 'fiji': 'fj',
+                    'paraguay': 'py', 'cuba': 'cu', 'japan': 'jp', 'macao': 'mo', 'taiwan': 'tw', 'qatar': 'qa',
+                    'singapore': 'sg', 'uae': 'ae', 'kazakhstan': 'kz', 'malaysia': 'my', 'philippines': 'ph',
+                    'turkey': 'tr', 'uzbekistan': 'uz', 'srilanka': 'lk', 'cambodia': 'kh', 'north korea': 'kp',
+                    'indonesia': 'id', 'iran': 'ir', 'thailand': 'th', 'south korea': 'kr', 'iraq': 'iq',
+                    'afghanistan': 'af', 'saudiarabia': 'sa', 'yemen': 'ye', 'nepal': 'np', 'syria': 'sy',
+                    'jordan': 'jo', 'azerbaijan': 'az', 'tajikistan': 'tj', 'laos': 'la', 'lebanon': 'lb',
+                    'kyrgyzstan': 'kg', 'turkmenistan': 'tm', 'oman': 'om', 'palestine': 'ps', 'kuwait': 'kw',
+                    'georgia': 'ge', 'mongolia': 'mn', 'armenia': 'am', 'timor-leste': 'tl', 'cyprus': 'cy',
+                    'maldives': 'mv', 'brunei': 'bn', 'chile': 'cl', 'guatemala': 'gt', 'bolivia': 'bo',
+                    'haiti': 'ht', 'ethiopia': 'et', 'honduras': 'hn', 'nicaragua': 'ni', 'el salvador': 'sv',
+                    'costarica': 'cr', 'panama': 'pa', 'uruguay': 'uy', 'jamaica': 'jm', 'trinidad': 'tt',
+                    'guyana': 'gy', 'suriname': 'sr', 'belize': 'bz', 'bahamas': 'bs', 'saintlucia': 'lc',
+                    'solomonislands': 'sb', 'kiribati': 'ki', 'tonga': 'to', 'marshall islands': 'mh',
+                    'palau': 'pw', 'tuvalu': 'tv', 'nauru': 'nr', 'kenya': 'ke', 'uganda': 'ug', 'sudan': 'sd',
+                    'madagascar': 'mg', 'cameroon': 'cm', 'ivorycoast': 'ci', 'côte d\'ivoire': 'ci', 'niger': 'ne',
+                    'mali': 'ml', 'senegal': 'sn', 'somalia': 'so', 'zimbabwe': 'zw', 'rwanda': 'rw',
+                    'tunisia': 'tn', 'southsudan': 'ss', 'togo': 'tg', 'sierraleone': 'sl', 'libya': 'ly',
+                    'liberia': 'lr', 'mauritania': 'mr', 'gambia': 'gm', 'mauritius': 'mu', 'eswatini': 'sz',
+                    'cabo verde': 'cv', 'saotome': 'st', 'montserrat': 'ms', 'newcaledonia': 'nc',
+                    'turksandcaicos': 'tc', 'virginislands': 'vg'
+                };
+                
+                for (let key in countryMap) { if (n.includes(key)) return countryMap[key]; }
+                return 'un'; // Fallback
             };
 
             return (
                 <div ref={wrapperRef} className="relative w-full z-[100]">
-                    <div onClick={() => setIsOpen(!isOpen)} className="w-full bg-white border border-gray-200 text-gray-900 font-bold uppercase tracking-wider text-[10px] sm:text-xs py-4 px-4 rounded-xl cursor-pointer flex items-center justify-between hover:border-brand-primary/50 transition-colors shadow-sm allow-select">
+                    <div onClick={() => setIsOpen(!isOpen)} className="w-full bg-[#0F172A] border border-gray-700/50 text-white font-semibold text-[11px] sm:text-[13px] tracking-wide py-4 px-4 rounded-xl cursor-pointer flex items-center justify-between hover:border-brand-primary/50 transition-colors shadow-sm allow-select">
                         <div className="flex items-center gap-3 overflow-hidden">
-                            {showLogos && selectedOpt ? (
-                                <div className="w-5 h-5 rounded overflow-hidden shrink-0 flex items-center justify-center bg-gray-50 border border-gray-100">
-                                    <img src={`https://logo.clearbit.com/${getDomain(selectedOpt.label)}`} onError={(e)=>{e.target.style.display='none'; e.target.nextSibling.style.display='block';}} className="w-full h-full object-cover" alt="icon"/>
-                                    <Icon className="w-3.5 h-3.5 text-brand-primary hidden shrink-0" />
+                            {mode !== 'default' && selectedOpt ? (
+                                <div className={`shrink-0 flex items-center justify-center bg-white shadow-sm overflow-hidden p-[2px] ${mode === 'country' ? 'w-6 h-6 rounded-full border-none' : 'w-6 h-6 rounded-lg'}`}>
+                                    <img 
+                                        src={mode === 'country' ? (getCountryCode(selectedOpt.label) === 'un' ? `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedOpt.label)}&background=0F172A&color=fff&size=64&bold=true` : `https://flagcdn.com/w40/${getCountryCode(selectedOpt.label)}.png`) : `https://logo.clearbit.com/${getDomain(selectedOpt.label)}`} 
+                                        onError={(e) => { 
+                                            // 🟢 TRIPLE FALLBACK LOGIC 🟢
+                                            if (mode !== 'country') {
+                                                const currentSrc = e.target.src;
+                                                const domain = getDomain(selectedOpt.label);
+                                                if (currentSrc.includes('clearbit')) {
+                                                    e.target.src = `https://icon.horse/icon/${domain}`;
+                                                } else if (currentSrc.includes('icon.horse')) {
+                                                    e.target.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+                                                } else {
+                                                    e.target.onerror = null; 
+                                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedOpt.label)}&background=0F172A&color=fff&size=64&bold=true`;
+                                                }
+                                            } else {
+                                                e.target.onerror = null; e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedOpt.label)}&background=0F172A&color=fff&size=64&bold=true`;
+                                            }
+                                        }} 
+                                        className={`w-full h-full ${mode === 'country' ? 'object-cover rounded-full' : 'object-contain rounded-md'}`} 
+                                        alt="icon"
+                                    />
                                 </div>
                             ) : (
                                 Icon && <Icon className="w-4 h-4 text-brand-primary shrink-0" />
@@ -649,16 +656,17 @@
                         </div>
                         <ChevronDown className={`w-4 h-4 text-brand-primary transition-transform duration-300 ${isOpen ? 'rotate-180' : ''} shrink-0`} />
                     </div>
+                    
                     {isOpen && (
-                        <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden animate-fade-in-up">
-                            <div className="p-3 border-b border-gray-100 bg-gray-50 flex items-center gap-2">
+                        <div className="absolute z-50 w-full mt-2 bg-[#0b1219] border border-gray-700/50 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden animate-fade-in-up">
+                            <div className="p-3 border-b border-gray-700/50 bg-[#151e29] flex items-center gap-2">
                                 <Search className="w-3.5 h-3.5 text-brand-primary" />
                                 <input
                                     type="text"
-                                    placeholder="Search..."
+                                    placeholder={mode === 'country' ? "Search Country..." : "Search Service..."}
                                     value={searchTerm}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full bg-transparent border-none outline-none text-gray-900 text-[10px] sm:text-xs font-mono uppercase tracking-widest allow-select"
+                                    className="w-full bg-transparent border-none outline-none text-white text-[11px] sm:text-xs font-sans font-medium tracking-wide allow-select placeholder-gray-500"
                                     onClick={(e) => e.stopPropagation()}
                                     autoFocus
                                 />
@@ -668,27 +676,45 @@
                                     <div
                                         key={opt.value}
                                         onClick={() => { onChange(opt.value); setIsOpen(false); setSearchQuery(''); }}
-                                        className={`px-4 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors flex items-center gap-4 border-b border-gray-50 last:border-0 ${value === opt.value ? 'bg-brand-primary/10 text-brand-primary' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}
+                                        className={`px-4 py-3 text-[12px] sm:text-[13px] font-medium tracking-wide cursor-pointer transition-all flex items-center gap-4 border-b border-gray-800 last:border-0 font-sans ${value === opt.value ? 'bg-brand-primary/20 text-white font-bold' : 'text-gray-300 hover:bg-gray-800 hover:text-white'}`}
                                     >
-                                        {showLogos && (
-                                            <div className="w-7 h-7 rounded-md overflow-hidden shrink-0 flex items-center justify-center bg-white shadow-sm border border-gray-100 p-0.5">
-                                                <img src={`https://logo.clearbit.com/${getDomain(opt.label)}`} onError={(e)=>{e.target.style.display='none'; e.target.nextSibling.style.display='flex';}} className="w-full h-full object-contain rounded-sm" alt="icon"/>
-                                                <div className="hidden w-full h-full bg-gray-100 rounded-sm items-center justify-center"><Icon className="w-3.5 h-3.5 text-gray-400" /></div>
-                                            </div>
-                                        )}
-                                        <span className="truncate flex-grow">{opt.label}</span>
-                                        {/* 🟢 ডানপাশে প্রাইস বসানো হলো 🟢 */}
-                                        {opt.price !== undefined && <span className="ml-auto text-brand-primary font-mono tracking-widest">${Number(opt.price).toFixed(2)}</span>}
-                                    </div>
-                                )) : (
-                                    <div className="p-6 text-center text-[10px] text-gray-400 uppercase tracking-widest font-mono">Not Found</div>
-                                )}
-                            </div>
-                        </div>
-                    )}
-                </div>
-            );
-        };
+                                        {mode !== 'default' && (
+                                            <div className={`shrink-0 flex items-center justify-center bg-white shadow-sm overflow-hidden p-[2px] ${mode === 'country' ? 'w-6 h-6 rounded-full border-none' : 'w-6 h-6 rounded-lg'}`}>
+                                                <img 
+                                                    src={mode === 'country' ? (getCountryCode(opt.label) === 'un' ? `https://ui-avatars.com/api/?name=${encodeURIComponent(opt.label)}&background=0F172A&color=fff&size=64&bold=true` : `https://flagcdn.com/w40/${getCountryCode(opt.label)}.png`) : `https://logo.clearbit.com/${getDomain(opt.label)}`} 
+                                                    onError={(e) => { 
+                                                        if (mode !== 'country') {
+                                                            const currentSrc = e.target.src;
+                                                            const domain = getDomain(opt.label);
+                                                            if (currentSrc.includes('clearbit')) {
+                                                                e.target.src = `https://icon.horse/icon/${domain}`;
+                                                            } else if (currentSrc.includes('icon.horse')) {
+                                                                                        e.target.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+                                                                                    } else {
+                                                                                        e.target.onerror = null;
+                                                                                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(opt.label)}&background=0F172A&color=fff&size=64&bold=true`;
+                                                                                    }
+                                                                                } else {
+                                                                                    e.target.onerror = null; 
+                                                                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(opt.label)}&background=0F172A&color=fff&size=64&bold=true`;
+                                                                                }
+                                                                            }} 
+                                                                            className={`w-full h-full ${mode === 'country' ? 'object-cover rounded-full' : 'object-contain rounded-md'}`} 
+                                                                            alt="icon"
+                                                                        />
+                                                                    </div>
+                                                                )}
+                                                                <span className="truncate">{opt.label}</span>
+                                                            </div>
+                                                        )) : (
+                                                            <div className="px-4 py-4 text-center text-gray-500 text-xs font-mono">No results found</div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                };
 
         const getTier = (spent) => {
           if(typeof spent !== 'number' || isNaN(spent)) return { threshold: 0, name: 'Standard', next: 20, color: 'text-gray-400', icon: Award };
@@ -1860,19 +1886,22 @@
                 )}
 
                 {(!maintenanceSettings?.active || user.role === 'admin') && (
-                    <div className="w-full relative z-30 mb-6 px-1 sm:px-0 mt-0">
-                      <div className="bg-gray-100/80 backdrop-blur-xl rounded-full p-1 sm:p-1.5 flex flex-nowrap justify-between sm:justify-center gap-0.5 sm:gap-1 w-full mx-auto max-w-full sm:max-w-fit shadow-inner border border-gray-200/50 overflow-hidden">
-                        {(user.role === 'admin' ? ADMIN_TABS : CUSTOMER_TABS).map(tab => (
-                          <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`btn-animate shrink-0 flex-1 relative flex flex-col items-center justify-center py-2 sm:py-2.5 px-1 sm:px-4 rounded-full group transition-all duration-500 ${activeTab === tab.id ? 'bg-white shadow-[0_2px_10px_rgba(0,0,0,0.05)] text-brand-primary border border-gray-200/50 scale-[1.02] sm:scale-105' : 'border border-transparent hover:bg-gray-200/50 text-gray-500'}`}>
-                              <div className="relative z-10 flex flex-col items-center justify-center w-full h-full">
-                                  <tab.icon className={`w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 ${activeTab === tab.id ? 'scale-110 mb-1 text-brand-primary' : 'mb-1 text-gray-400 group-hover:text-brand-primary'}`} strokeWidth={activeTab === tab.id ? 2 : 1.5} /> 
-                                  <span className={`text-[7px] sm:text-[9px] leading-[1.1] uppercase tracking-wider text-center whitespace-normal break-words w-full transition-colors duration-300 ${activeTab === tab.id ? 'font-bold text-brand-primary' : 'font-medium text-gray-500 group-hover:text-gray-900'}`}>
-                                      {tab.label === 'SMS Verifications' ? 'SMS Verify' : tab.label}
-                                  </span>
-                              </div>
-                          </button>
-                        ))}
-                      </div>
+                    <div className="w-full relative z-30 mb-6 px-2 sm:px-0 mt-2">
+                        {/* 🟢 FLOATING PILL DOCK MENU (DARK THEME OPTIMIZED & MOBILE PERFECT) 🟢 */}
+                        <div className="bg-[#0F172A]/80 backdrop-blur-2xl rounded-full p-1.5 flex justify-between items-center w-full mx-auto max-w-3xl shadow-[0_8px_30px_rgba(0,0,0,0.4)] border border-white/10">
+                            {(user.role === 'admin' ? ADMIN_TABS : CUSTOMER_TABS).map(tab => (
+                                <button 
+                                    key={tab.id} 
+                                    onClick={() => setActiveTab(tab.id)} 
+                                    className={`btn-animate flex-1 relative flex flex-col items-center justify-center py-2 sm:py-3 rounded-full transition-all duration-300 ${activeTab === tab.id ? 'bg-brand-primary shadow-[0_0_15px_rgba(59,130,246,0.5)] text-white scale-[1.05] z-10' : 'bg-transparent text-gray-400 hover:text-white hover:bg-white/5'}`}
+                                >
+                                    <tab.icon className={`w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 ${activeTab === tab.id ? 'mb-1 text-white' : 'mb-1 text-gray-400'}`} strokeWidth={activeTab === tab.id ? 2.5 : 1.5} /> 
+                                    <span className={`text-[7.5px] sm:text-[10px] leading-tight uppercase tracking-wider text-center w-full px-0.5 ${activeTab === tab.id ? 'font-black text-white' : 'font-bold'}`}>
+                                        {tab.label === 'SMS Verifications' ? 'SMS Verify' : tab.label}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 )}
 
@@ -2471,13 +2500,14 @@
                                                 {isLoadingCountries ? (
                                                     <div className="glass-input py-4 flex items-center justify-center opacity-50"><RefreshCw className="w-5 h-5 animate-spin"/></div>
                                                 ) : (
-                                                    <SearchableDropdown 
-                                                        options={pandaCountries} 
-                                                        value={selectedPandaCountry} 
-                                                        onChange={setSelectedPandaCountry} 
-                                                        placeholder="Search Country..."
-                                                        icon={Globe}
-                                                    />
+                                               <SearchableDropdown 
+                                                    options={pandaCountries} 
+                                                    value={selectedPandaCountry} 
+                                                    onChange={setSelectedPandaCountry} 
+                                                    placeholder="Search Country..."
+                                                    icon={Globe}
+                                                    mode="country"
+                                                />     
                                                 )}
                                             </div>
                                         ) : (
@@ -2489,6 +2519,7 @@
                                                     onChange={setSelectedCountry} 
                                                     placeholder="Search Country..."
                                                     icon={Globe}
+                                                    mode="country"
                                                 />
                                             </div>
                                         )}
@@ -2504,13 +2535,13 @@
                                                 <div className="glass-input py-4 text-center text-red-400 font-mono text-xs uppercase">No services available</div>
                                             ) : (
                                                 <SearchableDropdown 
-                                                options={finalServiceOptions} 
-                                                value={selectedServiceCode || ''} 
-                                                onChange={setSelectedServiceCode} 
-                                                placeholder="Search Service..."
-                                                icon={Smartphone}
-                                                showLogos={true} // 👈 🟢 লোগো দেখানোর পারমিশন অন করা হলো
-                                            />
+                                                    options={finalServiceOptions} 
+                                                    value={selectedServiceCode || ''} 
+                                                    onChange={setSelectedServiceCode} 
+                                                    placeholder="Search Service..."
+                                                    icon={Smartphone}
+                                                    mode="service"
+                                                />
                                             )}
                                         </div>
 
@@ -2708,20 +2739,20 @@
 
          // Observer removed to prevent UI blinking
 
-          const handleAddToCart = (product) => {
-              const selectedState = selectedStates[product.id];
-              if (!selectedState && getAvailableStates(product.id).length > 0) {
-                  triggerToast("Please select a State.");
-                  return;
-              }
-              const finalState = (!selectedState || selectedState === 'Random') ? undefined : selectedState;
-              const cartItem = { ...product };
-              if (finalState) cartItem.selectedState = finalState;
-              
-              setCart([...cart, cartItem]); 
-              triggerToast(`Added to cart.`);
+         const handleAddToCart = (product) => {
+              const selectedState = selectedStates[product.id];
+              if (!selectedState && getAvailableStates(product.id).length > 0) {
+                  triggerToast("Please select a State.");
+                  return;
+              }
+              const finalState = (!selectedState || selectedState === 'Random') ? undefined : selectedState;
+              const cartItem = { ...product };
+              if (finalState) cartItem.selectedState = finalState;
+              
+              setCart([...cart, cartItem]); 
+              triggerToast(`Added to cart.`);
               setShowCart(true); // 👈 🟢 অটোমেটিক কার্ট পপ-আপ ওপেন করবে
-          };
+          };
 
           const handleStateChange = (productId, stateStr) => {
               setSelectedStates(prev => ({...prev, [productId]: stateStr}));
@@ -4569,33 +4600,6 @@
             const autoWakeTimerRef = useRef(null);
             const recognitionRef = useRef(null);
             const hasFollowedUpRef = useRef(false); // 🟢 FIX: একবারই প্রশ্ন করার ট্র্যাকার
-
-            // 🟢 Initial greeting & 1-minute logic 🟢
-            const hasTriggeredRef = useRef(false);
-            
-            useEffect(() => {
-                if (isLoggedIn && activeTab === 'store' && !hasTriggeredRef.current) {
-                    hasTriggeredRef.current = true;
-
-                    const triggerPopup = () => {
-                        // চেক করছি ইউজার এর মধ্যে কথা বলা শুরু করেছে কি না
-                        if (!isListening && !isSpeaking && !isProcessing && !transcript && chatHistory.length === 0) {
-                            setShowBubble(true);
-                            setBubbleExiting(false);
-                            setTimeout(() => {
-                                setBubbleExiting(true);
-                                setTimeout(() => setShowBubble(false), 500);
-                            }, 5000); // ৫ সেকেন্ড স্ক্রিনে থাকবে
-                        }
-                    };
-
-                    // ওয়েবসাইটে ঢোকার ২ সেকেন্ড পর একবার দেখাবে
-                    setTimeout(triggerPopup, 2000);
-
-                    // ঠিক ১ মিনিট (৬০,০০০ মিলিসেকেন্ড) পর আবার দেখাবে
-                    setTimeout(triggerPopup, 62000);
-                }
-            }, [isLoggedIn, activeTab, isListening, isSpeaking, isProcessing, transcript, chatHistory.length]);
 
             // 🟢 Proactive Timers Logic Disabled (Stops Random Speaking) 🟢
             const resetProactiveTimers = useCallback(() => {
