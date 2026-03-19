@@ -1904,20 +1904,20 @@
 
                 {(!maintenanceSettings?.active || user.role === 'admin') && (
                     <div className="w-full relative z-30 mb-6 px-2 sm:px-0 mt-2">
-                        {/* 🟢 CLEAN FLAT UNDERLINE MENU WITH REAL LOGOS (ALWAYS COLORFUL) 🟢 */}
-                        <div className="bg-transparent flex justify-between items-center w-full mx-auto max-w-3xl border-b-[3px] border-gray-200/60 mb-2">
+                        {/* 🟢 NO-SLIDER WRAPPED MENU (TWO ROWS ON MOBILE) 🟢 */}
+                        <div className="bg-transparent flex flex-wrap justify-center sm:justify-between items-center w-full mx-auto max-w-3xl border-b-[3px] border-gray-200/60 mb-4 gap-y-2 sm:gap-y-0 pb-2 sm:pb-0">
                             {(user.role === 'admin' ? ADMIN_TABS : CUSTOMER_TABS).map(tab => (
                                 <button 
                                     key={tab.id} 
                                     onClick={() => setActiveTab(tab.id)} 
-                                    className={`flex-1 relative flex flex-col items-center justify-center py-3 transition-all duration-300 border-b-[3px] -mb-[3px] ${activeTab === tab.id ? 'border-brand-primary text-brand-primary z-10 bg-brand-primary/5' : 'border-transparent text-gray-500 hover:text-gray-800 hover:border-gray-300 hover:bg-gray-100/50'}`}
+                                    className={`w-[31%] sm:w-auto sm:flex-1 relative flex flex-col items-center justify-center py-2 sm:py-3 transition-all duration-300 rounded-xl sm:rounded-none sm:border-b-[3px] sm:-mb-[3px] ${activeTab === tab.id ? 'bg-brand-primary/10 sm:bg-brand-primary/5 sm:border-brand-primary text-brand-primary z-10 shadow-sm sm:shadow-none' : 'border-transparent text-gray-500 hover:text-gray-800 hover:bg-gray-100/50'}`}
                                 >
                                     <img 
                                         src={tab.imgUrl} 
                                         alt={tab.label} 
                                         className={`w-6 h-6 sm:w-7 sm:h-7 mb-1.5 transition-all duration-300 ${activeTab === tab.id ? 'opacity-100 scale-110 drop-shadow-md' : 'opacity-70 hover:opacity-100 hover:scale-105'}`} 
                                     />
-                                    <span className={`text-[10px] sm:text-[12px] leading-tight uppercase tracking-widest text-center w-full px-0.5 ${activeTab === tab.id ? 'font-black text-brand-primary' : 'font-bold'}`}>
+                                    <span className={`text-[10px] sm:text-[12px] leading-tight uppercase tracking-wider text-center w-full px-1 ${activeTab === tab.id ? 'font-black text-brand-primary' : 'font-bold'}`}>
                                         {tab.label === 'SMS Verifications' ? 'SMS Verify' : tab.label}
                                     </span>
                                 </button>
@@ -2267,11 +2267,14 @@
             return (
                 <div className="w-full relative z-10 animate-fade-in-up max-w-5xl mx-auto mt-4">
                     
-                    {/* 🟢 Minimalist Header 🟢 */}
+                    {/* 🟢 Colorful Real Logo Header 🟢 */}
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 w-full mb-8 px-2 sm:px-0">
-                        <div>
-                            <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-wide">SMS Verifications</h1>
-                            <p className="text-gray-500 text-[10px] sm:text-xs font-mono mt-1">Instant OTPs & Virtual Numbers</p>
+                        <div className="flex items-center gap-3">
+                            <img src="https://cdn-icons-png.flaticon.com/512/8930/8930815.png" alt="SMS" className="w-10 h-10 sm:w-12 sm:h-12 drop-shadow-sm" />
+                            <div>
+                                <h1 className="text-xl sm:text-2xl font-black text-brand-primary tracking-wide uppercase">SMS Verifications</h1>
+                                <p className="text-gray-500 text-[10px] sm:text-xs font-mono mt-1 font-bold">Instant OTPs & Virtual Numbers</p>
+                            </div>
                         </div>
                     </div>
 
@@ -2292,8 +2295,17 @@
 
                            {/* Left: Number & Service */}
                            <div className="flex items-center gap-5 w-full md:w-auto">
-                               <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center bg-[#090E17] shrink-0">
-                                   <MessageSquare className="w-5 h-5 text-brand-primary" />
+                               <div className="w-12 h-12 rounded-2xl border border-gray-200 flex items-center justify-center bg-white shrink-0 shadow-sm overflow-hidden p-1.5">
+                                   <img 
+                                        src={`https://logo.clearbit.com/${String(activeOrder.service).toLowerCase().replace(/[^a-z0-9]/g, '')}.com`} 
+                                        onError={(e) => { 
+                                            const backupDomain = String(activeOrder.service).toLowerCase().replace(/[^a-z0-9]/g, '') + '.com';
+                                            e.target.onerror = null; 
+                                            e.target.src = `https://www.google.com/s2/favicons?domain=${backupDomain}&sz=128`; 
+                                        }}
+                                        className="w-full h-full object-contain drop-shadow-sm" 
+                                        alt="Service Logo"
+                                   />
                                </div>
                                <div className="flex flex-col">
                                    <p className="text-[10px] text-gray-500 font-mono tracking-widest uppercase mb-1">{activeOrder.service} Verification</p>
@@ -2425,9 +2437,11 @@
                             </div>
 
                             {/* Right Side: Minimal Checkout Panel */}
-                            <div className="lg:col-span-1 border-t lg:border-t-0 lg:border-l border-white/5 pt-6 lg:pt-0 lg:pl-8 flex flex-col justify-between">
+                            <div className="lg:col-span-1 border-t lg:border-t-0 lg:border-l border-gray-200 pt-6 lg:pt-0 lg:pl-8 flex flex-col justify-between">
                                 <div>
-                                    <h3 className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-6">Order Summary</h3>
+                                    <h3 className="text-[10px] text-gray-800 font-black uppercase tracking-widest mb-6 flex items-center gap-2">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/2953/2953536.png" className="w-4 h-4 drop-shadow-sm" alt="bill" /> Order Summary
+                                    </h3>
                                     
                                     <div className="flex justify-between items-center border-b border-white/5 py-3">
                                         <span className="text-xs text-gray-300 font-medium">{currentServiceObj ? currentServiceObj.name : 'Service'}</span>
@@ -2447,10 +2461,10 @@
                                     <button 
                                         onClick={() => buyNumber(currentServiceObj || { code: selectedServiceCode, name: selectedServiceCode, finalPrice: displayPrice })} 
                                         disabled={isBuying || (smsMode === 'panda' && !displayPrice)} 
-                                        className="w-full bg-white text-black hover:bg-gray-200 transition-colors py-3.5 rounded-full text-[11px] font-bold uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="btn-animate w-full bg-brand-primary text-white hover:bg-blue-600 transition-colors py-3.5 rounded-xl text-[11px] sm:text-xs font-black uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
                                     >
-                                        {isBuying ? <RefreshCw className="w-4 h-4 animate-spin"/> : <ShoppingCart className="w-4 h-4" />}
-                                        {isBuying ? 'Processing' : 'Purchase Number'}
+                                        {isBuying ? <RefreshCw className="w-5 h-5 animate-spin"/> : <img src="https://cdn-icons-png.flaticon.com/512/1170/1170628.png" className="w-5 h-5 drop-shadow-sm" alt="buy" />}
+                                        {isBuying ? 'Processing...' : 'Purchase Number'}
                                     </button>
                                 </div>
                             </div>
