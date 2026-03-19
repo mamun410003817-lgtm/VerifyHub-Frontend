@@ -34,7 +34,7 @@
           extend: {
             fontFamily: {
               sans: ['"Inter"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
-              mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+              mono: ['"Inter"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
             },
             colors: {
               brand: {
@@ -119,7 +119,7 @@
     <!-- Premium Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <script async src="https://unpkg.com/es-module-shims@1.10.0/dist/es-module-shims.js"></script>
 
@@ -1887,16 +1887,16 @@
 
                 {(!maintenanceSettings?.active || user.role === 'admin') && (
                     <div className="w-full relative z-30 mb-6 px-2 sm:px-0 mt-2">
-                        {/* 🟢 FLOATING PILL DOCK MENU (DARK THEME OPTIMIZED & MOBILE PERFECT) 🟢 */}
-                        <div className="bg-[#0F172A]/80 backdrop-blur-2xl rounded-full p-1.5 flex justify-between items-center w-full mx-auto max-w-3xl shadow-[0_8px_30px_rgba(0,0,0,0.4)] border border-white/10">
+                        {/* 🟢 FLOATING PILL DOCK MENU (FLAT & CLEAN DESIGN) 🟢 */}
+                        <div className="bg-[#0F172A]/90 backdrop-blur-2xl rounded-full p-1.5 flex justify-between items-center w-full mx-auto max-w-3xl border border-white/10">
                             {(user.role === 'admin' ? ADMIN_TABS : CUSTOMER_TABS).map(tab => (
                                 <button 
                                     key={tab.id} 
                                     onClick={() => setActiveTab(tab.id)} 
-                                    className={`btn-animate flex-1 relative flex flex-col items-center justify-center py-2 sm:py-3 rounded-full transition-all duration-300 ${activeTab === tab.id ? 'bg-brand-primary shadow-[0_0_15px_rgba(59,130,246,0.5)] text-white scale-[1.05] z-10' : 'bg-transparent text-gray-400 hover:text-white hover:bg-white/5'}`}
+                                    className={`flex-1 relative flex flex-col items-center justify-center py-2 sm:py-3 rounded-full transition-colors ${activeTab === tab.id ? 'bg-white/10 text-white z-10' : 'bg-transparent text-gray-500 hover:text-gray-300 hover:bg-white/5'}`}
                                 >
-                                    <tab.icon className={`w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 ${activeTab === tab.id ? 'mb-1 text-white' : 'mb-1 text-gray-400'}`} strokeWidth={activeTab === tab.id ? 2.5 : 1.5} /> 
-                                    <span className={`text-[7.5px] sm:text-[10px] leading-tight uppercase tracking-wider text-center w-full px-0.5 ${activeTab === tab.id ? 'font-black text-white' : 'font-bold'}`}>
+                                    <tab.icon className={`w-4 h-4 sm:w-5 sm:h-5 ${activeTab === tab.id ? 'mb-1 text-white' : 'mb-1 text-gray-500'}`} strokeWidth={activeTab === tab.id ? 2 : 1.5} /> 
+                                    <span className={`text-[7.5px] sm:text-[10px] leading-tight uppercase tracking-wider text-center w-full px-0.5 ${activeTab === tab.id ? 'font-bold text-white' : 'font-medium'}`}>
                                         {tab.label === 'SMS Verifications' ? 'SMS Verify' : tab.label}
                                     </span>
                                 </button>
@@ -2729,30 +2729,28 @@
             );
         }
 
-        // ==========================================
-        // 🌟 ASSET STORE MODULE
+      // ==========================================
+        // 🌟 ASSET STORE MODULE (WITH ALL ORIGINAL LOGOS)
         // ==========================================
         function CustomerDashboardStore({ inventory, categories, cart, setCart, setShowCart, triggerToast, bankSettings }) {
           const [searchQuery, setSearchQuery] = useState('');
           const [selectedStates, setSelectedStates] = useState({}); 
           const filteredCategories = categories.filter(c => (c?.name || '').toLowerCase().includes((searchQuery || '').toLowerCase()));
 
-         // Observer removed to prevent UI blinking
-
          const handleAddToCart = (product) => {
-              const selectedState = selectedStates[product.id];
-              if (!selectedState && getAvailableStates(product.id).length > 0) {
-                  triggerToast("Please select a State.");
-                  return;
-              }
-              const finalState = (!selectedState || selectedState === 'Random') ? undefined : selectedState;
-              const cartItem = { ...product };
-              if (finalState) cartItem.selectedState = finalState;
-              
-              setCart([...cart, cartItem]); 
-              triggerToast(`Added to cart.`);
-              setShowCart(true); // 👈 🟢 অটোমেটিক কার্ট পপ-আপ ওপেন করবে
-          };
+              const selectedState = selectedStates[product.id];
+              if (!selectedState && getAvailableStates(product.id).length > 0) {
+                  triggerToast("Please select a State.");
+                  return;
+              }
+              const finalState = (!selectedState || selectedState === 'Random') ? undefined : selectedState;
+              const cartItem = { ...product };
+              if (finalState) cartItem.selectedState = finalState;
+              
+              setCart([...cart, cartItem]); 
+              triggerToast(`Added to cart.`);
+              setShowCart(true); 
+          };
 
           const handleStateChange = (productId, stateStr) => {
               setSelectedStates(prev => ({...prev, [productId]: stateStr}));
@@ -2769,6 +2767,45 @@
               return Array.from(states).sort();
           };
 
+          // 🟢 SMART LOGO MAPPER FOR STORE PRODUCTS 🟢
+          const getProductLogo = (name) => {
+              let n = String(name).toLowerCase();
+              if (n.includes('google voice') || n.includes('gv')) return 'https://www.google.com/s2/favicons?domain=voice.google.com&sz=128';
+              if (n.includes('textplus')) return 'https://www.google.com/s2/favicons?domain=textplus.com&sz=128';
+              if (n.includes('textnow')) return 'https://www.google.com/s2/favicons?domain=textnow.com&sz=128';
+              if (n.includes('nordvpn') || n.includes('nord vpn')) return 'https://www.google.com/s2/favicons?domain=nordvpn.com&sz=128';
+              if (n.includes('expressvpn') || n.includes('express vpn')) return 'https://www.google.com/s2/favicons?domain=expressvpn.com&sz=128';
+              if (n.includes('ipvanish')) return 'https://www.google.com/s2/favicons?domain=ipvanish.com&sz=128';
+              if (n.includes('surfshark')) return 'https://www.google.com/s2/favicons?domain=surfshark.com&sz=128';
+              if (n.includes('cyberghost')) return 'https://www.google.com/s2/favicons?domain=cyberghostvpn.com&sz=128';
+              if (n.includes('vyprvpn')) return 'https://www.google.com/s2/favicons?domain=vyprvpn.com&sz=128';
+              if (n.includes('pia') || n.includes('private internet')) return 'https://www.google.com/s2/favicons?domain=privateinternetaccess.com&sz=128';
+              if (n.includes('vpn')) return 'https://www.google.com/s2/favicons?domain=vpn.com&sz=128';
+              if (n.includes('gmail') || n.includes('google')) return 'https://www.google.com/s2/favicons?domain=google.com&sz=128';
+              if (n.includes('facebook') || n.includes('fb')) return 'https://www.google.com/s2/favicons?domain=facebook.com&sz=128';
+              if (n.includes('instagram') || n.includes('ig')) return 'https://www.google.com/s2/favicons?domain=instagram.com&sz=128';
+              if (n.includes('twitter') || n.includes(' x ')) return 'https://www.google.com/s2/favicons?domain=x.com&sz=128';
+              if (n.includes('tiktok')) return 'https://www.google.com/s2/favicons?domain=tiktok.com&sz=128';
+              if (n.includes('whatsapp')) return 'https://www.google.com/s2/favicons?domain=whatsapp.com&sz=128';
+              if (n.includes('telegram')) return 'https://www.google.com/s2/favicons?domain=telegram.org&sz=128';
+              if (n.includes('netflix')) return 'https://www.google.com/s2/favicons?domain=netflix.com&sz=128';
+              if (n.includes('amazon') || n.includes('aws')) return 'https://www.google.com/s2/favicons?domain=amazon.com&sz=128';
+              if (n.includes('paypal')) return 'https://www.google.com/s2/favicons?domain=paypal.com&sz=128';
+              if (n.includes('cashapp') || n.includes('cash app')) return 'https://www.google.com/s2/favicons?domain=cash.app&sz=128';
+              if (n.includes('venmo')) return 'https://www.google.com/s2/favicons?domain=venmo.com&sz=128';
+              if (n.includes('chime')) return 'https://www.google.com/s2/favicons?domain=chime.com&sz=128';
+              if (n.includes('yahoo')) return 'https://www.google.com/s2/favicons?domain=yahoo.com&sz=128';
+              if (n.includes('outlook') || n.includes('hotmail')) return 'https://www.google.com/s2/favicons?domain=outlook.com&sz=128';
+              if (n.includes('tinder')) return 'https://www.google.com/s2/favicons?domain=tinder.com&sz=128';
+              if (n.includes('bumble')) return 'https://www.google.com/s2/favicons?domain=bumble.com&sz=128';
+              if (n.includes('match')) return 'https://www.google.com/s2/favicons?domain=match.com&sz=128';
+              if (n.includes('pof') || n.includes('plenty of fish')) return 'https://www.google.com/s2/favicons?domain=pof.com&sz=128';
+              
+              // Fallback Domain format if not in list
+              let word = n.split(' ')[0].replace(/[^a-z0-9]/g, '');
+              return word ? `https://www.google.com/s2/favicons?domain=${word}.com&sz=128` : null;
+          };
+
           return (
             <div className="space-y-6 w-full relative z-10 animate-matrix-in">
               <div className="flex flex-col sm:flex-row justify-between items-center gap-4 w-full bg-white p-5 rounded-3xl border border-gray-200 shadow-sm relative overflow-hidden">
@@ -2782,7 +2819,7 @@
                      <input type="text" placeholder="Search accounts..." value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)} className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-2xl pl-12 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all allow-select" />
                 </div>
               </div>
-<div className="flex flex-col gap-4 sm:gap-5 w-full">
+              <div className="flex flex-col gap-4 sm:gap-5 w-full">
                   {filteredCategories.length === 0 ? (
                       <div className="w-full bg-white rounded-3xl border border-gray-200 py-20 text-center text-gray-500 font-mono text-[10px] uppercase tracking-widest flex flex-col items-center shadow-sm">
                           <Search className="w-10 h-10 mb-4 opacity-20"/>
@@ -2794,17 +2831,20 @@
                           const availableStates = getAvailableStates(product.id);
                           const stockCount = inventory[product.id] ? inventory[product.id].length : 0;
                           const isOutOfStock = stockCount === 0;
+                          
+                          const logoUrl = getProductLogo(product.name);
 
                           return (
-                              <div key={product.id} className={`relative flex flex-col lg:flex-row justify-between items-start lg:items-center p-5 sm:p-6 bg-white border rounded-2xl sm:rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 group overflow-hidden ${isOutOfStock ? "border-gray-200 bg-gray-50/50" : "border-gray-200 hover:border-brand-primary/40"}`}>
-                                  
-                                  {/* 🟢 Hover Left Accent Line 🟢 */}
-                                  {!isOutOfStock && <div className="absolute left-0 top-0 h-full w-1.5 bg-brand-primary scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center"></div>}
+                              <div key={product.id} className={`relative flex flex-col lg:flex-row justify-between items-start lg:items-center p-5 sm:p-6 bg-white border rounded-2xl sm:rounded-3xl shadow-sm transition-colors duration-300 group overflow-hidden ${isOutOfStock ? "border-gray-200 bg-gray-50/50" : "border-gray-200 hover:border-gray-300"}`}>
 
                                   {/* Left Section: Details */}
                                   <div className="flex items-start gap-4 w-full lg:w-2/5 mb-4 lg:mb-0 relative z-10">
-                                      <div className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl border shrink-0 transition-all duration-300 ${isOutOfStock ? 'bg-gray-100 border-gray-200 text-gray-400' : 'bg-blue-50/50 border-blue-100 text-brand-primary group-hover:bg-brand-primary/10 group-hover:border-brand-primary/30'}`}>
-                                          <Icon className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.5} />
+                                      <div className={`w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-xl sm:rounded-2xl border shrink-0 ${isOutOfStock ? 'bg-gray-100 border-gray-200 text-gray-400' : 'bg-gray-50 border-gray-200 text-brand-primary shadow-sm'}`}>
+                                          {logoUrl ? (
+                                              <img src={logoUrl} className={`w-7 h-7 sm:w-8 sm:h-8 object-contain ${isOutOfStock ? 'opacity-40 grayscale' : ''}`} alt={product.name} />
+                                          ) : (
+                                              <Icon className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.5} />
+                                          )}
                                       </div>
                                       <div className="flex flex-col">
                                           <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-1">
