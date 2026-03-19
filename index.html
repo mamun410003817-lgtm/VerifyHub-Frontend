@@ -359,86 +359,78 @@
         .timer-bar {
                 animation: countdown linear forwards;
             }
-/* 🟢 ULTRA-MINIMALIST FLAT DARK THEME 🟢 */
+/* 🟢 THE ULTIMATE DAY MODE (LIGHT THEME) OVERRIDE 🟢 */
             body, html, #root, .light-theme { 
-                background-color: #090E17 !important; /* Pitch Dark Minimal Background */
-                color: #F8FAFC !important; 
+                background-color: #F4F4F5 !important; /* Soft minimal background */
+                color: #0F172A !important; 
             }
             
-            /* 1. Flat Cards and Panels (KILL SHADOWS) */
-            .bg-white, .light-theme .bg-white, .bg-gray-50, .glass-effect, .glass-panel {
-                background-color: #101726 !important; /* Flat card color */
-                border: 1px solid rgba(255, 255, 255, 0.03) !important; /* Ultra subtle border */
-                box-shadow: none !important; /* KILL ALL SHADOWS */
-                color: #F8FAFC !important;
-                backdrop-filter: none !important; /* Remove heavy glass blurs */
-            }
-            
-            /* 2. Flat Hover States (No Jumping) */
-            .hover\:bg-gray-50:hover, .hover\:bg-gray-100:hover, .hover\:bg-blue-50\/20:hover, .hover\:bg-blue-50\/50:hover {
-                background-color: #162032 !important;
-                border-color: rgba(255, 255, 255, 0.06) !important;
-                transform: translateY(0) !important; /* Kill hover lift for flat feel */
+            /* 1. FORCE ALL DARK BACKGROUNDS TO WHITE/LIGHT GRAY */
+            [class*="bg-[#0F172A]"], [class*="bg-[#0b1219]"], [class*="bg-[#151e29]"], 
+            [class*="bg-[#0B1121]"], [class*="bg-[#090E17]"], [class*="bg-[#050505]"],
+            [class*="bg-[rgba(0,0,0"], [class*="bg-black/"], .glass-effect, .glass-panel {
+                background-color: #FFFFFF !important;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+                backdrop-filter: none !important;
             }
 
-            /* 3. Refined Typography */
-            .text-gray-900, .text-gray-800, .text-black { color: #FFFFFF !important; font-weight: 500 !important; }
-            .text-gray-700, .text-gray-600 { color: #CBD5E1 !important; font-weight: 400 !important; }
-            .text-gray-500, .text-gray-400 { color: #64748B !important; font-weight: 400 !important; }
-            
-            /* 4. Minimal Inputs */
-            input, textarea, select, .glass-input {
-                background-color: #090E17 !important;
-                border: 1px solid rgba(255, 255, 255, 0.05) !important;
+            /* Exception: Keep Modals Overlay Background Semi-Dark */
+            .fixed.inset-0[class*="bg-[#000]"], .fixed.inset-0[class*="bg-black"] {
+                background-color: rgba(0, 0, 0, 0.4) !important;
+                backdrop-filter: blur(4px) !important;
+            }
+
+            /* 2. FORCE ALL WHITE/LIGHT TEXT TO DARK */
+            .text-white, .text-gray-200, .text-gray-300 { color: #0F172A !important; font-weight: 600 !important; }
+            .text-gray-400 { color: #475569 !important; font-weight: 500 !important; }
+            .text-gray-500 { color: #64748B !important; font-weight: 500 !important; }
+
+            /* Maintain Branding & Status Colors */
+            .text-brand-primary { color: #2563EB !important; }
+            .text-green-400, .text-green-500 { color: #16A34A !important; }
+            .text-red-400, .text-red-500 { color: #DC2626 !important; }
+            .text-yellow-400, .text-yellow-500 { color: #CA8A04 !important; }
+
+            /* Fix Buttons Text (Primary buttons should stay white text) */
+            button.bg-brand-primary, button.bg-brand-primary .text-white,
+            button.bg-green-500, button.bg-green-500 .text-white,
+            button.bg-red-500, button.bg-red-500 .text-white,
+            button.bg-gray-900, button.bg-gray-900 .text-white {
                 color: #FFFFFF !important;
-                box-shadow: none !important;
+            }
+
+            /* 3. FORCE ALL WHITE/DARK BORDERS TO LIGHT GRAY */
+            [class*="border-white"], [class*="border-gray-700"], [class*="border-gray-800"] {
+                border-color: rgba(0, 0, 0, 0.08) !important;
+            }
+
+            /* 4. FIX MENU BAR ACTIVE BUTTON & HOVERS */
+            [class*="bg-white/10"] {
+                background-color: #E2E8F0 !important; /* Active Menu Item Background */
+            }
+            [class*="bg-white/10"] .text-white, [class*="bg-white/10"] svg {
+                color: #2563EB !important; /* Blue text for active menu */
+            }
+            [class*="hover:bg-white/5"]:hover, [class*="hover:bg-[rgba(255,255,255,0.05)]"]:hover {
+                background-color: #F1F5F9 !important;
+                color: #0F172A !important;
+            }
+
+            /* 5. FIX INPUTS & SELECTS */
+            input, textarea, select, .glass-input, .bg-transparent {
+                background-color: #FFFFFF !important;
+                border: 1px solid rgba(0, 0, 0, 0.15) !important;
+                color: #0F172A !important;
             }
             input:focus, textarea:focus, select:focus {
-                border-color: #3B82F6 !important;
-                box-shadow: none !important;
+                border-color: #2563EB !important;
+                box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1) !important;
             }
+            select option { background-color: #FFFFFF !important; color: #0F172A !important; }
 
-            /* 5. Subtle Borders */
-            .border-gray-200, .border-gray-100, .border-gray-300, .border-t, .border-b {
-                border-color: rgba(255, 255, 255, 0.03) !important;
-            }
-
-            /* 6. Flat Solid Buttons */
-            button.bg-gray-900, .bg-gray-900, button.bg-brand-primary, .bg-brand-primary {
-                background-color: #2563EB !important; /* Pure Solid Blue */
-                color: white !important;
-                border: none !important;
-                box-shadow: none !important;
-                background-image: none !important; /* Remove gradient */
-            }
-            button.bg-brand-primary:hover { background-color: #1D4ED8 !important; transform: none !important; }
-            button.bg-white, .bg-white.text-black {
-                background-color: rgba(255,255,255,0.04) !important;
-                color: #F8FAFC !important;
-                border: 1px solid rgba(255,255,255,0.04) !important;
-                box-shadow: none !important;
-            }
-            button.bg-white:hover, .bg-white.text-black:hover { background-color: rgba(255,255,255,0.08) !important; transform: none !important; }
-            
-            /* 7. Borderless Header */
-            header {
-                background-color: #090E17 !important;
-                border-bottom: 1px solid rgba(255,255,255,0.03) !important;
-                box-shadow: none !important;
-            }
-            
-            /* 8. Utility backgrounds */
-            .bg-blue-50, .bg-gray-100, .bg-gray-50\/50, .bg-gray-50 { background-color: rgba(255,255,255,0.02) !important; border-color: rgba(255,255,255,0.03) !important; box-shadow: none !important; }
-            
-            /* 9. Dropdown Fixes */
-            .bg-\\[\\#151e29\\] { background-color: #090E17 !important; box-shadow: none !important; border: 1px solid rgba(255,255,255,0.05) !important;}
-            .bg-\\[\\#0b1219\\] { background-color: #101726 !important; box-shadow: none !important; border: 1px solid rgba(255,255,255,0.05) !important; }
-
-            /* 10. KILL BACKGROUND BLUR BLOBS, NEON GLOWS & BOUNCY ANIMATIONS */
+            /* 6. Remove Blurs and Bouncy animations for ultra-minimalist feel */
             .blur-3xl { display: none !important; }
-            .shadow-\\[0_8px_30px_rgba\\(59\\,130\\,246\\,0\\.1\\)\\] { box-shadow: none !important; border: 1px solid rgba(255,255,255,0.05) !important; }
-            .hover\:-translate-y-1:hover, .hover\:-translate-y-2:hover, .group:hover .group-hover\:-translate-y-2 { transform: none !important; }
-            .animate-bouncy-pop { animation: fadeInUp 0.4s ease forwards !important; }
+            .animate-bouncy-pop { animation: fadeInUp 0.3s ease forwards !important; }
         </style>
 </head>
 <body class="antialiased">
