@@ -1954,11 +1954,11 @@
           );
         }
 
-        // ==========================================
-        // 📱 CUSTOMER SMS STORE MODULE (UPDATED UI & SEARCH) 📱
+       // ==========================================
+        // 📱 CUSTOMER SMS STORE MODULE (ULTRA-MINIMALIST VERCEL STYLE) 📱
         // ==========================================
         function CustomerDashboardSMS({ user, balance, setUsersDB, triggerToast, bankSettings }) {
-            const [smsMode, setSmsMode] = useState('standard'); // 'standard' | 'panda'
+            const [smsMode, setSmsMode] = useState('standard'); 
             
             const [services, setServices] = useState([]);
             const [isLoadingRates, setIsLoadingRates] = useState(true);
@@ -1971,7 +1971,6 @@
             const [selectedDuration, setSelectedDuration] = useState('15 minutes'); 
             const [selectedServiceCode, setSelectedServiceCode] = useState('');
             
-            // 🟢 NEW: USA State Selection Variables 🟢
             const [selectedUsaState, setSelectedUsaState] = useState('');
             const usaStatesList = [
                 { value: "", label: "Any State (Random)" },
@@ -1986,7 +1985,6 @@
             const [timeRemaining, setTimeRemaining] = useState(0);
             const pollingRef = useRef(false);
 
-            // 🟢 Cross-Device Sync & Dead Order Filter 🟢
             useEffect(() => {
                 let isMounted = true;
                 const fetchActiveOrder = async () => {
@@ -1999,8 +1997,6 @@
                         const data = await res.json();
                         if (data.success && data.data && data.data.length > 0 && isMounted) {
                             const latestOrder = data.data[data.data.length - 1];
-                            
-                            // 🟢 FIX: চেক করা হচ্ছে নম্বরটির মেয়াদ আগেই শেষ কি না 🟢
                             let totalSeconds = 900; 
                             if(latestOrder.duration === '5 minutes') totalSeconds = 300;
                             else if(latestOrder.duration === '3 days') totalSeconds = 259200;
@@ -2009,28 +2005,23 @@
                             else if(latestOrder.duration === '25 days') totalSeconds = 2160000;
                             
                             const expireTime = latestOrder.startTime + (totalSeconds * 1000);
-                            
                             if (Date.now() >= expireTime) {
-                                // মেয়াদ আগেই শেষ! স্ক্রিনে কোনো পপআপ দেখাবে না। 
-                                // নীরবে ব্যাকগ্রাউন্ডে ক্যানসেল রিকোয়েস্ট পাঠিয়ে দেবে।
                                 fetch(`${BACKEND_URL}/api/sms/cancel`, {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                                     body: JSON.stringify({ orderId: latestOrder.orderId, n_id: latestOrder.n_id, provider: latestOrder.provider })
                                 }).catch(()=>{});
-                                
                                 setActiveOrder(null);
                             } else {
                                 setActiveOrder(latestOrder);
                             }
                         }
-                    } catch (e) { console.error("Sync active orders failed"); }
+                    } catch (e) {}
                 };
                 fetchActiveOrder();
                 return () => { isMounted = false; };
             }, [user]);
 
-            // 🟢 Sync active order to local storage (Fallback) 🟢
             useEffect(() => {
                 if (user?.email) {
                     if (activeOrder) localStorage.setItem(`activeOrder_${user.email}`, JSON.stringify(activeOrder));
@@ -2038,14 +2029,11 @@
                 }
             }, [activeOrder, user?.email]);
 
-            // 🟢 UPDATED: Comprehensive Country List for smspinverify 🟢
             const countryOptionsStr = "USA:United States,USA Rent:USA Rent,USA Virtual:USA Virtual,United kingdom UK:United kingdom UK,Hong Kong:Hong Kong,Germany:Germany,Russia:Russia,USA Rent up to 25 days :USA Rent up to 25 days,India:India,Pakistan:Pakistan,Brazil:Brazil,Mozambique:Mozambique,South Africa:South Africa,Venezuela:Venezuela,Swaziland:Swaziland,France:France,Malawi:Malawi,Nigeria:Nigeria,China:China,Lesotho:Lesotho,Zambia:Zambia,Egypt:Egypt,Peru:Peru,Mexico:Mexico,Spain:Spain,Ghana:Ghana,Morocco:Morocco,Algeria:Algeria,Myanmar:Myanmar,Argentina:Argentina,Romania:Romania,Ukraine:Ukraine,Vietnam:Vietnam,Canada:Canada,Tanzania:Tanzania,Namibia:Namibia,Switzerland:Switzerland,Italy:Italy,Colombia:Colombia,Botswana:Botswana,Sweden:Sweden,Denmark:Denmark,Ecuador:Ecuador,Austria:Austria,Czech Republic:Czech Republic,Norway:Norway,Luxembourg:Luxembourg,Belgium:Belgium,Poland:Poland,Finland:Finland,Hungary:Hungary,Ireland:Ireland,Greece:Greece,Bosnia and Herzegovina:Bosnia and Herzegovina,Bulgaria:Bulgaria,Slovakia:Slovakia,Belarus:Belarus,Serbia:Serbia,Croatia:Croatia,Moldova:Moldova,Israel:Israel,Albania:Albania,Lithuania:Lithuania,Northmacedonia:Northmacedonia,Slovenia:Slovenia,Latvia:Latvia,Estonia:Estonia,Montenegro:Montenegro,Malta:Malta,Iceland:Iceland,Andorra:Andorra,Monaco:Monaco,Liechtenstein:Liechtenstein,San Marino:San Marino,holy see:holy see,Australia:Australia,New zealand:New zealand,Fiji :Fiji ,Paraguay:Paraguay,Cuba:Cuba,Japan:Japan,Macao:Macao,Taiwan:Taiwan,Qatar:Qatar,Singapore:Singapore,Uae:Uae,Kazakhstan:Kazakhstan,Malaysia:Malaysia,Philippines:Philippines,Turkey:Turkey,Uzbekistan:Uzbekistan,Srilanka:Srilanka,Cambodia:Cambodia,North Korea:North Korea,Indonesia:Indonesia,Iran:Iran,Thailand:Thailand,South Korea:South Korea,Iraq:Iraq,Afghanistan:Afghanistan,Saudiarabia:Saudiarabia,Yemen:Yemen,Nepal:Nepal,Syria:Syria,Jordan:Jordan,Azerbaijan:Azerbaijan,Tajikistan:Tajikistan,Laos:Laos,Lebanon:Lebanon,Kyrgyzstan:Kyrgyzstan,Turkmenistan:Turkmenistan,Oman:Oman,State of Palestine:State of Palestine,Kuwait:Kuwait,Georgia:Georgia,Mongolia:Mongolia,Armenia:Armenia,Timor-Leste:Timor-Leste,Cyprus:Cyprus,Maldives:Maldives,Brunei:Brunei,Chile:Chile,Guatemala:Guatemala,Bolivia:Bolivia,Haiti:Haiti,Ethiopia:Ethiopia,Honduras:Honduras,Nicaragua:Nicaragua,El Salvador:El Salvador,Costarica:Costarica,Panama:Panama,Uruguay:Uruguay,Jamaica:Jamaica,Trinidad and Tobago:Trinidad and Tobago,Guyana:Guyana,Suriname:Suriname,Belize:Belize,Bahamas:Bahamas,Saintlucia:Saintlucia,Solomonislands:Solomonislands,Kiribati:Kiribati,Tonga:Tonga,Marshall Islands:Marshall Islands,Palau:Palau,Tuvalu:Tuvalu,Nauru:Nauru,Kenya:Kenya,Uganda:Uganda,Sudan:Sudan,Madagascar:Madagascar,Cameroon:Cameroon,Côte d'Ivoire:Côte d'Ivoire,Niger:Niger,Mali:Mali,Senegal:Senegal,Somalia:Somalia,Zimbabwe:Zimbabwe,Rwanda:Rwanda,Tunisia:Tunisia,Southsudan:Southsudan,Togo:Togo,Sierraleone:Sierraleone,Libya:Libya,Liberia:Liberia,Mauritania:Mauritania,Gambia:Gambia,Mauritius:Mauritius,Eswatini:Eswatini,Cabo Verde:Cabo Verde,Saotomeandprincipe:Saotomeandprincipe,Montserrat:Montserrat,Newcaledonia:Newcaledonia,Turksandcaicos:Turksandcaicos,Virginislands:Virginislands,Ivorycoast:Ivorycoast";
             const countryOptions = useMemo(() => countryOptionsStr.split(',').map(s => { let [v, l] = s.split(':'); return {value: v, label: l || v}; }).sort((a,b) => a.label.localeCompare(b.label)), []);
-            
             const hardcodedServicesStr = "CashApp 2,WhatsApp,Gmail Rent,Telegram,Credit Karma,CashApp ,Amazon,Gmail,Service not listed,Unknown,Credit karma 3,instagram,Google chat,PayPal 2,Amazon - AWS,AWS 3,Apple ID,Amazon 9,Amazon 4,Apple,Bumble,AOL,Adobe,Affirm,Amazon 3,Amazon 5,Binance US,Capital One,Capital One 3,Current,Facebook 3,Tinder 5,Linode 2,Facebook,WhatsApp 2,Moonpay,Gmail 4,Bumble 5,Gmail 6,POF 3,Venmo,Amazon 8,PayPal,Yahoo 4,Telegram 3,Bumble 4,Telegram 4,BLK 2,tiktok 2,Tinder 4,OfferUp 3,Match 6,Whatsapp 4,OfferUp,attapoll 2,UserInterviews,POF 4,Ourtime 5,instagram 3,WalletHub,ebay 2,WhatsApp Germany,Linode 3,greendot 2,Amazon 7,Moonpay 2,Gmail 2,Signal 3,Yahoo,Gmail 5,POF,Yahoo 3,Chispa 2,Remitly,Stir,AWS 4,Cashapp 3,LinkedIn 2,craigslist 3,Telegram 7,Fetch,Coinbase,OkCupid 3,Empower,Synchrony,AWS 6,Fiverr 9,OurTime,Uber,LinkedIn 4,Match,PayPal 5,Signal,BLK,Facebook Reset,Tinder 7,BOSS Revolution Money,Discord,DoorDash,imo 2,ipsos isay,Payoneer 3,TransferWise,Walmart,Branded Surveys US,Chime,Credit Sesame,Fiverr 7,Gmail 9,Instagram 4,OfferUp 6,CARD,eBay,Facebook 9,Instagram Reset,marblepay,Microsoft - Outlook,OnePay,Tinder 8,Tinder 9,Walmart 4,Apple Wallet,BLK 3,Chiapa,Chispa,ClassPass,Crypto.com,Dave,FetLife US,GO2  3,Google Voice,Grindr,Hinge,hrblock,Klarna,Kraken,Lyft,POF 6,Skrill,SoFi,SurveyMonkey Rewards,TikTok,Twilio 3,WeChat,ZOOT,1111家教,11are,12Man,1688,1688 3,17LIVE,1800 Fresh Tax,188aqq,1kkirana,1km,1mg,1xbet,22are,28MEX,2dehands,2K6OA3,3Fun,5miles,Aeldra US,Afterpay,Airbaton,Airbnb,Albert,Alibaba,Aliexpress,Allset,Ally,Amasia,America ,America Voice,AppStation US,Atom US,AttaPoll,Badoo,Baidu US,Bank of America,Bank Of America 3,Banxa US,BCBS,Best Of Our Valley,bet365,Betterment US,Bigo Live,BitClout US,Bitcoin ATM,BlackPeopleMeet,Blue Federal Credit Union US,BMO,Bovada,Brandclub US,BridgeCard US,BTCDirect US,Bumble 3,Bump US,Burner,cardi mall,Cash Alarm US,Chase,Chicks Gold Inc,Chime 3,Chime Reset,Chispa 3,CIBC US,Citi,Citibank,Citizens,Claude,Cleo,Clickadu US,CMB,Coffee Meets Bagel - CMB,Coffee Meets Bagel US,CoinFlip,Cointelegraph US,Copper,Craigslist,Craigslist 7,Crowdtap 3,CuriousCat US,DAtech,dell,Dingtone,Discord 4,Discover us,Dollar General,DOSH US,Doublelist,Doublelist 4,Dunkin,Earn Honey US,EarningStation,eGifter,Empire,Eneba US,eureka,EZ Texting,Facebook 11,Facebook 13,Facebook 14,Facebook 17,Facebook 18,Facebook USA,FANATICS,FastMail,Feeld,Fetch Rewards,Fidelity Investments,Fiverr,Fiverr 3,Fiverr 8,Flash Rewards US,Floatme,Found,Freecash.com,Freelancer,FreeTaxUSA US,G2G,Gemini,Gmail 13,Gmail 8,GMX,Go2,Golden Farmery US,Google messenger,GoPuff,Grasshopper,Green Dot,GroupMe,GU Chat,Guru US,Handshake,Happn US,HappyCo,Hily,Hily 2,Hotmail US,ibotta US,imo,iMoney US,Indeed,Instacart,InstaRem,iOffer,iPlum,ipsos,KakaoTalk,Kamatera,KashKick,League of Legends US,Lemon8,Lenme,Line US,LinkedIn,Linode Cloud Manager,Locanto,LuckyLand,LuckyOne,M1 Finance US,Mail Princess,MailRu,Match 5,Mercari,Microsoft - Outlook 2,Microsoft Azure ,Microsoft Office 365,Microsoft Office 365 E5,Microsoft Office 365 Education,Microsoft Outlook,mixi,MobileMoney,MoneyGram,MoneyLion,MS Bing HotMail Azure,MTC Game Portal,My Voice,Netflix,Nextdoor,Nike,Offerup 4,OffGamers,Ok.RU,Ok.RU 2,OkCupid,Okcupid 5,OneForma,OnePay USA,OpenPhone,Outlook,Ozan 1,Paid Viewpoint,Payactiv,Paybis,PaymeDollar,Payoneer,PayPal 8,PayPal Reset,PaysafeCard,PCGameSupply,Pinecone,Plaid,PlayerAuctions,PNC,POF 5,Prime Opinion,Privacy,Prolific,Prolific 3,RealPrize,Rebtel,Revolut,Rewarded Play,Rewarded Play 3,Ria,Ring4,RingCaptcha,Rips,Roomies,Roomster,Samokat,SCHWAB,SeatGeek,Secret Benefits US,Sendwave,SEOClerks,Sezzle,Simplex - SimplexCC,Skout US,Snagshout US,Snap Finance,Snapchat,Snaplii,Sparrow,Steady US,Steam US,Step,Strike,Stripe,SuperPay,Survey,Survey Junkie US,SweetRing,TD,TechBubble US,Telnyx,Temu,Textnow,textPlus,Thumbtack,Ticketmaster,Tierlock,Tinder,Token,Toloka,Top survey,TradingView US,transunion,Triumph,TRUIST,Truth Social,Turgame US,Twilio,Twitch,Twitter,U S Bank,UberEats US,Univision Mobile Money US,uphold,Uplift US,UpVoice US,Upward,Upward 3,Upwork,Valued Opinions US,Varo,Vets Prevail US,ViaApp - ViaVan US,Viber,Vidaplayer,vinted,VK,VoilaNorbert US,Vonage,Voyager US,Vumber US,Wealthfront US,Wells Fargo,Whatnot,Windows - Xbox Store,WorldRemit,Yahoo 5,Yandex,Yandex 2,Youtube,Yubo,Zillow,Zip - QuadPay,Zoho,Zoosk";
             const hardcodedServices = useMemo(() => hardcodedServicesStr.split(',').map(s => ({value: s, label: s})).sort((a,b) => a.label.localeCompare(b.label)), []);
 
-            // Fetch Panda Countries when switching mode
             useEffect(() => {
                 if (smsMode === 'panda' && pandaCountries.length === 0) {
                     const fetchC = async () => {
@@ -2053,9 +2041,7 @@
                         try {
                             const res = await fetch(`${BACKEND_URL}/api/sms/pandasms/countries`);
                             const data = await res.json();
-                            if(data.success && data.data) {
-                                setPandaCountries(data.data);
-                            }
+                            if(data.success && data.data) setPandaCountries(data.data);
                         } catch(e) {}
                         setIsLoadingCountries(false);
                     };
@@ -2063,7 +2049,6 @@
                 }
             }, [smsMode, pandaCountries.length]);
 
-            // Duration options logic
             const isPanda = smsMode === 'panda' || currentProvider === 'pandasms' || selectedCountry === 'UK' || selectedCountry === 'United Kingdom';
             const durationOptions = isPanda ? 
                 [{ value: '5 minutes', label: '5 Minutes' }] : 
@@ -2086,38 +2071,22 @@
                     const token = await getAuthToken();
                     const currentC = smsMode === 'panda' ? selectedPandaCountry : selectedCountry;
                     const providerQuery = smsMode === 'panda' ? '&provider=pandasms' : '';
-                    const res = await fetch(`${BACKEND_URL}/api/sms/getPrices?country=${currentC}${providerQuery}`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
+                    const res = await fetch(`${BACKEND_URL}/api/sms/getPrices?country=${currentC}${providerQuery}`, { headers: { 'Authorization': `Bearer ${token}` } });
                     const data = await res.json();
                     
                     if(data.success) {
-                        // 🟢 FIX: If standard mode and API returns no services, fallback to hardcoded list 🟢
-                        if (smsMode === 'standard' && (!data.data || data.data.length === 0)) {
-                             // Assuming base cost is somehow calculated or defaults. We use hardcoded with default prices.
-                             // This ensures the user still sees options even if the specific API rate fetch fails for smspinverify.
-                             // However, since API returned success but empty, it might mean the country is unsupported.
-                             // Let's just set the API returned data.
-                        }
-                        
                         setServices(data.data);
                         setCurrentProvider(data.provider);
-                        
                         if(data.data.length > 0) {
-                            // 🟢 FIX: ডিফল্ট হিসেবে WhatsApp সিলেক্ট করা, না পেলে প্রথমটা 🟢
                             const whatsappApp = data.data.find(s => String(s.name).toLowerCase().includes('whatsapp'));
                             setSelectedServiceCode(whatsappApp ? whatsappApp.code : data.data[0].code);
-                        } else {
-                            setSelectedServiceCode('WhatsApp');
-                        }
+                        } else setSelectedServiceCode('WhatsApp');
                     } else {
                         triggerToast(data.message || 'Failed to load SMS services.');
-                        setServices([]);
-                        setSelectedServiceCode('');
+                        setServices([]); setSelectedServiceCode('');
                     }
                 } catch(e) {
-                    triggerToast('Network error loading SMS services.');
-                    setServices([]);
+                    triggerToast('Network error loading SMS services.'); setServices([]);
                 }
                 setIsLoadingRates(false);
             }, [selectedCountry, selectedPandaCountry, smsMode, triggerToast]);
@@ -2126,7 +2095,6 @@
 
             useEffect(() => { return () => { if(pollInterval) clearInterval(pollInterval); } }, [pollInterval]);
 
-      // 🟢 NEW TIMER LOGIC & AUTO-CANCEL (FIXED REPEATED POPUPS) 🟢
             useEffect(() => {
                 if(activeOrder && activeOrder.status === 'Active') {
                     let totalSeconds = 900; 
@@ -2137,33 +2105,27 @@
                     else if(activeOrder.duration === '25 days') totalSeconds = 2160000;
                     
                     const expireTime = activeOrder.startTime + (totalSeconds * 1000);
-                    let isExpiredHandled = false; // 👈 একাধিকবার ট্রিগার হওয়া ঠেকাতে ফ্ল্যাগ
+                    let isExpiredHandled = false;
 
                     const updateTimer = () => {
                         const now = Date.now();
                         const diff = Math.max(0, Math.floor((expireTime - now) / 1000));
                         setTimeRemaining(diff);
 
-                        // 🟢 Auto-check timeout when timer hits 0 🟢
                         if (diff === 0 && activeOrder.status === 'Active' && !isExpiredHandled) {
-                            isExpiredHandled = true; // 👈 ফ্ল্যাগ ট্রু করে দিলাম যাতে দ্বিতীয়বার না ঢোকে
+                            isExpiredHandled = true; 
                             triggerToast("Time expired! Auto-cancelling & refunding...");
-                            
                             if(pollInterval) clearInterval(pollInterval);
-                            setActiveOrder(null); // 👈 স্ক্রিন থেকে প্যানেলটি সাথে সাথে সরিয়ে দিলাম
+                            setActiveOrder(null); 
                             
-                            // 🟢 ব্যাকএন্ডে ক্যানসেল রিকোয়েস্ট পাঠানো (Background process) 🟢
                             (async () => {
                                 try {
                                     const token = await getAuthToken();
                                     await fetch(`${BACKEND_URL}/api/sms/cancel`, {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                                         body: JSON.stringify({ orderId: activeOrder.orderId, n_id: activeOrder.n_id, provider: activeOrder.provider })
                                     });
-                                } catch(e) {
-                                    console.error("Auto cancel error", e);
-                                }
+                                } catch(e) {}
                             })();
                         }
                     };
@@ -2183,13 +2145,10 @@
             const startPolling = (orderData) => {
                 setPollInterval(prev => {
                     if(prev) clearInterval(prev);
-                    // 🟢 FIX: পোলিং টাইম ১০ সেকেন্ড থেকে কমিয়ে ৩ সেকেন্ড করা হলো 🟢
                     const intId = setInterval(async () => {
                         try {
                             const token = await getAuthToken();
-                            const res = await fetch(`${BACKEND_URL}/api/sms/getStatus?n_id=${orderData.n_id}&provider=${orderData.provider}`, {
-                                headers: { 'Authorization': `Bearer ${token}` }
-                            });
+                            const res = await fetch(`${BACKEND_URL}/api/sms/getStatus?n_id=${orderData.n_id}&provider=${orderData.provider}`, { headers: { 'Authorization': `Bearer ${token}` } });
                             const data = await res.json();
                             
                             if(data.success) {
@@ -2199,17 +2158,16 @@
                                     triggerToast("SMS Code Received! Auto-saved to Vault.");
                                 } else if (data.status === 'CANCEL') {
                                     clearInterval(intId);
-                                    setActiveOrder(null); // 👈 স্ক্রিন থেকে সাথে সাথে সরিয়ে দেবে
+                                    setActiveOrder(null); 
                                     triggerToast("Number expired or cancelled. Refund processed.");
                                 }
                             }
                         } catch(e) {}
-                    }, 3000); // 👈 এখানে 3000 মানে ৩ সেকেন্ড
+                    }, 3000); 
                     return intId;
                 });
             };
 
-            // 🟢 Resume polling on reload 🟢
             useEffect(() => {
                 if (activeOrder && activeOrder.status === 'Active' && !pollingRef.current) {
                     startPolling(activeOrder);
@@ -2222,8 +2180,7 @@
             const buyNumber = async (serviceObj) => {
                 if(!serviceObj) return;
                 if(activeOrder && activeOrder.status === 'Active') {
-                    triggerToast("Please complete or cancel your current number first.");
-                    return;
+                    triggerToast("Please complete or cancel your current number first."); return;
                 }
                 
                 let finalCalculatedPrice = serviceObj.finalPrice;
@@ -2232,69 +2189,38 @@
                 if (selectedDuration === '14 days') finalCalculatedPrice *= 4;
                 if (selectedDuration === '25 days') finalCalculatedPrice *= 5;
 
-                if(balance < finalCalculatedPrice) {
-                    triggerToast("Insufficient funds for this duration.");
-                    return;
-                }
+                if(balance < finalCalculatedPrice) { triggerToast("Insufficient funds for this duration."); return; }
 
                 setIsCheckingOut(true);
                 try {
                     const token = await getAuthToken();
                     const reqBody = { 
-                        serviceId: serviceObj.code, 
-                        countryId: smsMode === 'panda' ? selectedPandaCountry : selectedCountry, 
-                        requestedPrice: finalCalculatedPrice,
-                        duration: selectedDuration,
-                        provider: currentProvider
+                        serviceId: serviceObj.code, countryId: smsMode === 'panda' ? selectedPandaCountry : selectedCountry, 
+                        requestedPrice: finalCalculatedPrice, duration: selectedDuration, provider: currentProvider
                     };
-                    if (smsMode === 'panda' && reuseNumberInput.trim() !== '') {
-                        reqBody.reuseNumber = reuseNumberInput.trim();
-                    }
-                    
-                    // 🟢 NEW: Add state to request body if USA and standard mode 🟢
-                    if (smsMode === 'standard' && (selectedCountry === 'USA' || selectedCountry === 'United States') && selectedUsaState) {
-                        reqBody.state = selectedUsaState;
-                    }
+                    if (smsMode === 'panda' && reuseNumberInput.trim() !== '') reqBody.reuseNumber = reuseNumberInput.trim();
+                    if (smsMode === 'standard' && (selectedCountry === 'USA' || selectedCountry === 'United States') && selectedUsaState) reqBody.state = selectedUsaState;
 
                     const res = await fetch(`${BACKEND_URL}/api/sms/getNumber`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                        body: JSON.stringify(reqBody)
+                        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(reqBody)
                     });
                     const data = await res.json();
                     
                     if(data.success) {
                         triggerToast(`Number assigned for ${data.duration}!`);
                         setUsersDB(prev => ({
-                            ...prev,
-                            [user.email]: {
-                                ...prev[user.email],
-                                balance: Number(prev[user.email].balance) - finalCalculatedPrice,
-                                totalSpent: Number(prev[user.email].totalSpent || 0) + finalCalculatedPrice
-                            }
+                            ...prev, [user.email]: { ...prev[user.email], balance: Number(prev[user.email].balance) - finalCalculatedPrice, totalSpent: Number(prev[user.email].totalSpent || 0) + finalCalculatedPrice }
                         }));
 
                         const newOrder = {
-                            orderId: data.orderId,
-                            n_id: data.n_id,
-                            phone: data.phone,
-                            service: serviceObj.name,
-                            originalPrice: finalCalculatedPrice,
-                            status: 'Active',
-                            code: null,
-                            duration: data.duration, 
-                            provider: data.provider,
-                            startTime: Date.now()
+                            orderId: data.orderId, n_id: data.n_id, phone: data.phone, service: serviceObj.name,
+                            originalPrice: finalCalculatedPrice, status: 'Active', code: null, duration: data.duration, provider: data.provider, startTime: Date.now()
                         };
                         setActiveOrder(newOrder);
                         startPolling(newOrder);
                         pollingRef.current = true;
-                    } else {
-                        triggerToast(data.message || "Failed to get number.");
-                    }
-                } catch(e) {
-                    triggerToast("Network error.");
-                }
+                    } else triggerToast(data.message || "Failed to get number.");
+                } catch(e) { triggerToast("Network error."); }
                 setIsCheckingOut(false);
             };
 
@@ -2306,26 +2232,18 @@
                 try {
                     const token = await getAuthToken();
                     const res = await fetch(`${BACKEND_URL}/api/sms/cancel`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({ orderId: activeOrder.orderId, n_id: activeOrder.n_id, provider: activeOrder.provider })
                     });
                     const data = await res.json();
                     if(data.success) {
-                        triggerToast(data.message || "Number securely cancelled & refunded.");
+                        triggerToast(data.message || "Cancelled & refunded.");
                         if(pollInterval) clearInterval(pollInterval);
-                        
-                        // Let the sync route update the balance in the background
                         setActiveOrder(null);
-                    } else {
-                        triggerToast(data.message || "Cannot cancel right now.");
-                    }
-                } catch(e) {
-                    triggerToast("Failed to cancel due to network error.");
-                } finally {
-                    setIsCancelling(false);
-                }
+                    } else triggerToast(data.message || "Cannot cancel right now.");
+                } catch(e) { triggerToast("Network error."); } finally { setIsCancelling(false); }
             };
+
             const currentServiceObj = (services || []).find(s => s.code === selectedServiceCode);
             let displayPrice = currentServiceObj ? (currentServiceObj.finalPrice || 0) : 0;
             if (selectedDuration === '3 days') displayPrice *= 2;
@@ -2333,316 +2251,202 @@
             if (selectedDuration === '14 days') displayPrice *= 4;
             if (selectedDuration === '25 days') displayPrice *= 5;
             
-            // 🟢 Determine which options to show based on mode (WITH PRICE) 🟢
             let finalServiceOptions = [];
             const safeServices = services || [];
-            if (smsMode === 'standard' && safeServices.length === 0) {
-                 finalServiceOptions = hardcodedServices || [];
-            } else {
-                 // 👈 এখানে s.finalPrice অ্যাড করা হলো যাতে ড্রপডাউনে দাম দেখায়
-                 finalServiceOptions = safeServices.map(s => ({ value: s.code, label: s.name, price: s.finalPrice }));
-            }
+            if (smsMode === 'standard' && safeServices.length === 0) finalServiceOptions = hardcodedServices || [];
+            else finalServiceOptions = safeServices.map(s => ({ value: s.code, label: s.name, price: s.finalPrice }));
 
             return (
-                <div className="space-y-8 w-full relative z-10 animate-matrix-in max-w-4xl mx-auto">
+                <div className="w-full relative z-10 animate-fade-in-up max-w-5xl mx-auto mt-4">
                     
-                    {/* Header Title */}
-                    <div className="text-center mb-10">
-                        <h1 className="text-3xl sm:text-5xl font-bold text-white tracking-[0.25em] uppercase mb-2 drop-shadow-lg">
-                            SMS <span className="font-light text-[#eab308] animate-pulse">Gateway</span>
-                        </h1>
-                        <p className="text-gray-400 text-xs sm:text-sm font-mono tracking-widest uppercase">Instant OTP & Virtual Numbers</p>
+                    {/* 🟢 Minimalist Header 🟢 */}
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 w-full mb-8 px-2 sm:px-0">
+                        <div>
+                            <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-wide">SMS Verifications</h1>
+                            <p className="text-gray-500 text-[10px] sm:text-xs font-mono mt-1">Instant OTPs & Virtual Numbers</p>
+                        </div>
                     </div>
 
-                    {/* Active Order Panel - Shows only if there's an active order */}
+                    {/* 🟢 Active Order Minimalist View 🟢 */}
                     {activeOrder ? (
-                        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-brand-primary/30 shadow-[0_8px_30px_rgba(59,130,246,0.1)] animate-bouncy-pop relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-full h-1.5 bg-gray-100">
-                                {activeOrder.status === 'Active' && (
-                                    <div className="h-full timer-bar bg-brand-primary" style={{
-                                        animationDuration: activeOrder.duration === '15 minutes' ? '900s' : 
-                                                           activeOrder.duration === '5 minutes' ? '300s' :
-                                                           activeOrder.duration === '3 days' ? '259200s' : 
-                                                           activeOrder.duration === '7 days' ? '604800s' : 
-                                                           activeOrder.duration === '14 days' ? '1209600s' : '2160000s'
-                                    }}></div>
-                                )}
-                            </div>
-                            
-                            <div className="flex flex-col lg:flex-row justify-between items-center gap-8 text-center lg:text-left mt-2">
-                                <div className="flex-grow w-full">
-                                    <div className="flex items-center justify-center lg:justify-start gap-3 mb-3">
-                                        <div className="w-2 h-2 bg-brand-primary rounded-full animate-pulse"></div>
-                                        <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">{activeOrder.service} Verification</p>
-                                    </div>
-                                    
-                                    {/* 🟢 PRO PHONE NUMBER DISPLAY WITH SMART COUNTRY CODE SPLITTER 🟢 */}
-                                    {(() => {
-                                        let p = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
-                                        let cc = '';
-                                        let num = p;
-                                        
-                                        // Smart Logic to extract Country Code
-                                        if (p.length === 10) { cc = '+1'; num = p; } // Default USA format without 1
-                                        else if (p.startsWith('1') && p.length === 11) { cc = '+1'; num = p.slice(1); }
-                                        else if (p.startsWith('44')) { cc = '+44'; num = p.slice(2); } // UK
-                                        else if (p.startsWith('7') && p.length === 11) { cc = '+7'; num = p.slice(1); } // Russia
-                                        else if (p.startsWith('86')) { cc = '+86'; num = p.slice(2); } // China
-                                        else if (p.startsWith('91')) { cc = '+91'; num = p.slice(2); } // India
-                                        else if (p.startsWith('62')) { cc = '+62'; num = p.slice(2); } // Indonesia
-                                        else if (p.startsWith('880')) { cc = '+880'; num = p.slice(3); } // Bangladesh
-                                        else { cc = '+' + p.slice(0, 2); num = p.slice(2); } // Fallback for others
+                        <div className="border border-white/10 bg-white/[0.02] rounded-2xl p-6 relative overflow-hidden flex flex-col md:flex-row gap-6 justify-between items-center w-full animate-fade-in-up">
+                           
+                           {/* Progress Bar Line */}
+                           <div className="absolute top-0 left-0 w-full h-[2px] bg-white/5">
+                               {activeOrder.status === 'Active' && <div className="h-full bg-brand-primary timer-bar" style={{
+                                   animationDuration: activeOrder.duration === '15 minutes' ? '900s' : 
+                                                      activeOrder.duration === '5 minutes' ? '300s' :
+                                                      activeOrder.duration === '3 days' ? '259200s' : 
+                                                      activeOrder.duration === '7 days' ? '604800s' : 
+                                                      activeOrder.duration === '14 days' ? '1209600s' : '2160000s'
+                               }}></div>}
+                           </div>
 
-                                        return (
-                                            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 my-4 w-full">
-                                                
-                                                {/* Beautiful Divided Number Box */}
-                                                <div className="flex items-center bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden shrink-0 max-w-full">
-                                                    <div className="bg-gray-100 px-4 py-3 sm:py-4 border-r border-gray-200 flex items-center justify-center">
-                                                        <span className="text-xl sm:text-2xl font-black text-gray-500 tracking-wider">{cc}</span>
-                                                    </div>
-                                                    <div className="px-4 py-3 sm:py-4 bg-white overflow-hidden">
-                                                        <span className="text-2xl sm:text-3xl md:text-4xl font-mono font-black tracking-widest text-gray-900 break-all">{num}</span>
-                                                    </div>
-                                                </div>
-                                                
-                                                {/* Copy Button (Only copies the base number) */}
-                                                <button onClick={() => {
-                                                    if(navigator.clipboard) {
-                                                        navigator.clipboard.writeText(num).then(()=>triggerToast("Number copied! (Without Country Code)"));
-                                                    } else { 
-                                                        const t = document.createElement("textarea"); t.value = num; document.body.appendChild(t); t.select(); document.execCommand("copy"); document.body.removeChild(t); triggerToast("Number copied!"); 
-                                                    }
-                                                }} className="btn-animate p-3 sm:p-4 bg-white hover:bg-brand-primary text-gray-600 hover:text-white rounded-2xl transition-all border border-gray-200 shadow-sm shrink-0 flex items-center justify-center group" title="Copy Number Only">
-                                                    <Copy className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform"/>
-                                                </button>
-                                                
-                                            </div>
-                                        );
-                                    })()}
-                                    
-                                    <div className="flex flex-wrap gap-3 justify-center lg:justify-start mt-2">
-                                        <span className="text-[10px] text-gray-600 font-bold uppercase bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm">Duration: {activeOrder.duration}</span>
-                                        <span className="text-[10px] text-gray-600 font-bold uppercase bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm">Price: ${activeOrder.originalPrice.toFixed(2)}</span>
-                                    </div>
-                                    {activeOrder.status === 'Active' && (
-                                        <p className="text-xs sm:text-sm text-orange-600 mt-6 flex items-center gap-2 justify-center lg:justify-start font-bold bg-orange-50 w-fit mx-auto lg:mx-0 px-4 py-2 rounded-full border border-orange-100">
-                                            <RefreshCw className="w-4 h-4 animate-spin"/> Listening for SMS... ({formatTime(timeRemaining)})
-                                        </p>
-                                    )}
-                                </div>
-                                
-                                {/* Awaiting Code / Code Received Box (Light Mode Clean Look) */}
-                                <div className="bg-gray-50 p-6 sm:p-8 rounded-3xl border border-gray-200 min-w-[280px] w-full lg:w-auto flex flex-col items-center justify-center min-h-[160px] shadow-sm shrink-0 relative overflow-hidden">
-                                    {activeOrder.code ? (
-                                        <div className="text-center animate-spring-card w-full">
-                                            <p className="text-[10px] sm:text-xs text-green-600 font-bold uppercase tracking-[0.3em] mb-3 bg-green-100 px-3 py-1 rounded-full inline-block">Code Received</p>
-                                            
-                                            {/* Code with Copy Button */}
-                                            <div className="flex items-center justify-center gap-3 mt-2 bg-white border border-gray-200 p-3 sm:p-4 rounded-2xl shadow-sm">
-                                                <p className="text-3xl sm:text-4xl font-mono font-black text-gray-900 break-all tracking-widest">{activeOrder.code}</p>
-                                                <button onClick={() => {
-                                                    if(navigator.clipboard) navigator.clipboard.writeText(activeOrder.code).then(()=>triggerToast("Code copied!"));
-                                                }} className="btn-animate p-2.5 sm:p-3 bg-green-500 hover:bg-green-600 text-white rounded-xl transition-all shadow-md shrink-0">
-                                                    <Copy className="w-5 h-5"/>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ) : activeOrder.status === 'Cancelled' ? (
-                                        <div className="text-center">
-                                            <div className="w-12 h-12 bg-red-50 border border-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-3"><X className="w-6 h-6"/></div>
-                                            <p className="text-red-600 font-bold uppercase tracking-widest text-sm">Operation Cancelled</p>
-                                        </div>
-                                    ) : (
-                                        <div className="flex flex-col items-center gap-3 opacity-60">
-                                            <div className="relative">
-                                                <MessageSquare className="w-10 h-10 text-gray-400 animate-bounce"/>
-                                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-1">
-                                                    <span className="w-1 h-1 bg-gray-400 rounded-full animate-pulse"></span>
-                                                    <span className="w-1 h-1 bg-gray-400 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></span>
-                                                    <span className="w-1 h-1 bg-gray-400 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></span>
-                                                </div>
-                                            </div>
-                                            <p className="text-gray-500 font-bold tracking-widest text-[10px] sm:text-xs uppercase mt-2">Awaiting Code</p>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                            
-                            <div className="mt-8 border-t border-gray-100 pt-6 flex flex-col sm:flex-row justify-center lg:justify-end gap-4 w-full">
-                                {activeOrder.status === 'Active' && (
-                                    <button onClick={cancelNumber} disabled={isCancelling} className="btn-animate w-full sm:w-auto px-8 py-3.5 bg-white hover:bg-red-50 text-red-500 font-bold text-xs uppercase tracking-widest rounded-xl border border-gray-200 hover:border-red-200 transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-sm">
-                                        {isCancelling ? <RefreshCw className="w-4 h-4 animate-spin"/> : <X className="w-4 h-4"/>}
-                                        {isCancelling ? 'Cancelling...' : 'Cancel & Refund'}
-                                    </button>
-                                )}
-                                {activeOrder.status === 'Completed' && (
-                                    <button onClick={() => setActiveOrder(null)} className="btn-animate w-full sm:w-auto px-10 py-3.5 bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 font-bold text-xs uppercase tracking-widest rounded-xl shadow-sm flex items-center justify-center gap-2 transition-colors">
-                                        <CheckCircle className="w-4 h-4 text-green-500"/> Complete Order
-                                    </button>
-                                )}
-                                {activeOrder.status === 'Cancelled' && (
-                                    <button onClick={() => setActiveOrder(null)} className="btn-animate w-full sm:w-auto px-10 py-3.5 bg-white hover:bg-red-50 text-red-500 border border-gray-200 font-bold text-xs uppercase tracking-widest rounded-xl shadow-sm flex items-center justify-center gap-2 transition-colors">
-                                        <X className="w-4 h-4"/> Close
-                                    </button>
-                                )}
-                            </div>
+                           {/* Left: Number & Service */}
+                           <div className="flex items-center gap-5 w-full md:w-auto">
+                               <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center bg-[#090E17] shrink-0">
+                                   <MessageSquare className="w-5 h-5 text-brand-primary" />
+                               </div>
+                               <div className="flex flex-col">
+                                   <p className="text-[10px] text-gray-500 font-mono tracking-widest uppercase mb-1">{activeOrder.service} Verification</p>
+                                   <div className="flex items-center gap-3">
+                                       <span className="text-2xl sm:text-3xl font-mono text-white tracking-wider font-bold">
+                                           {(() => {
+                                               let p = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
+                                               if (p.length === 10) return `+1 ${p}`;
+                                               if (p.startsWith('1') && p.length === 11) return `+1 ${p.slice(1)}`;
+                                               if (p.startsWith('44')) return `+44 ${p.slice(2)}`;
+                                               return `+${p}`;
+                                           })()}
+                                       </span>
+                                       <button onClick={() => {
+                                           let cleanNum = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
+                                           if (cleanNum.startsWith('1') && cleanNum.length === 11) cleanNum = cleanNum.slice(1);
+                                           if(navigator.clipboard) navigator.clipboard.writeText(cleanNum).then(()=>triggerToast("Number copied!"));
+                                       }} className="text-gray-500 hover:text-white transition-colors" title="Copy Base Number"><Copy className="w-4 h-4"/></button>
+                                   </div>
+                               </div>
+                           </div>
+
+                           {/* Right: Code & Actions */}
+                           <div className="flex flex-col items-center md:items-end w-full md:w-auto mt-2 md:mt-0">
+                               {activeOrder.code ? (
+                                   <div className="flex items-center gap-3 bg-green-500/10 px-5 py-2.5 rounded-lg border border-green-500/20">
+                                       <span className="text-xl font-mono font-bold text-green-400 tracking-widest">{activeOrder.code}</span>
+                                       <button onClick={() => {
+                                           if(navigator.clipboard) navigator.clipboard.writeText(activeOrder.code).then(()=>triggerToast("Code copied!"));
+                                       }} className="text-green-500 hover:text-green-300 transition-colors"><Copy className="w-4 h-4"/></button>
+                                   </div>
+                               ) : activeOrder.status === 'Cancelled' ? (
+                                   <span className="text-red-500 font-mono text-xs uppercase tracking-widest">Cancelled & Refunded</span>
+                               ) : (
+                                   <div className="flex items-center gap-2 text-gray-400 font-mono text-xs">
+                                       <RefreshCw className="w-3.5 h-3.5 animate-spin text-brand-primary" /> Awaiting Code... ({formatTime(timeRemaining)})
+                                   </div>
+                               )}
+                               <div className="flex gap-4 mt-3">
+                                   {activeOrder.status === 'Active' && <button onClick={cancelNumber} disabled={isCancelling} className="text-[10px] uppercase text-red-500 hover:text-red-400 font-bold tracking-widest disabled:opacity-50">{isCancelling ? 'Cancelling...' : 'Cancel & Refund'}</button>}
+                                   {activeOrder.status === 'Completed' && <button onClick={() => setActiveOrder(null)} className="text-[10px] uppercase text-green-500 hover:text-green-400 font-bold tracking-widest">Close Order</button>}
+                                   {activeOrder.status === 'Cancelled' && <button onClick={() => setActiveOrder(null)} className="text-[10px] uppercase text-gray-500 hover:text-gray-300 font-bold tracking-widest">Close</button>}
+                               </div>
+                           </div>
                         </div>
                     ) : (
-                        /* Configuration & Purchase Area */
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        /* 🟢 Minimalist Purchase Configuration 🟢 */
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full border-t border-white/5 pt-8">
                             
-                            {/* Left Side: Configuration Controls */}
-                            <div className="lg:col-span-2 space-y-6">
-                                <div className="bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.05)]">
-                                    <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-gray-900 mb-6 flex items-center gap-3 border-b border-gray-100 pb-4">
-                                        <Settings className="w-5 h-5 text-brand-primary"/> Configuration
-                                    </h3>
-                                    
-                                    {/* 🟢 TOGGLE SMS MODE (LIGHT THEME PRO) 🟢 */}
-                                    <div className="flex bg-gray-100 p-1.5 rounded-xl mb-6 border border-gray-200 shadow-inner">
-                                        <button onClick={() => setSmsMode('standard')} className={`flex-1 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-lg transition-all duration-300 ${smsMode==='standard' ? 'bg-white text-gray-900 shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}>Extended Term</button>
-                                        <button onClick={() => setSmsMode('panda')} className={`flex-1 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-lg transition-all duration-300 flex items-center justify-center gap-2 ${smsMode==='panda' ? 'bg-white text-brand-primary shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}>Short Term</button>
-                                    </div>
+                            {/* Left Side: Config Form */}
+                            <div className="lg:col-span-2 flex flex-col gap-6">
+                                
+                                {/* Sleek Tab Toggle */}
+                                <div className="flex border-b border-white/10 w-fit">
+                                    <button className={`pb-2 px-4 text-xs font-mono tracking-widest uppercase transition-all ${smsMode==='standard' ? 'text-white border-b-2 border-brand-primary' : 'text-gray-600 hover:text-gray-300'}`} onClick={()=>setSmsMode('standard')}>Extended Term</button>
+                                    <button className={`pb-2 px-4 text-xs font-mono tracking-widest uppercase transition-all ${smsMode==='panda' ? 'text-white border-b-2 border-brand-primary' : 'text-gray-600 hover:text-gray-300'}`} onClick={()=>setSmsMode('panda')}>Short Term (Low Cost)</button>
+                                </div>
 
-                                    <div className="space-y-6">
-                                        {/* Country Select (Custom Searchable) */}
-                                        {smsMode === 'panda' ? (
-                                            <div className="relative z-50">
-                                                <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em] pl-1">Select Country (Global)</label>
-                                                {isLoadingCountries ? (
-                                                    <div className="glass-input py-4 flex items-center justify-center opacity-50"><RefreshCw className="w-5 h-5 animate-spin"/></div>
-                                                ) : (
-                                               <SearchableDropdown 
-                                                    options={pandaCountries} 
-                                                    value={selectedPandaCountry} 
-                                                    onChange={setSelectedPandaCountry} 
-                                                    placeholder="Search Country..."
-                                                    icon={Globe}
-                                                    mode="country"
-                                                />     
-                                                )}
-                                            </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+                                   {/* Country Select */}
+                                   <div className="flex flex-col gap-2 relative z-50">
+                                       <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Country</label>
+                                       {isLoadingCountries && smsMode === 'panda' ? (
+                                            <div className="py-3 px-4 border-b border-white/10 flex items-center justify-center opacity-50"><RefreshCw className="w-4 h-4 animate-spin text-white"/></div>
                                         ) : (
-                                            <div className="relative z-50">
-                                                <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em] pl-1">Select Country</label>
-                                                <SearchableDropdown 
-                                                    options={countryOptions} 
-                                                    value={selectedCountry} 
-                                                    onChange={setSelectedCountry} 
-                                                    placeholder="Search Country..."
-                                                    icon={Globe}
-                                                    mode="country"
-                                                />
-                                            </div>
+                                           <SearchableDropdown 
+                                                options={smsMode === 'panda' ? pandaCountries : countryOptions} 
+                                                value={smsMode === 'panda' ? selectedPandaCountry : selectedCountry} 
+                                                onChange={smsMode === 'panda' ? setSelectedPandaCountry : setSelectedCountry} 
+                                                placeholder="Search Country..."
+                                                icon={Globe}
+                                                mode="country"
+                                            />
                                         )}
+                                   </div>
 
-                                        {/* Service Select (Custom Searchable) */}
-                                        <div className="relative z-40">
-                                            <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em] pl-1">Platform / Service</label>
-                                            {isLoadingRates && smsMode === 'panda' ? (
-                                                <div className="glass-input py-4 flex items-center justify-center opacity-50">
-                                                    <RefreshCw className="w-5 h-5 animate-spin"/>
-                                                </div>
-                                            ) : (!finalServiceOptions || finalServiceOptions.length === 0) ? (
-                                                <div className="glass-input py-4 text-center text-red-400 font-mono text-xs uppercase">No services available</div>
-                                            ) : (
-                                                <SearchableDropdown 
-                                                    options={finalServiceOptions} 
-                                                    value={selectedServiceCode || ''} 
-                                                    onChange={setSelectedServiceCode} 
-                                                    placeholder="Search Service..."
-                                                    icon={Smartphone}
-                                                    mode="service"
-                                                />
-                                            )}
-                                        </div>
-
-                                        {/* 🟢 NEW: REUSE NUMBER OPTION FOR PANDASMS 🟢 */}
-                                        {smsMode === 'panda' && (
-                                            <div className="relative z-30">
-                                                <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em] pl-1">Reuse Previous Number <span className="text-gray-500 lowercase tracking-normal">(Optional)</span></label>
-                                                <div className="relative">
-                                                   <Smartphone className="w-4 h-4 text-white absolute left-4 top-3.5" />
-                                                   <input type="text" value={reuseNumberInput} onChange={e => setReuseNumberInput(e.target.value)} placeholder="e.g. 447123456789" className="glass-input allow-select !pl-12 text-xs font-mono" />
-                                                </div>
-                                                <p className="text-[9px] text-brand-primary mt-1.5 uppercase tracking-widest pl-1">Leave blank to get a new number.</p>
-                                            </div>
+                                   {/* Service Select */}
+                                   <div className="flex flex-col gap-2 relative z-40">
+                                       <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Service / App</label>
+                                       {isLoadingRates && smsMode === 'panda' ? (
+                                            <div className="py-3 px-4 border-b border-white/10 flex items-center justify-center opacity-50"><RefreshCw className="w-4 h-4 animate-spin text-white"/></div>
+                                        ) : (!finalServiceOptions || finalServiceOptions.length === 0) ? (
+                                            <div className="py-3 px-4 text-center text-red-400 font-mono text-[10px] uppercase border-b border-white/10">No stock available</div>
+                                        ) : (
+                                            <SearchableDropdown 
+                                                options={finalServiceOptions} 
+                                                value={selectedServiceCode || ''} 
+                                                onChange={setSelectedServiceCode} 
+                                                placeholder="Search Service..."
+                                                icon={Smartphone}
+                                                mode="service"
+                                            />
                                         )}
+                                   </div>
+                                </div>
 
-                                        {/* 🟢 NEW: USA State Select (Only for Standard Mode & USA) 🟢 */}
-                                        {smsMode === 'standard' && (selectedCountry === 'USA' || selectedCountry === 'United States') && (
-                                            <div className="relative z-30 mb-6">
-                                                <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em] pl-1">Select State <span className="text-gray-500 lowercase tracking-normal">(Optional)</span></label>
-                                                <div className="relative">
-                                                    <select value={selectedUsaState} onChange={e => setSelectedUsaState(e.target.value)} className="glass-input allow-select font-bold uppercase tracking-wider text-[10px] sm:text-xs py-4 appearance-none cursor-pointer hover:border-brand-primary/50 transition-colors shadow-inner">
-                                                        {usaStatesList.map(st => <option key={st.value} value={st.value} className="bg-white text-gray-900">{st.label}</option>)}
-                                                    </select>
-                                                    <ChevronDown className="w-4 h-4 text-brand-primary absolute right-4 top-4 pointer-events-none"/>
-                                                </div>
-                                            </div>
-                                        )}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                   {/* Rental Duration */}
+                                   <div className="flex flex-col gap-2 relative z-30">
+                                       <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Duration</label>
+                                       <div className="relative">
+                                           <select value={selectedDuration} onChange={e => setSelectedDuration(e.target.value)} className="w-full bg-transparent border-b border-white/10 text-white text-xs py-3 outline-none cursor-pointer hover:border-brand-primary transition-colors appearance-none font-mono" disabled={isPanda}>
+                                               {durationOptions.map(opt => <option key={opt.value} value={opt.value} className="bg-[#090E17] text-white">{opt.label}</option>)}
+                                           </select>
+                                           <Clock className="w-3.5 h-3.5 text-gray-500 absolute right-2 top-3.5 pointer-events-none"/>
+                                       </div>
+                                   </div>
 
-                                        {/* Duration Select */}
-                                        <div className="relative z-20">
-                                            <label className="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-[0.2em] pl-1">Rental Duration</label>
-                                            <div className="relative">
-                                                <select value={selectedDuration} onChange={e => setSelectedDuration(e.target.value)} className="glass-input allow-select font-bold uppercase tracking-wider text-[10px] sm:text-xs py-4 appearance-none cursor-pointer hover:border-brand-primary/50 transition-colors shadow-inner" disabled={isPanda}>
-                                                    {durationOptions.map(opt => <option key={opt.value} value={opt.value} className="bg-white text-gray-900">{opt.label}</option>)}
-                                                </select>
-                                                <Clock className="w-4 h-4 text-brand-primary absolute right-4 top-4 pointer-events-none"/>
-                                            </div>
-                                        </div>
+                                   {/* Dynamic Option (State or Reuse) */}
+                                   {smsMode === 'standard' && (selectedCountry === 'USA' || selectedCountry === 'United States') && (
+                                       <div className="flex flex-col gap-2 relative z-30">
+                                           <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Select State (Optional)</label>
+                                           <div className="relative">
+                                               <select value={selectedUsaState} onChange={e => setSelectedUsaState(e.target.value)} className="w-full bg-transparent border-b border-white/10 text-white text-xs py-3 outline-none cursor-pointer hover:border-brand-primary transition-colors appearance-none font-mono">
+                                                   {usaStatesList.map(st => <option key={st.value} value={st.value} className="bg-[#090E17] text-white">{st.label}</option>)}
+                                               </select>
+                                               <ChevronDown className="w-3.5 h-3.5 text-gray-500 absolute right-2 top-3.5 pointer-events-none"/>
+                                           </div>
+                                       </div>
+                                   )}
+                                   
+                                   {smsMode === 'panda' && (
+                                       <div className="flex flex-col gap-2 relative z-30">
+                                           <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Reuse Number (Optional)</label>
+                                           <input type="text" value={reuseNumberInput} onChange={e => setReuseNumberInput(e.target.value)} placeholder="e.g. 447123456789" className="bg-transparent border-b border-white/10 text-white text-xs py-3 outline-none hover:border-brand-primary focus:border-brand-primary transition-colors font-mono" />
+                                       </div>
+                                   )}
+                                </div>
+                            </div>
 
+                            {/* Right Side: Minimal Checkout Panel */}
+                            <div className="lg:col-span-1 border-t lg:border-t-0 lg:border-l border-white/5 pt-6 lg:pt-0 lg:pl-8 flex flex-col justify-between">
+                                <div>
+                                    <h3 className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-6">Order Summary</h3>
+                                    
+                                    <div className="flex justify-between items-center border-b border-white/5 py-3">
+                                        <span className="text-xs text-gray-300 font-medium">{currentServiceObj ? currentServiceObj.name : 'Service'}</span>
+                                        <span className="text-sm font-mono text-white">${displayPrice ? displayPrice.toFixed(2) : '0.00'}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center border-b border-white/5 py-3">
+                                        <span className="text-[10px] text-gray-500 uppercase tracking-widest">Duration</span>
+                                        <span className="text-[10px] text-gray-300 font-mono">{selectedDuration}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center py-3">
+                                        <span className="text-[10px] text-gray-500 uppercase tracking-widest">Local Rate</span>
+                                        <span className="text-[10px] text-gray-400 font-mono tracking-widest">~ ₦{(displayPrice * (bankSettings?.nairaRate || 1500)).toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
                                     </div>
                                 </div>
-                            </div>
-
-                            {/* Right Side: Buy Card */}
-                            <div className="lg:col-span-1">
-                                <div className="bg-white p-8 rounded-3xl text-center flex flex-col items-center justify-center h-full min-h-[300px] border border-gray-200 shadow-sm group relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:border-brand-primary/30">
-                                    
-                                    <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                                    
-                                    {isLoadingRates && smsMode === 'panda' ? (
-                                        <RefreshCw className="w-10 h-10 text-brand-primary animate-spin relative z-10"/>
-                                    ) : (!currentServiceObj && smsMode === 'panda') ? (
-                                        <p className="text-gray-500 font-mono uppercase text-xs tracking-widest relative z-10">Select a valid configuration</p>
-                                    ) : (
-                                        <div className="relative z-10 flex flex-col items-center w-full animate-fade-in-up">
-                                            <div className="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center border border-gray-100 mb-6 shadow-sm group-hover:scale-110 transition-transform duration-500">
-                                                <MessageSquare className="w-8 h-8 text-brand-primary"/>
-                                            </div>
-                                            
-                                            <h2 className="text-xl sm:text-2xl font-black uppercase tracking-wide text-gray-900 mb-3 text-center w-full truncate px-2">{currentServiceObj ? currentServiceObj.name : selectedServiceCode || 'Service'}</h2>
-                                            
-                                            <div className="flex flex-wrap justify-center gap-2 mb-6">
-                                                <span className="text-[9px] bg-gray-100 text-gray-600 px-3 py-1 rounded-full border border-gray-200 uppercase tracking-widest font-bold">{smsMode === 'panda' ? selectedPandaCountry : selectedCountry}</span>
-                                                <span className="text-[9px] bg-gray-100 text-gray-600 px-3 py-1 rounded-full border border-gray-200 uppercase tracking-widest font-bold">{selectedDuration}</span>
-                                            </div>
-                                            
-                                            <div className="flex flex-col items-center mb-8">
-                                                <div className="text-5xl font-mono font-light text-gray-900 flex items-center justify-center gap-1">
-                                                    <span className="text-2xl text-brand-primary font-bold">$</span>
-                                                    {displayPrice ? displayPrice.toFixed(2) : (
-                                                        <span className="text-xl text-gray-400 tracking-widest uppercase">Select to view</span>
-                                                    )}
-                                                </div>
-                                                {displayPrice > 0 && (
-                                                    <span className="text-[10px] text-gray-600 font-mono mt-3 tracking-widest uppercase bg-gray-50 px-3 py-1 rounded-full border border-gray-200">
-                                                        ~ ₦{(displayPrice * (bankSettings?.nairaRate || 1500)).toLocaleString('en-US', {maximumFractionDigits: 0})}
-                                                    </span>
-                                                )}
-                                            </div>
-                                            
-                                            <button onClick={() => buyNumber(currentServiceObj || { code: selectedServiceCode, name: selectedServiceCode, finalPrice: displayPrice })} disabled={isBuying || (smsMode === 'panda' && !displayPrice)} className="btn-animate w-full bg-brand-primary hover:opacity-90 text-white font-bold py-4 px-6 rounded-2xl text-xs sm:text-sm tracking-widest uppercase transition-all duration-300 shadow-[0_8px_20px_rgba(59,130,246,0.3)] flex items-center justify-center gap-3 disabled:opacity-50">
-                                                {isBuying ? <RefreshCw className="w-5 h-5 animate-spin"/> : <ShoppingCart className="w-5 h-5"/>}
-                                                {isBuying ? 'PROCESSING' : 'BUY NOW'}
-                                            </button>
-                                        </div>
-                                    )}
+                                
+                                <div className="mt-8">
+                                    <button 
+                                        onClick={() => buyNumber(currentServiceObj || { code: selectedServiceCode, name: selectedServiceCode, finalPrice: displayPrice })} 
+                                        disabled={isBuying || (smsMode === 'panda' && !displayPrice)} 
+                                        className="w-full bg-white text-black hover:bg-gray-200 transition-colors py-3.5 rounded-full text-[11px] font-bold uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {isBuying ? <RefreshCw className="w-4 h-4 animate-spin"/> : <ShoppingCart className="w-4 h-4" />}
+                                        {isBuying ? 'Processing' : 'Purchase Number'}
+                                    </button>
                                 </div>
                             </div>
+
                         </div>
                     )}
                 </div>
@@ -2743,12 +2547,11 @@
         }
 
      // ==========================================
-        // 🌟 ASSET STORE MODULE (ULTRA MINIMALIST + INFO MODAL)
+        // 🌟 ASSET STORE MODULE (ULTRA MINIMALIST LIST VIEW)
         // ==========================================
         function CustomerDashboardStore({ inventory, categories, cart, setCart, setShowCart, triggerToast, bankSettings }) {
           const [searchQuery, setSearchQuery] = useState('');
           const [selectedStates, setSelectedStates] = useState({}); 
-          // 🟢 NEW: Info Modal State
           const [infoModal, setInfoModal] = useState({ show: false, product: null });
           
           const filteredCategories = categories.filter(c => (c?.name || '').toLowerCase().includes((searchQuery || '').toLowerCase()));
@@ -2783,7 +2586,7 @@
               return Array.from(states).sort();
           };
 
-          // 🟢 SMART LOGO MAPPER FOR STORE PRODUCTS 🟢
+          // 🟢 SMART LOGO MAPPER 🟢
           const getProductLogo = (name) => {
               let n = String(name).toLowerCase();
               if (n.includes('google voice') || n.includes('gv')) return 'https://www.google.com/s2/favicons?domain=voice.google.com&sz=128';
@@ -2817,29 +2620,29 @@
               if (n.includes('match')) return 'https://www.google.com/s2/favicons?domain=match.com&sz=128';
               if (n.includes('pof') || n.includes('plenty of fish')) return 'https://www.google.com/s2/favicons?domain=pof.com&sz=128';
               
-              // Fallback
               let word = n.split(' ')[0].replace(/[^a-z0-9]/g, '');
               return word ? `https://www.google.com/s2/favicons?domain=${word}.com&sz=128` : null;
           };
 
           return (
-            <div className="space-y-6 w-full relative z-10 animate-matrix-in">
-              <div className="flex flex-col sm:flex-row justify-between items-center gap-4 w-full bg-white p-5 rounded-3xl border border-gray-200 shadow-sm relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-1.5 h-full bg-brand-primary"></div>
-                <div className="text-center sm:text-left w-full pl-4 py-1">
-                  <h1 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-[0.25em] uppercase mb-1">Buy <span className="font-light text-brand-primary">Accounts</span></h1>
-                  <p className="text-gray-500 text-[9px] sm:text-[10px] font-mono tracking-widest uppercase">Verified Static Entities</p>
+            <div className="w-full relative z-10 animate-fade-in-up max-w-5xl mx-auto mt-4">
+              {/* Ultra Minimal Header & Search */}
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 w-full mb-8 px-2 sm:px-0">
+                <div>
+                  <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-wide">Buy Accounts</h1>
+                  <p className="text-gray-500 text-[10px] sm:text-xs font-mono mt-1">Select an asset from the inventory</p>
                 </div>
-                <div className="w-full sm:w-72 relative">
-                     <Search className="w-4 h-4 text-gray-400 absolute left-4 top-3.5" />
-                     <input type="text" placeholder="Search accounts..." value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)} className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-2xl pl-12 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all allow-select" />
+                <div className="w-full sm:w-64 border-b border-gray-700 pb-2 flex items-center group focus-within:border-brand-primary transition-colors">
+                     <Search className="w-3.5 h-3.5 text-gray-500 mr-2 group-focus-within:text-brand-primary transition-colors" />
+                     <input type="text" placeholder="Search..." value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)} className="bg-transparent border-none outline-none text-[11px] sm:text-xs text-white w-full placeholder-gray-600 font-mono tracking-wide" />
                 </div>
               </div>
-              <div className="flex flex-col gap-4 sm:gap-5 w-full">
+
+              {/* Minimal List View */}
+              <div className="flex flex-col w-full border-t border-white/5">
                   {filteredCategories.length === 0 ? (
-                      <div className="w-full bg-white rounded-3xl border border-gray-200 py-20 text-center text-gray-500 font-mono text-[10px] uppercase tracking-widest flex flex-col items-center shadow-sm">
-                          <Search className="w-10 h-10 mb-4 opacity-20"/>
-                          No accounts found matching your search.
+                      <div className="w-full py-16 text-center text-gray-600 font-mono text-[10px] uppercase tracking-widest flex flex-col items-center">
+                          No accounts found.
                       </div>
                   ) : (
                       filteredCategories.map((product, idx) => {
@@ -2847,101 +2650,85 @@
                           const availableStates = getAvailableStates(product.id);
                           const stockCount = inventory[product.id] ? inventory[product.id].length : 0;
                           const isOutOfStock = stockCount === 0;
-                          
                           const logoUrl = getProductLogo(product.name);
 
                           return (
-                              <div key={product.id} className={`relative flex flex-col lg:flex-row justify-between items-start lg:items-center p-4 sm:p-5 bg-white border rounded-2xl sm:rounded-3xl shadow-sm transition-colors duration-300 group overflow-hidden ${isOutOfStock ? "border-gray-200 bg-gray-50/50" : "border-gray-200 hover:border-gray-400"}`}>
+                              <div key={product.id} className={`flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 px-2 border-b transition-colors group ${isOutOfStock ? "border-white/5 opacity-50" : "border-white/5 hover:bg-white/[0.02]"}`}>
 
-                                  {/* Left Section: Details (MINIMALIST) */}
-                                  <div className="flex items-center gap-4 w-full lg:w-2/5 mb-4 lg:mb-0 relative z-10">
-                                      <div className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-xl border shrink-0 ${isOutOfStock ? 'bg-gray-100 border-gray-200 text-gray-400' : 'bg-gray-50 border-gray-100 text-brand-primary shadow-sm'}`}>
+                                  {/* Left: Logo & Name */}
+                                  <div className="flex items-center gap-4 w-full sm:w-1/3 mb-3 sm:mb-0">
+                                      <div className={`w-8 h-8 flex items-center justify-center rounded-md shrink-0 transition-all ${isOutOfStock ? 'bg-transparent grayscale' : 'bg-white/5 group-hover:bg-white/10'}`}>
                                           {logoUrl ? (
-                                              <img 
-                                                  src={logoUrl} 
-                                                  onError={(e) => { 
-                                                      e.target.onerror = null; 
-                                                      e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name)}&background=0F172A&color=fff&size=64&bold=true`; 
-                                                  }}
-                                                  className={`w-6 h-6 sm:w-7 sm:h-7 object-contain ${isOutOfStock ? 'opacity-40 grayscale' : ''}`} 
-                                                  alt={product.name} 
-                                              />
+                                              <img src={logoUrl} onError={(e) => { e.target.onerror = null; e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name)}&background=101726&color=fff&size=64&bold=true`; }} className="w-4 h-4 sm:w-5 sm:h-5 object-contain" alt={product.name} />
                                           ) : (
-                                              <Icon className="w-5 h-5" strokeWidth={1.5} />
+                                              <Icon className="w-4 h-4 text-gray-400" strokeWidth={1.5} />
                                           )}
                                       </div>
-                                      <div className="flex flex-col justify-center">
-                                          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                                              <h3 className={`text-sm sm:text-[15px] font-bold tracking-wide uppercase transition-colors duration-300 ${isOutOfStock ? 'text-gray-500' : 'text-gray-900 group-hover:text-brand-primary'}`}>{product.name}</h3>
-                                              
-                                              {/* 🟢 NEW: INFO BUTTON 🟢 */}
-                                              <button onClick={() => setInfoModal({ show: true, product })} className="text-gray-400 hover:text-brand-primary transition-colors flex items-center justify-center" title="View Details & Rules">
-                                                  <FileText className="w-3.5 h-3.5" />
+                                      <div className="flex flex-col">
+                                          <div className="flex items-center gap-2">
+                                              <span className={`text-[12px] sm:text-[13px] font-medium tracking-wide transition-colors ${isOutOfStock ? 'text-gray-500' : 'text-gray-200 group-hover:text-white'}`}>{product.name}</span>
+                                              <button onClick={() => setInfoModal({ show: true, product })} className="text-gray-600 hover:text-brand-primary transition-colors" title="Info">
+                                                  <FileText className="w-3 h-3" />
                                               </button>
-
-                                              <span className={`text-[8px] uppercase tracking-widest font-bold px-2 py-0.5 rounded-md border ${isOutOfStock ? 'bg-red-50 text-red-500 border-red-100' : 'text-brand-primary bg-brand-primary/10 border-brand-primary/20'}`}>
-                                                  {isOutOfStock ? 'Out of Stock' : `${stockCount} Units`}
-                                              </span>
                                           </div>
-                                          {/* Description text completely removed for minimalist look */}
+                                          <span className="text-[9px] text-gray-500 font-mono mt-0.5">{isOutOfStock ? 'Out of stock' : `${stockCount} available`}</span>
                                       </div>
                                   </div>
 
-                                  {/* Middle Section: Dropdown */}
-                                  <div className="w-full lg:w-1/4 mb-4 lg:mb-0 px-0 lg:px-4 relative z-10">
+                                  {/* Middle: State Selector (Subtle) */}
+                                  <div className="w-full sm:w-1/3 flex justify-start sm:justify-center mb-3 sm:mb-0 pl-12 sm:pl-0">
                                       {!isOutOfStock && availableStates.length > 0 ? (
-                                          <div className="relative w-full group/select">
+                                          <div className="relative inline-block">
                                               <select 
                                                   value={selectedStates[product.id] || ''} 
                                                   onChange={(e) => handleStateChange(product.id, e.target.value)}
-                                                  className="w-full bg-gray-50 hover:bg-white border border-gray-200 text-gray-900 text-[10px] sm:text-xs rounded-xl px-4 py-2.5 sm:py-3 appearance-none outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary tracking-wider font-semibold cursor-pointer transition-all shadow-inner group-hover/select:shadow-sm"
+                                                  className="bg-transparent border-none text-[10px] text-gray-400 font-mono outline-none cursor-pointer hover:text-gray-200 appearance-none pr-4"
                                               >
-                                                  <option value="">Select State (Random)</option>
-                                                  {availableStates.map(state => <option key={state} value={state}>{state}</option>)}
+                                                  <option value="" className="bg-[#090E17]">Select State (Any)</option>
+                                                  {availableStates.map(state => <option key={state} value={state} className="bg-[#090E17]">{state}</option>)}
                                               </select>
-                                              <ChevronDown className="w-4 h-4 text-gray-400 absolute right-4 top-2.5 sm:top-3 pointer-events-none transition-transform group-hover/select:text-brand-primary"/>
+                                              <ChevronDown className="w-3 h-3 text-gray-600 absolute right-0 top-1 pointer-events-none"/>
                                           </div>
-                                      ) : (
-                                          <div className="hidden lg:block w-full"></div>
-                                      )}
+                                      ) : null}
                                   </div>
 
-                                  {/* Right Section: Price & Add to Cart */}
-                                  <div className="flex items-center justify-between lg:justify-end gap-4 sm:gap-6 w-full lg:w-auto shrink-0 border-t border-gray-100 lg:border-0 pt-4 lg:pt-0 relative z-10">
-                                      <div className="flex flex-col items-start lg:items-end">
-                                          <span className={`text-xl sm:text-2xl font-mono font-black tracking-wider ${isOutOfStock ? 'text-gray-400' : 'text-gray-900'}`}>${Number(product.price).toFixed(2)}</span>
-                                          <span className="text-[9px] text-gray-500 font-mono font-bold tracking-widest mt-0.5">~ ₦{(Number(product.price) * (bankSettings?.nairaRate || 1500)).toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
+                                  {/* Right: Price & Buy */}
+                                  <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-6 w-full sm:w-1/3 pl-12 sm:pl-0">
+                                      <div className="flex flex-col items-start sm:items-end">
+                                          <span className="text-[13px] sm:text-[14px] font-mono font-medium text-gray-300">${Number(product.price).toFixed(2)}</span>
                                       </div>
-                                      <button onClick={() => handleAddToCart(product)} disabled={isOutOfStock} className={`btn-animate py-2.5 sm:py-3 px-6 sm:px-8 rounded-xl text-[10px] sm:text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-2 shadow-sm transition-all duration-300 ${isOutOfStock ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200' : 'bg-brand-primary hover:bg-blue-600 text-white border border-transparent'}`}>
-                                          {isOutOfStock ? 'Empty' : 'Buy'} <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                      <button 
+                                          onClick={() => handleAddToCart(product)} 
+                                          disabled={isOutOfStock} 
+                                          className={`px-4 sm:px-5 py-1.5 rounded-full text-[10px] font-medium tracking-widest uppercase transition-all duration-200 ${isOutOfStock ? 'bg-transparent text-gray-600 border border-gray-800 cursor-not-allowed' : 'bg-transparent text-gray-300 border border-gray-600 hover:bg-white hover:text-black hover:border-white'}`}
+                                      >
+                                          {isOutOfStock ? 'Empty' : 'Buy'}
                                       </button>
                                   </div>
+
                               </div>
                           );
                       })
                   )}
               </div>
 
-              {/* 🟢 NEW: INFO MODAL (SHOWS DETAILS & RULES) 🟢 */}
+              {/* 🟢 INFO MODAL (MINIMAL) 🟢 */}
               {infoModal.show && createPortal(
                   <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-[#000]/80 backdrop-blur-sm animate-fade-in-up">
-                      <div className="glass-effect shadow-[0_20px_50px_rgba(0,0,0,0.8)] rounded-3xl w-full max-w-md p-6 sm:p-8 border border-white/20 bg-[#0f172a]">
-                          <div className="flex justify-between items-center mb-5 pb-4 border-b border-white/10">
-                              <h3 className="text-sm font-bold tracking-widest text-white flex items-center gap-2 uppercase">
-                                  <FileText className="w-4 h-4 text-brand-primary"/> Details
-                              </h3>
-                              <button type="button" onClick={() => setInfoModal({ show: false, product: null })} className="btn-animate p-2 bg-black/50 hover:bg-white/10 rounded-full text-gray-400 border border-white/10"><X className="w-3.5 h-3.5" /></button>
-                          </div>
-                          <div className="space-y-5 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
+                      <div className="bg-[#0B1121] border border-white/10 rounded-2xl w-full max-w-sm p-6 shadow-2xl relative">
+                          <div className="flex justify-between items-start mb-4">
                               <div>
-                                  <h4 className="text-lg font-black text-white uppercase tracking-wider mb-1">{infoModal.product.name}</h4>
-                                  <p className="text-[11px] text-brand-primary font-mono font-bold tracking-widest mb-3">${Number(infoModal.product.price).toFixed(2)}</p>
-                                  <p className="text-xs text-gray-300 leading-relaxed">{infoModal.product.description || 'No specific description available.'}</p>
+                                  <h4 className="text-sm font-semibold text-white tracking-wide">{infoModal.product.name}</h4>
+                                  <p className="text-[10px] text-gray-400 font-mono mt-1">${Number(infoModal.product.price).toFixed(2)} / account</p>
                               </div>
+                              <button onClick={() => setInfoModal({ show: false, product: null })} className="text-gray-500 hover:text-white transition-colors"><X className="w-4 h-4" /></button>
+                          </div>
+                          <div className="space-y-4 max-h-[50vh] overflow-y-auto custom-scrollbar pr-2 mt-4 text-xs font-light text-gray-300 leading-relaxed">
+                              <p>{infoModal.product.description || 'No description available.'}</p>
                               {infoModal.product.instructions && (
-                                  <div className="bg-brand-primary/10 border border-brand-primary/20 p-4 rounded-xl mt-4">
-                                      <p className="text-[10px] font-bold text-brand-primary uppercase tracking-[0.2em] mb-3 flex items-center gap-1.5"><AlertTriangle className="w-3 h-3"/> Usage Rules / Warranty</p>
-                                      <pre className="text-[10.5px] text-gray-300 font-mono whitespace-pre-wrap leading-relaxed allow-select">{infoModal.product.instructions}</pre>
+                                  <div className="mt-4 pt-4 border-t border-white/5">
+                                      <p className="text-[9px] font-medium text-gray-500 uppercase tracking-widest mb-2">Rules & Warranty</p>
+                                      <pre className="font-mono text-[10px] text-gray-400 whitespace-pre-wrap">{infoModal.product.instructions}</pre>
                                   </div>
                               )}
                           </div>
