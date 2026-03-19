@@ -431,6 +431,18 @@
             /* 6. Remove Blurs and Bouncy animations for ultra-minimalist feel */
             .blur-3xl { display: none !important; }
             .animate-bouncy-pop { animation: fadeInUp 0.3s ease forwards !important; }
+
+            /* 7. GLOBAL FONT SIZE INCREASE (READABILITY UPGRADE - MAX) */
+            .text-xs { font-size: 0.95rem !important; line-height: 1.4rem !important; } /* ~15px */
+            .text-sm { font-size: 1.05rem !important; line-height: 1.5rem !important; } /* ~17px */
+            .text-base { font-size: 1.15rem !important; line-height: 1.6rem !important; } /* ~18.5px */
+            .text-\[8px\] { font-size: 11px !important; }
+            .text-\[9px\] { font-size: 13px !important; }
+            .text-\[10px\] { font-size: 14px !important; }
+            .text-\[11px\] { font-size: 15px !important; }
+            .text-\[12px\] { font-size: 16px !important; }
+            .text-\[13px\] { font-size: 17px !important; }
+            p, span, div, button, a { letter-spacing: 0.03em; } /* Makes text larger and more breathable */
         </style>
 </head>
 <body class="antialiased">
@@ -500,20 +512,20 @@
         ];
 
         const CUSTOMER_TABS = [
-            { id: 'store', label: 'Buy Account', icon: ShoppingCart },
-            { id: 'sms_store', label: 'SMS Verifications', icon: Smartphone },
-            { id: 'add_funds', label: 'Add Fund', icon: Wallet },
-            { id: 'my_accounts', label: 'Purchased', icon: Key },
-            { id: 'profile', label: 'Profile', icon: UserIcon } 
+            { id: 'store', label: 'Buy Account', imgUrl: 'https://cdn-icons-png.flaticon.com/512/3144/3144456.png' },
+            { id: 'sms_store', label: 'SMS Verifications', imgUrl: 'https://cdn-icons-png.flaticon.com/512/8930/8930815.png' },
+            { id: 'add_funds', label: 'Add Fund', imgUrl: 'https://cdn-icons-png.flaticon.com/512/2953/2953536.png' },
+            { id: 'my_accounts', label: 'Purchased', imgUrl: 'https://cdn-icons-png.flaticon.com/512/2913/2913008.png' },
+            { id: 'profile', label: 'Profile', imgUrl: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' } 
         ];
 
         const ADMIN_TABS = [
-            { id: 'inventory', label: 'Stock', icon: Package },
-            { id: 'deposits', label: 'Deposits', icon: CreditCard },
-            { id: 'users', label: 'Users', icon: Users },
-            { id: 'support', label: 'Comms', icon: Headset },
-            { id: 'analytics', label: 'Analytics', icon: BarChart },
-            { id: 'settings', label: 'Settings', icon: Settings }
+            { id: 'inventory', label: 'Stock', imgUrl: 'https://cdn-icons-png.flaticon.com/512/3150/3150702.png' },
+            { id: 'deposits', label: 'Deposits', imgUrl: 'https://cdn-icons-png.flaticon.com/512/2830/2830284.png' },
+            { id: 'users', label: 'Users', imgUrl: 'https://cdn-icons-png.flaticon.com/512/1256/1256650.png' },
+            { id: 'support', label: 'Comms', imgUrl: 'https://cdn-icons-png.flaticon.com/512/4233/4233830.png' },
+            { id: 'analytics', label: 'Analytics', imgUrl: 'https://cdn-icons-png.flaticon.com/512/2936/2936690.png' },
+            { id: 'settings', label: 'Settings', imgUrl: 'https://cdn-icons-png.flaticon.com/512/2965/2965306.png' }
         ];
 
         const uiCard = "glass-effect rounded-3xl relative transition-all duration-300 w-full";
@@ -1892,16 +1904,20 @@
 
                 {(!maintenanceSettings?.active || user.role === 'admin') && (
                     <div className="w-full relative z-30 mb-6 px-2 sm:px-0 mt-2">
-                        {/* 🟢 FLOATING PILL DOCK MENU (FLAT & CLEAN DESIGN) 🟢 */}
-                        <div className="bg-[#0F172A]/90 backdrop-blur-2xl rounded-full p-1.5 flex justify-between items-center w-full mx-auto max-w-3xl border border-white/10">
+                        {/* 🟢 CLEAN FLAT UNDERLINE MENU WITH REAL LOGOS (ALWAYS COLORFUL) 🟢 */}
+                        <div className="bg-transparent flex justify-between items-center w-full mx-auto max-w-3xl border-b-[3px] border-gray-200/60 mb-2">
                             {(user.role === 'admin' ? ADMIN_TABS : CUSTOMER_TABS).map(tab => (
                                 <button 
                                     key={tab.id} 
                                     onClick={() => setActiveTab(tab.id)} 
-                                    className={`flex-1 relative flex flex-col items-center justify-center py-2 sm:py-3 rounded-full transition-colors ${activeTab === tab.id ? 'bg-white/10 text-white z-10' : 'bg-transparent text-gray-500 hover:text-gray-300 hover:bg-white/5'}`}
+                                    className={`flex-1 relative flex flex-col items-center justify-center py-3 transition-all duration-300 border-b-[3px] -mb-[3px] ${activeTab === tab.id ? 'border-brand-primary text-brand-primary z-10 bg-brand-primary/5' : 'border-transparent text-gray-500 hover:text-gray-800 hover:border-gray-300 hover:bg-gray-100/50'}`}
                                 >
-                                    <tab.icon className={`w-4 h-4 sm:w-5 sm:h-5 ${activeTab === tab.id ? 'mb-1 text-white' : 'mb-1 text-gray-500'}`} strokeWidth={activeTab === tab.id ? 2 : 1.5} /> 
-                                    <span className={`text-[7.5px] sm:text-[10px] leading-tight uppercase tracking-wider text-center w-full px-0.5 ${activeTab === tab.id ? 'font-bold text-white' : 'font-medium'}`}>
+                                    <img 
+                                        src={tab.imgUrl} 
+                                        alt={tab.label} 
+                                        className={`w-6 h-6 sm:w-7 sm:h-7 mb-1.5 transition-all duration-300 ${activeTab === tab.id ? 'opacity-100 scale-110 drop-shadow-md' : 'opacity-70 hover:opacity-100 hover:scale-105'}`} 
+                                    />
+                                    <span className={`text-[10px] sm:text-[12px] leading-tight uppercase tracking-widest text-center w-full px-0.5 ${activeTab === tab.id ? 'font-black text-brand-primary' : 'font-bold'}`}>
                                         {tab.label === 'SMS Verifications' ? 'SMS Verify' : tab.label}
                                     </span>
                                 </button>
