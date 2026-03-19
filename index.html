@@ -582,8 +582,8 @@
         const uiInput = "glass-input";
         const uiBtnPrimary = "btn-animate w-full bg-white text-black font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 shadow-[0_5px_20px_rgba(255,255,255,0.2)] tracking-widest uppercase text-xs";
 
-        // 🟢 CUSTOM SEARCHABLE DROPDOWN COMPONENT 🟢
-        const SearchableDropdown = ({ options, value, onChange, placeholder, icon: Icon }) => {
+        // 🟢 CUSTOM SEARCHABLE DROPDOWN COMPONENT (WITH LOGOS & PRICES) 🟢
+        const SearchableDropdown = ({ options, value, onChange, placeholder, icon: Icon, showLogos = false }) => {
             const [isOpen, setIsOpen] = useState(false);
             const [searchTerm, setSearchQuery] = useState('');
             const wrapperRef = useRef(null);
@@ -599,13 +599,52 @@
             }, [wrapperRef]);
 
             const filteredOptions = options.filter(opt => opt.label.toLowerCase().includes(searchTerm.toLowerCase()));
-            const selectedLabel = options.find(opt => opt.value === value)?.label || placeholder;
+            const selectedOpt = options.find(opt => opt.value === value);
+            const selectedLabel = selectedOpt?.label || placeholder;
+
+            // 🌐 ডাইনামিক ডোমেইন ম্যাপিং (লোগোর জন্য)
+            const getDomain = (name) => {
+                let clean = name.toLowerCase().trim();
+                if(clean.includes('whatsapp')) return 'whatsapp.com';
+                if(clean.includes('paypal')) return 'paypal.com';
+                if(clean.includes('google') || clean.includes('gmail')) return 'google.com';
+                if(clean.includes('facebook')) return 'facebook.com';
+                if(clean.includes('instagram')) return 'instagram.com';
+                if(clean.includes('walmart')) return 'walmart.com';
+                if(clean.includes('venmo')) return 'venmo.com';
+                if(clean.includes('tinder')) return 'tinder.com';
+                if(clean.includes('telegram')) return 'telegram.org';
+                if(clean.includes('tiktok')) return 'tiktok.com';
+                if(clean.includes('snapchat')) return 'snapchat.com';
+                if(clean.includes('amazon') || clean.includes('aws')) return 'amazon.com';
+                if(clean.includes('apple')) return 'apple.com';
+                if(clean.includes('netflix')) return 'netflix.com';
+                if(clean.includes('discord')) return 'discord.com';
+                if(clean.includes('uber')) return 'uber.com';
+                if(clean.includes('linkedin')) return 'linkedin.com';
+                if(clean.includes('twitter')) return 'twitter.com';
+                if(clean.includes('yahoo')) return 'yahoo.com';
+                if(clean.includes('match')) return 'match.com';
+                if(clean.includes('cashapp')) return 'cash.app';
+                if(clean.includes('credit karma')) return 'creditkarma.com';
+                if(clean.includes('bumble')) return 'bumble.com';
+                if(clean.includes('chime')) return 'chime.com';
+                if(clean.includes('identitytheft')) return 'identitytheft.gov';
+                return clean.split(' ')[0].replace(/[^a-z0-9]/g, '') + '.com';
+            };
 
             return (
                 <div ref={wrapperRef} className="relative w-full z-[100]">
                     <div onClick={() => setIsOpen(!isOpen)} className="w-full bg-white border border-gray-200 text-gray-900 font-bold uppercase tracking-wider text-[10px] sm:text-xs py-4 px-4 rounded-xl cursor-pointer flex items-center justify-between hover:border-brand-primary/50 transition-colors shadow-sm allow-select">
-                        <div className="flex items-center gap-2 overflow-hidden">
-                            {Icon && <Icon className="w-4 h-4 text-brand-primary shrink-0" />}
+                        <div className="flex items-center gap-3 overflow-hidden">
+                            {showLogos && selectedOpt ? (
+                                <div className="w-5 h-5 rounded overflow-hidden shrink-0 flex items-center justify-center bg-gray-50 border border-gray-100">
+                                    <img src={`https://logo.clearbit.com/${getDomain(selectedOpt.label)}`} onError={(e)=>{e.target.style.display='none'; e.target.nextSibling.style.display='block';}} className="w-full h-full object-cover" alt="icon"/>
+                                    <Icon className="w-3.5 h-3.5 text-brand-primary hidden shrink-0" />
+                                </div>
+                            ) : (
+                                Icon && <Icon className="w-4 h-4 text-brand-primary shrink-0" />
+                            )}
                             <span className="truncate">{selectedLabel}</span>
                         </div>
                         <ChevronDown className={`w-4 h-4 text-brand-primary transition-transform duration-300 ${isOpen ? 'rotate-180' : ''} shrink-0`} />
@@ -624,14 +663,22 @@
                                     autoFocus
                                 />
                             </div>
-                            <div className="max-h-56 overflow-y-auto custom-scrollbar">
+                            <div className="max-h-72 overflow-y-auto custom-scrollbar">
                                 {filteredOptions.length > 0 ? filteredOptions.map(opt => (
                                     <div
                                         key={opt.value}
                                         onClick={() => { onChange(opt.value); setIsOpen(false); setSearchQuery(''); }}
-                                        className={`px-4 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors ${value === opt.value ? 'bg-brand-primary/10 text-brand-primary' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}
+                                        className={`px-4 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors flex items-center gap-4 border-b border-gray-50 last:border-0 ${value === opt.value ? 'bg-brand-primary/10 text-brand-primary' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}
                                     >
-                                        {opt.label}
+                                        {showLogos && (
+                                            <div className="w-7 h-7 rounded-md overflow-hidden shrink-0 flex items-center justify-center bg-white shadow-sm border border-gray-100 p-0.5">
+                                                <img src={`https://logo.clearbit.com/${getDomain(opt.label)}`} onError={(e)=>{e.target.style.display='none'; e.target.nextSibling.style.display='flex';}} className="w-full h-full object-contain rounded-sm" alt="icon"/>
+                                                <div className="hidden w-full h-full bg-gray-100 rounded-sm items-center justify-center"><Icon className="w-3.5 h-3.5 text-gray-400" /></div>
+                                            </div>
+                                        )}
+                                        <span className="truncate flex-grow">{opt.label}</span>
+                                        {/* 🟢 ডানপাশে প্রাইস বসানো হলো 🟢 */}
+                                        {opt.price !== undefined && <span className="ml-auto text-brand-primary font-mono tracking-widest">${Number(opt.price).toFixed(2)}</span>}
                                     </div>
                                 )) : (
                                     <div className="p-6 text-center text-[10px] text-gray-400 uppercase tracking-widest font-mono">Not Found</div>
@@ -2244,13 +2291,14 @@
             if (selectedDuration === '14 days') displayPrice *= 4;
             if (selectedDuration === '25 days') displayPrice *= 5;
             
-            // 🟢 Determine which options to show based on mode 🟢
+            // 🟢 Determine which options to show based on mode (WITH PRICE) 🟢
             let finalServiceOptions = [];
             const safeServices = services || [];
             if (smsMode === 'standard' && safeServices.length === 0) {
                  finalServiceOptions = hardcodedServices || [];
             } else {
-                 finalServiceOptions = safeServices.map(s => ({ value: s.code, label: s.name }));
+                 // 👈 এখানে s.finalPrice অ্যাড করা হলো যাতে ড্রপডাউনে দাম দেখায়
+                 finalServiceOptions = safeServices.map(s => ({ value: s.code, label: s.name, price: s.finalPrice }));
             }
 
             return (
@@ -2456,12 +2504,13 @@
                                                 <div className="glass-input py-4 text-center text-red-400 font-mono text-xs uppercase">No services available</div>
                                             ) : (
                                                 <SearchableDropdown 
-                                                    options={finalServiceOptions} 
-                                                    value={selectedServiceCode || ''} 
-                                                    onChange={setSelectedServiceCode} 
-                                                    placeholder="Search Service..."
-                                                    icon={Smartphone}
-                                                />
+                                                options={finalServiceOptions} 
+                                                value={selectedServiceCode || ''} 
+                                                onChange={setSelectedServiceCode} 
+                                                placeholder="Search Service..."
+                                                icon={Smartphone}
+                                                showLogos={true} // 👈 🟢 লোগো দেখানোর পারমিশন অন করা হলো
+                                            />
                                             )}
                                         </div>
 
