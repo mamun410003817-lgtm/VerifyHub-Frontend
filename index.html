@@ -359,73 +359,86 @@
         .timer-bar {
                 animation: countdown linear forwards;
             }
-/* 🟢 PREMIUM DARK NAVY THEME 🟢 */
+/* 🟢 ULTRA-MINIMALIST FLAT DARK THEME 🟢 */
             body, html, #root, .light-theme { 
-                background-color: #0B1121 !important; /* Deep Navy Background */
+                background-color: #090E17 !important; /* Pitch Dark Minimal Background */
                 color: #F8FAFC !important; 
             }
             
-            /* 1. Cards and Panels */
-            .bg-white, .light-theme .bg-white, .bg-gray-50 {
-                background-color: #131C2A !important; /* Slightly lighter navy for cards */
-                border-color: rgba(255, 255, 255, 0.05) !important;
+            /* 1. Flat Cards and Panels (KILL SHADOWS) */
+            .bg-white, .light-theme .bg-white, .bg-gray-50, .glass-effect, .glass-panel {
+                background-color: #101726 !important; /* Flat card color */
+                border: 1px solid rgba(255, 255, 255, 0.03) !important; /* Ultra subtle border */
+                box-shadow: none !important; /* KILL ALL SHADOWS */
                 color: #F8FAFC !important;
+                backdrop-filter: none !important; /* Remove heavy glass blurs */
             }
             
-            /* 2. Fix Hover States */
+            /* 2. Flat Hover States (No Jumping) */
             .hover\:bg-gray-50:hover, .hover\:bg-gray-100:hover, .hover\:bg-blue-50\/20:hover, .hover\:bg-blue-50\/50:hover {
-                background-color: #1E293B !important;
-                border-color: rgba(255, 255, 255, 0.1) !important;
+                background-color: #162032 !important;
+                border-color: rgba(255, 255, 255, 0.06) !important;
+                transform: translateY(0) !important; /* Kill hover lift for flat feel */
             }
 
-            /* 3. Text Colors */
-            .text-gray-900, .text-gray-800, .text-black { color: #FFFFFF !important; font-weight: 700 !important; }
-            .text-gray-700, .text-gray-600 { color: #E2E8F0 !important; font-weight: 600 !important; }
-            .text-gray-500, .text-gray-400 { color: #94A3B8 !important; font-weight: 500 !important; }
+            /* 3. Refined Typography */
+            .text-gray-900, .text-gray-800, .text-black { color: #FFFFFF !important; font-weight: 500 !important; }
+            .text-gray-700, .text-gray-600 { color: #CBD5E1 !important; font-weight: 400 !important; }
+            .text-gray-500, .text-gray-400 { color: #64748B !important; font-weight: 400 !important; }
             
-            /* 4. Inputs & Selects */
+            /* 4. Minimal Inputs */
             input, textarea, select, .glass-input {
-                background-color: #0F172A !important;
-                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                background-color: #090E17 !important;
+                border: 1px solid rgba(255, 255, 255, 0.05) !important;
                 color: #FFFFFF !important;
+                box-shadow: none !important;
             }
             input:focus, textarea:focus, select:focus {
                 border-color: #3B82F6 !important;
-                box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+                box-shadow: none !important;
             }
 
-            /* 5. Borders & Dividers */
+            /* 5. Subtle Borders */
             .border-gray-200, .border-gray-100, .border-gray-300, .border-t, .border-b {
-                border-color: rgba(255, 255, 255, 0.05) !important;
+                border-color: rgba(255, 255, 255, 0.03) !important;
             }
 
-            /* 6. Buttons */
-            button.bg-gray-900, .bg-gray-900 {
-                background-color: #3B82F6 !important; /* Primary Blue */
+            /* 6. Flat Solid Buttons */
+            button.bg-gray-900, .bg-gray-900, button.bg-brand-primary, .bg-brand-primary {
+                background-color: #2563EB !important; /* Pure Solid Blue */
                 color: white !important;
                 border: none !important;
+                box-shadow: none !important;
+                background-image: none !important; /* Remove gradient */
             }
+            button.bg-brand-primary:hover { background-color: #1D4ED8 !important; transform: none !important; }
             button.bg-white, .bg-white.text-black {
-                background-color: #1E293B !important;
+                background-color: rgba(255,255,255,0.04) !important;
                 color: #F8FAFC !important;
-                border: 1px solid rgba(255,255,255,0.1) !important;
+                border: 1px solid rgba(255,255,255,0.04) !important;
+                box-shadow: none !important;
             }
-            button.bg-white:hover, .bg-white.text-black:hover {
-                background-color: #334155 !important;
-            }
+            button.bg-white:hover, .bg-white.text-black:hover { background-color: rgba(255,255,255,0.08) !important; transform: none !important; }
             
-            /* 7. Header & Top Nav */
+            /* 7. Borderless Header */
             header {
-                background-color: rgba(11, 17, 33, 0.8) !important;
-                border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+                background-color: #090E17 !important;
+                border-bottom: 1px solid rgba(255,255,255,0.03) !important;
+                box-shadow: none !important;
             }
             
-            /* 8. Icons & Backgrounds */
-            .bg-blue-50, .bg-gray-100, .bg-gray-50\/50 { background-color: #1E293B !important; border-color: rgba(255,255,255,0.05) !important; }
+            /* 8. Utility backgrounds */
+            .bg-blue-50, .bg-gray-100, .bg-gray-50\/50, .bg-gray-50 { background-color: rgba(255,255,255,0.02) !important; border-color: rgba(255,255,255,0.03) !important; box-shadow: none !important; }
             
             /* 9. Dropdown Fixes */
-            .bg-\\[\\#151e29\\] { background-color: #0F172A !important; }
-            .bg-\\[\\#0b1219\\] { background-color: #131C2A !important; }
+            .bg-\\[\\#151e29\\] { background-color: #090E17 !important; box-shadow: none !important; border: 1px solid rgba(255,255,255,0.05) !important;}
+            .bg-\\[\\#0b1219\\] { background-color: #101726 !important; box-shadow: none !important; border: 1px solid rgba(255,255,255,0.05) !important; }
+
+            /* 10. KILL BACKGROUND BLUR BLOBS, NEON GLOWS & BOUNCY ANIMATIONS */
+            .blur-3xl { display: none !important; }
+            .shadow-\\[0_8px_30px_rgba\\(59\\,130\\,246\\,0\\.1\\)\\] { box-shadow: none !important; border: 1px solid rgba(255,255,255,0.05) !important; }
+            .hover\:-translate-y-1:hover, .hover\:-translate-y-2:hover, .group:hover .group-hover\:-translate-y-2 { transform: none !important; }
+            .animate-bouncy-pop { animation: fadeInUp 0.4s ease forwards !important; }
         </style>
 </head>
 <body class="antialiased">
