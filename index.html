@@ -1193,85 +1193,118 @@
               setIsAuthChecking(false);
           };
 
-          // 🟢 2. SMART POLLING DATA FETCHING (FIXED TO PREVENT OVERWRITING INPUTS) 🟢
-          useEffect(() => {
-              if (!user) return;
-              let isMounted = true;
+         // 🟢 2. REALTIME & INITIAL DATA FETCHING (NO MORE POLLING) 🟢
+          useEffect(() => {
+              if (!user) return;
+              let isMounted = true;
 
-              const fetchAllData = async () => {
-                  if (!isMounted) return;
+              const fetchInitialData = async () => {
+                  if (!isMounted) return;
 
-                  const { data: settings } = await supabase.from('store_settings').select('*');
-                  if (settings) {
-                      settings.forEach(s => {
-                          const sData = s.data || {};
-                          if (s.id === 'Products') setCategories(prev => JSON.stringify(prev) !== JSON.stringify(sData.list || DEFAULT_CATEGORIES) ? (sData.list || DEFAULT_CATEGORIES) : prev);
-                          if (s.id === 'CryptoMethods') setCryptoSettings(prev => JSON.stringify(prev) !== JSON.stringify(sData.list || []) ? (sData.list || []) : prev);
-                          if (s.id === 'CustomPayments') setCustomPayments(prev => JSON.stringify(prev) !== JSON.stringify(sData.list || []) ? (sData.list || []) : prev);
-                          if (s.id === 'SMS') setSmsSettings(prev => JSON.stringify(prev) !== JSON.stringify(sData) ? sData : prev); 
-                      });
-                  }
+                  // Fetch Settings
+                  const { data: settings } = await supabase.from('store_settings').select('*');
+                  if (settings) {
+                      settings.forEach(s => {
+                          const sData = s.data || {};
+                          if (s.id === 'Products') setCategories(sData.list || DEFAULT_CATEGORIES);
+                          if (s.id === 'CryptoMethods') setCryptoSettings(sData.list || []);
+                          if (s.id === 'CustomPayments') setCustomPayments(sData.list || []);
+                          if (s.id === 'SMS') setSmsSettings(sData); 
+                      });
+                  }
 
-                  const { data: stock } = await supabase.from('store_inventory').select('data').eq('id', 'Stock').maybeSingle();
-                  if (stock && stock.data) setInventory(prev => JSON.stringify(prev) !== JSON.stringify(stock.data) ? stock.data : prev);
+                  // Fetch Inventory
+                  const { data: stock } = await supabase.from('store_inventory').select('data').eq('id', 'Stock').maybeSingle();
+                  if (stock && stock.data) setInventory(stock.data);
 
-                  try {
-                      const token = await getAuthToken();
-                      if (!token) return;
-                      const res = await fetch(`${BACKEND_URL}/api/sync`, {
-                          method: 'GET',
-                          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
-                      });
-                      
-                      const syncData = await res.json();
+                  // Call our backend API once to get secure user data
+                  try {
+                      const token = await getAuthToken();
+                      if (!token) return;
+                      const res = await fetch(`${BACKEND_URL}/api/sync`, {
+                          method: 'GET',
+                          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+                      });
+                      
+                      const syncData = await res.json();
 
-                      if (syncData.success) {
-                          if (user.role === 'admin' && syncData.isAdmin) {
-                              let uObj={}; 
-                              (syncData.users || []).forEach(u => uObj[u.id] = u.data || {}); 
-                              setUsersDB(uObj);
-                              
-                              setAllOrders((syncData.orders || []).map(d => ({id: d.id, ...(d.data || {}), date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
-                              setDeposits((syncData.deposits || []).map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
-                              setPurchases((syncData.purchases || []).map(d => ({id: d.id, ...(d.data || {}), customer: d.customer || d.data?.customer, type: d.type || d.data?.type, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
-                              setTickets((syncData.tickets || []).map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
-                              setActiveChats((syncData.chats || []).map(d => ({id: d.id, userEmail: d.id, ...(d.data || {})})).sort((a,b)=>new Date(b.lastMessageTime || b.last_message_time || 0)-new Date(a.lastMessageTime || a.lastMessageTime || 0)));
-                          } else {
-                              if (syncData.myUser) {
-                                  const dbData = syncData.myUser.data || {};
-                                  
+                      if (syncData.success) {
+                          if (user.role === 'admin' && syncData.isAdmin) {
+                              let uObj={}; 
+                              (syncData.users || []).forEach(u => uObj[u.id] = u.data || {}); 
+                              setUsersDB(uObj);
+                              
+                              setAllOrders((syncData.orders || []).map(d => ({id: d.id, ...(d.data || {}), date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                              setDeposits((syncData.deposits || []).map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                              setPurchases((syncData.purchases || []).map(d => ({id: d.id, ...(d.data || {}), customer: d.customer || d.data?.customer, type: d.type || d.data?.type, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                              setTickets((syncData.tickets || []).map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
+                              setActiveChats((syncData.chats || []).map(d => ({id: d.id, userEmail: d.id, ...(d.data || {})})).sort((a,b)=>new Date(b.lastMessageTime || b.last_message_time || 0)-new Date(a.lastMessageTime || a.lastMessageTime || 0)));
+                          } else {
+                              if (syncData.myUser) {
+                                  const dbData = syncData.myUser.data || {};
+                                  // Session checker
                                   const dbSessionId = dbData.activeSessionId;
                                   const localSessionId = localStorage.getItem('mySessionId');
                                   const sessionAge = parseInt(localStorage.getItem('mySessionAge') || '0');
                                   
                                   if (dbSessionId && localSessionId && dbSessionId !== localSessionId && (Date.now() - sessionAge > 10000)) {
                                       handleLogout();
-                                      alert("⚠️ Session Expired: Your account was logged in from another device. You have been logged out securely.");
+                                      alert("⚠️ Session Expired: Your account was logged in from another device.");
                                       window.location.reload();
                                       return; 
                                   }
                                   
                                   setUsersDB({ [user.email]: dbData });
-                              }
-                              
-                              // 🟢 FIX: RESTORING DELETED SETTERS FOR VAULT & HISTORY 🟢
+                              }
+                              
                               setAllOrders((syncData.orders || []).map(d => ({id: d.id, ...(d.data || {}), date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
                               setDeposits((syncData.deposits || []).map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
                               setPurchases((syncData.purchases || []).map(d => ({id: d.id, ...(d.data || {}), customer: d.customer || d.data?.customer || d.email, type: d.type || d.data?.type, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
                               setTickets((syncData.tickets || []).map(d => ({id: d.id, ...(d.data || {}), email: d.email || d.data?.email, date: d.data?.date || d.date || new Date().toISOString()})).sort((a,b)=>new Date(b.date)-new Date(a.date)));
-                          }
-                      }
-                  } catch(e) {
-                      console.error("Sync error", e);
-                  } finally {
-                      setIsInitialSyncDone(true);
-                  }
-              };
+                          }
+                      }
+                  } catch(e) {
+                      console.error("Sync error", e);
+                  } finally {
+                      setIsInitialSyncDone(true);
+                  }
+              };
 
-              fetchAllData();
-              const intervalId = setInterval(fetchAllData, 6000); 
-              return () => { isMounted = false; clearInterval(intervalId); };
-          }, [user]);
+              fetchInitialData();
+
+              // 🟢 THE MAGIC: SUPABASE REALTIME SUBSCRIPTION 🟢
+              const realtimeChannel = supabase.channel('verifyhub-realtime')
+                  .on('postgres_changes', { event: '*', schema: 'public', table: 'store_inventory' }, payload => {
+                      if (payload.new && payload.new.id === 'Stock') {
+                          setInventory(payload.new.data); // Update stock instantly!
+                      }
+                  })
+                  .on('postgres_changes', { event: '*', schema: 'public', table: 'store_settings' }, payload => {
+                      if (payload.new) {
+                          const sData = payload.new.data || {};
+                          if (payload.new.id === 'Products') setCategories(sData.list || DEFAULT_CATEGORIES);
+                          if (payload.new.id === 'Notice') setGlobalNotice(sData.text || '');
+                          if (payload.new.id === 'Maintenance') setMaintenanceSettings(sData);
+                      }
+                  })
+                  .on('postgres_changes', { event: '*', schema: 'public', table: 'store_purchases' }, payload => {
+                      // Add new purchase instantly to user's vault without reloading
+                      if (payload.new) {
+                          const newPurchase = { id: payload.new.id, ...payload.new.data };
+                          setPurchases(prev => {
+                              const exists = prev.find(p => p.id === newPurchase.id);
+                              if (exists) return prev;
+                              return [newPurchase, ...prev];
+                          });
+                      }
+                  })
+                  .subscribe();
+
+              return () => { 
+                  isMounted = false; 
+                  supabase.removeChannel(realtimeChannel); // Clean up on unmount
+              };
+          }, [user]);
 
           useEffect(() => {
               if(!user) return;
@@ -2594,24 +2627,44 @@
             const messagesEndRef = useRef(null);
 
             useEffect(() => {
-                const fetchChat = async () => {
-                    const { data } = await supabase.from('store_chats').select('*').eq('user_email', user.email).order('timestamp', { ascending: true });
-                    if (data) {
-                        const newMsgs = data.map(m => ({ id: m.id, ...m.data, timestamp: m.timestamp }));
-                        if(newMsgs.length > chatMessages.length && !isOpen) {
-                            const lastMsg = newMsgs[newMsgs.length - 1];
-                            if(lastMsg.sender === 'admin') {
-                                setIncomingMsg(lastMsg.text);
-                                setUnreadCount(prev => prev + 1);
-                            }
+                let isMounted = true;
+
+                const fetchInitialChat = async () => {
+                    const { data } = await supabase.from('store_chats').select('*').eq('user_email', user.email).order('timestamp', { ascending: true });
+                    if (data && isMounted) {
+                        const newMsgs = data.map(m => ({ id: m.id, ...m.data, timestamp: m.timestamp }));
+                        setChatMessages(newMsgs);
+                    }
+                };
+                fetchInitialChat();
+
+                // 🟢 SUPABASE REALTIME CHAT 🟢
+                const chatChannel = supabase.channel(`chat_${user.email}`)
+                    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'store_chats', filter: `user_email=eq.${user.email}` }, payload => {
+                        if (payload.new) {
+                            const newMsg = { id: payload.new.id, ...payload.new.data, timestamp: payload.new.timestamp };
+                            
+                            setChatMessages(prev => {
+                                // Prevent duplicates
+                                if (prev.find(m => m.id === newMsg.id)) return prev;
+                                
+                                // Show notification if admin replies while chat is closed
+                                if (!isOpen && newMsg.sender === 'admin') {
+                                    setIncomingMsg(newMsg.text);
+                                    setUnreadCount(c => c + 1);
+                                }
+                                
+                                return [...prev, newMsg];
+                            });
                         }
-                        setChatMessages(newMsgs);
-                    }
+                    })
+                    .subscribe();
+
+                return () => { 
+                    isMounted = false; 
+                    supabase.removeChannel(chatChannel); 
                 };
-                fetchChat();
-                const intId = setInterval(fetchChat, 4000);
-                return () => clearInterval(intId);
-            }, [isOpen, user.email, setIncomingMsg, chatMessages.length]);
+            }, [isOpen, user.email, setIncomingMsg]);
 
             useEffect(() => { if (isOpen) { setUnreadCount(0); setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }), 100); } }, [isOpen, chatMessages]);
 
