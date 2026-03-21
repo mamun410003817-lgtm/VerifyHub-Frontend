@@ -1444,22 +1444,42 @@
               }
           };
 
-          const handleLogout = () => { 
-              supabase.auth.signOut().then(() => { 
-                  setUser(null); 
-                  setCart([]); 
-                  setShowCart(false); 
-                  setEmailInput(''); 
-                  setPasswordInput(''); 
-                  localStorage.removeItem('lastActiveTab');
-                  localStorage.removeItem('mySessionId'); // 🟢 Kills local session
-              }); 
-          };
+          const handleLogout = () => { 
+              supabase.auth.signOut().then(() => { 
+                  setUser(null); 
+                  setCart([]); 
+                  setShowCart(false); 
+                  setEmailInput(''); 
+                  setPasswordInput(''); 
+                  localStorage.removeItem('lastActiveTab');
+                  localStorage.removeItem('mySessionId'); // 🟢 Kills local session
+              }); 
+          };
 
-          if (isAuthChecking) return <div className="min-h-screen flex items-center justify-center bg-[#f4f4f5]"><RefreshCw className="w-8 h-8 text-brand-primary animate-spin"/></div>;
+          // 🟢 PREMIUM SPLASH/LOADING SCREEN 🟢
+          if (isAuthChecking) return (
+              <div className="min-h-screen flex flex-col items-center justify-center bg-[#020617] transition-colors duration-500 z-[9999] relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-b from-brand-primary/10 to-transparent opacity-50"></div>
+                  <div className="relative z-10 flex flex-col items-center justify-center animate-fade-in-up">
+                      <div className="relative flex items-center justify-center mb-8">
+                          <div className="absolute inset-0 bg-brand-primary/30 blur-2xl rounded-full animate-pulse"></div>
+                          <EliteLogo className="w-20 h-20 text-white animate-float-bubble drop-shadow-[0_0_20px_rgba(59,130,246,0.6)]" />
+                      </div>
+                      <h2 className="text-xl sm:text-2xl font-black tracking-[0.3em] uppercase text-white mb-2 flex items-center gap-2 drop-shadow-md">
+                          Verify<span className="text-brand-primary font-light">Hub</span> <span className="text-[10px] text-brand-primary mt-1 bg-brand-primary/10 px-2 py-0.5 rounded border border-brand-primary/30">ELITE</span>
+                      </h2>
+                      <div className="flex items-center gap-2.5 mt-6">
+                          <div className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-bounce shadow-[0_0_8px_rgba(59,130,246,0.8)]" style={{animationDelay: '0s'}}></div>
+                          <div className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-bounce shadow-[0_0_8px_rgba(59,130,246,0.8)]" style={{animationDelay: '0.15s'}}></div>
+                          <div className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-bounce shadow-[0_0_8px_rgba(59,130,246,0.8)]" style={{animationDelay: '0.3s'}}></div>
+                      </div>
+                      <p className="text-[9px] text-gray-500 font-mono tracking-[0.2em] uppercase mt-6 opacity-70">Establishing secure connection...</p>
+                  </div>
+              </div>
+          );
 
-          if (!user) {
-            if (showLanding) {
+          if (!user) {
+            if (showLanding) {
                 return (
                     <div className="min-h-screen w-full relative overflow-x-hidden font-sans bg-white text-gray-900 selection:bg-brand-primary selection:text-white">
                         
