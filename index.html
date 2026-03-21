@@ -682,12 +682,12 @@
                     <div onClick={() => setIsOpen(!isOpen)} className="w-full bg-[#0F172A] border border-gray-700/50 text-white font-semibold text-[11px] sm:text-[13px] tracking-wide py-4 px-4 rounded-xl cursor-pointer flex items-center justify-between hover:border-brand-primary/50 transition-colors shadow-sm allow-select">
                         <div className="flex items-center gap-3 overflow-hidden">
                             {mode !== 'default' && selectedOpt ? (
-                                <div className={`shrink-0 flex items-center justify-center bg-white shadow-sm overflow-hidden p-[2px] ${mode === 'country' ? 'w-6 h-6 rounded-full border-none' : 'w-6 h-6 rounded-lg'}`}>
+                                <div className={`shrink-0 flex items-center justify-center bg-white shadow-sm overflow-hidden p-[2px] ${(mode === 'country' || mode === 'state') ? 'w-6 h-6 rounded-full border-none' : 'w-6 h-6 rounded-lg'}`}>
                                     <img 
-                                        src={mode === 'country' ? (getCountryCode(selectedOpt.label) === 'un' ? `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedOpt.label)}&background=0F172A&color=fff&size=64&bold=true` : `https://flagcdn.com/w40/${getCountryCode(selectedOpt.label)}.png`) : `https://logo.clearbit.com/${getDomain(selectedOpt.label)}`} 
+                                        src={mode === 'state' ? (selectedOpt.value === '' ? `https://ui-avatars.com/api/?name=Any&background=0F172A&color=fff&size=64&bold=true` : `https://flagcdn.com/w40/us-${selectedOpt.value.toLowerCase()}.png`) : mode === 'country' ? (getCountryCode(selectedOpt.label) === 'un' ? `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedOpt.label)}&background=0F172A&color=fff&size=64&bold=true` : `https://flagcdn.com/w40/${getCountryCode(selectedOpt.label)}.png`) : `https://logo.clearbit.com/${getDomain(selectedOpt.label)}`} 
                                         onError={(e) => { 
                                             // 🟢 TRIPLE FALLBACK LOGIC 🟢
-                                            if (mode !== 'country') {
+                                            if (mode !== 'country' && mode !== 'state') {
                                                 const currentSrc = e.target.src;
                                                 const domain = getDomain(selectedOpt.label);
                                                 if (currentSrc.includes('clearbit')) {
@@ -702,7 +702,7 @@
                                                 e.target.onerror = null; e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedOpt.label)}&background=0F172A&color=fff&size=64&bold=true`;
                                             }
                                         }} 
-                                        className={`w-full h-full ${mode === 'country' ? 'object-cover rounded-full' : 'object-contain rounded-md'}`} 
+                                        className={`w-full h-full ${(mode === 'country' || mode === 'state') ? 'object-cover rounded-full' : 'object-contain rounded-md'}`} 
                                         alt="icon"
                                     />
                                 </div>
@@ -736,31 +736,31 @@
                                         className={`px-4 py-3 text-[12px] sm:text-[13px] font-medium tracking-wide cursor-pointer transition-all flex items-center gap-4 border-b border-gray-800 last:border-0 font-sans ${value === opt.value ? 'bg-brand-primary/20 text-white font-bold' : 'text-gray-300 hover:bg-gray-800 hover:text-white'}`}
                                     >
                                         {mode !== 'default' && (
-                                            <div className={`shrink-0 flex items-center justify-center bg-white shadow-sm overflow-hidden p-[2px] ${mode === 'country' ? 'w-6 h-6 rounded-full border-none' : 'w-6 h-6 rounded-lg'}`}>
+                                            <div className={`shrink-0 flex items-center justify-center bg-white shadow-sm overflow-hidden p-[2px] ${(mode === 'country' || mode === 'state') ? 'w-6 h-6 rounded-full border-none' : 'w-6 h-6 rounded-lg'}`}>
                                                 <img 
-                                                    src={mode === 'country' ? (getCountryCode(opt.label) === 'un' ? `https://ui-avatars.com/api/?name=${encodeURIComponent(opt.label)}&background=0F172A&color=fff&size=64&bold=true` : `https://flagcdn.com/w40/${getCountryCode(opt.label)}.png`) : `https://logo.clearbit.com/${getDomain(opt.label)}`} 
+                                                    src={mode === 'state' ? (opt.value === '' ? `https://ui-avatars.com/api/?name=Any&background=0F172A&color=fff&size=64&bold=true` : `https://flagcdn.com/w40/us-${opt.value.toLowerCase()}.png`) : mode === 'country' ? (getCountryCode(opt.label) === 'un' ? `https://ui-avatars.com/api/?name=${encodeURIComponent(opt.label)}&background=0F172A&color=fff&size=64&bold=true` : `https://flagcdn.com/w40/${getCountryCode(opt.label)}.png`) : `https://logo.clearbit.com/${getDomain(opt.label)}`} 
                                                     onError={(e) => { 
-                                                        if (mode !== 'country') {
+                                                        if (mode !== 'country' && mode !== 'state') {
                                                             const currentSrc = e.target.src;
                                                             const domain = getDomain(opt.label);
                                                             if (currentSrc.includes('clearbit')) {
                                                                 e.target.src = `https://icon.horse/icon/${domain}`;
                                                             } else if (currentSrc.includes('icon.horse')) {
-                                                                                        e.target.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-                                                                                    } else {
-                                                                                        e.target.onerror = null;
-                                                                                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(opt.label)}&background=0F172A&color=fff&size=64&bold=true`;
-                                                                                    }
-                                                                                } else {
-                                                                                    e.target.onerror = null; 
-                                                                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(opt.label)}&background=0F172A&color=fff&size=64&bold=true`;
-                                                                                }
-                                                                            }} 
-                                                                            className={`w-full h-full ${mode === 'country' ? 'object-cover rounded-full' : 'object-contain rounded-md'}`} 
-                                                                            alt="icon"
-                                                                        />
-                                                                    </div>
-                                                                )}
+                                                                e.target.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+                                                            } else {
+                                                                e.target.onerror = null;
+                                                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(opt.label)}&background=0F172A&color=fff&size=64&bold=true`;
+                                                            }
+                                                        } else {
+                                                            e.target.onerror = null; 
+                                                            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(opt.label)}&background=0F172A&color=fff&size=64&bold=true`;
+                                                        }
+                                                    }} 
+                                                    className={`w-full h-full ${(mode === 'country' || mode === 'state') ? 'object-cover rounded-full' : 'object-contain rounded-md'}`} 
+                                                    alt="icon"
+                                                />
+                                            </div>
+                                        )}
                                                                 <span className="truncate">{opt.label}</span>
                                                             </div>
                                                         )) : (
@@ -2527,12 +2527,14 @@
                                    {smsMode === 'standard' && (selectedCountry === 'USA' || selectedCountry === 'United States') && (
                                        <div className="flex flex-col gap-2 relative z-30">
                                            <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Select State (Optional)</label>
-                                           <div className="relative">
-                                               <select value={selectedUsaState} onChange={e => setSelectedUsaState(e.target.value)} className="w-full bg-transparent border-b border-white/10 text-white text-xs py-3 outline-none cursor-pointer hover:border-brand-primary transition-colors appearance-none font-mono">
-                                                   {usaStatesList.map(st => <option key={st.value} value={st.value} className="bg-[#090E17] text-white">{st.label}</option>)}
-                                               </select>
-                                               <ChevronDown className="w-3.5 h-3.5 text-gray-500 absolute right-2 top-3.5 pointer-events-none"/>
-                                           </div>
+                                           <SearchableDropdown 
+                                               options={usaStatesList} 
+                                               value={selectedUsaState} 
+                                               onChange={setSelectedUsaState} 
+                                               placeholder="Any State (Random)"
+                                               icon={Globe}
+                                               mode="state"
+                                           />
                                        </div>
                                    )}
                                    
