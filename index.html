@@ -2306,21 +2306,38 @@
             const [isCancelling, setIsCancelling] = useState(false);
 
             const cancelNumber = async () => {
-                if(!activeOrder || isCancelling) return;
-                setIsCancelling(true);
+                if(!activeOrder || isCancelling) return;
+                setIsCancelling(true);
+                try {
+                    const token = await getAuthToken();
+                    const res = await fetch(`${BACKEND_URL}/api/sms/cancel`, {
+                        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ orderId: activeOrder.orderId, n_id: activeOrder.n_id, provider: activeOrder.provider })
+                    });
+                    const data = await res.json();
+                    if(data.success) {
+                        triggerToast(data.message || "Cancelled & refunded.");
+                        if(pollInterval) clearInterval(pollInterval);
+                        setActiveOrder(null);
+                    } else triggerToast(data.message || "Cannot cancel right now.");
+                } catch(e) { triggerToast("Network error."); } finally { setIsCancelling(false); }
+            };
+
+            // 🟢 NEW: Handle Complete Button 🟢
+            const handleComplete = async () => {
+                if(!activeOrder) return;
                 try {
                     const token = await getAuthToken();
-                    const res = await fetch(`${BACKEND_URL}/api/sms/cancel`, {
+                    const res = await fetch(`${BACKEND_URL}/api/sms/complete`, {
                         method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                        body: JSON.stringify({ orderId: activeOrder.orderId, n_id: activeOrder.n_id, provider: activeOrder.provider })
+                        body: JSON.stringify({ orderId: activeOrder.orderId, n_id: activeOrder.n_id })
                     });
                     const data = await res.json();
                     if(data.success) {
-                        triggerToast(data.message || "Cancelled & refunded.");
-                        if(pollInterval) clearInterval(pollInterval);
-                        setActiveOrder(null);
-                    } else triggerToast(data.message || "Cannot cancel right now.");
-                } catch(e) { triggerToast("Network error."); } finally { setIsCancelling(false); }
+                        setActiveOrder(null); // Remove from screen
+                        triggerToast("Code moved to your Vault!");
+                    } else triggerToast(data.message || "Failed to close.");
+                } catch(e) { triggerToast("Network error."); }
             };
 
             const currentServiceObj = (services || []).find(s => s.code === selectedServiceCode);
@@ -2415,11 +2432,12 @@
                                        <RefreshCw className="w-3.5 h-3.5 animate-spin text-brand-primary" /> Awaiting Code... ({formatTime(timeRemaining)})
                                    </div>
                                )}
-                               <div className="flex gap-4 mt-3">
-                                   {activeOrder.status === 'Active' && <button onClick={cancelNumber} disabled={isCancelling} className="text-[10px] uppercase text-red-500 hover:text-red-400 font-bold tracking-widest disabled:opacity-50">{isCancelling ? 'Cancelling...' : 'Cancel & Refund'}</button>}
-                                   {activeOrder.status === 'Completed' && <button onClick={() => setActiveOrder(null)} className="text-[10px] uppercase text-green-500 hover:text-green-400 font-bold tracking-widest">Close Order</button>}
-                                   {activeOrder.status === 'Cancelled' && <button onClick={() => setActiveOrder(null)} className="text-[10px] uppercase text-gray-500 hover:text-gray-300 font-bold tracking-widest">Close</button>}
-                               </div>
+                              <div className="flex gap-4 mt-3">
+                                   {activeOrder.status === 'Active' && <button onClick={cancelNumber} disabled={isCancelling} className="text-[10px] uppercase text-red-500 hover:text-red-400 font-bold tracking-widest disabled:opacity-50">{isCancelling ? 'Cancelling...' : 'Cancel & Refund'}</button>}
+                                   {/* 🟢 NEW: Call handleComplete instead of just setting null 🟢 */}
+                                   {activeOrder.status === 'Completed' && <button onClick={handleComplete} className="text-[10px] uppercase text-green-500 hover:text-green-400 font-bold tracking-widest">Completed</button>}
+                                   {activeOrder.status === 'Cancelled' && <button onClick={handleComplete} className="text-[10px] uppercase text-gray-500 hover:text-gray-300 font-bold tracking-widest">Close</button>}
+                               </div>
                            </div>
                         </div>
                     ) : (
