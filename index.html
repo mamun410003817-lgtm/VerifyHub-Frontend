@@ -2497,12 +2497,13 @@
                                 </div>
 
                                 {/* Left: Number & Service */}
-                                <div className="flex items-center gap-5 w-full md:w-auto relative z-10">
-                                    <div className="relative">
+                                <div className="flex items-center gap-3 sm:gap-5 w-full md:w-auto relative z-10 overflow-hidden">
+                                    {/* Logo Container - Shrink fixed so it doesn't get squeezed */}
+                                    <div className="relative shrink-0">
                                         {activeOrder.status === 'Active' && !activeOrder.code && (
                                             <div className="absolute inset-0 bg-brand-primary rounded-2xl animate-ping opacity-20"></div>
                                         )}
-                                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border border-gray-200 bg-gray-50 flex items-center justify-center shrink-0 shadow-sm overflow-hidden p-2 relative z-10">
+                                        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl border border-gray-200 bg-gray-50 flex items-center justify-center shrink-0 shadow-sm overflow-hidden p-1.5 sm:p-2 relative z-10">
                                             <img 
                                                  src={`https://logo.clearbit.com/${String(activeOrder.service).toLowerCase().replace(/[^a-z0-9]/g, '')}.com`} 
                                                  onError={(e) => { 
@@ -2515,13 +2516,16 @@
                                             />
                                         </div>
                                     </div>
-                                    <div className="flex flex-col">
+                                    
+                                    {/* Number & Info Container - Flexible Width */}
+                                    <div className="flex flex-col min-w-0 w-full">
                                         <div className="flex items-center gap-2 mb-1">
-                                            <p className="text-[10px] sm:text-xs text-gray-500 font-bold tracking-widest uppercase">{activeOrder.service} Verification</p>
-                                            {activeOrder.status === 'Active' && !activeOrder.code && <span className="flex h-2 w-2 relative"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-brand-primary"></span></span>}
+                                            <p className="text-[9px] sm:text-xs text-gray-500 font-bold tracking-widest uppercase truncate">{activeOrder.service} Verification</p>
+                                            {activeOrder.status === 'Active' && !activeOrder.code && <span className="flex h-2 w-2 shrink-0 relative"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-brand-primary"></span></span>}
                                         </div>
-                                        <div className="flex items-center gap-3">
-                                            <span className="text-3xl sm:text-4xl font-black font-mono text-gray-900 tracking-wider">
+                                        <div className="flex items-center gap-2 sm:gap-3 w-full">
+                                            {/* 🟢 Responsive Font Size & Dynamic Letter Spacing 🟢 */}
+                                            <span className="text-[18px] leading-tight sm:text-3xl md:text-4xl font-black font-mono text-gray-900 tracking-tight sm:tracking-wider truncate">
                                                 {(() => {
                                                     let p = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
                                                     if (p.length === 10) return `+1 ${p}`;
@@ -2530,6 +2534,8 @@
                                                     return `+${p}`;
                                                 })()}
                                             </span>
+                                            
+                                            {/* Copy Button - Shrink fixed so it stays visible */}
                                             <button onClick={() => {
                                                 let cleanNum = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
                                                 if (cleanNum.startsWith('1') && cleanNum.length === 11) cleanNum = cleanNum.slice(1);
@@ -2557,7 +2563,7 @@
                                                 } else {
                                                     fallbackCopy(cleanNum);
                                                 }
-                                            }} className="bg-gray-50 hover:bg-brand-primary/10 text-gray-500 hover:text-brand-primary p-2 rounded-lg transition-colors border border-gray-200 shadow-sm" title="Copy Number"><Copy className="w-4 h-4 sm:w-5 sm:h-5"/></button>
+                                            }} className="shrink-0 bg-gray-50 hover:bg-brand-primary/10 text-gray-500 hover:text-brand-primary p-1.5 sm:p-2 rounded-lg transition-colors border border-gray-200 shadow-sm" title="Copy Number"><Copy className="w-4 h-4 sm:w-5 sm:h-5"/></button>
                                         </div>
                                     </div>
                                 </div>
@@ -2636,36 +2642,39 @@
                             </div>
                         </div>
                     ) : (
-                        /* 🟢 Minimalist Purchase Configuration 🟢 */
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full border-t border-white/5 pt-8">
-                            
-                            {/* Left Side: Config Form */}
-                            <div className="lg:col-span-2 flex flex-col gap-6">
+                        /* 🟢 Ultra-Minimalist Purchase Configuration 🟢 */
+                        <div className="w-full flex flex-col items-center mt-2 animate-fade-in-up">
+                            <div className="w-full max-w-3xl bg-white rounded-[32px] border border-gray-200 shadow-[0_4px_30px_rgba(0,0,0,0.03)] p-6 sm:p-10 relative overflow-hidden">
                                 
-                                {/* 🟢 Sleek Tab Toggle (Clear & Direct Naming) 🟢 */}
-                                <div className="flex border-b border-gray-200 w-full sm:w-fit mb-4">
+                                {/* Subtle Background Accents */}
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-[60px] pointer-events-none"></div>
+
+                                {/* 🟢 iOS-Style Segmented Control (Tabs) 🟢 */}
+                                <div className="flex bg-gray-100/80 p-1.5 rounded-2xl w-full sm:w-fit mx-auto mb-10 shadow-inner relative z-10 border border-gray-200/50">
                                     <button 
-                                        className={`pb-2 px-3 sm:px-4 text-[10px] sm:text-xs font-bold tracking-widest uppercase transition-all w-1/2 sm:w-auto ${smsMode==='standard' ? 'text-brand-primary border-b-[3px] border-brand-primary' : 'text-gray-400 hover:text-gray-600'}`} 
-                                        onClick={()=>setSmsMode('standard')}
-                                    >
-                                        Rent Number (3-25 Days)
-                                    </button>
-                                    <button 
-                                        className={`pb-2 px-3 sm:px-4 text-[10px] sm:text-xs font-bold tracking-widest uppercase transition-all w-1/2 sm:w-auto ${smsMode==='panda' ? 'text-brand-primary border-b-[3px] border-brand-primary' : 'text-gray-400 hover:text-gray-600'}`} 
+                                        className={`flex-1 sm:px-8 py-3 text-[10px] sm:text-xs font-bold tracking-widest uppercase transition-all duration-300 rounded-[12px] ${smsMode==='panda' ? 'bg-white text-brand-primary shadow-sm ring-1 ring-gray-200/50 scale-100' : 'text-gray-500 hover:text-gray-800 scale-95'}`} 
                                         onClick={()=>setSmsMode('panda')}
                                     >
-                                        Quick Verify (5 Mins)
+                                        Quick Verify <span className="hidden sm:inline">(5 Mins)</span>
+                                    </button>
+                                    <button 
+                                        className={`flex-1 sm:px-8 py-3 text-[10px] sm:text-xs font-bold tracking-widest uppercase transition-all duration-300 rounded-[12px] ${smsMode==='standard' ? 'bg-white text-brand-primary shadow-sm ring-1 ring-gray-200/50 scale-100' : 'text-gray-500 hover:text-gray-800 scale-95'}`} 
+                                        onClick={()=>setSmsMode('standard')}
+                                    >
+                                        Rent Number <span className="hidden sm:inline">(3-25 Days)</span>
                                     </button>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
-                                   {/* Country Select */}
-                                   <div className="flex flex-col gap-2 relative z-50">
-                                       <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Country</label>
-                                       {isLoadingCountries && smsMode === 'panda' ? (
-                                            <div className="py-3 px-4 border-b border-white/10 flex items-center justify-center opacity-50"><RefreshCw className="w-4 h-4 animate-spin text-white"/></div>
+                                {/* 🟢 Form Fields (Clean Grid) 🟢 */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mb-8 relative z-10">
+                                    
+                                    {/* Country */}
+                                    <div className="flex flex-col gap-2.5 relative z-50">
+                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><Globe className="w-3.5 h-3.5"/> Select Country</label>
+                                        {isLoadingCountries && smsMode === 'panda' ? (
+                                            <div className="py-4 px-4 bg-gray-50 rounded-2xl border border-gray-200 flex items-center justify-center"><RefreshCw className="w-5 h-5 animate-spin text-brand-primary/50"/></div>
                                         ) : (
-                                           <SearchableDropdown 
+                                            <SearchableDropdown 
                                                 options={smsMode === 'panda' ? pandaCountries : countryOptions} 
                                                 value={smsMode === 'panda' ? selectedPandaCountry : selectedCountry} 
                                                 onChange={smsMode === 'panda' ? setSelectedPandaCountry : setSelectedCountry} 
@@ -2674,15 +2683,15 @@
                                                 mode="country"
                                             />
                                         )}
-                                   </div>
+                                    </div>
 
-                                   {/* Service Select */}
-                                   <div className="flex flex-col gap-2 relative z-40">
-                                       <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Service / App</label>
-                                       {isLoadingRates && smsMode === 'panda' ? (
-                                            <div className="py-3 px-4 border-b border-white/10 flex items-center justify-center opacity-50"><RefreshCw className="w-4 h-4 animate-spin text-white"/></div>
+                                    {/* Service */}
+                                    <div className="flex flex-col gap-2.5 relative z-40">
+                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><Smartphone className="w-3.5 h-3.5"/> Select Service</label>
+                                        {isLoadingRates && smsMode === 'panda' ? (
+                                            <div className="py-4 px-4 bg-gray-50 rounded-2xl border border-gray-200 flex items-center justify-center"><RefreshCw className="w-5 h-5 animate-spin text-brand-primary/50"/></div>
                                         ) : (!finalServiceOptions || finalServiceOptions.length === 0) ? (
-                                            <div className="py-3 px-4 text-center text-red-400 font-mono text-[10px] uppercase border-b border-white/10">No stock available</div>
+                                            <div className="py-4 px-4 text-center text-red-500 font-mono text-[10px] uppercase bg-red-50/50 border border-red-100 rounded-2xl font-bold flex items-center justify-center gap-2"><AlertTriangle className="w-3.5 h-3.5"/> No stock</div>
                                         ) : (
                                             <SearchableDropdown 
                                                 options={finalServiceOptions} 
@@ -2693,88 +2702,84 @@
                                                 mode="service"
                                             />
                                         )}
-                                   </div>
-                                </div>
+                                    </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                   {/* Rental Duration */}
-                                   <div className="flex flex-col gap-2 relative z-30">
-                                       <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Duration</label>
-                                       <div className="relative">
-                                           <select value={selectedDuration} onChange={e => setSelectedDuration(e.target.value)} className="w-full bg-transparent border-b border-white/10 text-white text-xs py-3 outline-none cursor-pointer hover:border-brand-primary transition-colors appearance-none font-mono" disabled={isPanda}>
-                                               {durationOptions.map(opt => <option key={opt.value} value={opt.value} className="bg-[#090E17] text-white">{opt.label}</option>)}
-                                           </select>
-                                           <Clock className="w-3.5 h-3.5 text-gray-500 absolute right-2 top-3.5 pointer-events-none"/>
-                                       </div>
-                                   </div>
+                                    {/* Duration */}
+                                    <div className="flex flex-col gap-2.5 relative z-30">
+                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><Clock className="w-3.5 h-3.5"/> Time Duration</label>
+                                        <div className="relative group">
+                                            <select value={selectedDuration} onChange={e => setSelectedDuration(e.target.value)} className="w-full bg-gray-50/80 border border-gray-200 text-gray-800 text-[13px] rounded-2xl py-4 px-5 outline-none cursor-pointer focus:bg-white focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 hover:border-gray-300 transition-all appearance-none font-mono font-bold shadow-sm" disabled={isPanda}>
+                                                {durationOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+                                            </select>
+                                            <ChevronDown className="w-4 h-4 text-gray-400 absolute right-4 top-[18px] pointer-events-none group-hover:text-gray-600 transition-colors"/>
+                                        </div>
+                                    </div>
 
-                                   {/* Dynamic Option (State or Reuse) */}
-                                   {smsMode === 'standard' && (selectedCountry === 'USA' || selectedCountry === 'United States') && (
-                                       <div className="flex flex-col gap-2 relative z-30">
-                                           <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Select State (Optional)</label>
-                                           <SearchableDropdown 
-                                               options={usaStatesList} 
-                                               value={selectedUsaState} 
-                                               onChange={setSelectedUsaState} 
-                                               placeholder="Any State (Random)"
-                                               icon={Globe}
-                                               mode="state"
-                                           />
-                                       </div>
-                                   )}
-                                   
-                                   {smsMode === 'panda' && (
-                                       <div className="flex flex-col gap-2 relative z-30">
-                                           <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Reuse Number (Optional)</label>
-                                           <input type="text" value={reuseNumberInput} onChange={e => setReuseNumberInput(e.target.value)} placeholder="e.g. 447123456789" className="bg-transparent border-b border-white/10 text-white text-xs py-3 outline-none hover:border-brand-primary focus:border-brand-primary transition-colors font-mono" />
-                                       </div>
-                                   )}
-                                </div>
-                            </div>
-
-                            {/* Right Side: Minimal Checkout Panel */}
-                            <div className="lg:col-span-1 border-t lg:border-t-0 lg:border-l border-gray-200 pt-6 lg:pt-0 lg:pl-8 flex flex-col justify-between">
-                                <div>
-                                    <h3 className="text-[10px] text-gray-800 font-black uppercase tracking-widest mb-6 flex items-center gap-2">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/2953/2953536.png" className="w-4 h-4 drop-shadow-sm" alt="bill" /> Order Summary
-                                    </h3>
+                                    {/* Dynamic Options */}
+                                    {smsMode === 'standard' && (selectedCountry === 'USA' || selectedCountry === 'United States') && (
+                                        <div className="flex flex-col gap-2.5 relative z-30 animate-fade-in-up">
+                                            <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">State (Optional)</label>
+                                            <SearchableDropdown 
+                                                options={usaStatesList} 
+                                                value={selectedUsaState} 
+                                                onChange={setSelectedUsaState} 
+                                                placeholder="Any State (Random)"
+                                                icon={Globe}
+                                                mode="state"
+                                            />
+                                        </div>
+                                    )}
                                     
-                                    <div className="flex justify-between items-center border-b border-gray-100 py-3">
-                                        <span className="text-xs text-gray-600 font-medium">{currentServiceObj ? currentServiceObj.name : 'Service'}</span>
-                                        <span className="text-sm font-mono font-bold text-gray-900">${displayPrice ? displayPrice.toFixed(2) : '0.00'}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center border-b border-gray-100 py-3">
-                                        <span className="text-[10px] text-gray-500 uppercase tracking-widest">Duration</span>
-                                        <span className="text-[10px] text-gray-700 font-mono font-bold">{selectedDuration}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center py-3">
-                                        <span className="text-[10px] text-gray-500 uppercase tracking-widest">Local Rate</span>
-                                        {/* 🟢 500 Naira Extra Markup Added Here 🟢 */}
-                                        <span className="text-[10px] text-brand-primary font-mono tracking-widest font-bold">~ ₦{(displayPrice > 0 ? (displayPrice * (bankSettings?.nairaRate || 1500)) + 500 : 0).toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
-                                    </div>
+                                    {smsMode === 'panda' && (
+                                        <div className="flex flex-col gap-2.5 relative z-30 animate-fade-in-up">
+                                            <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Reuse Number (Optional)</label>
+                                            <input type="text" value={reuseNumberInput} onChange={e => setReuseNumberInput(e.target.value)} placeholder="e.g. 447123456789" className="w-full bg-gray-50/80 border border-gray-200 text-gray-800 text-[13px] rounded-2xl py-4 px-5 outline-none hover:border-gray-300 focus:bg-white focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all font-mono font-bold shadow-sm placeholder-gray-400" />
+                                        </div>
+                                    )}
                                 </div>
-                                
-                                <div className="mt-6">
-                                    {/* 🟢 WARNING TEXT FOR USERS (ENGLISH) 🟢 */}
-                                    <div className="bg-amber-50 border border-amber-200 p-3.5 rounded-xl mb-5 flex gap-2.5 items-start shadow-sm">
-                                        <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
-                                        <p className="text-[10px] sm:text-[11px] text-amber-800 font-medium leading-relaxed">
-                                            <span className="uppercase block mb-1 text-amber-600 text-[9px] font-bold tracking-widest">⚠️ Important Notice</span>
-                                            If the app shows <span className="font-bold text-red-600">"Already Registered"</span> after entering the number, DO NOT request a code (OTP). Cancel the number immediately.
+
+                                {/* 🟢 Divider 🟢 */}
+                                <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-8"></div>
+
+                                {/* 🟢 Unified Checkout Bottom 🟢 */}
+                                <div className="flex flex-col gap-6 relative z-10">
+                                    
+                                    <div className="flex flex-col sm:flex-row justify-between items-center gap-6 bg-gray-50/50 p-5 sm:p-6 rounded-[20px] border border-gray-100">
+                                        {/* Price Display */}
+                                        <div className="flex flex-col w-full sm:w-auto items-center sm:items-start text-center sm:text-left">
+                                            <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Total Cost</p>
+                                            <div className="flex flex-col sm:flex-row items-center sm:items-baseline gap-1 sm:gap-3">
+                                                <span className="text-3xl sm:text-4xl font-black font-mono text-gray-900 tracking-tight">${displayPrice ? displayPrice.toFixed(2) : '0.00'}</span>
+                                                <span className="text-[11px] font-mono font-bold text-brand-primary bg-brand-primary/10 px-2.5 py-1 rounded-md border border-brand-primary/20">
+                                                    ~ ₦{(displayPrice > 0 ? (displayPrice * (bankSettings?.nairaRate || 1500)) + 500 : 0).toLocaleString('en-US', {maximumFractionDigits: 0})}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {/* Action Button */}
+                                        <div className="w-full sm:w-[260px] shrink-0">
+                                            <button 
+                                                onClick={() => buyNumber(currentServiceObj || { code: selectedServiceCode, name: selectedServiceCode, finalPrice: displayPrice })} 
+                                                disabled={isBuying || (smsMode === 'panda' && !displayPrice)} 
+                                                className="btn-animate w-full bg-gray-900 hover:bg-black text-white transition-colors py-4 px-6 rounded-2xl text-[11px] sm:text-xs font-black uppercase tracking-widest flex justify-center items-center gap-2.5 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_10px_25px_rgba(0,0,0,0.25)]"
+                                            >
+                                                {isBuying ? <RefreshCw className="w-5 h-5 animate-spin"/> : <Zap className="w-4 h-4 text-brand-gold" />}
+                                                {isBuying ? 'Processing...' : 'Get Number Now'}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Minimal Warning Alert */}
+                                    <div className="flex items-start gap-3 bg-red-50/80 border border-red-100 p-4 rounded-2xl mx-auto w-full max-w-2xl">
+                                        <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                                        <p className="text-[10px] sm:text-[11px] text-red-800 font-medium leading-relaxed">
+                                            If the app shows <strong className="text-red-600 font-bold">"Already Registered"</strong>, DO NOT request OTP. Cancel the number immediately to avoid charges.
                                         </p>
                                     </div>
 
-                                    <button 
-                                        onClick={() => buyNumber(currentServiceObj || { code: selectedServiceCode, name: selectedServiceCode, finalPrice: displayPrice })} 
-                                        disabled={isBuying || (smsMode === 'panda' && !displayPrice)} 
-                                        className="btn-animate w-full bg-brand-primary text-white hover:bg-blue-600 transition-colors py-3.5 rounded-xl text-[11px] sm:text-xs font-black uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
-                                    >
-                                        {isBuying ? <RefreshCw className="w-5 h-5 animate-spin"/> : <img src="https://cdn-icons-png.flaticon.com/512/1170/1170628.png" className="w-5 h-5 drop-shadow-sm" alt="buy" />}
-                                        {isBuying ? 'Processing...' : 'Purchase Number'}
-                                    </button>
                                 </div>
-                            </div>
 
+                            </div>
                         </div>
                     )}
                 </div>
