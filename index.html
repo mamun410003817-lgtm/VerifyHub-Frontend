@@ -860,7 +860,7 @@
             }
         }
 
-       const VaultItem = ({ acc, idx, triggerToast, categories }) => {
+      const VaultItem = ({ acc, idx, triggerToast, categories }) => {
             const [totpCode, setTotpCode] = useState('');
             const [timeLeft, setTimeLeft] = useState(30);
             const [twoFaSecret, setTwoFaSecret] = useState(null);
@@ -873,6 +873,37 @@
             const [isRenewing, setIsRenewing] = useState(false);
             const [renewDuration, setRenewDuration] = useState('3 days');
             const [renewStatus, setRenewStatus] = useState('');
+
+            // 🟢 SMART LOGO MAPPER FOR VAULT ITEMS 🟢
+            const getVaultLogo = (name) => {
+                let n = String(name).toLowerCase();
+                // Specific App Logos
+                if (n.includes('google voice') || n.includes('gv')) return 'https://www.google.com/s2/favicons?domain=voice.google.com&sz=128';
+                if (n.includes('textplus') || n.includes('text plus')) return 'https://www.google.com/s2/favicons?domain=textplus.com&sz=128';
+                if (n.includes('textnow')) return 'https://www.google.com/s2/favicons?domain=textnow.com&sz=128';
+                if (n.includes('gmail') || n.includes('google')) return 'https://www.google.com/s2/favicons?domain=google.com&sz=128';
+                if (n.includes('facebook') || n.includes('fb')) return 'https://www.google.com/s2/favicons?domain=facebook.com&sz=128';
+                if (n.includes('whatsapp')) return 'https://www.google.com/s2/favicons?domain=whatsapp.com&sz=128';
+                if (n.includes('telegram')) return 'https://www.google.com/s2/favicons?domain=telegram.org&sz=128';
+                if (n.includes('instagram') || n.includes('ig')) return 'https://www.google.com/s2/favicons?domain=instagram.com&sz=128';
+                if (n.includes('tiktok')) return 'https://www.google.com/s2/favicons?domain=tiktok.com&sz=128';
+                if (n.includes('twitter') || n.includes(' x ')) return 'https://www.google.com/s2/favicons?domain=x.com&sz=128';
+                if (n.includes('netflix')) return 'https://www.google.com/s2/favicons?domain=netflix.com&sz=128';
+                if (n.includes('amazon') || n.includes('aws')) return 'https://www.google.com/s2/favicons?domain=amazon.com&sz=128';
+                if (n.includes('paypal')) return 'https://www.google.com/s2/favicons?domain=paypal.com&sz=128';
+                if (n.includes('cashapp')) return 'https://www.google.com/s2/favicons?domain=cash.app&sz=128';
+                if (n.includes('venmo')) return 'https://www.google.com/s2/favicons?domain=venmo.com&sz=128';
+                if (n.includes('chime')) return 'https://www.google.com/s2/favicons?domain=chime.com&sz=128';
+                if (n.includes('yahoo')) return 'https://www.google.com/s2/favicons?domain=yahoo.com&sz=128';
+                if (n.includes('outlook') || n.includes('hotmail')) return 'https://www.google.com/s2/favicons?domain=outlook.com&sz=128';
+                if (n.includes('tinder')) return 'https://www.google.com/s2/favicons?domain=tinder.com&sz=128';
+                if (n.includes('bumble')) return 'https://www.google.com/s2/favicons?domain=bumble.com&sz=128';
+                
+                // Category Fallbacks
+                if (isSMS) return 'https://cdn-icons-png.flaticon.com/512/9135/9135759.png'; // Beautiful SMS Icon
+                
+                return 'https://cdn-icons-png.flaticon.com/512/2838/2838883.png'; // Premium Key/Account Icon
+            };
 
             useEffect(() => {
                 try {
@@ -921,19 +952,33 @@
 
             if (!acc) return null;
             const canRenew = isSMS && displayData && !displayData.includes('Duration: 5 minutes');
+            const logoUrl = getVaultLogo(safeType);
 
             return (
-                <div className="bg-white border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-md hover:border-brand-primary/30 p-5 sm:p-6 rounded-2xl flex flex-col transition-all duration-300 animate-fade-in-up group" style={{animationDelay: `${idx * 0.05}s`}}>
+                <div className="bg-white border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-lg hover:-translate-y-1 hover:border-brand-primary/40 p-5 sm:p-6 rounded-2xl flex flex-col transition-all duration-300 animate-fade-in-up group relative overflow-hidden" style={{animationDelay: `${idx * 0.05}s`}}>
                     
+                    {/* Subtle Background Glow */}
+                    <div className="absolute -top-10 -right-10 w-32 h-32 bg-brand-primary/5 rounded-full blur-2xl pointer-events-none group-hover:bg-brand-primary/10 transition-colors duration-500"></div>
+
                     {/* Header */}
-                    <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-100">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center shrink-0 shadow-sm">
-                                {isSMS ? <Smartphone className="w-4 h-4 text-brand-primary"/> : <Key className="w-4 h-4 text-brand-primary"/>} 
+                    <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-100 relative z-10">
+                        <div className="flex items-center gap-3.5">
+                            <div className="w-12 h-12 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0 shadow-sm p-2 group-hover:shadow-md transition-shadow duration-300">
+                                <img 
+                                    src={logoUrl} 
+                                    className="w-full h-full object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300" 
+                                    alt="Account Logo"
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = isSMS ? 'https://cdn-icons-png.flaticon.com/512/9135/9135759.png' : 'https://cdn-icons-png.flaticon.com/512/2838/2838883.png';
+                                    }}
+                                />
                             </div>
                             <div>
-                                <h3 className="text-[12px] sm:text-[13px] font-bold text-gray-900 tracking-wide uppercase">{safeType.replace('PUR-SMS-', 'SMS: ')}</h3>
-                                <p className="text-[9px] sm:text-[10px] text-gray-500 font-mono mt-1 uppercase tracking-widest">{safeFormatDate(acc.date)}</p>
+                                <h3 className="text-[13px] sm:text-[14px] font-bold text-gray-900 tracking-wide uppercase leading-tight">{safeType.replace('PUR-SMS-', 'SMS: ')}</h3>
+                                <p className="text-[9px] sm:text-[10px] text-gray-500 font-mono mt-1 uppercase tracking-widest flex items-center gap-1">
+                                    <Clock className="w-3 h-3" /> {safeFormatDate(acc.date)}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -2408,104 +2453,187 @@
             return (
                 <div className="w-full relative z-10 animate-fade-in-up max-w-5xl mx-auto mt-4">
                     
-                    {/* 🟢 Colorful Real Logo Header 🟢 */}
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 w-full mb-8 px-2 sm:px-0">
-                        <div className="flex items-center gap-3">
-                            <img src="https://cdn-icons-png.flaticon.com/512/9135/9135759.png" alt="SMS" className="w-10 h-10 sm:w-12 sm:h-12 drop-shadow-md" />
-                            <div>
-                                <h1 className="text-xl sm:text-2xl font-black text-brand-primary tracking-wide uppercase">SMS Verifications</h1>
-                                <p className="text-gray-500 text-[10px] sm:text-xs font-mono mt-1 font-bold">Instant OTPs & Virtual Numbers</p>
+                    {/* 🟢 Colorful Real Logo Header & Trust Badge 🟢 */}
+                    <div className="flex flex-col w-full mb-8 px-2 sm:px-0">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 w-full mb-5">
+                            <div className="flex items-center gap-3">
+                                <img src="https://cdn-icons-png.flaticon.com/512/9135/9135759.png" alt="SMS" className="w-10 h-10 sm:w-12 sm:h-12 drop-shadow-md" />
+                                <div>
+                                    <h1 className="text-xl sm:text-2xl font-black text-brand-primary tracking-wide uppercase">SMS Verifications</h1>
+                                    <p className="text-gray-500 text-[10px] sm:text-xs font-mono mt-1 font-bold">Instant OTPs & Virtual Numbers</p>
+                                </div>
                             </div>
+                        </div>
+                        
+                        {/* 🟢 TRUST & REASSURANCE MESSAGE (ENGLISH) 🟢 */}
+                        <div className="bg-green-50 border border-green-200 p-3.5 sm:p-4 rounded-xl flex gap-3 items-start shadow-sm w-full">
+                            <ShieldCheck className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+                            <p className="text-[10px] sm:text-[11px] text-green-800 font-medium leading-relaxed">
+                                <span className="uppercase block mb-1 text-green-600 text-[9px] font-bold tracking-widest">🛡️ 100% Safe & Secure</span>
+                                Don't worry! If you do not receive the OTP code for any reason, simply cancel the number. You will <span className="font-bold text-green-700 underline">not be charged</span> and your balance will remain completely safe.
+                            </p>
                         </div>
                     </div>
 
-                    {/* 🟢 Active Order Minimalist View 🟢 */}
+                   {/* 🟢 Active Order Premium White View 🟢 */}
                     {activeOrder ? (
-                        <div className="border border-white/10 bg-white/[0.02] rounded-2xl p-6 relative overflow-hidden flex flex-col md:flex-row gap-6 justify-between items-center w-full animate-fade-in-up">
-                           
-                           {/* Progress Bar Line */}
-                           <div className="absolute top-0 left-0 w-full h-[2px] bg-white/5">
-                               {activeOrder.status === 'Active' && <div className="h-full bg-brand-primary timer-bar" style={{
-                                   animationDuration: activeOrder.duration === '15 minutes' ? '900s' : 
-                                                      activeOrder.duration === '5 minutes' ? '300s' :
-                                                      activeOrder.duration === '3 days' ? '259200s' : 
-                                                      activeOrder.duration === '7 days' ? '604800s' : 
-                                                      activeOrder.duration === '14 days' ? '1209600s' : '2160000s'
-                               }}></div>}
-                           </div>
+                        <div className={`relative w-full rounded-[24px] overflow-hidden animate-fade-in-up transition-all duration-500 bg-white border ${activeOrder.code ? 'border-green-400 shadow-[0_10px_40px_rgba(74,222,128,0.15)]' : activeOrder.status === 'Cancelled' ? 'border-red-300 shadow-md' : 'border-brand-primary/30 shadow-[0_10px_40px_rgba(59,130,246,0.1)]'}`}>
+                            
+                            {/* Inner Container */}
+                            <div className="p-6 sm:p-8 w-full h-full relative flex flex-col md:flex-row gap-8 justify-between items-center z-10">
+                                
+                                {/* Background Soft Glow */}
+                                <div className={`absolute -top-24 -right-24 w-48 h-48 rounded-full blur-[80px] opacity-30 pointer-events-none ${activeOrder.code ? 'bg-green-400' : 'bg-brand-primary'}`}></div>
 
-                           {/* Left: Number & Service */}
-                           <div className="flex items-center gap-5 w-full md:w-auto">
-                               <div className="w-12 h-12 rounded-2xl border border-gray-200 flex items-center justify-center bg-white shrink-0 shadow-sm overflow-hidden p-1.5">
-                                   <img 
-                                        src={`https://logo.clearbit.com/${String(activeOrder.service).toLowerCase().replace(/[^a-z0-9]/g, '')}.com`} 
-                                        onError={(e) => { 
-                                            const backupDomain = String(activeOrder.service).toLowerCase().replace(/[^a-z0-9]/g, '') + '.com';
-                                            e.target.onerror = null; 
-                                            e.target.src = `https://www.google.com/s2/favicons?domain=${backupDomain}&sz=128`; 
-                                        }}
-                                        className="w-full h-full object-contain drop-shadow-sm" 
-                                        alt="Service Logo"
-                                   />
-                               </div>
-                               <div className="flex flex-col">
-                                   <p className="text-[10px] text-gray-500 font-mono tracking-widest uppercase mb-1">{activeOrder.service} Verification</p>
-                                   <div className="flex items-center gap-3">
-                                       <span className="text-2xl sm:text-3xl font-mono text-white tracking-wider font-bold">
-                                           {(() => {
-                                               let p = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
-                                               if (p.length === 10) return `+1 ${p}`;
-                                               if (p.startsWith('1') && p.length === 11) return `+1 ${p.slice(1)}`;
-                                               if (p.startsWith('44')) return `+44 ${p.slice(2)}`;
-                                               return `+${p}`;
-                                           })()}
-                                       </span>
-                                       <button onClick={() => {
-                                           let cleanNum = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
-                                           if (cleanNum.startsWith('1') && cleanNum.length === 11) cleanNum = cleanNum.slice(1);
-                                           if(navigator.clipboard) navigator.clipboard.writeText(cleanNum).then(()=>triggerToast("Number copied!"));
-                                       }} className="text-gray-500 hover:text-white transition-colors" title="Copy Base Number"><Copy className="w-4 h-4"/></button>
-                                   </div>
-                               </div>
-                           </div>
+                                {/* Progress Bar Line */}
+                                <div className="absolute top-0 left-0 w-full h-1.5 bg-gray-100">
+                                    {activeOrder.status === 'Active' && <div className="h-full bg-brand-primary timer-bar rounded-r-full shadow-[0_0_10px_#3b82f6]" style={{
+                                        animationDuration: activeOrder.duration === '15 minutes' ? '900s' : 
+                                                           activeOrder.duration === '5 minutes' ? '300s' :
+                                                           activeOrder.duration === '3 days' ? '259200s' : 
+                                                           activeOrder.duration === '7 days' ? '604800s' : 
+                                                           activeOrder.duration === '14 days' ? '1209600s' : '2160000s'
+                                    }}></div>}
+                                </div>
 
-                           {/* Right: Code & Actions */}
-                           <div className="flex flex-col items-center md:items-end w-full md:w-auto mt-5 md:mt-0">
-                               {activeOrder.code ? (
-                                   <div className="flex flex-col items-center md:items-end">
-                                       <p className="text-[10px] text-green-500 font-black uppercase tracking-[0.2em] mb-2 animate-bounce flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5"/> Code Received!</p>
-                                       <div className="flex items-center gap-3 bg-green-500/10 px-6 py-3.5 rounded-xl border-2 border-green-500 shadow-[0_0_20px_rgba(74,222,128,0.2)]">
-                                           <span className="text-3xl font-mono font-black text-green-400 tracking-[0.2em] select-all">{activeOrder.code}</span>
-                                           <button onClick={() => {
-                                               if(navigator.clipboard) navigator.clipboard.writeText(activeOrder.code).then(()=>triggerToast("Code copied!"));
-                                           }} className="bg-green-500/20 p-2.5 rounded-lg text-green-400 hover:bg-green-500 hover:text-black transition-colors shadow-sm" title="Copy Code"><Copy className="w-5 h-5"/></button>
-                                       </div>
-                                   </div>
-                               ) : activeOrder.status === 'Cancelled' ? (
-                                   <div className="flex flex-col items-center md:items-end">
-                                       <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1.5">Status</p>
-                                       <div className="flex items-center gap-2 px-5 py-3 rounded-xl border-2 border-dashed border-red-500/50 bg-red-500/10">
-                                           <span className="text-red-500 font-mono text-xs uppercase tracking-widest font-bold">Cancelled & Refunded</span>
-                                       </div>
-                                   </div>
-                               ) : (
-                                   <div className="flex flex-col items-center md:items-end w-full md:w-auto">
-                                       <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] mb-2 flex items-center gap-1.5"><Smartphone className="w-3.5 h-3.5 text-brand-primary"/> Code will appear here</p>
-                                       <div className="flex items-center justify-center gap-3 bg-[rgba(0,0,0,0.3)] px-6 py-4 rounded-xl border-2 border-dashed border-brand-primary/50 relative overflow-hidden min-w-[240px] shadow-inner transition-all duration-300">
-                                           <div className="absolute inset-0 bg-brand-primary/10 w-full h-full animate-pulse"></div>
-                                           <RefreshCw className="w-5 h-5 animate-spin text-brand-primary relative z-10" />
-                                           <span className="text-xl font-mono font-black text-white tracking-[0.3em] relative z-10 opacity-70">_ _ _ _ _ _</span>
-                                           <span className="text-[10px] text-white bg-brand-primary/80 font-black font-mono absolute bottom-0 right-0 px-2 py-0.5 rounded-tl-lg">{formatTime(timeRemaining)}</span>
-                                       </div>
-                                   </div>
-                               )}
-                              <div className="flex gap-4 mt-4">
-                                   {activeOrder.status === 'Active' && <button onClick={cancelNumber} disabled={isCancelling} className="text-[10px] uppercase text-red-500 hover:text-red-400 font-bold tracking-widest disabled:opacity-50">{isCancelling ? 'Cancelling...' : 'Cancel & Refund'}</button>}
-                                   {/* 🟢 NEW: Call handleComplete instead of just setting null 🟢 */}
-                                   {activeOrder.status === 'Completed' && <button onClick={handleComplete} className="text-[10px] uppercase text-green-500 hover:text-green-400 font-bold tracking-widest">Completed</button>}
-                                   {activeOrder.status === 'Cancelled' && <button onClick={handleComplete} className="text-[10px] uppercase text-gray-500 hover:text-gray-300 font-bold tracking-widest">Close</button>}
-                               </div>
-                           </div>
+                                {/* Left: Number & Service */}
+                                <div className="flex items-center gap-5 w-full md:w-auto relative z-10">
+                                    <div className="relative">
+                                        {activeOrder.status === 'Active' && !activeOrder.code && (
+                                            <div className="absolute inset-0 bg-brand-primary rounded-2xl animate-ping opacity-20"></div>
+                                        )}
+                                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border border-gray-200 bg-gray-50 flex items-center justify-center shrink-0 shadow-sm overflow-hidden p-2 relative z-10">
+                                            <img 
+                                                 src={`https://logo.clearbit.com/${String(activeOrder.service).toLowerCase().replace(/[^a-z0-9]/g, '')}.com`} 
+                                                 onError={(e) => { 
+                                                     const backupDomain = String(activeOrder.service).toLowerCase().replace(/[^a-z0-9]/g, '') + '.com';
+                                                     e.target.onerror = null; 
+                                                     e.target.src = `https://www.google.com/s2/favicons?domain=${backupDomain}&sz=128`; 
+                                                 }}
+                                                 className="w-full h-full object-contain drop-shadow-sm" 
+                                                 alt="Service Logo"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <p className="text-[10px] sm:text-xs text-gray-500 font-bold tracking-widest uppercase">{activeOrder.service} Verification</p>
+                                            {activeOrder.status === 'Active' && !activeOrder.code && <span className="flex h-2 w-2 relative"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-brand-primary"></span></span>}
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-3xl sm:text-4xl font-black font-mono text-gray-900 tracking-wider">
+                                                {(() => {
+                                                    let p = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
+                                                    if (p.length === 10) return `+1 ${p}`;
+                                                    if (p.startsWith('1') && p.length === 11) return `+1 ${p.slice(1)}`;
+                                                    if (p.startsWith('44')) return `+44 ${p.slice(2)}`;
+                                                    return `+${p}`;
+                                                })()}
+                                            </span>
+                                            <button onClick={() => {
+                                                let cleanNum = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
+                                                if (cleanNum.startsWith('1') && cleanNum.length === 11) cleanNum = cleanNum.slice(1);
+                                                
+                                                // 🟢 Bulletproof Copy Fallback Logic 🟢
+                                                const fallbackCopy = (text) => {
+                                                    const textArea = document.createElement("textarea");
+                                                    textArea.value = text;
+                                                    document.body.appendChild(textArea);
+                                                    textArea.focus();
+                                                    textArea.select();
+                                                    try {
+                                                        document.execCommand('copy');
+                                                        triggerToast("Number copied!");
+                                                    } catch (err) {
+                                                        triggerToast("Failed to copy");
+                                                    }
+                                                    document.body.removeChild(textArea);
+                                                };
+
+                                                if (navigator.clipboard && window.isSecureContext) {
+                                                    navigator.clipboard.writeText(cleanNum)
+                                                        .then(() => triggerToast("Number copied!"))
+                                                        .catch(() => fallbackCopy(cleanNum));
+                                                } else {
+                                                    fallbackCopy(cleanNum);
+                                                }
+                                            }} className="bg-gray-50 hover:bg-brand-primary/10 text-gray-500 hover:text-brand-primary p-2 rounded-lg transition-colors border border-gray-200 shadow-sm" title="Copy Number"><Copy className="w-4 h-4 sm:w-5 sm:h-5"/></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Right: Code & Actions */}
+                                <div className="flex flex-col items-center md:items-end w-full md:w-auto mt-2 md:mt-0 relative z-10 max-w-full">
+                                    {activeOrder.code ? (
+                                        <div className="flex flex-col items-center md:items-end w-full max-w-full">
+                                            <p className="text-[11px] text-green-600 font-black uppercase tracking-[0.2em] mb-2 flex items-center gap-1.5"><CheckCircle className="w-4 h-4"/> Code Received Successfully!</p>
+                                            <div className="flex items-center justify-between gap-3 sm:gap-4 bg-green-50 px-4 sm:px-6 py-4 rounded-2xl border border-green-200 shadow-sm w-full max-w-full overflow-hidden group hover:border-green-400 transition-all">
+                                                {/* 🟢 DYNAMIC TEXT SIZING FOR LONG/SHORT SMS 🟢 */}
+                                                <span className={`font-mono font-black text-green-600 select-all transition-transform break-words whitespace-pre-wrap flex-grow overflow-hidden ${String(activeOrder.code).length > 12 ? 'text-xs sm:text-sm tracking-normal leading-relaxed text-left' : 'text-3xl sm:text-4xl tracking-[0.2em] text-center group-hover:scale-105'}`}>
+                                                    {activeOrder.code}
+                                                </span>
+                                                <button onClick={() => {
+                                                    const textToCopy = activeOrder.code;
+                                                    // 🟢 Bulletproof Copy Fallback Logic 🟢
+                                                    const fallbackCopy = (text) => {
+                                                        const textArea = document.createElement("textarea");
+                                                        textArea.value = text;
+                                                        document.body.appendChild(textArea);
+                                                        textArea.focus();
+                                                        textArea.select();
+                                                        try {
+                                                            document.execCommand('copy');
+                                                            triggerToast("Code copied!");
+                                                        } catch (err) {
+                                                            triggerToast("Failed to copy");
+                                                        }
+                                                        document.body.removeChild(textArea);
+                                                    };
+
+                                                    if (navigator.clipboard && window.isSecureContext) {
+                                                        navigator.clipboard.writeText(textToCopy)
+                                                            .then(() => triggerToast("Code copied!"))
+                                                            .catch(() => fallbackCopy(textToCopy));
+                                                    } else {
+                                                        fallbackCopy(textToCopy);
+                                                    }
+                                                }} className="bg-white border border-green-200 text-green-600 hover:bg-green-100 p-3 sm:p-4 rounded-xl transition-transform hover:scale-110 shadow-sm" title="Copy Code"><Copy className="w-5 h-5 sm:w-6 sm:h-6"/></button>
+                                            </div>
+                                        </div>
+                                    ) : activeOrder.status === 'Cancelled' ? (
+                                        <div className="flex flex-col items-center md:items-end w-full">
+                                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2">Order Status</p>
+                                            <div className="flex items-center gap-3 px-6 py-4 rounded-2xl border border-red-200 bg-red-50 w-full sm:w-auto justify-center">
+                                                <X className="w-5 h-5 text-red-500" />
+                                                <span className="text-red-600 font-mono text-sm uppercase tracking-widest font-bold">Cancelled & Refunded</span>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-col items-center md:items-end w-full">
+                                            <p className="text-[10px] sm:text-xs text-brand-primary font-bold uppercase tracking-[0.2em] mb-2 flex items-center gap-2"><RefreshCw className="w-3.5 h-3.5 animate-spin"/> Awaiting SMS Code...</p>
+                                            <div className="flex items-center justify-center gap-4 bg-blue-50/50 px-6 sm:px-8 py-5 rounded-2xl border border-blue-100 relative overflow-hidden min-w-[280px] sm:min-w-[320px] shadow-sm w-full">
+                                                {/* Scanning Radar Effect */}
+                                                <div className="absolute inset-0 bg-white/50 w-full h-full">
+                                                    <div className="w-[200%] h-full bg-gradient-to-r from-transparent via-blue-200/30 to-transparent absolute top-0 -left-[100%] animate-shimmer"></div>
+                                                </div>
+                                                <MessageSquare className="w-6 h-6 animate-pulse text-brand-primary/60 relative z-10" />
+                                                <span className="text-2xl sm:text-3xl font-mono font-black text-gray-300 tracking-[0.4em] relative z-10">_ _ _ _</span>
+                                                <div className="absolute top-2 right-3 flex items-center gap-1.5 bg-white px-2 py-1 rounded-md border border-gray-200 shadow-sm">
+                                                    <Clock className="w-3 h-3 text-gray-500" />
+                                                    <span className="text-[10px] text-gray-700 font-black font-mono">{formatTime(timeRemaining)}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                   <div className="flex gap-4 mt-5 sm:mt-6 w-full justify-end">
+                                        {activeOrder.status === 'Active' && <button onClick={cancelNumber} disabled={isCancelling} className="text-xs bg-white hover:bg-red-50 text-red-500 border border-red-200 px-5 py-2.5 rounded-xl uppercase font-bold tracking-widest disabled:opacity-50 transition-colors shadow-sm w-full sm:w-auto">{isCancelling ? 'Cancelling...' : 'Cancel Order'}</button>}
+                                        
+                                        {activeOrder.status === 'Completed' && <button onClick={handleComplete} className="text-xs bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl uppercase font-black tracking-widest transition-colors shadow-sm w-full sm:w-auto">Dismiss</button>}
+                                        
+                                        {activeOrder.status === 'Cancelled' && <button onClick={handleComplete} className="text-xs bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-2.5 rounded-xl uppercase font-bold tracking-widest transition-colors shadow-sm w-full sm:w-auto">Close</button>}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     ) : (
                         /* 🟢 Minimalist Purchase Configuration 🟢 */
@@ -2514,10 +2642,20 @@
                             {/* Left Side: Config Form */}
                             <div className="lg:col-span-2 flex flex-col gap-6">
                                 
-                                {/* Sleek Tab Toggle */}
-                                <div className="flex border-b border-white/10 w-fit">
-                                    <button className={`pb-2 px-4 text-xs font-mono tracking-widest uppercase transition-all ${smsMode==='standard' ? 'text-white border-b-2 border-brand-primary' : 'text-gray-600 hover:text-gray-300'}`} onClick={()=>setSmsMode('standard')}>Extended Term</button>
-                                    <button className={`pb-2 px-4 text-xs font-mono tracking-widest uppercase transition-all ${smsMode==='panda' ? 'text-white border-b-2 border-brand-primary' : 'text-gray-600 hover:text-gray-300'}`} onClick={()=>setSmsMode('panda')}>Short Term (Low Cost)</button>
+                                {/* 🟢 Sleek Tab Toggle (Clear & Direct Naming) 🟢 */}
+                                <div className="flex border-b border-gray-200 w-full sm:w-fit mb-4">
+                                    <button 
+                                        className={`pb-2 px-3 sm:px-4 text-[10px] sm:text-xs font-bold tracking-widest uppercase transition-all w-1/2 sm:w-auto ${smsMode==='standard' ? 'text-brand-primary border-b-[3px] border-brand-primary' : 'text-gray-400 hover:text-gray-600'}`} 
+                                        onClick={()=>setSmsMode('standard')}
+                                    >
+                                        Rent Number (3-25 Days)
+                                    </button>
+                                    <button 
+                                        className={`pb-2 px-3 sm:px-4 text-[10px] sm:text-xs font-bold tracking-widest uppercase transition-all w-1/2 sm:w-auto ${smsMode==='panda' ? 'text-brand-primary border-b-[3px] border-brand-primary' : 'text-gray-400 hover:text-gray-600'}`} 
+                                        onClick={()=>setSmsMode('panda')}
+                                    >
+                                        Quick Verify (5 Mins)
+                                    </button>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
@@ -2601,21 +2739,31 @@
                                         <img src="https://cdn-icons-png.flaticon.com/512/2953/2953536.png" className="w-4 h-4 drop-shadow-sm" alt="bill" /> Order Summary
                                     </h3>
                                     
-                                    <div className="flex justify-between items-center border-b border-white/5 py-3">
-                                        <span className="text-xs text-gray-300 font-medium">{currentServiceObj ? currentServiceObj.name : 'Service'}</span>
-                                        <span className="text-sm font-mono text-white">${displayPrice ? displayPrice.toFixed(2) : '0.00'}</span>
+                                    <div className="flex justify-between items-center border-b border-gray-100 py-3">
+                                        <span className="text-xs text-gray-600 font-medium">{currentServiceObj ? currentServiceObj.name : 'Service'}</span>
+                                        <span className="text-sm font-mono font-bold text-gray-900">${displayPrice ? displayPrice.toFixed(2) : '0.00'}</span>
                                     </div>
-                                    <div className="flex justify-between items-center border-b border-white/5 py-3">
+                                    <div className="flex justify-between items-center border-b border-gray-100 py-3">
                                         <span className="text-[10px] text-gray-500 uppercase tracking-widest">Duration</span>
-                                        <span className="text-[10px] text-gray-300 font-mono">{selectedDuration}</span>
+                                        <span className="text-[10px] text-gray-700 font-mono font-bold">{selectedDuration}</span>
                                     </div>
                                     <div className="flex justify-between items-center py-3">
                                         <span className="text-[10px] text-gray-500 uppercase tracking-widest">Local Rate</span>
-                                        <span className="text-[10px] text-gray-400 font-mono tracking-widest">~ ₦{(displayPrice * (bankSettings?.nairaRate || 1500)).toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
+                                        {/* 🟢 500 Naira Extra Markup Added Here 🟢 */}
+                                        <span className="text-[10px] text-brand-primary font-mono tracking-widest font-bold">~ ₦{(displayPrice > 0 ? (displayPrice * (bankSettings?.nairaRate || 1500)) + 500 : 0).toLocaleString('en-US', {maximumFractionDigits: 0})}</span>
                                     </div>
                                 </div>
                                 
-                                <div className="mt-8">
+                                <div className="mt-6">
+                                    {/* 🟢 WARNING TEXT FOR USERS (ENGLISH) 🟢 */}
+                                    <div className="bg-amber-50 border border-amber-200 p-3.5 rounded-xl mb-5 flex gap-2.5 items-start shadow-sm">
+                                        <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+                                        <p className="text-[10px] sm:text-[11px] text-amber-800 font-medium leading-relaxed">
+                                            <span className="uppercase block mb-1 text-amber-600 text-[9px] font-bold tracking-widest">⚠️ Important Notice</span>
+                                            If the app shows <span className="font-bold text-red-600">"Already Registered"</span> after entering the number, DO NOT request a code (OTP). Cancel the number immediately.
+                                        </p>
+                                    </div>
+
                                     <button 
                                         onClick={() => buyNumber(currentServiceObj || { code: selectedServiceCode, name: selectedServiceCode, finalPrice: displayPrice })} 
                                         disabled={isBuying || (smsMode === 'panda' && !displayPrice)} 
@@ -3238,11 +3386,15 @@
                     
                     {/* 🟢 Premium 3D Header 🟢 */}
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 w-full mb-8 px-2 sm:px-0">
-                        <div className="flex items-center gap-3">
-                            <img src="https://cdn-icons-png.flaticon.com/512/2838/2838883.png" alt="Vault" className="w-10 h-10 sm:w-12 sm:h-12 drop-shadow-md" />
+                        <div className="flex items-center gap-4">
+                            {/* 🟢 Premium 3D Safe/Vault Icon Container 🟢 */}
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-2xl flex items-center justify-center shadow-[0_8px_20px_rgba(59,130,246,0.15)] relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 w-8 h-8 bg-blue-400/20 blur-xl rounded-full pointer-events-none"></div>
+                                <img src="https://cdn-icons-png.flaticon.com/512/4300/4300059.png" alt="Vault" className="w-8 h-8 sm:w-10 sm:h-10 drop-shadow-md relative z-10 group-hover:scale-110 transition-transform duration-300" />
+                            </div>
                             <div>
                                 <h1 className="text-xl sm:text-2xl font-black text-brand-primary tracking-wide uppercase">My Vault</h1>
-                                <p className="text-gray-500 text-[10px] sm:text-xs font-mono mt-1 font-bold">Your Purchased Assets & Accounts</p>
+                                <p className="text-gray-500 text-[10px] sm:text-xs font-mono mt-1 font-bold tracking-widest">Your Purchased Assets & Accounts</p>
                             </div>
                         </div>
                         <div className="bg-white border border-gray-200 px-4 py-2.5 rounded-xl text-[10px] font-bold text-gray-700 uppercase tracking-widest shadow-sm flex items-center gap-2">
@@ -3319,8 +3471,46 @@
 
           const unifiedHistory = [
               ...myDeposits.map(d => ({ id: d.id, type: d.status === 'Approved' || d.data?.status === 'Approved' ? 'Funds Added' : 'Deposit Processing', amount: d.data?.amount || d.amount, date: d.data?.date || d.date, status: d.data?.status || d.status, method: d.data?.method || d.method })),
-              ...myOrders.map(o => ({ id: o.id, type: 'Bought Account', amount: o.total, date: o.date, status: o.status, method: 'Account Balance' })),
-              ...myPurchases.filter(p => String(p.type).includes('SMS Verify')).map(p => ({ id: p.id, type: p.type, amount: 0, date: p.date, status: 'Completed', method: 'Account Balance' }))
+              ...myPurchases.map(p => {
+                  let cost = 0;
+                  
+                  // 🟢 1. Direct Fields Check
+                  const possibleKeys = ['price', 'amount', 'total', 'cost', 'originalPrice', 'orderPrice', 'deducted'];
+                  for (let key of possibleKeys) {
+                      if (p[key] && !isNaN(parseFloat(p[key]))) {
+                          cost = parseFloat(p[key]);
+                          break;
+                      }
+                  }
+                  
+                  // 🟢 2. Inside Data Object Check
+                  if (cost === 0 && typeof p.data === 'object' && p.data !== null) {
+                      for (let key of possibleKeys) {
+                          if (p.data[key] && !isNaN(parseFloat(p.data[key]))) {
+                              cost = parseFloat(p.data[key]);
+                              break;
+                          }
+                      }
+                  }
+                  
+                  // 🟢 3. Text Extraction Check (If price is hidden in the text string)
+                  if (cost === 0) {
+                      const dataStr = typeof p.data === 'object' ? JSON.stringify(p.data) : String(p.data || '');
+                      const match = dataStr.match(/(?:Price|Cost|Amount|Charged|Total).*?\$?([0-9]+\.[0-9]+)/i);
+                      if (match && match[1]) {
+                          cost = parseFloat(match[1]);
+                      }
+                  }
+
+                  return { 
+                      id: p.id, 
+                      type: p.type || p.data?.type || 'Purchased Asset', 
+                      amount: cost, 
+                      date: p.data?.date || p.date, 
+                      status: 'Completed', 
+                      method: 'Account Balance' 
+                  };
+              })
           ].sort((a,b) => {
               const timeA = a.date ? new Date(a.date).getTime() : 0;
               const timeB = b.date ? new Date(b.date).getTime() : 0;
@@ -3459,8 +3649,8 @@
                                                     <span className="text-xs font-bold text-gray-800 tracking-wide">{item.type}</span>
                                                 </div>
                                             </td>
-                                            <td className="p-4">
-                                                <span className={`font-mono font-bold ${isDeposit ? (isApproved ? 'text-green-600' : isPending ? 'text-yellow-600' : 'text-gray-500') : 'text-gray-900'}`}>
+                                            <td className="p-4 sm:p-5">
+                                                <span className={`font-mono font-black tracking-wider px-3 py-1.5 rounded-lg inline-block ${isDeposit ? (isApproved ? 'bg-green-50 text-green-600 border border-green-100' : isPending ? 'bg-yellow-50 text-yellow-600 border border-yellow-100' : 'bg-gray-50 text-gray-500') : 'bg-red-50 text-red-600 border border-red-100 shadow-[0_2px_10px_rgba(239,68,68,0.1)]'}`}>
                                                     {isDeposit ? '+' : '-'}${Number(item.amount || 0).toFixed(2)}
                                                 </span>
                                             </td>
