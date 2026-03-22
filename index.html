@@ -2141,12 +2141,30 @@
             const [isLoadingRates, setIsLoadingRates] = useState(true);
             
             const [selectedCountry, setSelectedCountry] = useState('USA');
-            const [selectedPandaCountry, setSelectedPandaCountry] = useState('US');
+            const [selectedPandaCountry, setSelectedPandaCountry] = useState('UK'); // 🟢 Default Changed
             const [pandaCountries, setPandaCountries] = useState([]);
             const [isLoadingCountries, setIsLoadingCountries] = useState(false);
             
             const [selectedDuration, setSelectedDuration] = useState('15 minutes'); 
             const [selectedServiceCode, setSelectedServiceCode] = useState('');
+
+            // 🟢 AUTO-SELECT UNITED KINGDOM FOR QUICK VERIFY 🟢
+            useEffect(() => {
+                if (smsMode === 'panda' && pandaCountries.length > 0) {
+                    // চেক করবে বর্তমান কান্ট্রিটি API এর লিস্টে আছে কিনা
+                    const isCurrentValid = pandaCountries.some(c => c.value === selectedPandaCountry);
+                    
+                    // যদি না থাকে, তবে অটোমেটিক United Kingdom খুঁজে সেট করে দিবে
+                    if (!isCurrentValid) {
+                        const ukOption = pandaCountries.find(c => String(c.label).toLowerCase().includes('united kingdom') || String(c.label).toLowerCase() === 'uk' || String(c.label).toLowerCase().includes('kingdom'));
+                        if (ukOption) {
+                            setSelectedPandaCountry(ukOption.value);
+                        } else {
+                            setSelectedPandaCountry(pandaCountries[0].value); // ফেইলসেফ
+                        }
+                    }
+                }
+            }, [smsMode, pandaCountries, selectedPandaCountry]);
             
             const [selectedUsaState, setSelectedUsaState] = useState('');
             const usaStatesList = [
@@ -2665,12 +2683,12 @@
                                     </button>
                                 </div>
 
-                                {/* 🟢 Form Fields (Clean Grid) 🟢 */}
+                                {/* 🟢 Form Fields (Clean Grid with Real Logos) 🟢 */}
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mb-8 relative z-10">
                                     
                                     {/* Country */}
                                     <div className="flex flex-col gap-2.5 relative z-50">
-                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><Globe className="w-3.5 h-3.5"/> Select Country</label>
+                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><img src="https://cdn-icons-png.flaticon.com/512/814/814513.png" className="w-4 h-4 drop-shadow-sm" alt="country"/> Select Country</label>
                                         {isLoadingCountries && smsMode === 'panda' ? (
                                             <div className="py-4 px-4 bg-gray-50 rounded-2xl border border-gray-200 flex items-center justify-center"><RefreshCw className="w-5 h-5 animate-spin text-brand-primary/50"/></div>
                                         ) : (
@@ -2687,7 +2705,7 @@
 
                                     {/* Service */}
                                     <div className="flex flex-col gap-2.5 relative z-40">
-                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><Smartphone className="w-3.5 h-3.5"/> Select Service</label>
+                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><img src="https://cdn-icons-png.flaticon.com/512/5608/5608615.png" className="w-4 h-4 drop-shadow-sm" alt="app"/> Select Service</label>
                                         {isLoadingRates && smsMode === 'panda' ? (
                                             <div className="py-4 px-4 bg-gray-50 rounded-2xl border border-gray-200 flex items-center justify-center"><RefreshCw className="w-5 h-5 animate-spin text-brand-primary/50"/></div>
                                         ) : (!finalServiceOptions || finalServiceOptions.length === 0) ? (
@@ -2706,7 +2724,7 @@
 
                                     {/* Duration */}
                                     <div className="flex flex-col gap-2.5 relative z-30">
-                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><Clock className="w-3.5 h-3.5"/> Time Duration</label>
+                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><img src="https://cdn-icons-png.flaticon.com/512/2784/2784459.png" className="w-4 h-4 drop-shadow-sm" alt="clock"/> Time Duration</label>
                                         <div className="relative group">
                                             <select value={selectedDuration} onChange={e => setSelectedDuration(e.target.value)} className="w-full bg-gray-50/80 border border-gray-200 text-gray-800 text-[13px] rounded-2xl py-4 px-5 outline-none cursor-pointer focus:bg-white focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 hover:border-gray-300 transition-all appearance-none font-mono font-bold shadow-sm" disabled={isPanda}>
                                                 {durationOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
@@ -2718,7 +2736,7 @@
                                     {/* Dynamic Options */}
                                     {smsMode === 'standard' && (selectedCountry === 'USA' || selectedCountry === 'United States') && (
                                         <div className="flex flex-col gap-2.5 relative z-30 animate-fade-in-up">
-                                            <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">State (Optional)</label>
+                                            <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" className="w-4 h-4 drop-shadow-sm" alt="map-pin"/> State (Optional)</label>
                                             <SearchableDropdown 
                                                 options={usaStatesList} 
                                                 value={selectedUsaState} 
@@ -2732,7 +2750,7 @@
                                     
                                     {smsMode === 'panda' && (
                                         <div className="flex flex-col gap-2.5 relative z-30 animate-fade-in-up">
-                                            <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Reuse Number (Optional)</label>
+                                            <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><img src="https://cdn-icons-png.flaticon.com/512/1000/1000958.png" className="w-4 h-4 drop-shadow-sm" alt="sim-card"/> Reuse Number (Optional)</label>
                                             <input type="text" value={reuseNumberInput} onChange={e => setReuseNumberInput(e.target.value)} placeholder="e.g. 447123456789" className="w-full bg-gray-50/80 border border-gray-200 text-gray-800 text-[13px] rounded-2xl py-4 px-5 outline-none hover:border-gray-300 focus:bg-white focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all font-mono font-bold shadow-sm placeholder-gray-400" />
                                         </div>
                                     )}
