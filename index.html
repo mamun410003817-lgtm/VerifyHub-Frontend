@@ -2419,98 +2419,95 @@
                         </div>
                     </div>
 
-                   {/* 🟢 Active Order View (Clean & Warning Added) 🟢 */}
-                    {activeOrder ? (
-                        <div className="flex flex-col gap-4 w-full animate-fade-in-up">
-                            <div className="border border-white/10 bg-[#0f172a] rounded-2xl p-6 relative overflow-hidden flex flex-col md:flex-row gap-6 justify-between items-center w-full shadow-lg">
-                               {/* Progress Bar Line */}
-                               <div className="absolute top-0 left-0 w-full h-[3px] bg-white/5">
-                                   {activeOrder.status === 'Active' && <div className="h-full bg-brand-primary timer-bar" style={{
-                                       animationDuration: activeOrder.duration === '15 minutes' ? '900s' : 
-                                                          activeOrder.duration === '5 minutes' ? '300s' :
-                                                          activeOrder.duration === '3 days' ? '259200s' : 
-                                                          activeOrder.duration === '7 days' ? '604800s' : 
-                                                          activeOrder.duration === '14 days' ? '1209600s' : '2160000s'
-                                   }}></div>}
-                               </div>
+                    {/* 🟢 Active Order Minimalist View 🟢 */}
+                    {activeOrder ? (
+                        <div className="border border-white/10 bg-white/[0.02] rounded-2xl p-6 relative overflow-hidden flex flex-col md:flex-row gap-6 justify-between items-center w-full animate-fade-in-up">
+                           
+                           {/* Progress Bar Line */}
+                           <div className="absolute top-0 left-0 w-full h-[2px] bg-white/5">
+                               {activeOrder.status === 'Active' && <div className="h-full bg-brand-primary timer-bar" style={{
+                                   animationDuration: activeOrder.duration === '15 minutes' ? '900s' : 
+                                                      activeOrder.duration === '5 minutes' ? '300s' :
+                                                      activeOrder.duration === '3 days' ? '259200s' : 
+                                                      activeOrder.duration === '7 days' ? '604800s' : 
+                                                      activeOrder.duration === '14 days' ? '1209600s' : '2160000s'
+                               }}></div>}
+                           </div>
 
-                               {/* Left: Number & Service */}
-                               <div className="flex items-center gap-5 w-full md:w-auto">
-                                   <div className="w-14 h-14 rounded-2xl border border-gray-200 flex items-center justify-center bg-white shrink-0 shadow-sm overflow-hidden p-2">
-                                       <img 
-                                            src={`https://logo.clearbit.com/${String(activeOrder.service).toLowerCase().replace(/[^a-z0-9]/g, '')}.com`} 
-                                            onError={(e) => { 
-                                                const backupDomain = String(activeOrder.service).toLowerCase().replace(/[^a-z0-9]/g, '') + '.com';
-                                                e.target.onerror = null; 
-                                                e.target.src = `https://www.google.com/s2/favicons?domain=${backupDomain}&sz=128`; 
-                                            }}
-                                            className="w-full h-full object-contain drop-shadow-sm" 
-                                            alt="Service Logo"
-                                       />
-                                   </div>
-                                   <div className="flex flex-col">
-                                       <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] mb-1">{activeOrder.service} Verification</p>
-                                       <div className="flex items-center gap-3">
-                                           <span className="text-3xl font-mono text-white tracking-wider font-black select-all">
-                                               {(() => {
-                                                   let p = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
-                                                   if (p.length === 10) return `+1 ${p}`;
-                                                   if (p.startsWith('1') && p.length === 11) return `+1 ${p.slice(1)}`;
-                                                   if (p.startsWith('44')) return `+44 ${p.slice(2)}`;
-                                                   return `+${p}`;
-                                               })()}
-                                           </span>
-                                           <button onClick={() => {
-                                               let cleanNum = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
-                                               if (cleanNum.startsWith('1') && cleanNum.length === 11) cleanNum = cleanNum.slice(1);
-                                               if(navigator.clipboard) navigator.clipboard.writeText(cleanNum).then(()=>triggerToast("Number copied!"));
-                                           }} className="bg-white/10 p-2 rounded-lg text-gray-300 hover:text-white hover:bg-brand-primary transition-colors" title="Copy Number"><Copy className="w-4 h-4"/></button>
-                                       </div>
-                                   </div>
-                               </div>
+                           {/* Left: Number & Service */}
+                           <div className="flex items-center gap-5 w-full md:w-auto">
+                               <div className="w-12 h-12 rounded-2xl border border-gray-200 flex items-center justify-center bg-white shrink-0 shadow-sm overflow-hidden p-1.5">
+                                   <img 
+                                        src={`https://logo.clearbit.com/${String(activeOrder.service).toLowerCase().replace(/[^a-z0-9]/g, '')}.com`} 
+                                        onError={(e) => { 
+                                            const backupDomain = String(activeOrder.service).toLowerCase().replace(/[^a-z0-9]/g, '') + '.com';
+                                            e.target.onerror = null; 
+                                            e.target.src = `https://www.google.com/s2/favicons?domain=${backupDomain}&sz=128`; 
+                                        }}
+                                        className="w-full h-full object-contain drop-shadow-sm" 
+                                        alt="Service Logo"
+                                   />
+                               </div>
+                               <div className="flex flex-col">
+                                   <p className="text-[10px] text-gray-500 font-mono tracking-widest uppercase mb-1">{activeOrder.service} Verification</p>
+                                   <div className="flex items-center gap-3">
+                                       <span className="text-2xl sm:text-3xl font-mono text-white tracking-wider font-bold">
+                                           {(() => {
+                                               let p = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
+                                               if (p.length === 10) return `+1 ${p}`;
+                                               if (p.startsWith('1') && p.length === 11) return `+1 ${p.slice(1)}`;
+                                               if (p.startsWith('44')) return `+44 ${p.slice(2)}`;
+                                               return `+${p}`;
+                                           })()}
+                                       </span>
+                                       <button onClick={() => {
+                                           let cleanNum = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
+                                           if (cleanNum.startsWith('1') && cleanNum.length === 11) cleanNum = cleanNum.slice(1);
+                                           if(navigator.clipboard) navigator.clipboard.writeText(cleanNum).then(()=>triggerToast("Number copied!"));
+                                       }} className="text-gray-500 hover:text-white transition-colors" title="Copy Base Number"><Copy className="w-4 h-4"/></button>
+                                   </div>
+                               </div>
+                           </div>
 
-                               {/* Right: Code & Actions */}
-                               <div className="flex flex-col items-center md:items-end w-full md:w-auto mt-4 md:mt-0">
-                                   {activeOrder.code ? (
-                                       <div className="flex items-center gap-4 bg-green-500/10 px-6 py-3 rounded-xl border border-green-500/30 shadow-[0_0_15px_rgba(74,222,128,0.15)]">
-                                           <span className="text-2xl font-mono font-black text-green-400 tracking-widest select-all">{activeOrder.code}</span>
+                           {/* Right: Code & Actions */}
+                           <div className="flex flex-col items-center md:items-end w-full md:w-auto mt-5 md:mt-0">
+                               {activeOrder.code ? (
+                                   <div className="flex flex-col items-center md:items-end">
+                                       <p className="text-[10px] text-green-500 font-black uppercase tracking-[0.2em] mb-2 animate-bounce flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5"/> Code Received!</p>
+                                       <div className="flex items-center gap-3 bg-green-500/10 px-6 py-3.5 rounded-xl border-2 border-green-500 shadow-[0_0_20px_rgba(74,222,128,0.2)]">
+                                           <span className="text-3xl font-mono font-black text-green-400 tracking-[0.2em] select-all">{activeOrder.code}</span>
                                            <button onClick={() => {
                                                if(navigator.clipboard) navigator.clipboard.writeText(activeOrder.code).then(()=>triggerToast("Code copied!"));
-                                           }} className="text-green-500 hover:text-green-300 transition-colors bg-green-500/20 p-2 rounded-lg"><Copy className="w-5 h-5"/></button>
+                                           }} className="bg-green-500/20 p-2.5 rounded-lg text-green-400 hover:bg-green-500 hover:text-black transition-colors shadow-sm" title="Copy Code"><Copy className="w-5 h-5"/></button>
                                        </div>
-                                   ) : activeOrder.status === 'Cancelled' ? (
-                                       <div className="bg-red-500/10 border border-red-500/20 px-5 py-2.5 rounded-xl">
-                                           <span className="text-red-500 font-bold text-xs uppercase tracking-widest">Cancelled & Refunded</span>
-                                       </div>
-                                   ) : (
-                                       <div className="flex flex-col items-center md:items-end gap-1">
-                                           <span className="text-[10px] text-brand-primary font-bold uppercase tracking-widest">Awaiting SMS...</span>
-                                           <div className="flex items-center gap-3 bg-black/40 px-5 py-2.5 rounded-xl border border-white/10 font-mono text-lg text-white font-bold">
-                                               <RefreshCw className="w-4 h-4 animate-spin text-gray-400" />
-                                               {formatTime(timeRemaining)}
-                                           </div>
-                                       </div>
-                                   )}
-                                   
-                                  <div className="flex gap-3 mt-4">
-                                       {activeOrder.status === 'Active' && <button onClick={cancelNumber} disabled={isCancelling} className="btn-animate bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-[10px] px-4 py-2 rounded-lg uppercase text-red-400 font-bold tracking-widest disabled:opacity-50 transition-colors">{isCancelling ? 'Cancelling...' : 'Cancel & Refund'}</button>}
-                                       {activeOrder.status === 'Completed' && <button onClick={handleComplete} className="btn-animate bg-green-500 hover:bg-green-400 text-black px-6 py-2 rounded-lg text-[10px] uppercase font-bold tracking-widest transition-colors shadow-sm">Completed</button>}
-                                       {activeOrder.status === 'Cancelled' && <button onClick={handleComplete} className="btn-animate bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg text-[10px] uppercase font-bold tracking-widest transition-colors">Close</button>}
                                    </div>
+                               ) : activeOrder.status === 'Cancelled' ? (
+                                   <div className="flex flex-col items-center md:items-end">
+                                       <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1.5">Status</p>
+                                       <div className="flex items-center gap-2 px-5 py-3 rounded-xl border-2 border-dashed border-red-500/50 bg-red-500/10">
+                                           <span className="text-red-500 font-mono text-xs uppercase tracking-widest font-bold">Cancelled & Refunded</span>
+                                       </div>
+                                   </div>
+                               ) : (
+                                   <div className="flex flex-col items-center md:items-end w-full md:w-auto">
+                                       <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] mb-2 flex items-center gap-1.5"><Smartphone className="w-3.5 h-3.5 text-brand-primary"/> Code will appear here</p>
+                                       <div className="flex items-center justify-center gap-3 bg-[rgba(0,0,0,0.3)] px-6 py-4 rounded-xl border-2 border-dashed border-brand-primary/50 relative overflow-hidden min-w-[240px] shadow-inner transition-all duration-300">
+                                           <div className="absolute inset-0 bg-brand-primary/10 w-full h-full animate-pulse"></div>
+                                           <RefreshCw className="w-5 h-5 animate-spin text-brand-primary relative z-10" />
+                                           <span className="text-xl font-mono font-black text-white tracking-[0.3em] relative z-10 opacity-70">_ _ _ _ _ _</span>
+                                           <span className="text-[10px] text-white bg-brand-primary/80 font-black font-mono absolute bottom-0 right-0 px-2 py-0.5 rounded-tl-lg">{formatTime(timeRemaining)}</span>
+                                       </div>
+                                   </div>
+                               )}
+                              <div className="flex gap-4 mt-4">
+                                   {activeOrder.status === 'Active' && <button onClick={cancelNumber} disabled={isCancelling} className="text-[10px] uppercase text-red-500 hover:text-red-400 font-bold tracking-widest disabled:opacity-50">{isCancelling ? 'Cancelling...' : 'Cancel & Refund'}</button>}
+                                   {/* 🟢 NEW: Call handleComplete instead of just setting null 🟢 */}
+                                   {activeOrder.status === 'Completed' && <button onClick={handleComplete} className="text-[10px] uppercase text-green-500 hover:text-green-400 font-bold tracking-widest">Completed</button>}
+                                   {activeOrder.status === 'Cancelled' && <button onClick={handleComplete} className="text-[10px] uppercase text-gray-500 hover:text-gray-300 font-bold tracking-widest">Close</button>}
                                </div>
-                            </div>
-
-                            {/* 🟢 NEW WARNING MESSAGE 🟢 */}
-                            {activeOrder.status === 'Active' && !activeOrder.code && (
-                                <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 flex items-start sm:items-center gap-3 animate-fade-in-up">
-                                    <AlertTriangle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5 sm:mt-0" />
-                                    <p className="text-[10px] sm:text-xs text-yellow-100 font-medium leading-relaxed">
-                                        <strong className="text-yellow-500 font-bold uppercase tracking-wider">Crucial Rule:</strong> If the app shows this number as <span className="text-white font-bold px-1 bg-black/30 rounded">Already Registered</span> or <span className="text-white font-bold px-1 bg-black/30 rounded">Banned</span>, DO NOT request a code! Click <span className="text-red-400 font-bold">Cancel & Refund</span> immediately to get your money back.
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-                    ) : (
+                           </div>
+                        </div>
+                    ) : (
                         /* 🟢 Minimalist Purchase Configuration 🟢 */
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full border-t border-white/5 pt-8">
                             
