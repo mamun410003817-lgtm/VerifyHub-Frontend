@@ -414,6 +414,22 @@
             .text-\\[13px\\] { font-size: 15px !important; }
             p, span, div, button, a, input, select { letter-spacing: 0.02em; font-weight: 500; }
 
+            /* 🟢 HOLOGRAPHIC FLY AWAY TEXT ANIMATION (ULTRA-PREMIUM) 🟢 */
+            @keyframes flyAwayLoop {
+                0% { opacity: 0; transform: translateY(10px) scale(0.85); filter: blur(3px); }
+                20% { opacity: 1; transform: translateY(-15px) scale(1); filter: blur(0); }
+                60% { opacity: 0.8; transform: translateY(-35px) scale(1.05); filter: blur(0); }
+                100% { opacity: 0; transform: translateY(-65px) scale(0.9); filter: blur(4px); pointer-events: none; }
+            }
+            .animate-fly-loop {
+                animation: flyAwayLoop 4.5s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+                z-index: 50;
+            }
+            .animate-fly-loop-delayed {
+                animation: flyAwayLoop 4.5s cubic-bezier(0.25, 1, 0.5, 1) 2.25s infinite;
+                z-index: 50;
+            }
+
             /* ENTERPRISE MINIMALISM */
             .light-mode .glass-effect, .light-mode .glass-panel, .light-mode .bg-white {
                 border-radius: 12px !important; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03) !important; border: 1px solid #E2E8F0 !important;
@@ -2685,22 +2701,49 @@
                                 {/* Subtle Background Accents */}
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-[60px] pointer-events-none"></div>
 
-                                {/* 🟢 iOS-Style Segmented Control (Tabs) with Recommendations 🟢 */}
-                                <div className="flex flex-col items-center w-full mb-10 relative z-10">
-                                    <div className="flex bg-gray-100/80 p-1.5 rounded-2xl w-full sm:w-fit shadow-inner border border-gray-200/50">
+                                {/* 🟢 ULTRA-PREMIUM Sliding Segmented Control 🟢 */}
+                                <div className="flex flex-col items-center w-full mb-10 relative z-[60]">
+                                    <div className="relative flex p-1.5 bg-gray-100/80 backdrop-blur-md rounded-2xl w-full sm:w-[400px] shadow-inner border border-gray-200/60">
+                                        
+                                        {/* The Sliding Pill (Background) */}
+                                        <div className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white rounded-[12px] shadow-[0_2px_15px_rgba(0,0,0,0.06)] transition-transform duration-500 ease-out ${smsMode === 'panda' ? 'translate-x-0' : 'translate-x-full'}`}></div>
+
+                                        {/* Button 1: Quick Verify */}
                                         <button 
-                                            className={`flex-1 flex flex-col items-center justify-center sm:px-8 py-2.5 transition-all duration-300 rounded-[12px] ${smsMode==='panda' ? 'bg-white text-brand-primary shadow-sm ring-1 ring-gray-200/50 scale-100' : 'text-gray-500 hover:text-gray-800 scale-95'}`} 
+                                            className="flex-1 flex flex-col items-center justify-center py-3 relative z-10 cursor-pointer" 
                                             onClick={()=>setSmsMode('panda')}
                                         >
-                                            <span className="text-[10px] sm:text-xs font-bold tracking-widest uppercase">Quick Verify <span className="hidden sm:inline">(5 Mins)</span></span>
-                                            <span className={`text-[8.5px] sm:text-[9.5px] font-mono mt-1 px-2 py-0.5 rounded-md tracking-wider ${smsMode==='panda' ? 'bg-blue-50 text-blue-600 font-bold border border-blue-100' : 'text-gray-400'}`}>🇬🇧 Best for UK WhatsApp</span>
+                                            <div className="flex items-center gap-2">
+                                                {smsMode==='panda' && <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.6)]"></div>}
+                                                <span className={`text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 ${smsMode==='panda' ? 'text-gray-900' : 'text-gray-400 hover:text-gray-600'}`}>Quick Verify</span>
+                                            </div>
+                                            <span className={`text-[8px] font-mono mt-0.5 transition-colors duration-300 ${smsMode==='panda' ? 'text-gray-500' : 'text-gray-300'}`}>5 Mins</span>
+                                            
+                                            {/* Holographic Floating Text */}
+                                            {smsMode==='panda' && (
+                                                <div className="absolute top-0 left-0 w-full flex justify-center items-center pointer-events-none">
+                                                    <span className="animate-fly-loop text-[9px] font-bold tracking-widest uppercase text-blue-500 drop-shadow-sm whitespace-nowrap">🇬🇧 UK WhatsApp</span>
+                                                </div>
+                                            )}
                                         </button>
+                                        
+                                        {/* Button 2: Long-Term */}
                                         <button 
-                                            className={`flex-1 flex flex-col items-center justify-center sm:px-8 py-2.5 transition-all duration-300 rounded-[12px] ${smsMode==='standard' ? 'bg-white text-brand-primary shadow-sm ring-1 ring-gray-200/50 scale-100' : 'text-gray-500 hover:text-gray-800 scale-95'}`} 
+                                            className="flex-1 flex flex-col items-center justify-center py-3 relative z-10 cursor-pointer" 
                                             onClick={()=>setSmsMode('standard')}
                                         >
-                                            <span className="text-[10px] sm:text-xs font-bold tracking-widest uppercase">Long-Term <span className="hidden sm:inline">(3-25 Days)</span></span>
-                                            <span className={`text-[8.5px] sm:text-[9.5px] font-mono mt-1 px-2 py-0.5 rounded-md tracking-wider ${smsMode==='standard' ? 'bg-purple-50 text-purple-600 font-bold border border-purple-100' : 'text-gray-400'}`}>🇺🇸 Best for USA WhatsApp</span>
+                                            <div className="flex items-center gap-2">
+                                                {smsMode==='standard' && <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse shadow-[0_0_8px_rgba(168,85,247,0.6)]"></div>}
+                                                <span className={`text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 ${smsMode==='standard' ? 'text-gray-900' : 'text-gray-400 hover:text-gray-600'}`}>Long-Term</span>
+                                            </div>
+                                            <span className={`text-[8px] font-mono mt-0.5 transition-colors duration-300 ${smsMode==='standard' ? 'text-gray-500' : 'text-gray-300'}`}>3-25 Days</span>
+                                            
+                                            {/* Holographic Floating Text */}
+                                            {smsMode==='standard' && (
+                                                <div className="absolute top-0 left-0 w-full flex justify-center items-center pointer-events-none">
+                                                    <span className="animate-fly-loop-delayed text-[9px] font-bold tracking-widest uppercase text-purple-500 drop-shadow-sm whitespace-nowrap">🇺🇸 USA WhatsApp</span>
+                                                </div>
+                                            )}
                                         </button>
                                     </div>
                                 </div>
