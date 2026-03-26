@@ -785,7 +785,11 @@
             try {
                 if (!d) return 'N/A';
                 const dateObj = new Date(d);
-                if (!isNaN(dateObj.getTime())) return dateObj.toLocaleDateString();
+                if (!isNaN(dateObj.getTime())) {
+                    const datePart = dateObj.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+                    const timePart = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+                    return `${datePart} | ${timePart}`;
+                }
             } catch(e) {}
             return 'Invalid Date';
         };
@@ -1332,14 +1336,22 @@
                           if (payload.new.id === 'Maintenance') setMaintenanceSettings(sData);
                       }
                   })
-                  .on('postgres_changes', { event: '*', schema: 'public', table: 'store_purchases' }, payload => {
+                  .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'store_purchases' }, payload => {
                       // Add new purchase instantly to user's vault without reloading
                       if (payload.new) {
-                          const newPurchase = { id: payload.new.id, ...payload.new.data };
+                          const d = payload.new;
+                          const newPurchase = { 
+                              id: d.id, 
+                              ...(d.data || {}), 
+                              customer: d.customer || d.data?.customer, 
+                              type: d.type || d.data?.type, 
+                              date: d.data?.date || d.date || new Date().toISOString() 
+                          };
                           setPurchases(prev => {
                               const exists = prev.find(p => p.id === newPurchase.id);
                               if (exists) return prev;
-                              return [newPurchase, ...prev];
+                              // Sort dynamically so the newest purchase always appears at the top
+                              return [newPurchase, ...prev].sort((a, b) => new Date(b.date) - new Date(a.date));
                           });
                       }
                   })
@@ -2125,7 +2137,7 @@
                 </div>
               </main>
 
-              {showCart && user.role === 'customer' && <CartModal cart={cart} setCart={setCart} setShowCart={setShowCart} balance={currentUserBalance} user={user} promoSettings={promoSettings} triggerToast={triggerToast} addNotification={addNotification} bankSettings={bankSettings} />}
+              {showCart && user.role === 'customer' && <CartModal cart={cart} setCart={setCart} setShowCart={setShowCart} balance={currentUserBalance} user={user} promoSettings={promoSettings} triggerToast={triggerToast} addNotification={addNotification} bankSettings={bankSettings} setActiveTab={setActiveTab} setPurchases={setPurchases} />}
               
               </div>
           );
@@ -3738,7 +3750,7 @@
         // ==========================================
         // CART MODAL
         // ==========================================
-        function CartModal({ cart, setCart, setShowCart, balance, user, promoSettings, triggerToast, addNotification, bankSettings }) {
+        function CartModal({ cart, setCart, setShowCart, balance, user, promoSettings, triggerToast, addNotification, bankSettings, setActiveTab, setPurchases }) {
             const [isCheckingOut, setIsCheckingOut] = useState(false);
             const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
             const discountAmount = promoSettings?.isActive ? (totalAmount * (promoSettings.discount / 100)) : 0;
@@ -3759,7 +3771,17 @@
                     if (result.success) {
                         triggerToast(`Successfully purchased ${cart.length} item(s).`);
                         addNotification("Purchase Success", `You bought ${cart.length} item(s).`);
+                        
+                        // 🟢 ১. API থেকে পাওয়া রিয়েল একাউন্ট ডাটা ০ সেকেন্ডে UI তে পুশ করা 🟢
+                        if (result.purchasedItems && result.purchasedItems.length > 0) {
+                            setPurchases(prev => [...result.purchasedItems, ...prev].sort((a, b) => new Date(b.date) - new Date(a.date)));
+                        }
+
                         setCart([]); setShowCart(false);
+                        
+                        // 🟢 ২. অটোমেটিক Purchased (Vault) ট্যাবে রিডাইরেক্ট করা 🟢
+                        if (setActiveTab) setActiveTab('my_accounts');
+                        
                     } else triggerToast("Error: " + result.message);
                 } catch(e) { clearTimeout(serverWakeTimer); triggerToast("Purchase failed. Try again."); } 
                 finally { setIsCheckingOut(false); }
