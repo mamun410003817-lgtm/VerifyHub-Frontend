@@ -2200,8 +2200,8 @@
             const [isLoadingRates, setIsLoadingRates] = useState(true);
             
             const [selectedCountry, setSelectedCountry] = useState('USA');
-            const [selectedQuickCountry, setSelectedQuickCountry] = useState('UK'); 
-            const [quickCountries, setQuickCountries] = useState([]);
+            const [selectedPandaCountry, setSelectedPandaCountry] = useState('UK'); // 🟢 Default Changed
+            const [pandaCountries, setPandaCountries] = useState([]);
             const [isLoadingCountries, setIsLoadingCountries] = useState(false);
             
             const [selectedDuration, setSelectedDuration] = useState('15 minutes'); 
@@ -2209,18 +2209,21 @@
 
             // 🟢 AUTO-SELECT UNITED KINGDOM FOR QUICK VERIFY 🟢
             useEffect(() => {
-                if (smsMode === 'quick' && quickCountries.length > 0) {
-                    const isCurrentValid = quickCountries.some(c => c.value === selectedQuickCountry);
+                if (smsMode === 'panda' && pandaCountries.length > 0) {
+                    // চেক করবে বর্তমান কান্ট্রিটি API এর লিস্টে আছে কিনা
+                    const isCurrentValid = pandaCountries.some(c => c.value === selectedPandaCountry);
+                    
+                    // যদি না থাকে, তবে অটোমেটিক United Kingdom খুঁজে সেট করে দিবে
                     if (!isCurrentValid) {
-                        const ukOption = quickCountries.find(c => String(c.label).toLowerCase().includes('united kingdom') || String(c.label).toLowerCase() === 'uk' || String(c.label).toLowerCase().includes('kingdom'));
+                        const ukOption = pandaCountries.find(c => String(c.label).toLowerCase().includes('united kingdom') || String(c.label).toLowerCase() === 'uk' || String(c.label).toLowerCase().includes('kingdom'));
                         if (ukOption) {
-                            setSelectedQuickCountry(ukOption.value);
+                            setSelectedPandaCountry(ukOption.value);
                         } else {
-                            setSelectedQuickCountry(quickCountries[0].value); 
+                            setSelectedPandaCountry(pandaCountries[0].value); // ফেইলসেফ
                         }
                     }
                 }
-            }, [smsMode, quickCountries, selectedQuickCountry]);
+            }, [smsMode, pandaCountries, selectedPandaCountry]);
             
             const [selectedUsaState, setSelectedUsaState] = useState('');
             const usaStatesList = [
@@ -2286,21 +2289,21 @@
             const hardcodedServices = useMemo(() => hardcodedServicesStr.split(',').map(s => ({value: s, label: s})).sort((a,b) => a.label.localeCompare(b.label)), []);
 
             useEffect(() => {
-                if (smsMode === 'quick' && quickCountries.length === 0) {
+                if (smsMode === 'panda' && pandaCountries.length === 0) {
                     const fetchC = async () => {
                         setIsLoadingCountries(true);
                         try {
-                            const res = await fetch(`${BACKEND_URL}/api/sms/quick-countries`);
+                            const res = await fetch(`${BACKEND_URL}/api/sms/pandasms/countries`);
                             const data = await res.json();
-                            if(data.success && data.data) setQuickCountries(data.data);
+                            if(data.success && data.data) setPandaCountries(data.data);
                         } catch(e) {}
                         setIsLoadingCountries(false);
                     };
                     fetchC();
                 }
-            }, [smsMode, quickCountries.length]);
+            }, [smsMode, pandaCountries.length]);
 
-            const isPanda = smsMode === 'quick' || currentProvider === 'route1' || selectedCountry === 'UK' || selectedCountry === 'United Kingdom';
+            const isPanda = smsMode === 'panda' || currentProvider === 'pandasms' || selectedCountry === 'UK' || selectedCountry === 'United Kingdom';
             const durationOptions = isPanda ? 
                 [{ value: '5 minutes', label: '5 Minutes' }] : 
                 [
@@ -2320,8 +2323,8 @@
                 setIsLoadingRates(true);
                 try {
                     const token = await getAuthToken();
-                    const currentC = smsMode === 'quick' ? selectedQuickCountry : selectedCountry;
-                    const providerQuery = smsMode === 'quick' ? '&provider=route1' : '';
+                    const currentC = smsMode === 'panda' ? selectedPandaCountry : selectedCountry;
+                    const providerQuery = smsMode === 'panda' ? '&provider=pandasms' : '';
                     const res = await fetch(`${BACKEND_URL}/api/sms/getPrices?country=${currentC}${providerQuery}`, { headers: { 'Authorization': `Bearer ${token}` } });
                     const data = await res.json();
                     
@@ -2446,10 +2449,10 @@
                 try {
                     const token = await getAuthToken();
                     const reqBody = { 
-                        serviceId: serviceObj.code, countryId: smsMode === 'quick' ? selectedQuickCountry : selectedCountry, 
+                        serviceId: serviceObj.code, countryId: smsMode === 'panda' ? selectedPandaCountry : selectedCountry, 
                         requestedPrice: finalCalculatedPrice, duration: selectedDuration, provider: currentProvider
                     };
-                    if (smsMode === 'quick' && reuseNumberInput.trim() !== '') reqBody.reuseNumber = reuseNumberInput.trim();
+                    if (smsMode === 'panda' && reuseNumberInput.trim() !== '') reqBody.reuseNumber = reuseNumberInput.trim();
                     if (smsMode === 'standard' && (selectedCountry === 'USA' || selectedCountry === 'United States') && selectedUsaState) reqBody.state = selectedUsaState;
 
                     const res = await fetch(`${BACKEND_URL}/api/sms/getNumber`, {
@@ -2728,25 +2731,25 @@
                                     <div className="relative flex p-1.5 bg-gray-100/80 backdrop-blur-md rounded-2xl w-full sm:w-[420px] shadow-inner border border-gray-200/60">
                                         
                                         {/* The Sliding Pill (Background) */}
-                                        <div className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white rounded-[12px] shadow-[0_2px_15px_rgba(0,0,0,0.06)] transition-transform duration-500 ease-out ${smsMode === 'quick' ? 'translate-x-0' : 'translate-x-full'}`}></div>
+                                        <div className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white rounded-[12px] shadow-[0_2px_15px_rgba(0,0,0,0.06)] transition-transform duration-500 ease-out ${smsMode === 'panda' ? 'translate-x-0' : 'translate-x-full'}`}></div>
 
                                         {/* Button 1: Quick Verify */}
                                         <button 
                                             className="flex-1 flex flex-col items-center justify-center py-3.5 relative z-10 cursor-pointer" 
-                                            onClick={()=>setSmsMode('quick')}
+                                            onClick={()=>setSmsMode('panda')}
                                         >
                                             <div className="flex items-center gap-2 relative">
-                                                {smsMode==='quick' && <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.6)]"></div>}
-                                                <span className={`text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 ${smsMode==='quick' ? 'text-gray-900' : 'text-gray-400 hover:text-gray-600'}`}>Quick Verify</span>
+                                                {smsMode==='panda' && <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.6)]"></div>}
+                                                <span className={`text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 ${smsMode==='panda' ? 'text-gray-900' : 'text-gray-400 hover:text-gray-600'}`}>Quick Verify</span>
                                                 
                                                 {/* Magic Floating Text (UK) */}
-                                                {smsMode==='quick' && (
+                                                {smsMode==='panda' && (
                                                     <div className="absolute -top-1 left-0 w-full flex justify-center items-center pointer-events-none">
                                                         <span className="animate-magic-float text-[8px] sm:text-[9px] font-black tracking-wider uppercase text-blue-500 drop-shadow-[0_0_5px_rgba(59,130,246,0.4)] whitespace-nowrap">🇬🇧 Best for UK WhatsApp</span>
                                                     </div>
                                                 )}
                                             </div>
-                                            <span className={`text-[8px] font-mono mt-1 transition-colors duration-300 ${smsMode==='quick' ? 'text-gray-500' : 'text-gray-300'}`}>5 Mins</span>
+                                            <span className={`text-[8px] font-mono mt-1 transition-colors duration-300 ${smsMode==='panda' ? 'text-gray-500' : 'text-gray-300'}`}>5 Mins</span>
                                         </button>
                                         
                                         {/* Button 2: Long-Term */}
@@ -2776,13 +2779,13 @@
                                     {/* Country */}
                                     <div className="flex flex-col gap-2.5 relative z-[90]">
                                         <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Select Country</label>
-                                        {isLoadingCountries && smsMode === 'quick' ? (
+                                        {isLoadingCountries && smsMode === 'panda' ? (
                                             <div className="py-4 px-4 bg-gray-50 rounded-2xl border border-gray-200 flex items-center justify-center"><RefreshCw className="w-5 h-5 animate-spin text-brand-primary/50"/></div>
                                         ) : (
                                             <SearchableDropdown 
-                                                options={smsMode === 'quick' ? quickCountries : countryOptions} 
-                                                value={smsMode === 'quick' ? selectedQuickCountry : selectedCountry} 
-                                                onChange={smsMode === 'quick' ? setSelectedQuickCountry : setSelectedCountry} 
+                                                options={smsMode === 'panda' ? pandaCountries : countryOptions} 
+                                                value={smsMode === 'panda' ? selectedPandaCountry : selectedCountry} 
+                                                onChange={smsMode === 'panda' ? setSelectedPandaCountry : setSelectedCountry} 
                                                 placeholder="Search Country..."
                                                 icon={Globe}
                                                 mode="country"
@@ -2793,7 +2796,7 @@
                                     {/* Service */}
                                     <div className="flex flex-col gap-2.5 relative z-[80]">
                                         <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Select Service</label>
-                                        {isLoadingRates && smsMode === 'quick' ? (
+                                        {isLoadingRates && smsMode === 'panda' ? (
                                             <div className="py-4 px-4 bg-gray-50 rounded-2xl border border-gray-200 flex items-center justify-center"><RefreshCw className="w-5 h-5 animate-spin text-brand-primary/50"/></div>
                                         ) : (!finalServiceOptions || finalServiceOptions.length === 0) ? (
                                             <div className="py-4 px-4 text-center text-red-500 font-mono text-[10px] uppercase bg-red-50/50 border border-red-100 rounded-2xl font-bold flex items-center justify-center gap-2"><AlertTriangle className="w-3.5 h-3.5"/> No stock</div>
@@ -2835,8 +2838,8 @@
                                         </div>
                                     )}
                                     
-                                    {smsMode === 'quick' && (
-                                        <div className="flex flex-col gap-2.5 relative z-[60] animate-fade-in-up">
+                                    {smsMode === 'panda' && (
+                                        <div className="flex flex-col gap-2.5 relative z-30 animate-fade-in-up">
                                             <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><img src="https://cdn-icons-png.flaticon.com/512/1000/1000958.png" className="w-4 h-4 drop-shadow-sm" alt="sim-card"/> Reuse Number (Optional)</label>
                                             <input type="text" value={reuseNumberInput} onChange={e => setReuseNumberInput(e.target.value)} placeholder="e.g. 447123456789" className="w-full bg-gray-50/80 border border-gray-200 text-gray-800 text-[13px] rounded-2xl py-4 px-5 outline-none hover:border-gray-300 focus:bg-white focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all font-mono font-bold shadow-sm placeholder-gray-400" />
                                         </div>
@@ -2865,7 +2868,7 @@
                                         <div className="w-full sm:w-[260px] shrink-0">
                                             <button 
                                                 onClick={() => buyNumber(currentServiceObj || { code: selectedServiceCode, name: selectedServiceCode, finalPrice: displayPrice })} 
-                                                disabled={isBuying || (smsMode === 'quick' && !displayPrice)} 
+                                                disabled={isBuying || (smsMode === 'panda' && !displayPrice)} 
                                                 className="btn-animate w-full bg-gray-900 hover:bg-black text-white transition-colors py-4 px-6 rounded-2xl text-[11px] sm:text-xs font-black uppercase tracking-widest flex justify-center items-center gap-2.5 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_10px_25px_rgba(0,0,0,0.25)]"
                                             >
                                                 {isBuying ? <RefreshCw className="w-5 h-5 animate-spin"/> : <Zap className="w-4 h-4 text-brand-gold" />}
