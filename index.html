@@ -2685,20 +2685,24 @@
                                 {/* Subtle Background Accents */}
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-[60px] pointer-events-none"></div>
 
-                                {/* 🟢 iOS-Style Segmented Control (Tabs) 🟢 */}
-                                <div className="flex bg-gray-100/80 p-1.5 rounded-2xl w-full sm:w-fit mx-auto mb-10 shadow-inner relative z-10 border border-gray-200/50">
-                                    <button 
-                                        className={`flex-1 sm:px-8 py-3 text-[10px] sm:text-xs font-bold tracking-widest uppercase transition-all duration-300 rounded-[12px] ${smsMode==='panda' ? 'bg-white text-brand-primary shadow-sm ring-1 ring-gray-200/50 scale-100' : 'text-gray-500 hover:text-gray-800 scale-95'}`} 
-                                        onClick={()=>setSmsMode('panda')}
-                                    >
-                                        Quick Verify <span className="hidden sm:inline">(5 Mins)</span>
-                                    </button>
-                                    <button 
-                                        className={`flex-1 sm:px-8 py-3 text-[10px] sm:text-xs font-bold tracking-widest uppercase transition-all duration-300 rounded-[12px] ${smsMode==='standard' ? 'bg-white text-brand-primary shadow-sm ring-1 ring-gray-200/50 scale-100' : 'text-gray-500 hover:text-gray-800 scale-95'}`} 
-                                        onClick={()=>setSmsMode('standard')}
-                                    >
-                                        Rent Number <span className="hidden sm:inline">(3-25 Days)</span>
-                                    </button>
+                                {/* 🟢 iOS-Style Segmented Control (Tabs) with Recommendations 🟢 */}
+                                <div className="flex flex-col items-center w-full mb-10 relative z-10">
+                                    <div className="flex bg-gray-100/80 p-1.5 rounded-2xl w-full sm:w-fit shadow-inner border border-gray-200/50">
+                                        <button 
+                                            className={`flex-1 flex flex-col items-center justify-center sm:px-8 py-2.5 transition-all duration-300 rounded-[12px] ${smsMode==='panda' ? 'bg-white text-brand-primary shadow-sm ring-1 ring-gray-200/50 scale-100' : 'text-gray-500 hover:text-gray-800 scale-95'}`} 
+                                            onClick={()=>setSmsMode('panda')}
+                                        >
+                                            <span className="text-[10px] sm:text-xs font-bold tracking-widest uppercase">Quick Verify <span className="hidden sm:inline">(5 Mins)</span></span>
+                                            <span className={`text-[8.5px] sm:text-[9.5px] font-mono mt-1 px-2 py-0.5 rounded-md tracking-wider ${smsMode==='panda' ? 'bg-blue-50 text-blue-600 font-bold border border-blue-100' : 'text-gray-400'}`}>🇬🇧 Best for UK WhatsApp</span>
+                                        </button>
+                                        <button 
+                                            className={`flex-1 flex flex-col items-center justify-center sm:px-8 py-2.5 transition-all duration-300 rounded-[12px] ${smsMode==='standard' ? 'bg-white text-brand-primary shadow-sm ring-1 ring-gray-200/50 scale-100' : 'text-gray-500 hover:text-gray-800 scale-95'}`} 
+                                            onClick={()=>setSmsMode('standard')}
+                                        >
+                                            <span className="text-[10px] sm:text-xs font-bold tracking-widest uppercase">Long-Term <span className="hidden sm:inline">(3-25 Days)</span></span>
+                                            <span className={`text-[8.5px] sm:text-[9.5px] font-mono mt-1 px-2 py-0.5 rounded-md tracking-wider ${smsMode==='standard' ? 'bg-purple-50 text-purple-600 font-bold border border-purple-100' : 'text-gray-400'}`}>🇺🇸 Best for USA WhatsApp</span>
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {/* 🟢 Form Fields (Clean Grid with Real Logos) 🟢 */}
