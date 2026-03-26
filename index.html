@@ -414,17 +414,42 @@
             .text-\\[13px\\] { font-size: 15px !important; }
             p, span, div, button, a, input, select { letter-spacing: 0.02em; font-weight: 500; }
 
-            /* 🟢 HOLOGRAPHIC FLY AWAY TEXT ANIMATION (ULTRA-PREMIUM) 🟢 */
-            @keyframes flyAwayLoop {
-                0% { opacity: 0; transform: translateY(10px) scale(0.85); filter: blur(3px); }
-                20% { opacity: 1; transform: translateY(-15px) scale(1); filter: blur(0); }
-                60% { opacity: 0.8; transform: translateY(-35px) scale(1.05); filter: blur(0); }
-                100% { opacity: 0; transform: translateY(-65px) scale(0.9); filter: blur(4px); pointer-events: none; }
+            /* 🟢 INSTANT MAGIC STARDUST FLY AWAY ANIMATION 🟢 */
+            @keyframes magicFloat {
+                0% { opacity: 0; transform: translateY(15px) translateX(0px) scale(0.8); filter: blur(4px); }
+                15% { opacity: 1; transform: translateY(-10px) translateX(3px) scale(1); filter: blur(0); }
+                40% { transform: translateY(-30px) translateX(-3px) scale(1.02); }
+                70% { opacity: 0.9; transform: translateY(-55px) translateX(2px) scale(1.05); filter: blur(0); }
+                100% { opacity: 0; transform: translateY(-80px) translateX(0px) scale(0.9); filter: blur(6px); pointer-events: none; }
             }
-            .animate-fly-loop {
-                animation: flyAwayLoop 4.5s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+
+            @keyframes stardustTrail {
+                0%, 100% { opacity: 0; transform: scale(0); }
+                20%, 60% { opacity: 1; transform: scale(1); }
+            }
+
+            .animate-magic-float {
+                animation: magicFloat 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+                position: relative;
                 z-index: 50;
             }
+
+            /* 🟢 Creating the Trail Particles 🟢 */
+            .animate-magic-float::after, .animate-magic-float::before {
+                content: '';
+                position: absolute;
+                border-radius: 50%;
+                animation: stardustTrail 4s ease-in-out infinite;
+                opacity: 0;
+            }
+
+            /* UK Blue Particles */
+            .text-blue-500.animate-magic-float::after { width: 3px; height: 3px; background: #60a5fa; top: 10px; right: -5px; animation-delay: 0.5s; box-shadow: 0 0 6px #60a5fa; }
+            .text-blue-500.animate-magic-float::before { width: 2px; height: 2px; background: #93c5fd; bottom: -5px; left: 10px; animation-delay: 1s; box-shadow: 0 0 4px #93c5fd; }
+
+            /* USA Purple Particles */
+            .text-purple-500.animate-magic-float::after { width: 3px; height: 3px; background: #a855f7; top: 10px; left: -5px; animation-delay: 0.5s; box-shadow: 0 0 6px #a855f7; }
+            .text-purple-500.animate-magic-float::before { width: 2px; height: 2px; background: #c084fc; bottom: -5px; right: 10px; animation-delay: 1s; box-shadow: 0 0 4px #c084fc; }
             .animate-fly-loop-delayed {
                 animation: flyAwayLoop 4.5s cubic-bezier(0.25, 1, 0.5, 1) 2.25s infinite;
                 z-index: 50;
@@ -2701,49 +2726,49 @@
                                 {/* Subtle Background Accents */}
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-[60px] pointer-events-none"></div>
 
-                                {/* 🟢 ULTRA-PREMIUM Sliding Segmented Control 🟢 */}
+                                {/* 🟢 ULTRA-PREMIUM Sliding Segmented Control with Magic Float 🟢 */}
                                 <div className="flex flex-col items-center w-full mb-10 relative z-[60]">
-                                    <div className="relative flex p-1.5 bg-gray-100/80 backdrop-blur-md rounded-2xl w-full sm:w-[400px] shadow-inner border border-gray-200/60">
+                                    <div className="relative flex p-1.5 bg-gray-100/80 backdrop-blur-md rounded-2xl w-full sm:w-[420px] shadow-inner border border-gray-200/60">
                                         
                                         {/* The Sliding Pill (Background) */}
                                         <div className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white rounded-[12px] shadow-[0_2px_15px_rgba(0,0,0,0.06)] transition-transform duration-500 ease-out ${smsMode === 'panda' ? 'translate-x-0' : 'translate-x-full'}`}></div>
 
                                         {/* Button 1: Quick Verify */}
                                         <button 
-                                            className="flex-1 flex flex-col items-center justify-center py-3 relative z-10 cursor-pointer" 
+                                            className="flex-1 flex flex-col items-center justify-center py-3.5 relative z-10 cursor-pointer" 
                                             onClick={()=>setSmsMode('panda')}
                                         >
-                                            <div className="flex items-center gap-2">
+                                            <div className="flex items-center gap-2 relative">
                                                 {smsMode==='panda' && <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.6)]"></div>}
                                                 <span className={`text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 ${smsMode==='panda' ? 'text-gray-900' : 'text-gray-400 hover:text-gray-600'}`}>Quick Verify</span>
+                                                
+                                                {/* Magic Floating Text (UK) */}
+                                                {smsMode==='panda' && (
+                                                    <div className="absolute -top-1 left-0 w-full flex justify-center items-center pointer-events-none">
+                                                        <span className="animate-magic-float text-[8px] sm:text-[9px] font-black tracking-wider uppercase text-blue-500 drop-shadow-[0_0_5px_rgba(59,130,246,0.4)] whitespace-nowrap">🇬🇧 Best for UK WhatsApp</span>
+                                                    </div>
+                                                )}
                                             </div>
-                                            <span className={`text-[8px] font-mono mt-0.5 transition-colors duration-300 ${smsMode==='panda' ? 'text-gray-500' : 'text-gray-300'}`}>5 Mins</span>
-                                            
-                                            {/* Holographic Floating Text */}
-                                            {smsMode==='panda' && (
-                                                <div className="absolute top-0 left-0 w-full flex justify-center items-center pointer-events-none">
-                                                    <span className="animate-fly-loop text-[9px] font-bold tracking-widest uppercase text-blue-500 drop-shadow-sm whitespace-nowrap">🇬🇧 UK WhatsApp</span>
-                                                </div>
-                                            )}
+                                            <span className={`text-[8px] font-mono mt-1 transition-colors duration-300 ${smsMode==='panda' ? 'text-gray-500' : 'text-gray-300'}`}>5 Mins</span>
                                         </button>
                                         
                                         {/* Button 2: Long-Term */}
                                         <button 
-                                            className="flex-1 flex flex-col items-center justify-center py-3 relative z-10 cursor-pointer" 
+                                            className="flex-1 flex flex-col items-center justify-center py-3.5 relative z-10 cursor-pointer" 
                                             onClick={()=>setSmsMode('standard')}
                                         >
-                                            <div className="flex items-center gap-2">
+                                            <div className="flex items-center gap-2 relative">
                                                 {smsMode==='standard' && <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse shadow-[0_0_8px_rgba(168,85,247,0.6)]"></div>}
                                                 <span className={`text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 ${smsMode==='standard' ? 'text-gray-900' : 'text-gray-400 hover:text-gray-600'}`}>Long-Term</span>
+                                                
+                                               {/* Magic Floating Text (USA) */}
+                                                {smsMode==='standard' && (
+                                                    <div className="absolute -top-1 left-0 w-full flex justify-center items-center pointer-events-none">
+                                                        <span className="animate-magic-float text-[8px] sm:text-[9px] font-black tracking-wider uppercase text-purple-500 drop-shadow-[0_0_5px_rgba(168,85,247,0.4)] whitespace-nowrap">🇺🇸 Best for USA WhatsApp</span>
+                                                    </div>
+                                                )}
                                             </div>
-                                            <span className={`text-[8px] font-mono mt-0.5 transition-colors duration-300 ${smsMode==='standard' ? 'text-gray-500' : 'text-gray-300'}`}>3-25 Days</span>
-                                            
-                                            {/* Holographic Floating Text */}
-                                            {smsMode==='standard' && (
-                                                <div className="absolute top-0 left-0 w-full flex justify-center items-center pointer-events-none">
-                                                    <span className="animate-fly-loop-delayed text-[9px] font-bold tracking-widest uppercase text-purple-500 drop-shadow-sm whitespace-nowrap">🇺🇸 USA WhatsApp</span>
-                                                </div>
-                                            )}
+                                            <span className={`text-[8px] font-mono mt-1 transition-colors duration-300 ${smsMode==='standard' ? 'text-gray-500' : 'text-gray-300'}`}>3-25 Days</span>
                                         </button>
                                     </div>
                                 </div>
