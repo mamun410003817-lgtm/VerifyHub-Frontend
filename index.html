@@ -402,17 +402,17 @@
             .light-mode input:focus, .light-mode textarea:focus, .light-mode select:focus { border-color: #2563EB !important; box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1) !important; }
             .light-mode select option { background-color: #FFFFFF !important; color: #0F172A !important; }
 
-           /* 🟢 GLOBAL FONT SIZE INCREASE (LARGER) 🟢 */
-            .text-xs { font-size: 1.05rem !important; line-height: 1.5rem !important; } 
-            .text-sm { font-size: 1.15rem !important; line-height: 1.6rem !important; } 
-            .text-base { font-size: 1.25rem !important; line-height: 1.75rem !important; } 
-            .text-\\[8px\\] { font-size: 12.5px !important; }
-            .text-\\[9px\\] { font-size: 14.5px !important; }
-            .text-\\[10px\\] { font-size: 15.5px !important; }
-            .text-\\[11px\\] { font-size: 16.5px !important; }
-            .text-\\[12px\\] { font-size: 17.5px !important; }
-            .text-\\[13px\\] { font-size: 18.5px !important; }
-            p, span, div, button, a, input, select { letter-spacing: 0.02em; font-weight: 500; }
+          /* 🟢 GLOBAL FONT SIZE INCREASE (EVEN LARGER) 🟢 */
+            .text-xs { font-size: 1.15rem !important; line-height: 1.6rem !important; } 
+            .text-sm { font-size: 1.25rem !important; line-height: 1.7rem !important; } 
+            .text-base { font-size: 1.35rem !important; line-height: 1.8rem !important; } 
+            .text-\\[8px\\] { font-size: 13.5px !important; }
+            .text-\\[9px\\] { font-size: 15.5px !important; }
+            .text-\\[10px\\] { font-size: 16.5px !important; }
+            .text-\\[11px\\] { font-size: 17.5px !important; }
+            .text-\\[12px\\] { font-size: 18.5px !important; }
+            .text-\\[13px\\] { font-size: 19.5px !important; }
+            p, span, div, button, a, input, select { letter-spacing: 0.03em; font-weight: 500; }
 
             /* ENTERPRISE MINIMALISM */
             .light-mode .glass-effect, .light-mode .glass-panel, .light-mode .bg-white {
@@ -2700,7 +2700,7 @@
                                     
                                     {/* Country */}
                                     <div className="flex flex-col gap-2.5 relative z-50">
-                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><img src="https://cdn-icons-png.flaticon.com/512/814/814513.png" className="w-4 h-4 drop-shadow-sm" alt="country"/> Select Country</label>
+                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Select Country</label>
                                         {isLoadingCountries && smsMode === 'panda' ? (
                                             <div className="py-4 px-4 bg-gray-50 rounded-2xl border border-gray-200 flex items-center justify-center"><RefreshCw className="w-5 h-5 animate-spin text-brand-primary/50"/></div>
                                         ) : (
@@ -2717,7 +2717,7 @@
 
                                     {/* Service */}
                                     <div className="flex flex-col gap-2.5 relative z-40">
-                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><img src="https://cdn-icons-png.flaticon.com/512/5608/5608615.png" className="w-4 h-4 drop-shadow-sm" alt="app"/> Select Service</label>
+                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Select Service</label>
                                         {isLoadingRates && smsMode === 'panda' ? (
                                             <div className="py-4 px-4 bg-gray-50 rounded-2xl border border-gray-200 flex items-center justify-center"><RefreshCw className="w-5 h-5 animate-spin text-brand-primary/50"/></div>
                                         ) : (!finalServiceOptions || finalServiceOptions.length === 0) ? (
@@ -2736,7 +2736,7 @@
 
                                     {/* Duration */}
                                     <div className="flex flex-col gap-2.5 relative z-30">
-                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><img src="https://cdn-icons-png.flaticon.com/512/2784/2784459.png" className="w-4 h-4 drop-shadow-sm" alt="clock"/> Time Duration</label>
+                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Time Duration</label>
                                         <div className="relative group">
                                             <select value={selectedDuration} onChange={e => setSelectedDuration(e.target.value)} className="w-full bg-gray-50/80 border border-gray-200 text-gray-800 text-[13px] rounded-2xl py-4 px-5 outline-none cursor-pointer focus:bg-white focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 hover:border-gray-300 transition-all appearance-none font-mono font-bold shadow-sm" disabled={isPanda}>
                                                 {durationOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
@@ -2748,7 +2748,7 @@
                                     {/* Dynamic Options */}
                                     {smsMode === 'standard' && (selectedCountry === 'USA' || selectedCountry === 'United States') && (
                                         <div className="flex flex-col gap-2.5 relative z-30 animate-fade-in-up">
-                                            <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" className="w-4 h-4 drop-shadow-sm" alt="map-pin"/> State (Optional)</label>
+                                            <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">State (Optional)</label>
                                             <SearchableDropdown 
                                                 options={usaStatesList} 
                                                 value={selectedUsaState} 
