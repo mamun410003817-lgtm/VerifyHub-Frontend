@@ -578,13 +578,8 @@
             const [searchTerm, setSearchQuery] = useState('');
             const wrapperRef = useRef(null);
 
-            useEffect(() => {
-                function handleClickOutside(event) {
-                    if (wrapperRef.current && !wrapperRef.current.contains(event.target)) setIsOpen(false);
-                }
-                document.addEventListener("mousedown", handleClickOutside);
-                return () => document.removeEventListener("mousedown", handleClickOutside);
-            }, [wrapperRef]);
+            // 🟢 BUG FIX: Removed the 'mousedown' listener because the full-screen Portal 
+            // overlay now natively handles closing. This prevents the auto-close bug! 🟢
 
             const filteredOptions = options.filter(opt => opt.label.toLowerCase().includes(searchTerm.toLowerCase()));
             const selectedOpt = options.find(opt => opt.value === value);
