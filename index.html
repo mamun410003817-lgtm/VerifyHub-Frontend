@@ -156,11 +156,11 @@
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            background-color: #020617; /* Modern Deep Slate */
+            background-color: #063129; /* Juicysms Deep Teal */
         }
         body {
-            /* 🟢 Enterprise Clean Background 🟢 */
-            background: #020617;
+            /* 🟢 Juicysms Style Gradient Background 🟢 */
+            background: linear-gradient(145deg, #0e5f53 0%, #053229 100%);
             background-attachment: fixed;
             background-size: cover;
             color: #ffffff;
@@ -402,17 +402,17 @@
             .light-mode input:focus, .light-mode textarea:focus, .light-mode select:focus { border-color: #2563EB !important; box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1) !important; }
             .light-mode select option { background-color: #FFFFFF !important; color: #0F172A !important; }
 
-         /* 🟢 GLOBAL FONT SIZE (REFINED & COMPACT) 🟢 */
-            .text-xs { font-size: 0.95rem !important; line-height: 1.4rem !important; } 
-            .text-sm { font-size: 1.05rem !important; line-height: 1.5rem !important; } 
-            .text-base { font-size: 1.15rem !important; line-height: 1.6rem !important; } 
+         /* 🟢 GLOBAL FONT SIZE (JUICYSMS STYLE - CLEAN & READABLE) 🟢 */
+            .text-xs { font-size: 0.85rem !important; line-height: 1.25rem !important; } 
+            .text-sm { font-size: 0.95rem !important; line-height: 1.4rem !important; } 
+            .text-base { font-size: 1.05rem !important; line-height: 1.5rem !important; } 
             .text-\\[8px\\] { font-size: 10px !important; }
             .text-\\[9px\\] { font-size: 11px !important; }
             .text-\\[10px\\] { font-size: 12px !important; }
             .text-\\[11px\\] { font-size: 13px !important; }
             .text-\\[12px\\] { font-size: 14px !important; }
             .text-\\[13px\\] { font-size: 15px !important; }
-            p, span, div, button, a, input, select { letter-spacing: 0.02em; font-weight: 500; }
+            p, span, div, button, a, input, select { letter-spacing: 0.01em; font-weight: 500; }
 
             /* 🟢 INSTANT MAGIC STARDUST FLY AWAY ANIMATION 🟢 */
             @keyframes magicFloat {
@@ -482,43 +482,99 @@
             .light-mode tr:hover td { background-color: #F8FAFC !important; }
 
             /* 🟢 NIGHT MODE (DARK THEME) AUTO-INVERT FIXES 🟢 */
-            /* Backgrounds */
+            
+            /* 🟢 JUICYSMS THEME OVERRIDES (CONVERT BLACK/SLATE TO TEAL) 🟢 */
+            body:not(.light-mode) [class*="bg-[#0F172A]"], 
+            body:not(.light-mode) [class*="bg-[#0b1219]"], 
+            body:not(.light-mode) [class*="bg-[#151e29]"],
+            body:not(.light-mode) [class*="bg-[#0b120c]"],
+            body:not(.light-mode) [class*="bg-[#020617]"],
+            body:not(.light-mode) .bg-[#0a0a0a],
+            body:not(.light-mode) .bg-black,
+            body:not(.light-mode) [class*="bg-[rgba(0,0,0,0.5)]"] {
+                background-color: rgba(14, 95, 83, 0.4) !important;
+                backdrop-filter: blur(16px) !important;
+                border-color: rgba(255, 255, 255, 0.15) !important;
+            }
+            body:not(.light-mode) .glass-effect {
+                background: rgba(14, 95, 83, 0.3) !important;
+                border-color: rgba(255, 255, 255, 0.15) !important;
+            }
+            body:not(.light-mode) .glass-input {
+                background: rgba(5, 50, 41, 0.6) !important;
+                border-color: rgba(255, 255, 255, 0.2) !important;
+            }
+
+            /* 🟢 JUICYSMS CARD BACKGROUNDS 🟢 */
             body:not(.light-mode) .bg-white,
             body:not(.light-mode) .bg-white\/90,
-            body:not(.light-mode) .bg-white\/95 { 
-                background-color: #0F172A !important; 
-                border-color: rgba(255,255,255,0.05) !important; 
-            }
+            body:not(.light-mode) .bg-white\/95,
             body:not(.light-mode) .bg-gray-50,
-            body:not(.light-mode) .bg-gray-50\/50 { 
-                background-color: #1E293B !important; 
-                border-color: rgba(255,255,255,0.05) !important; 
-            }
+            body:not(.light-mode) .bg-gray-50\/50,
             body:not(.light-mode) .bg-gray-100 { 
-                background-color: #334155 !important; 
-                border-color: rgba(255,255,255,0.05) !important; 
+                background-color: rgba(255, 255, 255, 0.08) !important; /* Soft transparent teal-tinted card */
+                backdrop-filter: blur(12px) !important;
+                border-color: rgba(255, 255, 255, 0.15) !important; 
+                border-radius: 20px !important;
             }
             
-            /* Text Colors */
+            /* 🟢 JUICYSMS TEXT COLORS 🟢 */
             body:not(.light-mode) .text-gray-900, 
             body:not(.light-mode) .text-gray-800,
-            body:not(.light-mode) .text-black { color: #F8FAFC !important; }
+            body:not(.light-mode) .text-black { color: #FFFFFF !important; }
             body:not(.light-mode) .text-gray-700, 
-            body:not(.light-mode) .text-gray-600 { color: #CBD5E1 !important; }
-            body:not(.light-mode) .text-gray-500 { color: #94A3B8 !important; }
+            body:not(.light-mode) .text-gray-600,
+            body:not(.light-mode) .text-gray-500,
+            body:not(.light-mode) .text-gray-400 { color: rgba(255, 255, 255, 0.8) !important; }
+            
+            /* Price Highlight Color (Juicysms Green) */
+            body:not(.light-mode) .text-brand-primary { color: #4ade80 !important; } 
             
             /* Borders & Shadows */
             body:not(.light-mode) .border-gray-100, 
-            body:not(.light-mode) .border-gray-200 { border-color: rgba(255,255,255,0.08) !important; }
-            body:not(.light-mode) .shadow-sm { box-shadow: 0 4px 25px rgba(0,0,0,0.5) !important; }
+            body:not(.light-mode) .border-gray-200 { border-color: rgba(255,255,255,0.1) !important; }
+            body:not(.light-mode) .shadow-sm { box-shadow: 0 4px 20px rgba(0,0,0,0.2) !important; }
             
-            /* Inputs & Forms */
+            /* 🟢 JUICYSMS INPUTS & FORMS 🟢 */
             body:not(.light-mode) input, 
             body:not(.light-mode) select, 
-            body:not(.light-mode) textarea { background-color: #020617 !important; color: #F8FAFC !important; border-color: rgba(255,255,255,0.15) !important; }
+            body:not(.light-mode) textarea { 
+                background-color: rgba(255, 255, 255, 0.05) !important; 
+                color: #FFFFFF !important; 
+                border: 1px solid rgba(255, 255, 255, 0.2) !important; 
+                border-radius: 12px !important;
+            }
             body:not(.light-mode) input:focus, 
             body:not(.light-mode) select:focus, 
-            body:not(.light-mode) textarea:focus { border-color: #3B82F6 !important; background-color: #0F172A !important; }
+            body:not(.light-mode) textarea:focus { 
+                border-color: #FFFFFF !important; 
+                background-color: rgba(255, 255, 255, 0.1) !important; 
+                box-shadow: 0 0 0 2px rgba(255,255,255,0.1) !important;
+            }
+
+            /* 🟢 JUICYSMS "ORDER/BUY" BUTTONS 🟢 */
+            body:not(.light-mode) button.bg-gray-900,
+            body:not(.light-mode) button.bg-black,
+            body:not(.light-mode) button.bg-white {
+                background-color: #ffffff !important;
+                color: #063129 !important; /* Dark teal text for contrast */
+                border: none !important;
+                border-radius: 9999px !important; /* Fully rounded capsule shape */
+                font-weight: 800 !important;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
+            }
+            body:not(.light-mode) button.bg-gray-900:hover,
+            body:not(.light-mode) button.bg-black:hover,
+            body:not(.light-mode) button.bg-white:hover {
+                background-color: #f1f5f9 !important;
+                transform: translateY(-2px) !important;
+            }
+            body:not(.light-mode) button.bg-gray-900 svg,
+            body:not(.light-mode) button.bg-black svg,
+            body:not(.light-mode) button.bg-white svg {
+                stroke: #063129 !important;
+                color: #063129 !important;
+            }
             
             /* Dark Mode Table Fixes */
             body:not(.light-mode) table th { background-color: #0F172A !important; color: #94A3B8 !important; border-bottom: 1px solid rgba(255,255,255,0.1) !important; }
