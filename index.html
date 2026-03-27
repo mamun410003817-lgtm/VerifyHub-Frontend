@@ -1164,13 +1164,15 @@
         };
 
         function App() {
-          // 🟢 FIXED: Default to Dark/Teal Theme (isLightMode is false by default) 🟢
-          const [isLightMode, setIsLightMode] = useState(() => localStorage.getItem('themeMode') === 'light');
+          // 🟢 FORCED PERMANENT DARK MODE (Elite Theme) 🟢
+          // Removed localStorage checking so no user can ever load Light Mode
+          const [isLightMode] = useState(false); 
           
           useEffect(() => {
-              if (isLightMode) { document.body.classList.add('light-mode'); localStorage.setItem('themeMode', 'light'); } 
-              else { document.body.classList.remove('light-mode'); localStorage.setItem('themeMode', 'dark'); }
-          }, [isLightMode]);
+              // Always force remove light-mode class on every load
+              document.body.classList.remove('light-mode'); 
+              localStorage.setItem('themeMode', 'dark');
+          }, []);
 
           const [showLanding, setShowLanding] = useState(true); // 🟢 Control Landing Page 🟢
           const [user, setUser] = useState(null); 
@@ -2228,18 +2230,23 @@
 
                 {(!maintenanceSettings?.active || user.role === 'admin') && (
                     <div className="w-full relative z-30 mb-8 px-3 sm:px-0 mt-4">
-                        {/* 🟢 PREMIUM CARD MENU (Juicysms Theme) 🟢 */}
-                        <div className="glass-effect flex flex-wrap justify-center sm:justify-between items-center w-full mx-auto max-w-4xl p-2 sm:p-3 rounded-[24px] border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.4)] gap-1 sm:gap-2">
+                        {/* 🟢 PREMIUM NO-BOX MENU (Ultra Minimalist) 🟢 */}
+                        <div className="glass-effect flex flex-wrap justify-center sm:justify-between items-center w-full mx-auto max-w-4xl p-2 sm:p-3 rounded-[24px] border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.4)] gap-1 sm:gap-2 relative overflow-hidden">
                             {(user.role === 'admin' ? ADMIN_TABS : CUSTOMER_TABS).map(tab => (
                                 <button 
                                     key={tab.id} 
                                     onClick={() => setActiveTab(tab.id)} 
-                                    className={`w-[31%] sm:w-auto sm:flex-1 relative flex flex-col items-center justify-center py-3 sm:py-4 transition-all duration-300 rounded-2xl ${activeTab === tab.id ? 'bg-[#4ade80]/10 border border-[#4ade80]/50 text-[#4ade80] shadow-[0_0_15px_rgba(74,222,128,0.15)] scale-105 z-10' : 'border border-transparent text-gray-400 hover:text-white hover:bg-white/5 scale-95 hover:scale-100'}`}
+                                    className={`w-[31%] sm:w-auto sm:flex-1 relative flex flex-col items-center justify-center py-3 sm:py-4 transition-all duration-300 group bg-transparent border-none ${activeTab === tab.id ? 'text-[#4ade80] scale-105 z-10' : 'text-gray-400 hover:text-white scale-95 hover:scale-100'}`}
                                 >
-                                    <tab.icon className={`w-5 h-5 sm:w-6 sm:h-6 mb-1.5 transition-all duration-300 ${activeTab === tab.id ? 'scale-110 text-[#4ade80] drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]' : 'opacity-70 group-hover:opacity-100'}`} strokeWidth={activeTab === tab.id ? 2.5 : 2} />
-                                    <span className={`text-[9px] sm:text-[11px] leading-tight uppercase tracking-widest text-center w-full px-1 ${activeTab === tab.id ? 'font-black text-[#4ade80]' : 'font-bold'}`}>
+                                    <tab.icon className={`w-5 h-5 sm:w-6 sm:h-6 mb-1.5 transition-all duration-300 ${activeTab === tab.id ? 'scale-110 text-[#4ade80] drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]' : 'opacity-70 group-hover:opacity-100 group-hover:drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]'}`} strokeWidth={activeTab === tab.id ? 2.5 : 2} />
+                                    <span className={`text-[9px] sm:text-[11px] leading-tight uppercase tracking-widest text-center w-full px-1 transition-colors ${activeTab === tab.id ? 'font-black text-[#4ade80]' : 'font-bold'}`}>
                                         {tab.label}
                                     </span>
+                                    
+                                    {/* Minimalist Glowing Bottom Indicator */}
+                                    {activeTab === tab.id && (
+                                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[40%] h-[3px] bg-[#4ade80] rounded-t-full shadow-[0_-2px_10px_rgba(74,222,128,0.8)]"></div>
+                                    )}
                                 </button>
                             ))}
                         </div>
