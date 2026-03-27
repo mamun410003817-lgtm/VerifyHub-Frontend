@@ -1890,11 +1890,11 @@
                                             <Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/>
                                         </div>
                                         <p className="text-gray-300 text-sm leading-relaxed mb-6 font-medium">"I was skeptical at first, but the Google Voice accounts were delivered instantly. The 30-min replacement policy is legit. Had one bad account, got replaced in 2 mins."</p>
-                                        <div className="flex items-center gap-3 border-t border-white/10 pt-4">
-                                            <div className="w-8 h-8 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center font-bold text-xs border border-blue-500/50">JD</div>
+                                        <div className="flex items-center gap-3.5 border-t border-white/10 pt-4">
+                                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John D." className="w-10 h-10 rounded-full border-2 border-white/10 shadow-sm object-cover" />
                                             <div>
                                                 <p className="text-xs font-bold text-white">John D.</p>
-                                                <p className="text-[10px] text-[#4ade80] uppercase tracking-widest">Verified Buyer</p>
+                                                <p className="text-[10px] text-[#4ade80] uppercase tracking-widest flex items-center gap-1"><ShieldCheck className="w-3 h-3"/> Verified Buyer</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1904,11 +1904,11 @@
                                             <Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/>
                                         </div>
                                         <p className="text-gray-300 text-sm leading-relaxed mb-6 font-medium">"Their proprietary SMS routing is insane. Used it for bulk WhatsApp verifications and the OTPs came through instantly. Crypto deposits are fully automated which saves me hours."</p>
-                                        <div className="flex items-center gap-3 border-t border-white/10 pt-4">
-                                            <div className="w-8 h-8 bg-purple-500/20 text-purple-400 rounded-full flex items-center justify-center font-bold text-xs border border-purple-500/50">MS</div>
+                                        <div className="flex items-center gap-3.5 border-t border-white/10 pt-4">
+                                            <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="Mark S." className="w-10 h-10 rounded-full border-2 border-white/10 shadow-sm object-cover" />
                                             <div>
                                                 <p className="text-xs font-bold text-white">Mark S.</p>
-                                                <p className="text-[10px] text-[#4ade80] uppercase tracking-widest">Agency Owner</p>
+                                                <p className="text-[10px] text-[#4ade80] uppercase tracking-widest flex items-center gap-1"><ShieldCheck className="w-3 h-3"/> Agency Owner</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1918,11 +1918,11 @@
                                             <Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/>
                                         </div>
                                         <p className="text-gray-300 text-sm leading-relaxed mb-6 font-medium">"Best plug for TextPlus and old Gmails. I've spent over $500 here. The dashboard is clean, and the Telegram support actually replies fast."</p>
-                                        <div className="flex items-center gap-3 border-t border-white/10 pt-4">
-                                            <div className="w-8 h-8 bg-[#4ade80]/20 text-[#4ade80] rounded-full flex items-center justify-center font-bold text-xs border border-[#4ade80]/50">RK</div>
+                                        <div className="flex items-center gap-3.5 border-t border-white/10 pt-4">
+                                            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Rahul K." className="w-10 h-10 rounded-full border-2 border-white/10 shadow-sm object-cover" />
                                             <div>
                                                 <p className="text-xs font-bold text-white">Rahul K.</p>
-                                                <p className="text-[10px] text-[#4ade80] uppercase tracking-widest">VIP Member</p>
+                                                <p className="text-[10px] text-[#4ade80] uppercase tracking-widest flex items-center gap-1"><ShieldCheck className="w-3 h-3"/> VIP Member</p>
                                             </div>
                                         </div>
                                     </div>
@@ -2020,7 +2020,8 @@
                 {/* 🟢 Clean Professional Background 🟢 */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-full bg-gradient-to-b from-brand-primary/5 to-transparent blur-3xl z-[0] pointer-events-none"></div>
 
-                <div className="w-full max-w-[400px] z-10 relative mt-10 sm:mt-0 animate-fade-in-up">
+                {/* 🟢 Added Negative Margin (-mt-24) to move the card UP 🟢 */}
+                <div className="w-full max-w-[400px] z-10 relative -mt-16 sm:-mt-32 animate-fade-in-up">
                     {/* 🟢 Auth Header (Dark Theme) 🟢 */}
                     <div className="flex flex-col items-center mb-6 sm:mb-8">
                         <div className="w-12 h-12 bg-white/5 backdrop-blur-md rounded-xl shadow-sm border border-white/20 flex items-center justify-center mb-5">
@@ -2242,11 +2243,6 @@
                                     <span className={`text-[9px] sm:text-[11px] leading-tight uppercase tracking-widest text-center w-full px-1 transition-colors ${activeTab === tab.id ? 'font-black text-[#4ade80]' : 'font-bold'}`}>
                                         {tab.label}
                                     </span>
-                                    
-                                    {/* Minimalist Glowing Bottom Indicator */}
-                                    {activeTab === tab.id && (
-                                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[40%] h-[3px] bg-[#4ade80] rounded-t-full shadow-[0_-2px_10px_rgba(74,222,128,0.8)]"></div>
-                                    )}
                                 </button>
                             ))}
                         </div>
@@ -2793,13 +2789,6 @@
                                             {smsMode==='quick' ? <CheckCircle className="w-4 h-4 text-[#4ade80]" /> : <Clock className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />}
                                             <span className={`text-[11px] sm:text-[12px] font-black tracking-widest uppercase transition-colors ${smsMode === 'quick' ? 'text-[#4ade80]' : 'text-gray-300 group-hover:text-white'}`}>Server One</span>
                                         </div>
-                                        
-                                        {/* Magic Floating Text (UK) - High Fly */}
-                                        {smsMode==='quick' && (
-                                            <div className="absolute -top-4 left-0 w-full flex justify-center items-center pointer-events-none z-50">
-                                                <span className="animate-magic-float text-[9px] font-black tracking-wider uppercase text-white whitespace-nowrap bg-[#063129]/95 px-3 py-1.5 rounded-md border border-[#4ade80]/50 shadow-[0_5px_15px_rgba(0,0,0,0.6)]">🇬🇧 Best for UK WhatsApp</span>
-                                            </div>
-                                        )}
                                     </button>
 
                                     {/* Card 2: Server Two */}
@@ -2811,13 +2800,6 @@
                                             {smsMode==='standard' ? <CheckCircle className="w-4 h-4 text-[#4ade80]" /> : <ShieldCheck className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />}
                                             <span className={`text-[11px] sm:text-[12px] font-black tracking-widest uppercase transition-colors ${smsMode === 'standard' ? 'text-[#4ade80]' : 'text-gray-300 group-hover:text-white'}`}>Server Two</span>
                                         </div>
-                                        
-                                        {/* Magic Floating Text (USA) - High Fly */}
-                                        {smsMode==='standard' && (
-                                            <div className="absolute -top-4 left-0 w-full flex justify-center items-center pointer-events-none z-50">
-                                                <span className="animate-magic-float text-[9px] font-black tracking-wider uppercase text-white whitespace-nowrap bg-[#063129]/95 px-3 py-1.5 rounded-md border border-[#4ade80]/50 shadow-[0_5px_15px_rgba(0,0,0,0.6)]">🇺🇸 Best for USA WhatsApp</span>
-                                            </div>
-                                        )}
                                     </button>
                                 </div>
 
