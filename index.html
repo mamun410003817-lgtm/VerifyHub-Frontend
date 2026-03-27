@@ -433,13 +433,12 @@
             .text-\\[13px\\] { font-size: 15px !important; }
             p, span, div, button, a, input, select { letter-spacing: 0.01em; font-weight: 500; }
 
-            /* 🟢 INSTANT MAGIC STARDUST FLY AWAY ANIMATION 🟢 */
+            /* 🟢 HIGH-FLYING MAGIC STARDUST ANIMATION 🟢 */
             @keyframes magicFloat {
-                0% { opacity: 0; transform: translateY(15px) translateX(0px) scale(0.8); filter: blur(4px); }
-                15% { opacity: 1; transform: translateY(-10px) translateX(3px) scale(1); filter: blur(0); }
-                40% { transform: translateY(-30px) translateX(-3px) scale(1.02); }
-                70% { opacity: 0.9; transform: translateY(-55px) translateX(2px) scale(1.05); filter: blur(0); }
-                100% { opacity: 0; transform: translateY(-80px) translateX(0px) scale(0.9); filter: blur(6px); pointer-events: none; }
+                0% { opacity: 0; transform: translateY(10px) scale(0.8); filter: blur(2px); }
+                15% { opacity: 1; transform: translateY(-10px) scale(1); filter: blur(0); }
+                60% { opacity: 0.8; transform: translateY(-90px) scale(1.05); }
+                100% { opacity: 0; transform: translateY(-180px) scale(0.9); filter: blur(3px); pointer-events: none; }
             }
 
             @keyframes stardustTrail {
@@ -448,7 +447,8 @@
             }
 
             .animate-magic-float {
-                animation: magicFloat 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+                /* Changed duration to 5s for smoother and slower fade out */
+                animation: magicFloat 5s cubic-bezier(0.25, 1, 0.5, 1) infinite;
                 position: relative;
                 z-index: 50;
             }
@@ -2180,13 +2180,15 @@
               <header className="sticky top-0 z-40 w-full bg-black/30 backdrop-blur-2xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
                   
-                  {/* 🟢 Left Side: Website Name 🟢 */}
-                  <div className="flex items-center gap-2 cursor-default">
+                  {/* 🟢 Left Side: Brand & Status 🟢 */}
+                  <div className="flex items-center gap-2.5 cursor-default shrink-0">
                       <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-[#4ade80]" />
-                      <span className="text-sm sm:text-lg font-black tracking-widest text-white uppercase drop-shadow-md flex items-center gap-1.5">
-                          Verify<span className="text-[#4ade80] font-light">Hub</span>
-                          <span className="text-[6px] sm:text-[7px] bg-[#4ade80]/10 text-[#4ade80] px-1.5 py-0.5 rounded border border-[#4ade80]/30 font-bold tracking-[0.3em] mt-0.5">ELITE</span>
-                      </span>
+                      <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-1.5">
+                          <span className="text-sm sm:text-lg font-black tracking-widest text-white uppercase drop-shadow-md">
+                              Verify<span className="text-[#4ade80] font-light">Hub</span>
+                          </span>
+                          <span className="text-[6px] sm:text-[7px] bg-[#4ade80]/10 text-[#4ade80] px-1.5 py-0.5 rounded border border-[#4ade80]/30 font-bold tracking-[0.3em] mt-0.5 sm:mt-0 max-w-fit">ELITE</span>
+                      </div>
                   </div>
 
                   {/* 🟢 Right Side: Action Buttons 🟢 */}
@@ -2772,42 +2774,41 @@
                                 
                                 {/* Subtle Background Accents */}
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-[60px] pointer-events-none"></div>
-
-{/* 🟢 SMS Mode Selection Cards (Compact Glass Theme) 🟢 */}
-                                <div className="grid grid-cols-2 gap-3 w-full sm:w-[400px] mb-8 mx-auto relative z-[60]">
+{/* 🟢 SMS Mode Selection Cards (Ultra Compact Glass Theme) 🟢 */}
+                                <div className="grid grid-cols-2 gap-3 w-full sm:w-[320px] mb-10 mx-auto relative z-[60]">
                                     
                                     {/* Card 1: Server One */}
                                     <button 
-                                        className={`flex flex-col items-center justify-center py-4 px-2 sm:px-3 rounded-2xl border transition-all duration-300 relative group ${smsMode === 'quick' ? 'bg-[#4ade80]/10 border-[#4ade80] shadow-[0_0_15px_rgba(74,222,128,0.15)] scale-100' : 'bg-white/5 border-white/10 hover:border-[#4ade80]/40 hover:bg-white/10 scale-95 hover:scale-100'}`}
+                                        className={`flex flex-col items-center justify-center py-3 px-2 rounded-xl border transition-all duration-300 relative group ${smsMode === 'quick' ? 'bg-[#4ade80]/10 border-[#4ade80] shadow-[0_0_15px_rgba(74,222,128,0.15)] scale-100' : 'bg-white/5 border-white/10 hover:border-[#4ade80]/40 hover:bg-white/10 scale-95 hover:scale-100'}`}
                                         onClick={()=>setSmsMode('quick')}
                                     >
-                                        <div className="flex items-center gap-1.5 sm:gap-2 relative z-10">
+                                        <div className="flex items-center gap-1.5 relative z-10">
                                             {smsMode==='quick' ? <CheckCircle className="w-4 h-4 text-[#4ade80]" /> : <Clock className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />}
-                                            <span className={`text-[11px] sm:text-xs font-black tracking-widest uppercase transition-colors ${smsMode === 'quick' ? 'text-[#4ade80]' : 'text-gray-300 group-hover:text-white'}`}>Server One</span>
+                                            <span className={`text-[11px] sm:text-[12px] font-black tracking-widest uppercase transition-colors ${smsMode === 'quick' ? 'text-[#4ade80]' : 'text-gray-300 group-hover:text-white'}`}>Server One</span>
                                         </div>
                                         
-                                        {/* Magic Floating Text (UK) - Visible & Out of Box */}
+                                        {/* Magic Floating Text (UK) - High Fly */}
                                         {smsMode==='quick' && (
                                             <div className="absolute -top-4 left-0 w-full flex justify-center items-center pointer-events-none z-50">
-                                                <span className="animate-magic-float text-[8px] sm:text-[9px] font-black tracking-wider uppercase text-white whitespace-nowrap bg-[#063129]/90 px-2.5 py-1 rounded-md border border-[#4ade80]/40 shadow-[0_4px_10px_rgba(0,0,0,0.5)]">🇬🇧 Best for UK WhatsApp</span>
+                                                <span className="animate-magic-float text-[9px] font-black tracking-wider uppercase text-white whitespace-nowrap bg-[#063129]/95 px-3 py-1.5 rounded-md border border-[#4ade80]/50 shadow-[0_5px_15px_rgba(0,0,0,0.6)]">🇬🇧 Best for UK WhatsApp</span>
                                             </div>
                                         )}
                                     </button>
 
                                     {/* Card 2: Server Two */}
                                     <button 
-                                        className={`flex flex-col items-center justify-center py-4 px-2 sm:px-3 rounded-2xl border transition-all duration-300 relative group ${smsMode === 'standard' ? 'bg-[#4ade80]/10 border-[#4ade80] shadow-[0_0_15px_rgba(74,222,128,0.15)] scale-100' : 'bg-white/5 border-white/10 hover:border-[#4ade80]/40 hover:bg-white/10 scale-95 hover:scale-100'}`}
+                                        className={`flex flex-col items-center justify-center py-3 px-2 rounded-xl border transition-all duration-300 relative group ${smsMode === 'standard' ? 'bg-[#4ade80]/10 border-[#4ade80] shadow-[0_0_15px_rgba(74,222,128,0.15)] scale-100' : 'bg-white/5 border-white/10 hover:border-[#4ade80]/40 hover:bg-white/10 scale-95 hover:scale-100'}`}
                                         onClick={()=>setSmsMode('standard')}
                                     >
-                                        <div className="flex items-center gap-1.5 sm:gap-2 relative z-10">
+                                        <div className="flex items-center gap-1.5 relative z-10">
                                             {smsMode==='standard' ? <CheckCircle className="w-4 h-4 text-[#4ade80]" /> : <ShieldCheck className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />}
-                                            <span className={`text-[11px] sm:text-xs font-black tracking-widest uppercase transition-colors ${smsMode === 'standard' ? 'text-[#4ade80]' : 'text-gray-300 group-hover:text-white'}`}>Server Two</span>
+                                            <span className={`text-[11px] sm:text-[12px] font-black tracking-widest uppercase transition-colors ${smsMode === 'standard' ? 'text-[#4ade80]' : 'text-gray-300 group-hover:text-white'}`}>Server Two</span>
                                         </div>
                                         
-                                        {/* Magic Floating Text (USA) - Visible & Out of Box */}
+                                        {/* Magic Floating Text (USA) - High Fly */}
                                         {smsMode==='standard' && (
                                             <div className="absolute -top-4 left-0 w-full flex justify-center items-center pointer-events-none z-50">
-                                                <span className="animate-magic-float-delayed text-[8px] sm:text-[9px] font-black tracking-wider uppercase text-white whitespace-nowrap bg-[#063129]/90 px-2.5 py-1 rounded-md border border-[#4ade80]/40 shadow-[0_4px_10px_rgba(0,0,0,0.5)]">🇺🇸 Best for USA WhatsApp</span>
+                                                <span className="animate-magic-float text-[9px] font-black tracking-wider uppercase text-white whitespace-nowrap bg-[#063129]/95 px-3 py-1.5 rounded-md border border-[#4ade80]/50 shadow-[0_5px_15px_rgba(0,0,0,0.6)]">🇺🇸 Best for USA WhatsApp</span>
                                             </div>
                                         )}
                                     </button>
