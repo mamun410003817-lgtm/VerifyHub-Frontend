@@ -685,7 +685,7 @@
         const uiBtnPrimary = "btn-animate w-full bg-white text-black font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 shadow-[0_5px_20px_rgba(255,255,255,0.2)] tracking-widest uppercase text-xs";
 
         // 🟢 CUSTOM SEARCHABLE DROPDOWN COMPONENT (100% OFFICIAL LOGOS & FLAGS GUARANTEED) 🟢
-        const SearchableDropdown = ({ options, value, onChange, placeholder, icon: Icon, mode = 'default' }) => {
+        const SearchableDropdown = ({ options, value, onChange, placeholder, icon: Icon, mode = 'default', label }) => {
             const [isOpen, setIsOpen] = useState(false);
             const [searchTerm, setSearchQuery] = useState('');
             const wrapperRef = useRef(null);
@@ -786,7 +786,8 @@
 
             return (
                 <div ref={wrapperRef} className="relative w-full z-[100]">
-                    <div onClick={() => setIsOpen(!isOpen)} className="w-full bg-white/5 backdrop-blur-md border border-white/10 text-white font-semibold text-[11px] sm:text-[13px] tracking-wide py-4 px-4 rounded-xl cursor-pointer flex items-center justify-between hover:border-[#4ade80]/50 transition-colors shadow-sm allow-select">
+                    <div onClick={() => setIsOpen(!isOpen)} className="w-full bg-white/5 backdrop-blur-md border border-white/10 text-white font-semibold text-[11px] sm:text-[13px] tracking-wide pt-6 pb-2 px-4 rounded-xl cursor-pointer flex items-center justify-between hover:border-[#4ade80]/50 transition-colors shadow-sm allow-select relative">
+                        {label && <span className="absolute top-1.5 left-4 text-[8px] font-black uppercase tracking-widest text-[#4ade80] pointer-events-none">{label}</span>}
                         <div className="flex items-center gap-3 overflow-hidden">
                             {mode !== 'default' && selectedOpt ? (
                                 <div className={`shrink-0 flex items-center justify-center bg-white shadow-sm overflow-hidden p-[2px] ${(mode === 'country' || mode === 'state') ? 'w-6 h-6 rounded-full border-none' : 'w-6 h-6 rounded-lg'}`}>
@@ -2847,16 +2848,16 @@
                                     </button>
                                 </div>
 
-                                {/* 🟢 Form Fields (Clean Grid with Real Logos) 🟢 */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mb-8 relative z-10">
+                                {/* 🟢 Form Fields (Minimalist Integrated Cards) 🟢 */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 mb-8 relative z-10">
                                     
                                     {/* Country */}
-                                    <div className="flex flex-col gap-2.5 relative z-[90]">
-                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Select Country</label>
+                                    <div className="relative z-[90]">
                                         {isLoadingCountries && smsMode === 'quick' ? (
-                                            <div className="py-4 px-4 bg-gray-50 rounded-2xl border border-gray-200 flex items-center justify-center"><RefreshCw className="w-5 h-5 animate-spin text-brand-primary/50"/></div>
+                                            <div className="pt-6 pb-2 px-4 bg-white/5 rounded-xl border border-white/10 flex items-center justify-center"><RefreshCw className="w-5 h-5 animate-spin text-[#4ade80]/50"/></div>
                                         ) : (
                                             <SearchableDropdown 
+                                                label="Select Country"
                                                 options={smsMode === 'quick' ? quickCountries : countryOptions} 
                                                 value={smsMode === 'quick' ? selectedQuickCountry : selectedCountry} 
                                                 onChange={smsMode === 'quick' ? setSelectedQuickCountry : setSelectedCountry} 
@@ -2868,14 +2869,14 @@
                                     </div>
 
                                     {/* Service */}
-                                    <div className="flex flex-col gap-2.5 relative z-[80]">
-                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Select Service</label>
+                                    <div className="relative z-[80]">
                                         {isLoadingRates && smsMode === 'quick' ? (
-                                            <div className="py-4 px-4 bg-gray-50 rounded-2xl border border-gray-200 flex items-center justify-center"><RefreshCw className="w-5 h-5 animate-spin text-brand-primary/50"/></div>
+                                            <div className="pt-6 pb-2 px-4 bg-white/5 rounded-xl border border-white/10 flex items-center justify-center"><RefreshCw className="w-5 h-5 animate-spin text-[#4ade80]/50"/></div>
                                         ) : (!finalServiceOptions || finalServiceOptions.length === 0) ? (
-                                            <div className="py-4 px-4 text-center text-red-500 font-mono text-[10px] uppercase bg-red-50/50 border border-red-100 rounded-2xl font-bold flex items-center justify-center gap-2"><AlertTriangle className="w-3.5 h-3.5"/> No stock</div>
+                                            <div className="pt-6 pb-2 px-4 text-center text-red-500 font-mono text-[10px] uppercase bg-red-500/10 border border-red-500/30 rounded-xl font-bold flex items-center justify-center gap-2"><AlertTriangle className="w-3.5 h-3.5"/> No stock</div>
                                         ) : (
                                             <SearchableDropdown 
+                                                label="Select Service"
                                                 options={finalServiceOptions} 
                                                 value={selectedServiceCode || ''} 
                                                 onChange={setSelectedServiceCode} 
@@ -2887,21 +2888,21 @@
                                     </div>
 
                                     {/* Duration */}
-                                    <div className="flex flex-col gap-2.5 relative z-[70]">
-                                        <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold ml-1">Time Duration</label>
+                                    <div className="relative z-[70] w-full">
                                         <div className="relative group">
-                                            <select value={selectedDuration} onChange={e => setSelectedDuration(e.target.value)} className="w-full bg-white/5 backdrop-blur-md border border-white/10 text-white text-[13px] rounded-2xl py-4 px-5 outline-none cursor-pointer focus:bg-black/40 focus:border-[#4ade80] focus:ring-2 focus:ring-[#4ade80]/30 hover:border-white/30 transition-all appearance-none font-mono font-bold shadow-sm" disabled={isServerOne}>
+                                            <span className="absolute top-1.5 left-4 text-[8px] font-black uppercase tracking-widest text-[#4ade80] z-10 pointer-events-none">Time Duration</span>
+                                            <select value={selectedDuration} onChange={e => setSelectedDuration(e.target.value)} className="w-full bg-white/5 backdrop-blur-md border border-white/10 text-white text-[13px] rounded-xl pt-6 pb-2 px-4 outline-none cursor-pointer focus:bg-black/40 focus:border-[#4ade80] focus:ring-2 focus:ring-[#4ade80]/30 hover:border-white/30 transition-all appearance-none font-mono font-bold shadow-sm" disabled={isServerOne}>
                                                 {durationOptions.map(opt => <option key={opt.value} value={opt.value} className="bg-[#063129] text-white">{opt.label}</option>)}
                                             </select>
-                                            <ChevronDown className="w-4 h-4 text-gray-400 absolute right-4 top-[18px] pointer-events-none group-hover:text-white transition-colors"/>
+                                            <ChevronDown className="w-4 h-4 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none group-hover:text-white transition-colors"/>
                                         </div>
                                     </div>
 
                                     {/* Dynamic Options */}
                                     {smsMode === 'standard' && (selectedCountry === 'USA' || selectedCountry === 'United States') && (
-                                        <div className="flex flex-col gap-2.5 relative z-[60] animate-fade-in-up">
-                                            <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold ml-1">State (Optional)</label>
+                                        <div className="relative z-[60] animate-fade-in-up">
                                             <SearchableDropdown 
+                                                label="State (Optional)"
                                                 options={usaStatesList} 
                                                 value={selectedUsaState} 
                                                 onChange={setSelectedUsaState} 
@@ -2937,7 +2938,7 @@
                                                 disabled={isBuying || (smsMode === 'quick' && !displayPrice)} 
                                                 className="btn-animate w-full bg-[#4ade80] hover:bg-green-400 text-[#063129] transition-colors py-4 px-6 rounded-2xl text-[11px] sm:text-xs font-black uppercase tracking-widest flex justify-center items-center gap-2.5 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_8px_20px_rgba(74,222,128,0.2)] hover:shadow-[0_10px_25px_rgba(74,222,128,0.4)]"
                                             >
-                                                {isBuying ? <RefreshCw className="w-5 h-5 animate-spin"/> : <Zap className="w-4 h-4 text-[#063129]" />}
+                                                {isBuying && <RefreshCw className="w-5 h-5 animate-spin"/>}
                                                 {isBuying ? 'Processing...' : 'Get Number Now'}
                                             </button>
                                         </div>
@@ -3411,8 +3412,7 @@
                 {/* 🟢 LEFT COLUMN: AUTO CRYPTO DEPOSIT 🟢 */}
                 <div className="w-full">
                   <div className="bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 hover:border-brand-primary/40 transition-all duration-300 shadow-[0_2px_10px_rgba(0,0,0,0.02)] h-full flex flex-col">
-                    <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
-                       <Zap className="w-4 h-4 text-brand-primary"/>
+                    <div className="flex items-center mb-6 pb-4 border-b border-gray-100">
                        <h2 className="text-[13px] font-bold tracking-widest text-gray-900 uppercase">Auto Crypto Deposit</h2>
                     </div>
                     
@@ -3464,8 +3464,8 @@
                 <div className="w-full">
                   <div className="bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 hover:border-brand-primary/40 transition-all duration-300 shadow-[0_2px_10px_rgba(0,0,0,0.02)] h-full">
                     <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
-                       <h2 className="text-[13px] font-bold tracking-widest text-gray-900 flex items-center gap-2 uppercase">
-                         <Building className="w-4 h-4 text-brand-primary"/> Manual Deposit
+                       <h2 className="text-[13px] font-bold tracking-widest text-gray-900 uppercase">
+                         Manual Deposit
                        </h2>
                     </div>
 
