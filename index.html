@@ -2182,7 +2182,17 @@
 
               {/* 🟢 Dark Glassmorphism Header 🟢 */}
               <header className="sticky top-0 z-40 w-full bg-black/30 backdrop-blur-2xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-end">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+                  
+                  {/* 🟢 Left Side: Website Name 🟢 */}
+                  <div className="flex items-center gap-2 cursor-default">
+                      <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-[#4ade80]" />
+                      <span className="text-sm sm:text-lg font-black tracking-widest text-white uppercase drop-shadow-md">
+                          Verify<span className="text-[#4ade80] font-light">Hub</span>
+                      </span>
+                  </div>
+
+                  {/* 🟢 Right Side: Action Buttons 🟢 */}
                   <div className="flex items-center gap-3 sm:gap-5">
                     
                     {user.role === 'customer' && (
@@ -2769,14 +2779,14 @@
 {/* 🟢 SMS Mode Selection Cards (Compact Glass Theme) 🟢 */}
                                 <div className="grid grid-cols-2 gap-3 w-full sm:w-[400px] mb-8 mx-auto relative z-[60]">
                                     
-                                    {/* Card 1: Quick Verify */}
+                                    {/* Card 1: Server One */}
                                     <button 
                                         className={`flex flex-col items-center justify-center py-3 px-2 sm:px-3 rounded-2xl border transition-all duration-300 relative group ${smsMode === 'quick' ? 'bg-[#4ade80]/10 border-[#4ade80] shadow-[0_0_15px_rgba(74,222,128,0.15)] scale-100' : 'bg-white/5 border-white/10 hover:border-[#4ade80]/40 hover:bg-white/10 scale-95 hover:scale-100'}`}
                                         onClick={()=>setSmsMode('quick')}
                                     >
                                         <div className="flex items-center gap-1.5 sm:gap-2 relative z-10 mb-1">
                                             {smsMode==='quick' ? <CheckCircle className="w-3.5 h-3.5 text-[#4ade80]" /> : <Clock className="w-3.5 h-3.5 text-gray-400 group-hover:text-white transition-colors" />}
-                                            <span className={`text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-colors ${smsMode === 'quick' ? 'text-[#4ade80]' : 'text-gray-300 group-hover:text-white'}`}>Quick Verify</span>
+                                            <span className={`text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-colors ${smsMode === 'quick' ? 'text-[#4ade80]' : 'text-gray-300 group-hover:text-white'}`}>Server One</span>
                                         </div>
                                         <span className={`text-[8px] sm:text-[9px] font-mono font-bold transition-colors ${smsMode === 'quick' ? 'text-green-300' : 'text-gray-500 group-hover:text-gray-400'}`}>5 Mins OTP</span>
                                         
@@ -2788,14 +2798,14 @@
                                         )}
                                     </button>
 
-                                    {/* Card 2: Long-Term */}
+                                    {/* Card 2: Server Two */}
                                     <button 
                                         className={`flex flex-col items-center justify-center py-3 px-2 sm:px-3 rounded-2xl border transition-all duration-300 relative group ${smsMode === 'standard' ? 'bg-[#4ade80]/10 border-[#4ade80] shadow-[0_0_15px_rgba(74,222,128,0.15)] scale-100' : 'bg-white/5 border-white/10 hover:border-[#4ade80]/40 hover:bg-white/10 scale-95 hover:scale-100'}`}
                                         onClick={()=>setSmsMode('standard')}
                                     >
                                         <div className="flex items-center gap-1.5 sm:gap-2 relative z-10 mb-1">
                                             {smsMode==='standard' ? <CheckCircle className="w-3.5 h-3.5 text-[#4ade80]" /> : <ShieldCheck className="w-3.5 h-3.5 text-gray-400 group-hover:text-white transition-colors" />}
-                                            <span className={`text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-colors ${smsMode === 'standard' ? 'text-[#4ade80]' : 'text-gray-300 group-hover:text-white'}`}>Long-Term</span>
+                                            <span className={`text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-colors ${smsMode === 'standard' ? 'text-[#4ade80]' : 'text-gray-300 group-hover:text-white'}`}>Server Two</span>
                                         </div>
                                         <span className={`text-[8px] sm:text-[9px] font-mono font-bold transition-colors ${smsMode === 'standard' ? 'text-green-300' : 'text-gray-500 group-hover:text-gray-400'}`}>3 to 25 Days</span>
                                         
