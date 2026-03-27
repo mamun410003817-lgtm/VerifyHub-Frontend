@@ -1149,7 +1149,8 @@
         };
 
         function App() {
-          const [isLightMode, setIsLightMode] = useState(() => localStorage.getItem('themeMode') !== 'dark');
+          // 🟢 FIXED: Default to Dark/Teal Theme (isLightMode is false by default) 🟢
+          const [isLightMode, setIsLightMode] = useState(() => localStorage.getItem('themeMode') === 'light');
           
           useEffect(() => {
               if (isLightMode) { document.body.classList.add('light-mode'); localStorage.setItem('themeMode', 'light'); } 
@@ -2779,49 +2780,51 @@
                                 {/* Subtle Background Accents */}
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-[60px] pointer-events-none"></div>
 
-                                {/* 🟢 ULTRA-PREMIUM Sliding Segmented Control with Magic Float 🟢 */}
+                                {/* 🟢 ULTRA-PREMIUM Sliding Segmented Control (Juicysms Theme Fixed) 🟢 */}
                                 <div className="flex flex-col items-center w-full mb-10 relative z-[60]">
-                                    <div className="relative flex p-1.5 bg-gray-100/80 backdrop-blur-md rounded-2xl w-full sm:w-[420px] shadow-inner border border-gray-200/60">
+                                    <div className="relative flex p-1.5 rounded-2xl w-full sm:w-[420px] shadow-inner border" style={{ backgroundColor: 'rgba(0,0,0,0.3)', borderColor: 'rgba(255,255,255,0.1)' }}>
                                         
-                                        {/* The Sliding Pill (Background) */}
-                                        <div className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white rounded-[12px] shadow-[0_2px_15px_rgba(0,0,0,0.06)] transition-transform duration-500 ease-out ${smsMode === 'quick' ? 'translate-x-0' : 'translate-x-full'}`}></div>
+                                        {/* The Sliding Pill (Background) - Forced Solid White */}
+                                        <div className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] rounded-[12px] shadow-[0_2px_15px_rgba(0,0,0,0.3)] transition-transform duration-500 ease-out ${smsMode === 'quick' ? 'translate-x-0' : 'translate-x-full'}`} style={{ backgroundColor: '#ffffff' }}></div>
 
                                         {/* Button 1: Quick Verify */}
                                         <button 
-                                            className="flex-1 flex flex-col items-center justify-center py-3.5 relative z-10 cursor-pointer" 
+                                            className="flex-1 flex flex-col items-center justify-center py-3.5 relative z-10 cursor-pointer transition-none shadow-none"
+                                            style={{ background: 'transparent', border: 'none' }}
                                             onClick={()=>setSmsMode('quick')}
                                         >
                                             <div className="flex items-center gap-2 relative">
-                                                {smsMode==='quick' && <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.6)]"></div>}
-                                                <span className={`text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 ${smsMode==='quick' ? 'text-gray-900' : 'text-gray-400 hover:text-gray-600'}`}>Quick Verify</span>
+                                                {smsMode==='quick' && <div className="w-1.5 h-1.5 rounded-full bg-[#063129] animate-pulse shadow-sm"></div>}
+                                                <span className="text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-colors duration-300" style={{ color: smsMode === 'quick' ? '#063129' : 'rgba(255,255,255,0.6)' }}>Quick Verify</span>
                                                 
                                                 {/* Magic Floating Text (UK) */}
                                                 {smsMode==='quick' && (
                                                     <div className="absolute -top-1 left-0 w-full flex justify-center items-center pointer-events-none">
-                                                        <span className="animate-magic-float text-[8px] sm:text-[9px] font-black tracking-wider uppercase text-blue-500 drop-shadow-[0_0_5px_rgba(59,130,246,0.4)] whitespace-nowrap">🇬🇧 Best for UK WhatsApp</span>
+                                                        <span className="animate-magic-float text-[8px] sm:text-[9px] font-black tracking-wider uppercase text-white whitespace-nowrap" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>🇬🇧 Best for UK WhatsApp</span>
                                                     </div>
                                                 )}
                                             </div>
-                                            <span className={`text-[8px] font-mono mt-1 transition-colors duration-300 ${smsMode==='quick' ? 'text-gray-500' : 'text-gray-300'}`}>5 Mins</span>
+                                            <span className="text-[8px] font-mono mt-1 transition-colors duration-300 font-bold" style={{ color: smsMode === 'quick' ? 'rgba(6,49,41,0.6)' : 'rgba(255,255,255,0.4)' }}>5 Mins</span>
                                         </button>
                                         
                                         {/* Button 2: Long-Term */}
                                         <button 
-                                            className="flex-1 flex flex-col items-center justify-center py-3.5 relative z-10 cursor-pointer" 
+                                            className="flex-1 flex flex-col items-center justify-center py-3.5 relative z-10 cursor-pointer transition-none shadow-none"
+                                            style={{ background: 'transparent', border: 'none' }}
                                             onClick={()=>setSmsMode('standard')}
                                         >
                                             <div className="flex items-center gap-2 relative">
-                                                {smsMode==='standard' && <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse shadow-[0_0_8px_rgba(168,85,247,0.6)]"></div>}
-                                                <span className={`text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-colors duration-300 ${smsMode==='standard' ? 'text-gray-900' : 'text-gray-400 hover:text-gray-600'}`}>Long-Term</span>
+                                                {smsMode==='standard' && <div className="w-1.5 h-1.5 rounded-full bg-[#063129] animate-pulse shadow-sm"></div>}
+                                                <span className="text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-colors duration-300" style={{ color: smsMode === 'standard' ? '#063129' : 'rgba(255,255,255,0.6)' }}>Long-Term</span>
                                                 
-                                               {/* Magic Floating Text (USA) */}
+                                                {/* Magic Floating Text (USA) */}
                                                 {smsMode==='standard' && (
                                                     <div className="absolute -top-1 left-0 w-full flex justify-center items-center pointer-events-none">
-                                                        <span className="animate-magic-float text-[8px] sm:text-[9px] font-black tracking-wider uppercase text-purple-500 drop-shadow-[0_0_5px_rgba(168,85,247,0.4)] whitespace-nowrap">🇺🇸 Best for USA WhatsApp</span>
+                                                        <span className="animate-magic-float text-[8px] sm:text-[9px] font-black tracking-wider uppercase text-white whitespace-nowrap" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>🇺🇸 Best for USA WhatsApp</span>
                                                     </div>
                                                 )}
                                             </div>
-                                            <span className={`text-[8px] font-mono mt-1 transition-colors duration-300 ${smsMode==='standard' ? 'text-gray-500' : 'text-gray-300'}`}>3-25 Days</span>
+                                            <span className="text-[8px] font-mono mt-1 transition-colors duration-300 font-bold" style={{ color: smsMode === 'standard' ? 'rgba(6,49,41,0.6)' : 'rgba(255,255,255,0.4)' }}>3-25 Days</span>
                                         </button>
                                     </div>
                                 </div>
