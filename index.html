@@ -1714,81 +1714,90 @@
                             </button>
                         </nav>
 
-                        {/* 🟢 HERO SECTION 🟢 */}
-                        <div className="relative z-10 flex flex-col items-center justify-center min-h-[75vh] px-4 text-center max-w-5xl mx-auto mt-6">
-                            <div className="mb-8 px-5 py-2 rounded-full border border-[#4ade80]/30 bg-[#4ade80]/10 text-[#4ade80] text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] backdrop-blur-md animate-fade-in-up shadow-[0_0_15px_rgba(74,222,128,0.2)] flex items-center gap-2">
-                                <Globe className="w-4 h-4" /> 100+ Countries Supported Globally
+                        {/* 🟢 MOBILE-OPTIMIZED HERO SECTION 🟢 */}
+                        <div className="relative z-10 flex flex-col items-center justify-center min-h-[70vh] px-4 text-center max-w-5xl mx-auto mt-8 sm:mt-12">
+                            
+                            {/* Top Badge */}
+                            <div className="mb-6 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full border border-[#4ade80]/30 bg-[#4ade80]/10 text-[#4ade80] text-[9px] sm:text-xs font-bold uppercase tracking-[0.2em] backdrop-blur-md animate-fade-in-up shadow-[0_0_15px_rgba(74,222,128,0.2)] flex items-center gap-1.5 sm:gap-2">
+                                <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> 100+ Countries Supported
                             </div>
                             
-                            <div className="min-h-[120px] sm:min-h-[160px] flex items-center justify-center w-full mb-6">
-                                <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.2] animate-fade-in-up text-center flex flex-col items-center text-white" style={{animationDelay: '0.1s'}}>
+                            {/* Main Heading */}
+                            <div className="flex items-center justify-center w-full mb-5 sm:mb-6">
+                                <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.3] sm:leading-[1.1] animate-fade-in-up text-center flex flex-col items-center text-white" style={{animationDelay: '0.1s'}}>
                                     <span>Premium Accounts &</span>
-                                    <span className="text-[#4ade80] mt-2 sm:mt-4 drop-shadow-[0_0_15px_rgba(74,222,128,0.3)]">Global SMS Bypass</span>
+                                    <span className="text-[#4ade80] mt-1 sm:mt-3 drop-shadow-[0_0_15px_rgba(74,222,128,0.3)]">Global SMS Bypass</span>
                                 </h1>
                             </div>
                             
-                            <p className="text-gray-300 text-sm sm:text-base font-medium mb-10 max-w-2xl leading-relaxed tracking-wide animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+                            {/* Subtitle */}
+                            <p className="text-gray-300 text-xs sm:text-base font-medium mb-8 max-w-2xl leading-relaxed tracking-wide animate-fade-in-up px-2" style={{animationDelay: '0.2s'}}>
                                 Bypass any OTP with our real physical carrier nodes spanning across 100+ countries. Buy aged accounts and secure real numbers instantly.
                             </p>
                             
-                            <div className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto animate-fade-in-up" style={{animationDelay: '0.3s'}}>
-                                <button onClick={() => setShowLanding(false)} className="btn-animate bg-[#4ade80] text-[#063129] px-10 py-4 rounded-xl text-xs font-black uppercase tracking-[0.2em] shadow-[0_0_25px_rgba(74,222,128,0.4)] hover:shadow-[0_0_40px_rgba(74,222,128,0.6)] transition-all flex items-center justify-center gap-2">
+                            {/* Action Buttons */}
+                            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto animate-fade-in-up px-4 sm:px-0" style={{animationDelay: '0.3s'}}>
+                                <button onClick={() => setShowLanding(false)} className="btn-animate w-full sm:w-auto bg-[#4ade80] text-[#063129] px-8 py-3.5 sm:py-4 rounded-xl text-[11px] sm:text-xs font-black uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(74,222,128,0.3)] hover:shadow-[0_0_30px_rgba(74,222,128,0.5)] transition-all flex items-center justify-center gap-2">
                                     <Lock className="w-4 h-4"/> Login / Register
                                 </button>
-                                <button onClick={() => window.scrollTo({top: window.innerHeight, behavior: 'smooth'})} className="btn-animate bg-white/5 text-white border border-white/20 shadow-sm px-10 py-4 rounded-xl text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-[#063129]">
+                                <button onClick={() => window.scrollTo({top: window.innerHeight, behavior: 'smooth'})} className="btn-animate w-full sm:w-auto bg-white/5 text-white border border-white/20 shadow-sm px-8 py-3.5 sm:py-4 rounded-xl text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-[#063129] transition-all">
                                     View Services
                                 </button>
                             </div>
                             
-                            {/* 🟢 LIVE STATS BAR 🟢 */}
-                            <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10 w-full max-w-4xl border-t border-white/10 pt-10 animate-fade-in-up" style={{animationDelay: '0.5s'}}>
-                                <div className="flex flex-col items-center">
-                                    <span className="text-2xl sm:text-3xl font-black text-white">99.9%</span>
-                                    <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">OTP Success Rate</span>
+                            {/* 🟢 RESPONSIVE LIVE STATS BAR 🟢 */}
+                            <div className="mt-12 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-4 sm:gap-10 w-full max-w-4xl border-t border-white/10 pt-8 sm:pt-10 animate-fade-in-up" style={{animationDelay: '0.5s'}}>
+                                <div className="flex flex-col items-center text-center">
+                                    <span className="text-xl sm:text-3xl font-black text-white">99.9%</span>
+                                    <span className="text-[9px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Success Rate</span>
                                 </div>
-                                <div className="flex flex-col items-center">
-                                    <span className="text-2xl sm:text-3xl font-black text-white">100+</span>
-                                    <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Countries Available</span>
+                                <div className="flex flex-col items-center text-center">
+                                    <span className="text-xl sm:text-3xl font-black text-white">100+</span>
+                                    <span className="text-[9px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Countries</span>
                                 </div>
-                                <div className="flex flex-col items-center">
-                                    <span className="text-2xl sm:text-3xl font-black text-white">&lt; 2s</span>
-                                    <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Auto Delivery</span>
+                                <div className="flex flex-col items-center text-center">
+                                    <span className="text-xl sm:text-3xl font-black text-white">&lt; 2s</span>
+                                    <span className="text-[9px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Auto Delivery</span>
                                 </div>
-                                <div className="flex flex-col items-center">
-                                    <span className="text-2xl sm:text-3xl font-black text-[#4ade80] flex items-center gap-1">24/7</span>
-                                    <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Admin Support</span>
+                                <div className="flex flex-col items-center text-center">
+                                    <span className="text-xl sm:text-3xl font-black text-[#4ade80] flex items-center justify-center gap-1">24/7</span>
+                                    <span className="text-[9px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Admin Support</span>
                                 </div>
                             </div>
                         </div>
 
-                        {/* 🟢 GLOBAL SUPPORTED COUNTRIES MARQUEE 🟢 */}
-                        <div className="w-full py-10 overflow-hidden relative z-10 flex flex-col items-center bg-black/20 border-y border-white/5 mt-8">
+                        {/* 🟢 MOBILE-SAFE SUPPORTED COUNTRIES MARQUEE 🟢 */}
+                        <div className="w-full py-8 sm:py-10 overflow-hidden relative z-10 flex flex-col items-center bg-black/20 border-y border-white/5 mt-8 sm:mt-12">
                             <style>{`
                                 @keyframes scrollSlow { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-                                .animate-scroll-slow { animation: scrollSlow 40s linear infinite; width: max-content; }
+                                .animate-scroll-slow { animation: scrollSlow 35s linear infinite; width: max-content; }
                                 .animate-scroll-slow:hover { animation-play-state: paused; }
                             `}</style>
-                            <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-gray-500 mb-6 drop-shadow-md">Providing Real Numbers From 100+ Countries</p>
-                            <div className="animate-scroll-slow flex items-center gap-6 sm:gap-8 pl-6 sm:pl-8">
-                                {/* List duplicated for infinite smooth scrolling effect */}
-                                {[
-                                    {name: 'United States', code: 'us'}, {name: 'United Kingdom', code: 'gb'}, {name: 'Canada', code: 'ca'},
-                                    {name: 'Germany', code: 'de'}, {name: 'France', code: 'fr'}, {name: 'India', code: 'in'},
-                                    {name: 'Brazil', code: 'br'}, {name: 'Australia', code: 'au'}, {name: 'Spain', code: 'es'},
-                                    {name: 'Italy', code: 'it'}, {name: 'Netherlands', code: 'nl'}, {name: 'Sweden', code: 'se'},
-                                    {name: 'Japan', code: 'jp'}, {name: 'South Africa', code: 'za'}, {name: 'Mexico', code: 'mx'},
-                                    // Duplicate for loop
-                                    {name: 'United States', code: 'us'}, {name: 'United Kingdom', code: 'gb'}, {name: 'Canada', code: 'ca'},
-                                    {name: 'Germany', code: 'de'}, {name: 'France', code: 'fr'}, {name: 'India', code: 'in'},
-                                    {name: 'Brazil', code: 'br'}, {name: 'Australia', code: 'au'}, {name: 'Spain', code: 'es'},
-                                    {name: 'Italy', code: 'it'}, {name: 'Netherlands', code: 'nl'}, {name: 'Sweden', code: 'se'},
-                                    {name: 'Japan', code: 'jp'}, {name: 'South Africa', code: 'za'}, {name: 'Mexico', code: 'mx'}
-                                ].map((c, i) => (
-                                    <div key={i} className="flex items-center gap-2.5 bg-white/5 border border-white/10 px-4 py-2 rounded-full backdrop-blur-md shrink-0 shadow-sm">
-                                        <img src={`https://flagcdn.com/w40/${c.code}.png`} alt={c.name} className="w-5 h-5 object-cover rounded-full shadow-sm" />
-                                        <span className="text-xs font-bold text-gray-300 tracking-wider uppercase">{c.name}</span>
-                                    </div>
-                                ))}
+                            <p className="text-[9px] sm:text-xs font-bold uppercase tracking-[0.3em] text-gray-500 mb-5 sm:mb-6 drop-shadow-md text-center px-4">Providing Real Numbers From 100+ Countries</p>
+                            
+                            {/* Wrapper to prevent horizontal scrollbar on mobile */}
+                            <div className="w-full overflow-hidden flex">
+                                <div className="animate-scroll-slow flex items-center gap-3 sm:gap-8 pl-3 sm:pl-8">
+                                    {/* List duplicated for infinite smooth scrolling effect */}
+                                    {[
+                                        {name: 'USA', code: 'us'}, {name: 'UK', code: 'gb'}, {name: 'Canada', code: 'ca'},
+                                        {name: 'Germany', code: 'de'}, {name: 'France', code: 'fr'}, {name: 'India', code: 'in'},
+                                        {name: 'Brazil', code: 'br'}, {name: 'Australia', code: 'au'}, {name: 'Spain', code: 'es'},
+                                        {name: 'Italy', code: 'it'}, {name: 'Netherlands', code: 'nl'}, {name: 'Sweden', code: 'se'},
+                                        {name: 'Japan', code: 'jp'}, {name: 'South Africa', code: 'za'}, {name: 'Mexico', code: 'mx'},
+                                        // Duplicate
+                                        {name: 'USA', code: 'us'}, {name: 'UK', code: 'gb'}, {name: 'Canada', code: 'ca'},
+                                        {name: 'Germany', code: 'de'}, {name: 'France', code: 'fr'}, {name: 'India', code: 'in'},
+                                        {name: 'Brazil', code: 'br'}, {name: 'Australia', code: 'au'}, {name: 'Spain', code: 'es'},
+                                        {name: 'Italy', code: 'it'}, {name: 'Netherlands', code: 'nl'}, {name: 'Sweden', code: 'se'},
+                                        {name: 'Japan', code: 'jp'}, {name: 'South Africa', code: 'za'}, {name: 'Mexico', code: 'mx'}
+                                    ].map((c, i) => (
+                                        <div key={i} className="flex items-center gap-2 sm:gap-2.5 bg-white/5 border border-white/10 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full backdrop-blur-md shrink-0 shadow-sm">
+                                            <img src={`https://flagcdn.com/w40/${c.code}.png`} alt={c.name} className="w-4 h-4 sm:w-5 sm:h-5 object-cover rounded-full shadow-sm" />
+                                            <span className="text-[10px] sm:text-xs font-bold text-gray-300 tracking-wider uppercase whitespace-nowrap">{c.name}</span>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
