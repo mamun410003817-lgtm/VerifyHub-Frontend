@@ -1695,46 +1695,48 @@
               </div>
           );
 
-          if (!user) {
-            if (showLanding) {
+        if (!user) {
+            if (showLanding) {
                 return (
-                    <div className="min-h-screen w-full relative overflow-x-hidden font-sans text-white selection:bg-brand-primary selection:text-white bg-transparent">
+                    <div className="min-h-screen w-full relative overflow-x-hidden font-sans text-white selection:bg-[#4ade80] selection:text-[#063129] bg-transparent">
                         
                         {/* 🟢 NAVBAR 🟢 */}
                         <nav className="w-full flex justify-between items-center p-6 sm:px-12 max-w-7xl mx-auto relative z-50 animate-fade-in-up">
                             <div className="flex items-center gap-3">
                                 <EliteLogo className="w-8 h-8 sm:w-10 sm:h-10 text-white opacity-90" />
-                                <span className="text-lg sm:text-xl font-bold tracking-[0.2em] uppercase text-white">VerifyHub <span className="text-[#4ade80] font-light">Elite</span></span>
+                                <span className="text-lg sm:text-xl font-bold tracking-[0.2em] uppercase text-white flex items-center gap-1.5">
+                                    VerifyHub <span className="text-[#4ade80] font-light">Elite</span>
+                                </span>
                             </div>
-                            <button onClick={() => setShowLanding(false)} className="btn-animate bg-white/10 hover:bg-white text-white hover:text-[#063129] border border-white/20 px-5 py-2.5 rounded-lg text-[10px] sm:text-xs font-bold uppercase tracking-wider flex items-center gap-2 group shadow-sm transition-all">
-                                Sign In
+                            <button onClick={() => setShowLanding(false)} className="btn-animate bg-white/10 hover:bg-[#4ade80] text-white hover:text-[#063129] border border-white/20 hover:border-[#4ade80] px-5 py-2.5 rounded-lg text-[10px] sm:text-xs font-bold uppercase tracking-wider flex items-center gap-2 group shadow-sm transition-all">
+                                Access Portal
                                 <svg className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                             </button>
                         </nav>
 
                         {/* 🟢 HERO SECTION 🟢 */}
                         <div className="relative z-10 flex flex-col items-center justify-center min-h-[75vh] px-4 text-center max-w-5xl mx-auto mt-6">
-                            <div className="mb-8 px-5 py-2 rounded-full border border-white/10 bg-white/5 text-gray-300 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] backdrop-blur-md animate-fade-in-up shadow-sm flex items-center gap-2">
-                                <ShieldCheck className="w-4 h-4 text-[#4ade80]" /> Verified & Secure Platform
+                            <div className="mb-8 px-5 py-2 rounded-full border border-[#4ade80]/30 bg-[#4ade80]/10 text-[#4ade80] text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] backdrop-blur-md animate-fade-in-up shadow-[0_0_15px_rgba(74,222,128,0.2)] flex items-center gap-2">
+                                <Globe className="w-4 h-4" /> 100+ Countries Supported Globally
                             </div>
                             
                             <div className="min-h-[120px] sm:min-h-[160px] flex items-center justify-center w-full mb-6">
                                 <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.2] animate-fade-in-up text-center flex flex-col items-center text-white" style={{animationDelay: '0.1s'}}>
-                                    <span>Enterprise-Grade</span>
-                                    <span className="text-[#4ade80] mt-2 sm:mt-4 drop-shadow-[0_0_15px_rgba(74,222,128,0.3)]">Digital Identity Solutions</span>
+                                    <span>Premium Accounts &</span>
+                                    <span className="text-[#4ade80] mt-2 sm:mt-4 drop-shadow-[0_0_15px_rgba(74,222,128,0.3)]">Global SMS Bypass</span>
                                 </h1>
                             </div>
                             
                             <p className="text-gray-300 text-sm sm:text-base font-medium mb-10 max-w-2xl leading-relaxed tracking-wide animate-fade-in-up" style={{animationDelay: '0.2s'}}>
-                                Reliable, high-quality digital accounts and instant global SMS verification infrastructure. Built for professionals, delivered instantly 24/7.
+                                Bypass any OTP with our real physical carrier nodes spanning across 100+ countries. Buy aged accounts and secure real numbers instantly.
                             </p>
                             
                             <div className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto animate-fade-in-up" style={{animationDelay: '0.3s'}}>
-                                <button onClick={() => setShowLanding(false)} className="btn-animate bg-[#4ade80] text-[#063129] px-10 py-4 rounded-xl text-xs font-black uppercase tracking-[0.2em] shadow-[0_0_25px_rgba(74,222,128,0.4)] hover:shadow-[0_0_40px_rgba(74,222,128,0.6)] transition-all">
-                                    Access Dashboard
+                                <button onClick={() => setShowLanding(false)} className="btn-animate bg-[#4ade80] text-[#063129] px-10 py-4 rounded-xl text-xs font-black uppercase tracking-[0.2em] shadow-[0_0_25px_rgba(74,222,128,0.4)] hover:shadow-[0_0_40px_rgba(74,222,128,0.6)] transition-all flex items-center justify-center gap-2">
+                                    <Lock className="w-4 h-4"/> Login / Register
                                 </button>
                                 <button onClick={() => window.scrollTo({top: window.innerHeight, behavior: 'smooth'})} className="btn-animate bg-white/5 text-white border border-white/20 shadow-sm px-10 py-4 rounded-xl text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-[#063129]">
-                                    Explore Platform
+                                    View Services
                                 </button>
                             </div>
                             
@@ -1742,68 +1744,100 @@
                             <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10 w-full max-w-4xl border-t border-white/10 pt-10 animate-fade-in-up" style={{animationDelay: '0.5s'}}>
                                 <div className="flex flex-col items-center">
                                     <span className="text-2xl sm:text-3xl font-black text-white">99.9%</span>
-                                    <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Network Uptime</span>
+                                    <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">OTP Success Rate</span>
                                 </div>
                                 <div className="flex flex-col items-center">
-                                    <span className="text-2xl sm:text-3xl font-black text-white">50K+</span>
-                                    <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Verified Orders</span>
+                                    <span className="text-2xl sm:text-3xl font-black text-white">100+</span>
+                                    <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Countries Available</span>
                                 </div>
                                 <div className="flex flex-col items-center">
-                                    <span className="text-2xl sm:text-3xl font-black text-white">&lt; 1s</span>
-                                    <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Delivery Time</span>
+                                    <span className="text-2xl sm:text-3xl font-black text-white">&lt; 2s</span>
+                                    <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Auto Delivery</span>
                                 </div>
                                 <div className="flex flex-col items-center">
                                     <span className="text-2xl sm:text-3xl font-black text-[#4ade80] flex items-center gap-1">24/7</span>
-                                    <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Active Support</span>
+                                    <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Admin Support</span>
                                 </div>
                             </div>
                         </div>
 
-                        {/* 🟢 BENTO GRID SECTION 🟢 */}
+                        {/* 🟢 GLOBAL SUPPORTED COUNTRIES MARQUEE 🟢 */}
+                        <div className="w-full py-10 overflow-hidden relative z-10 flex flex-col items-center bg-black/20 border-y border-white/5 mt-8">
+                            <style>{`
+                                @keyframes scrollSlow { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+                                .animate-scroll-slow { animation: scrollSlow 40s linear infinite; width: max-content; }
+                                .animate-scroll-slow:hover { animation-play-state: paused; }
+                            `}</style>
+                            <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-gray-500 mb-6 drop-shadow-md">Providing Real Numbers From 100+ Countries</p>
+                            <div className="animate-scroll-slow flex items-center gap-6 sm:gap-8 pl-6 sm:pl-8">
+                                {/* List duplicated for infinite smooth scrolling effect */}
+                                {[
+                                    {name: 'United States', code: 'us'}, {name: 'United Kingdom', code: 'gb'}, {name: 'Canada', code: 'ca'},
+                                    {name: 'Germany', code: 'de'}, {name: 'France', code: 'fr'}, {name: 'India', code: 'in'},
+                                    {name: 'Brazil', code: 'br'}, {name: 'Australia', code: 'au'}, {name: 'Spain', code: 'es'},
+                                    {name: 'Italy', code: 'it'}, {name: 'Netherlands', code: 'nl'}, {name: 'Sweden', code: 'se'},
+                                    {name: 'Japan', code: 'jp'}, {name: 'South Africa', code: 'za'}, {name: 'Mexico', code: 'mx'},
+                                    // Duplicate for loop
+                                    {name: 'United States', code: 'us'}, {name: 'United Kingdom', code: 'gb'}, {name: 'Canada', code: 'ca'},
+                                    {name: 'Germany', code: 'de'}, {name: 'France', code: 'fr'}, {name: 'India', code: 'in'},
+                                    {name: 'Brazil', code: 'br'}, {name: 'Australia', code: 'au'}, {name: 'Spain', code: 'es'},
+                                    {name: 'Italy', code: 'it'}, {name: 'Netherlands', code: 'nl'}, {name: 'Sweden', code: 'se'},
+                                    {name: 'Japan', code: 'jp'}, {name: 'South Africa', code: 'za'}, {name: 'Mexico', code: 'mx'}
+                                ].map((c, i) => (
+                                    <div key={i} className="flex items-center gap-2.5 bg-white/5 border border-white/10 px-4 py-2 rounded-full backdrop-blur-md shrink-0 shadow-sm">
+                                        <img src={`https://flagcdn.com/w40/${c.code}.png`} alt={c.name} className="w-5 h-5 object-cover rounded-full shadow-sm" />
+                                        <span className="text-xs font-bold text-gray-300 tracking-wider uppercase">{c.name}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* 🟢 BENTO GRID SECTION (SERVICES) 🟢 */}
                         <div className="relative z-10 pt-24 pb-24 mt-12 border-t border-white/10 bg-transparent">
                             <div className="max-w-6xl mx-auto px-4 sm:px-6">
                                 <div className="text-center mb-16 reveal-card visible">
-                                    <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-[#4ade80] mb-3">Capabilities</h2>
-                                    <p className="text-2xl sm:text-3xl font-bold text-white tracking-wide">Everything you need to scale securely.</p>
+                                    <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-[#4ade80] mb-3">Our Infrastructure</h2>
+                                    <p className="text-2xl sm:text-3xl font-bold text-white tracking-wide">Built for marketers and professionals.</p>
                                 </div>
                                 
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
-                                    {/* Large Card */}
+                                    {/* Large Card: SMS */}
                                     <div className="md:col-span-2 bg-white/5 shadow-lg p-8 sm:p-10 rounded-3xl reveal-card visible group overflow-hidden relative border border-white/10 hover:border-[#4ade80]/50 transition-all duration-500 hover:-translate-y-2 backdrop-blur-md">
                                         <div className="absolute -right-10 -top-10 w-40 h-40 bg-[#4ade80]/10 rounded-full blur-3xl group-hover:bg-[#4ade80]/20 transition-all duration-700"></div>
                                         <Smartphone className="w-10 h-10 text-[#4ade80] mb-6 opacity-90"/>
-                                        <h3 className="text-xl sm:text-2xl font-bold tracking-wide text-white mb-3 uppercase">Direct Carrier SMS Nodes</h3>
-                                        <p className="text-sm text-gray-400 font-medium leading-relaxed max-w-md">We route OTPs through our proprietary telecom partnerships across 100+ countries. Get real, non-VoIP numbers with zero third-party API delays.</p>
+                                        <h3 className="text-xl sm:text-2xl font-bold tracking-wide text-white mb-3 uppercase">Global SMS Infrastructure</h3>
+                                        <p className="text-sm text-gray-400 font-medium leading-relaxed max-w-md mb-4">Access our private Non-VoIP physical SIM banks spanning over <strong>100+ countries</strong>. Our automated dual-servers route your OTPs via the fastest local telecom networks directly to your dashboard.</p>
+                                        <div className="flex gap-2">
+                                            <span className="bg-black/40 border border-white/10 px-3 py-1 rounded-md text-[10px] font-mono text-[#4ade80]">WhatsApp</span>
+                                            <span className="bg-black/40 border border-white/10 px-3 py-1 rounded-md text-[10px] font-mono text-[#4ade80]">Telegram</span>
+                                            <span className="bg-black/40 border border-white/10 px-3 py-1 rounded-md text-[10px] font-mono text-[#4ade80]">Tinder</span>
+                                        </div>
                                     </div>
                                     
-                                    {/* Small Card 1 */}
+                                    {/* Small Card 1: Accounts */}
                                     <div className="bg-white/5 shadow-lg p-8 sm:p-10 rounded-3xl reveal-card visible group border border-white/10 hover:border-[#4ade80]/50 transition-colors backdrop-blur-md">
                                         <Package className="w-8 h-8 text-[#4ade80] mb-6 opacity-90"/>
-                                        <h3 className="text-lg font-bold tracking-wide text-white mb-3 uppercase">Verified Accounts</h3>
-                                        <p className="text-xs text-gray-400 font-medium leading-relaxed">Buy high-quality, aged accounts like Google Voice and TextPlus, ready for immediate secure use.</p>
+                                        <h3 className="text-lg font-bold tracking-wide text-white mb-3 uppercase">Aged Accounts</h3>
+                                        <p className="text-xs text-gray-400 font-medium leading-relaxed">High-quality, pre-verified Google Voice, TextPlus, and Gmail accounts. Delivered instantly with full recovery credentials.</p>
                                     </div>
 
-                                    {/* Small Card 2 */}
+                                    {/* Small Card 2: Deposits */}
                                     <div className="bg-white/5 shadow-lg p-8 sm:p-10 rounded-3xl reveal-card visible group border border-white/10 hover:border-[#4ade80]/50 transition-colors backdrop-blur-md">
-                                        <Zap className="w-8 h-8 text-[#4ade80] mb-6 opacity-90"/>
-                                        <h3 className="text-lg font-bold tracking-wide text-white mb-3 uppercase">Instant Delivery</h3>
-                                        <p className="text-xs text-gray-400 font-medium leading-relaxed">Our system is 100% automated. Add funds with crypto or bank transfer and receive your assets instantly.</p>
+                                        <CircleDollarSign className="w-8 h-8 text-[#4ade80] mb-6 opacity-90"/>
+                                        <h3 className="text-lg font-bold tracking-wide text-white mb-3 uppercase">Auto Deposits</h3>
+                                        <p className="text-xs text-gray-400 font-medium leading-relaxed">Top up your balance instantly using automated Crypto (USDT/BTC) or manual Local Bank Transfers with fast admin approval.</p>
                                     </div>
 
                                     {/* Support Card */}
                                     <div className="md:col-span-2 bg-white/5 shadow-lg border border-[#4ade80]/20 hover:border-[#4ade80]/50 transition-colors p-8 sm:p-10 rounded-3xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 reveal-card visible backdrop-blur-md">
                                         <div>
-                                            <h3 className="text-lg font-bold tracking-wide text-[#4ade80] mb-2 uppercase">24/7 Admin Support</h3>
-                                            <p className="text-sm text-gray-400 font-medium">Need help? Get priority assistance directly from our team.</p>
+                                            <h3 className="text-lg font-bold tracking-wide text-[#4ade80] mb-2 uppercase">Priority Admin Support</h3>
+                                            <p className="text-sm text-gray-400 font-medium">Got an issue? Use our in-app Live Chat or connect directly via Telegram for instant replacements.</p>
                                         </div>
                                         <div className="flex flex-wrap gap-4 w-full sm:w-auto">
-                                            <a href="https://wa.me/8801913003817" target="_blank" rel="noopener noreferrer" className="bg-[#25D366]/20 hover:bg-[#25D366] text-[#25D366] hover:text-black border border-[#25D366]/50 px-6 py-3.5 rounded-xl text-[10px] font-bold tracking-widest uppercase transition-colors flex items-center gap-2 shadow-inner">
-                                                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.87-2.03-.97-.272-.099-.47-.149-.669.149-.198.297-.768.97-.941 1.168-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.305-.88-.653-1.474-1.46-1.647-1.758-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.396-.272.322-1.04 1.014-1.04 2.476 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
-                                                WhatsApp
-                                            </a>
                                             <a href="https://t.me/+8801913003817" target="_blank" rel="noopener noreferrer" className="bg-[#0088cc]/20 hover:bg-[#0088cc] text-[#0088cc] hover:text-white border border-[#0088cc]/50 px-6 py-3.5 rounded-xl text-[10px] font-bold tracking-widest uppercase transition-colors flex items-center gap-2 shadow-inner">
                                                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-                                                Telegram
+                                                Telegram Support
                                             </a>
                                         </div>
                                     </div>
@@ -1819,17 +1853,15 @@
                                 .animate-scroll:hover { animation-play-state: paused; }
                             `}</style>
                             <div className="animate-scroll flex items-center gap-12 sm:gap-24 pl-12 sm:pl-24 text-gray-400 font-bold text-xs sm:text-sm uppercase tracking-[0.3em]">
-                                {/* দুইবার দেওয়া হয়েছে যাতে লুপ কন্টিনিউ হয় */}
-                                <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-[#4ade80]"/> Premium Accounts</div>
-                                <div className="flex items-center gap-2"><Lock className="w-4 h-4 text-[#4ade80]"/> Secure Infrastructure</div>
-                                <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-[#4ade80]"/> Global OTP Bypass</div>
-                                <div className="flex items-center gap-2"><Zap className="w-4 h-4 text-[#4ade80]"/> Instant Crypto Deposit</div>
+                                {/* 2 times for infinite loop */}
+                                <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-[#4ade80]"/> Premium GV & TextPlus</div>
+                                <div className="flex items-center gap-2"><Lock className="w-4 h-4 text-[#4ade80]"/> Real USA/UK SMS</div>
+                                <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-[#4ade80]"/> Auto Crypto Deposit</div>
                                 <div className="flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-[#4ade80]"/> 30-Min Warranty</div>
                                 
-                                <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-[#4ade80]"/> Premium Accounts</div>
-                                <div className="flex items-center gap-2"><Lock className="w-4 h-4 text-[#4ade80]"/> Secure Infrastructure</div>
-                                <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-[#4ade80]"/> Global OTP Bypass</div>
-                                <div className="flex items-center gap-2"><Zap className="w-4 h-4 text-[#4ade80]"/> Instant Crypto Deposit</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-[#4ade80]"/> Premium GV & TextPlus</div>
+                                <div className="flex items-center gap-2"><Lock className="w-4 h-4 text-[#4ade80]"/> Real USA/UK SMS</div>
+                                <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-[#4ade80]"/> Auto Crypto Deposit</div>
                                 <div className="flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-[#4ade80]"/> 30-Min Warranty</div>
                             </div>
                         </div>
@@ -1843,10 +1875,8 @@
                                 </div>
                                 
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-                                    {/* Connecting Line (Hidden on mobile) */}
                                     <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-white/10 z-0"></div>
                                     
-                                    {/* Step 1 */}
                                     <div className="relative z-10 flex flex-col items-center text-center reveal-card visible group">
                                         <div className="w-24 h-24 bg-[#0a211c] border-2 border-white/20 rounded-2xl shadow-sm flex items-center justify-center mb-6 group-hover:border-[#4ade80] group-hover:-translate-y-2 transition-all duration-300">
                                             <span className="text-3xl font-black text-gray-400 group-hover:text-[#4ade80] transition-colors">01</span>
@@ -1855,7 +1885,6 @@
                                         <p className="text-sm text-gray-400 font-medium max-w-[250px]">Sign up instantly with your email or use 1-click Google Auth.</p>
                                     </div>
                                     
-                                    {/* Step 2 */}
                                     <div className="relative z-10 flex flex-col items-center text-center reveal-card visible group" style={{transitionDelay: '0.1s'}}>
                                         <div className="w-24 h-24 bg-[#0a211c] border-2 border-white/20 rounded-2xl shadow-sm flex items-center justify-center mb-6 group-hover:border-[#4ade80] group-hover:-translate-y-2 transition-all duration-300">
                                             <span className="text-3xl font-black text-gray-400 group-hover:text-[#4ade80] transition-colors">02</span>
@@ -1864,7 +1893,6 @@
                                         <p className="text-sm text-gray-400 font-medium max-w-[250px]">Deposit via Local Bank Transfer or automated Crypto gateways.</p>
                                     </div>
                                     
-                                    {/* Step 3 */}
                                     <div className="relative z-10 flex flex-col items-center text-center reveal-card visible group" style={{transitionDelay: '0.2s'}}>
                                         <div className="w-24 h-24 bg-[#4ade80]/20 border-2 border-[#4ade80] rounded-2xl shadow-[0_10px_20px_rgba(74,222,128,0.3)] flex items-center justify-center mb-6 group-hover:-translate-y-2 transition-all duration-300">
                                             <span className="text-3xl font-black text-[#4ade80]">03</span>
@@ -1889,12 +1917,12 @@
                                         <div className="flex text-yellow-400 mb-4">
                                             <Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/>
                                         </div>
-                                        <p className="text-gray-300 text-sm leading-relaxed mb-6 font-medium">"I was skeptical at first, but the Google Voice accounts were delivered instantly. The 30-min replacement policy is legit. Had one bad account, got replaced in 2 mins."</p>
+                                        <p className="text-gray-300 text-sm leading-relaxed mb-6 font-medium">"I was skeptical at first, but the Google Voice accounts were delivered instantly. The 30-min replacement policy is legit. Had one bad account, got replaced via ticket in 2 mins."</p>
                                         <div className="flex items-center gap-3.5 border-t border-white/10 pt-4">
                                             <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John D." className="w-10 h-10 rounded-full border-2 border-white/10 shadow-sm object-cover" />
                                             <div>
-                                                <p className="text-xs font-bold text-white">John D.</p>
-                                                <p className="text-[10px] text-[#4ade80] uppercase tracking-widest flex items-center gap-1"><ShieldCheck className="w-3 h-3"/> Verified Buyer</p>
+                                                <p className="text-xs font-bold text-white">David Miller.</p>
+                                                <p className="text-[10px] text-[#4ade80] uppercase tracking-widest flex items-center gap-1"><ShieldCheck className="w-3 h-3"/> GV Buyer</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1903,7 +1931,7 @@
                                         <div className="flex text-yellow-400 mb-4">
                                             <Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/>
                                         </div>
-                                        <p className="text-gray-300 text-sm leading-relaxed mb-6 font-medium">"Their proprietary SMS routing is insane. Used it for bulk WhatsApp verifications and the OTPs came through instantly. Crypto deposits are fully automated which saves me hours."</p>
+                                        <p className="text-gray-300 text-sm leading-relaxed mb-6 font-medium">"Server Two is insane for USA WhatsApp bypass. Got the OTP in 5 seconds. Crypto deposits are fully automated which saves me hours of waiting."</p>
                                         <div className="flex items-center gap-3.5 border-t border-white/10 pt-4">
                                             <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="Mark S." className="w-10 h-10 rounded-full border-2 border-white/10 shadow-sm object-cover" />
                                             <div>
@@ -1917,7 +1945,7 @@
                                         <div className="flex text-yellow-400 mb-4">
                                             <Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/>
                                         </div>
-                                        <p className="text-gray-300 text-sm leading-relaxed mb-6 font-medium">"Best plug for TextPlus and old Gmails. I've spent over $500 here. The dashboard is clean, and the Telegram support actually replies fast."</p>
+                                        <p className="text-gray-300 text-sm leading-relaxed mb-6 font-medium">"Best plug for TextPlus and old Gmails. I've spent over $500 here. The dashboard is clean, and if a number doesn't get OTP, you get refunded instantly."</p>
                                         <div className="flex items-center gap-3.5 border-t border-white/10 pt-4">
                                             <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Rahul K." className="w-10 h-10 rounded-full border-2 border-white/10 shadow-sm object-cover" />
                                             <div>
@@ -1941,7 +1969,7 @@
                                         <div>
                                             <ShieldCheck className="w-12 h-12 text-[#4ade80] mb-4"/>
                                             <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-wide mb-4">Ironclad Guarantee</h3>
-                                            <p className="text-gray-300 leading-relaxed text-sm font-medium">We don't sell dead logs. Every account is checked before stocking. If an account fails to login or is dead on delivery, our automated system and admin team will replace it within our strict <strong className="text-white">30-Minute Replacement Window</strong>.</p>
+                                            <p className="text-gray-300 leading-relaxed text-sm font-medium">We don't sell dead logs. Every account is checked before stocking. If an account fails to login or is dead on delivery, our admin team will replace it within our strict <strong className="text-white">30-Minute Replacement Window</strong>.</p>
                                         </div>
                                         <div className="space-y-4">
                                             <div className="bg-black/30 border border-white/5 p-4 rounded-xl flex items-center gap-4 shadow-sm">
@@ -1962,7 +1990,7 @@
                                                 <div className="bg-[#4ade80]/20 p-2 rounded-lg border border-[#4ade80]/30"><ShieldCheck className="w-5 h-5 text-[#4ade80]"/></div>
                                                 <div>
                                                     <p className="font-bold text-sm uppercase tracking-wider text-white">Secure Escrow System</p>
-                                                    <p className="text-[10px] text-gray-400 font-mono mt-0.5">Funds safe until purchase</p>
+                                                    <p className="text-[10px] text-gray-400 font-mono mt-0.5">Funds safe if SMS fails</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1976,20 +2004,20 @@
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 reveal-card visible">
                                     <div className="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-[#4ade80]/50 transition-colors backdrop-blur-md">
-                                        <h4 className="font-bold text-white mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><Package className="w-4 h-4 text-[#4ade80]"/> Are these accounts fresh or aged?</h4>
-                                        <p className="text-sm text-gray-400 leading-relaxed font-medium">We provide both. You can select exactly what you need from the dashboard. Aged accounts are clearly marked and come with robust recovery options.</p>
+                                        <h4 className="font-bold text-white mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><Smartphone className="w-4 h-4 text-[#4ade80]"/> Are your SMS numbers Non-VoIP?</h4>
+                                        <p className="text-sm text-gray-400 leading-relaxed font-medium">Absolutely! All our numbers utilize real physical SIM cards from global telecom partners. This ensures a 99.9% bypass rate for highly secure platforms like WhatsApp, Telegram, and Banks.</p>
                                     </div>
                                     <div className="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-[#4ade80]/50 transition-colors backdrop-blur-md">
                                         <h4 className="font-bold text-white mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><Wallet className="w-4 h-4 text-[#4ade80]"/> How do I deposit funds?</h4>
-                                        <p className="text-sm text-gray-400 leading-relaxed font-medium">We accept automated Crypto (NOWPayments) for global users, and Local Bank Transfers with instant manual approval from the admin team.</p>
+                                        <p className="text-sm text-gray-400 leading-relaxed font-medium">We accept fully automated Crypto (NOWPayments) for global users, and Local Bank Transfers with fast manual approval from our admin team.</p>
                                     </div>
                                     <div className="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-[#4ade80]/50 transition-colors backdrop-blur-md">
                                         <h4 className="font-bold text-white mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><RefreshCw className="w-4 h-4 text-[#4ade80]"/> What if an account doesn't work?</h4>
-                                        <p className="text-sm text-gray-400 leading-relaxed font-medium">Report it via the "Report Issue" button in your vault within 30 minutes. If valid, our admin will instantly credit your balance or provide a fresh replacement.</p>
+                                        <p className="text-sm text-gray-400 leading-relaxed font-medium">Report it via the "Report Issue" button in your vault within 30 minutes. If valid, our admin will instantly provide a fresh replacement.</p>
                                     </div>
                                     <div className="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-[#4ade80]/50 transition-colors backdrop-blur-md">
-                                        <h4 className="font-bold text-white mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><Zap className="w-4 h-4 text-[#4ade80]"/> Are you a reseller or direct provider?</h4>
-                                        <p className="text-sm text-gray-400 leading-relaxed font-medium">We are a direct infrastructure provider. We maintain our own physical SIM banks and telecom nodes to ensure you get the fastest, un-flagged numbers without reseller markups.</p>
+                                        <h4 className="font-bold text-white mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><Zap className="w-4 h-4 text-[#4ade80]"/> What if an SMS code doesn't arrive?</h4>
+                                        <p className="text-sm text-gray-400 leading-relaxed font-medium">If you don't receive the OTP within the time limit, simply click "Cancel Order". The system will instantly refund the amount back to your balance. You only pay for successful codes.</p>
                                     </div>
                                 </div>
                             </div>
@@ -2012,7 +2040,7 @@
                         </div>
                     </div>
                 );
-            }
+            }  
 
             return (
               <div className="min-h-screen flex items-center justify-center p-4 relative font-sans w-full text-gray-900 overflow-hidden bg-gray-50">
