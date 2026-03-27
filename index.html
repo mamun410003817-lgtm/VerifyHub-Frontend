@@ -2180,37 +2180,31 @@
                 </div>, document.body
               )}
 
-              <header className="sticky top-0 z-40 w-full bg-white/90 backdrop-blur-xl rounded-none border-b border-gray-200 shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
-                  <div className="flex items-center gap-3 sm:gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center border border-gray-200">
-                        <EliteLogo className="w-7 h-7 text-gray-900" />
-                      </div>
-                      <span className="text-xl font-light tracking-[0.25em] text-gray-900 hidden sm:block uppercase">Verify<span className="font-bold text-brand-primary">Hub</span> <span className="text-[10px] text-brand-primary font-bold ml-1 tracking-[0.3em]">ELITE</span></span>
-                  </div>
-                  <div className="flex items-center gap-3 sm:gap-4">
+              {/* 🟢 Dark Glassmorphism Header 🟢 */}
+              <header className="sticky top-0 z-40 w-full bg-black/30 backdrop-blur-2xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-end">
+                  <div className="flex items-center gap-3 sm:gap-5">
+                    
                     {user.role === 'customer' && (
-                        <button onClick={() => setShowCart(true)} className="btn-animate relative p-3 rounded-xl bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors border border-gray-200">
-                            <ShoppingCart className="w-4 h-4" strokeWidth={1.5}/>
-                            {cart.length > 0 && <span className="absolute -top-2 -right-2 bg-brand-primary text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">{cart.length}</span>}
+                        <button onClick={() => setShowCart(true)} className="btn-animate relative p-2.5 sm:p-3 rounded-full bg-white/5 text-white hover:bg-white/20 transition-colors border border-white/10 shadow-sm">
+                            <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={1.5}/>
+                            {cart.length > 0 && <span className="absolute -top-1.5 -right-1.5 bg-[#4ade80] text-[#063129] text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full shadow-[0_0_10px_rgba(74,222,128,0.5)]">{cart.length}</span>}
                         </button>
                     )}
+                    
                     {user.role === 'customer' && (
-                                    <div className="glass-effect px-5 py-2 sm:py-2.5 rounded-full flex items-center justify-center border border-[#4ade80]/30 shadow-[0_0_15px_rgba(74,222,128,0.1)] cursor-default transition-all hover:border-[#4ade80]/60 hover:shadow-[0_0_25px_rgba(74,222,128,0.25)] group relative overflow-hidden bg-black/40">
-                                        
-                                        {/* Shiny Sweep Animation on Hover */}
-                                        <div className="absolute inset-0 bg-gradient-to-r from-[#4ade80]/0 via-[#4ade80]/15 to-[#4ade80]/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-[800ms] ease-in-out pointer-events-none"></div>
-                                        
-                                        {/* Single Minimalist Number Layout */}
-                                        <span className="font-mono font-black text-[14px] sm:text-[15px] tracking-widest text-white drop-shadow-md relative z-10">
-                                            $<span className="text-[#4ade80] drop-shadow-[0_0_8px_rgba(74,222,128,0.6)]">{Number(currentUserBalance).toFixed(2)}</span>
-                                        </span>
-                                    </div>
-                                )}
-                    <button onClick={() => setIsLightMode(!isLightMode)} className="btn-animate p-3 bg-gray-50 text-gray-600 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors border border-gray-200" title="Toggle Theme">
-                        {isLightMode ? <Moon className="w-4 h-4" strokeWidth={1.5}/> : <Sun className="w-4 h-4" strokeWidth={1.5}/>}
+                        <div className="glass-effect px-5 py-2 sm:py-2.5 rounded-full flex items-center justify-center border border-[#4ade80]/30 shadow-[0_0_15px_rgba(74,222,128,0.1)] cursor-default transition-all hover:border-[#4ade80]/60 hover:shadow-[0_0_25px_rgba(74,222,128,0.25)] group relative overflow-hidden bg-black/40">
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#4ade80]/0 via-[#4ade80]/15 to-[#4ade80]/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-[800ms] ease-in-out pointer-events-none"></div>
+                            <span className="font-mono font-black text-[14px] sm:text-[15px] tracking-widest text-white drop-shadow-md relative z-10">
+                                $<span className="text-[#4ade80] drop-shadow-[0_0_8px_rgba(74,222,128,0.6)]">{Number(currentUserBalance).toFixed(2)}</span>
+                            </span>
+                        </div>
+                    )}
+                    
+                    <button onClick={handleLogout} className="btn-animate p-2.5 sm:p-3 bg-red-500/10 text-red-400 hover:text-red-300 hover:bg-red-500/20 rounded-full transition-colors border border-red-500/20 shadow-sm">
+                        <LogOut className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={1.5}/>
                     </button>
-                    <button onClick={handleLogout} className="btn-animate p-3 bg-gray-50 text-gray-600 hover:text-red-500 hover:bg-red-50 transition-colors border border-gray-200"><LogOut className="w-4 h-4" strokeWidth={1.5}/></button>
+
                   </div>
                 </div>
               </header>
@@ -2224,17 +2218,17 @@
                 )}
 
                 {(!maintenanceSettings?.active || user.role === 'admin') && (
-                    <div className="w-full relative z-30 mb-6 px-2 sm:px-0 mt-2">
-                        {/* 🟢 NO-SLIDER WRAPPED MENU (LUCIDE ICONS) 🟢 */}
-                        <div className="bg-transparent flex flex-wrap justify-center sm:justify-between items-center w-full mx-auto max-w-3xl border-b-[3px] border-gray-200/60 mb-4 gap-y-2 sm:gap-y-0 pb-2 sm:pb-0">
+                    <div className="w-full relative z-30 mb-8 px-3 sm:px-0 mt-4">
+                        {/* 🟢 PREMIUM CARD MENU (Juicysms Theme) 🟢 */}
+                        <div className="glass-effect flex flex-wrap justify-center sm:justify-between items-center w-full mx-auto max-w-4xl p-2 sm:p-3 rounded-[24px] border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.4)] gap-1 sm:gap-2">
                             {(user.role === 'admin' ? ADMIN_TABS : CUSTOMER_TABS).map(tab => (
                                 <button 
                                     key={tab.id} 
                                     onClick={() => setActiveTab(tab.id)} 
-                                    className={`w-[31%] sm:w-auto sm:flex-1 relative flex flex-col items-center justify-center py-2 sm:py-3 transition-all duration-300 rounded-xl sm:rounded-none sm:border-b-[3px] sm:-mb-[3px] ${activeTab === tab.id ? 'bg-brand-primary/10 sm:bg-brand-primary/5 sm:border-brand-primary text-brand-primary z-10 shadow-sm sm:shadow-none' : 'border-transparent text-gray-500 hover:text-gray-800 hover:bg-gray-100/50'}`}
+                                    className={`w-[31%] sm:w-auto sm:flex-1 relative flex flex-col items-center justify-center py-3 sm:py-4 transition-all duration-300 rounded-2xl ${activeTab === tab.id ? 'bg-[#4ade80]/10 border border-[#4ade80]/50 text-[#4ade80] shadow-[0_0_15px_rgba(74,222,128,0.15)] scale-105 z-10' : 'border border-transparent text-gray-400 hover:text-white hover:bg-white/5 scale-95 hover:scale-100'}`}
                                 >
-                                    <tab.icon className={`w-5 h-5 sm:w-6 sm:h-6 mb-1.5 transition-all duration-300 ${activeTab === tab.id ? 'scale-110 text-brand-primary' : 'opacity-70 hover:opacity-100 hover:scale-105 text-gray-500'}`} strokeWidth={activeTab === tab.id ? 2.5 : 2} />
-                                    <span className={`text-[10px] sm:text-[12px] leading-tight uppercase tracking-wider text-center w-full px-1 ${activeTab === tab.id ? 'font-black text-brand-primary' : 'font-bold'}`}>
+                                    <tab.icon className={`w-5 h-5 sm:w-6 sm:h-6 mb-1.5 transition-all duration-300 ${activeTab === tab.id ? 'scale-110 text-[#4ade80] drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]' : 'opacity-70 group-hover:opacity-100'}`} strokeWidth={activeTab === tab.id ? 2.5 : 2} />
+                                    <span className={`text-[9px] sm:text-[11px] leading-tight uppercase tracking-widest text-center w-full px-1 ${activeTab === tab.id ? 'font-black text-[#4ade80]' : 'font-bold'}`}>
                                         {tab.label}
                                     </span>
                                 </button>
