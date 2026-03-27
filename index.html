@@ -3551,6 +3551,26 @@
           const [profileSubTab, setProfileSubTab] = useState('overview');
           const [ticketSubject, setTicketSubject] = useState('');
           const [ticketMessage, setTicketMessage] = useState('');
+          
+          // 🟢 NEW: Ticket Reply States 🟢
+          const [ticketReplies, setTicketReplies] = useState({});
+          const [expandedTicket, setExpandedTicket] = useState(null);
+
+          const submitTicketReply = async (e, ticketId) => {
+              e.preventDefault();
+              const replyText = ticketReplies[ticketId];
+              if (!replyText || !replyText.trim()) return;
+              try {
+                  const token = await getAuthToken();
+                  await fetch(`${BACKEND_URL}/api/secure-action`, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                      body: JSON.stringify({ action: 'reply_ticket', id: ticketId, message: replyText })
+                  });
+                  setTicketReplies({ ...ticketReplies, [ticketId]: '' });
+                  triggerToast('Reply sent successfully.');
+              } catch(err) { triggerToast('Failed to send reply.'); }
+          };
 
           const claimDailyBonus = async () => {
             const today = new Date().toISOString().split('T')[0];
@@ -3798,18 +3818,58 @@
                       <div className="bg-white border border-gray-200 shadow-[0_2px_10px_rgba(0,0,0,0.02)] rounded-2xl p-6 sm:p-8 flex flex-col h-[550px]">
                          <h3 className="text-[13px] font-bold tracking-widest text-gray-900 mb-4 pb-4 border-b border-gray-100 uppercase">My Tickets</h3>
                          <div className="space-y-4 overflow-y-auto flex-grow custom-scrollbar pr-2">
-                           {tickets.length === 0 ? <p className="text-center text-gray-400 font-mono text-[10px] uppercase tracking-widest py-20">No active tickets.</p> : tickets.map((t, idx) => (
-                             <div key={t.id} className="bg-gray-50 border border-gray-200 p-4 sm:p-5 rounded-xl hover:border-brand-primary/30 transition-colors animate-fade-in-up" style={{animationDelay: `${idx * 0.1}s`}}>
-                               <div className="flex justify-between items-start mb-3">
-                                 <h4 className="font-bold text-gray-800 text-xs uppercase tracking-wider break-words w-[70%]">{t.data?.subject || t.subject}</h4>
-                                 <span className={`text-[8px] px-2 py-1 rounded border uppercase tracking-[0.2em] font-bold ${t.data?.status === 'Open' || t.status === 'Open' ? 'bg-red-50 text-red-500 border-red-200' : 'bg-green-50 text-green-600 border-green-200'}`}>{t.data?.status || t.status}</span>
-                               </div>
-                               <div className="bg-white border border-gray-100 p-3 rounded-lg mb-3 shadow-sm">
-                                 <p className="text-[11px] text-gray-600 font-medium leading-relaxed break-words allow-select">{t.data?.message || t.message}</p>
-                               </div>
-                               <p className="text-[9px] text-gray-400 font-mono flex items-center gap-1.5 uppercase tracking-widest"><Clock className="w-3 h-3"/> {safeFormatDate(t.data?.date || t.date)}</p>
-                             </div>
-                           ))}
+                           {tickets.length === 0 ? <p className="text-center text-gray-400 font-mono text-[10px] uppercase tracking-widest py-20">No active tickets.</p> : tickets.map((t, idx) => {
+                                const rawMessage = t.data?.message || t.message || '';
+                                const messageParts = rawMessage.split('
+
+');
+                                const isExpanded = expandedTicket === t.id;
+
+                                return (
+                                  <div key={t.id} className="bg-white border border-gray-200 p-4 sm:p-5 rounded-2xl hover:border-brand-primary/40 transition-all shadow-[0_2px_15px_rgba(0,0,0,0.03)] animate-fade-in-up" style={{animationDelay: `${idx * 0.1}s`}}>
+                                    
+                                    {/* Ticket Header (Click to Open/Close) */}
+                                    <div className="flex justify-between items-start mb-2 cursor-pointer" onClick={() => setExpandedTicket(isExpanded ? null : t.id)}>
+                                      <div className="flex flex-col gap-1">
+                                          <h4 className="font-bold text-gray-900 text-[13px] tracking-wide break-words max-w-[200px] sm:max-w-xs">{t.data?.subject || t.subject}</h4>
+                                          <p className="text-[9px] text-gray-400 font-mono flex items-center gap-1.5 uppercase tracking-widest"><Clock className="w-3 h-3 text-brand-primary"/> {safeFormatDate(t.data?.date || t.date)}</p>
+                                      </div>
+                                      <div className="flex flex-col items-end gap-2 shrink-0">
+                                          <span className={`text-[9px] px-2.5 py-1 rounded-md uppercase tracking-[0.2em] font-bold ${t.data?.status === 'Open' || t.status === 'Open' ? 'bg-red-50 text-red-500 border border-red-100' : 'bg-green-50 text-green-600 border border-green-100'}`}>{t.data?.status || t.status}</span>
+                                          <button className="text-[9px] font-black text-brand-primary uppercase tracking-widest flex items-center gap-1 bg-brand-primary/10 px-2.5 py-1.5 rounded-lg border border-brand-primary/20 hover:bg-brand-primary hover:text-white transition-colors">{isExpanded ? 'Close Chat' : 'Open & Reply'}</button>
+                                      </div>
+                                    </div>
+                                    
+                                    {/* 🟢 Expanded Chat Thread 🟢 */}
+                                    {isExpanded && (
+                                        <div className="mt-4 pt-4 border-t border-gray-100 animate-fade-in-up">
+                                            <div className="space-y-3 mb-4 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
+                                                {messageParts.map((part, pIdx) => {
+                                                    if (!part.trim()) return null;
+                                                    if (part.startsWith('[ADMIN REPLY]:')) {
+                                                        return <div key={pIdx} className="bg-brand-primary/10 border border-brand-primary/20 p-3.5 rounded-2xl rounded-tl-sm ml-4 shadow-sm"><p className="text-[10px] font-black text-brand-primary mb-1.5 flex items-center gap-1.5 uppercase tracking-widest"><Headset className="w-3 h-3"/> Admin Reply</p><p className="text-[11px] sm:text-xs text-gray-800 font-medium leading-relaxed">{part.replace('[ADMIN REPLY]:', '').trim()}</p></div>;
+                                                    } else if (part.startsWith('[USER REPLY]:')) {
+                                                        return <div key={pIdx} className="bg-gray-100 border border-gray-200 p-3.5 rounded-2xl rounded-tr-sm mr-4 shadow-sm"><p className="text-[10px] font-black text-gray-500 mb-1.5 flex items-center gap-1.5 uppercase tracking-widest"><UserIcon className="w-3 h-3"/> You</p><p className="text-[11px] sm:text-xs text-gray-800 font-medium leading-relaxed">{part.replace('[USER REPLY]:', '').trim()}</p></div>;
+                                                    } else {
+                                                        return <div key={pIdx} className="bg-gray-100 border border-gray-200 p-3.5 rounded-2xl rounded-tr-sm mr-4 shadow-sm"><p className="text-[10px] font-black text-gray-500 mb-1.5 flex items-center gap-1.5 uppercase tracking-widest"><UserIcon className="w-3 h-3"/> You (Original Request)</p><p className="text-[11px] sm:text-xs text-gray-800 font-medium leading-relaxed">{part.trim()}</p></div>;
+                                                    }
+                                                })}
+                                            </div>
+                                            
+                                            {/* Reply Input Box */}
+                                            {(t.data?.status === 'Open' || t.status === 'Open') ? (
+                                                <form onSubmit={(e) => submitTicketReply(e, t.id)} className="flex gap-2 bg-gray-50 p-2 rounded-2xl border border-gray-200">
+                                                    <input type="text" value={ticketReplies[t.id] || ''} onChange={(e) => setTicketReplies({...ticketReplies, [t.id]: e.target.value})} placeholder="Type your reply to admin..." className="w-full bg-transparent border-none text-gray-900 text-xs px-3 focus:outline-none transition-all allow-select" required />
+                                                    <button type="submit" className="btn-animate bg-brand-primary hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl flex items-center justify-center shrink-0 shadow-md font-bold text-[10px] uppercase tracking-widest"><Send className="w-3.5 h-3.5 mr-1.5"/> Reply</button>
+                                                </form>
+                                            ) : (
+                                                <p className="text-center text-[10px] text-gray-400 font-bold uppercase tracking-widest bg-gray-50 py-3 rounded-xl border border-gray-100">This ticket is marked as resolved.</p>
+                                            )}
+                                        </div>
+                                    )}
+                                  </div>
+                                );
+                            })}
                          </div>
                       </div>
                   </div>
