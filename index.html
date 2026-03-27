@@ -771,7 +771,7 @@
 
             return (
                 <div ref={wrapperRef} className="relative w-full z-[100]">
-                    <div onClick={() => setIsOpen(!isOpen)} className="w-full bg-[#0F172A] border border-gray-700/50 text-white font-semibold text-[11px] sm:text-[13px] tracking-wide py-4 px-4 rounded-xl cursor-pointer flex items-center justify-between hover:border-brand-primary/50 transition-colors shadow-sm allow-select">
+                    <div onClick={() => setIsOpen(!isOpen)} className="w-full bg-white/5 backdrop-blur-md border border-white/10 text-white font-semibold text-[11px] sm:text-[13px] tracking-wide py-4 px-4 rounded-xl cursor-pointer flex items-center justify-between hover:border-[#4ade80]/50 transition-colors shadow-sm allow-select">
                         <div className="flex items-center gap-3 overflow-hidden">
                             {mode !== 'default' && selectedOpt ? (
                                 <div className={`shrink-0 flex items-center justify-center bg-white shadow-sm overflow-hidden p-[2px] ${(mode === 'country' || mode === 'state') ? 'w-6 h-6 rounded-full border-none' : 'w-6 h-6 rounded-lg'}`}>
@@ -809,11 +809,11 @@
                     {isOpen && createPortal(
                         <div className="fixed inset-0 z-[999999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in-up" onClick={() => setIsOpen(false)}>
                             <div 
-                                className="w-full max-w-md bg-[#0F172A] border border-gray-700/50 rounded-3xl shadow-[0_0_60px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col max-h-[85vh]"
+                                className="w-full max-w-md glass-effect border border-white/10 rounded-3xl shadow-[0_0_60px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[85vh]"
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 {/* 🟢 Search Header 🟢 */}
-                                <div className="p-5 border-b border-gray-700/50 bg-[#0b1219] flex items-center gap-3">
+                                <div className="p-5 border-b border-white/10 bg-black/40 flex items-center gap-3">
                                     <Search className="w-4 h-4 text-brand-primary shrink-0" />
                                     <input
                                         type="text"
@@ -1681,17 +1681,15 @@
           if (!user) {
             if (showLanding) {
                 return (
-                    <div className="min-h-screen w-full relative overflow-x-hidden font-sans bg-white text-gray-900 selection:bg-brand-primary selection:text-white">
-                        
-                        {/* Background Video Removed */}
+                    <div className="min-h-screen w-full relative overflow-x-hidden font-sans text-white selection:bg-brand-primary selection:text-white bg-transparent">
                         
                         {/* 🟢 NAVBAR 🟢 */}
                         <nav className="w-full flex justify-between items-center p-6 sm:px-12 max-w-7xl mx-auto relative z-50 animate-fade-in-up">
                             <div className="flex items-center gap-3">
-                                <EliteLogo className="w-8 h-8 sm:w-10 sm:h-10 text-gray-900 opacity-90" />
-                                <span className="text-lg sm:text-xl font-bold tracking-[0.2em] uppercase text-gray-900">VerifyHub <span className="text-brand-primary font-light">Elite</span></span>
+                                <EliteLogo className="w-8 h-8 sm:w-10 sm:h-10 text-white opacity-90" />
+                                <span className="text-lg sm:text-xl font-bold tracking-[0.2em] uppercase text-white">VerifyHub <span className="text-[#4ade80] font-light">Elite</span></span>
                             </div>
-                            <button onClick={() => setShowLanding(false)} className="btn-animate bg-gray-900 hover:bg-black text-white px-5 py-2.5 rounded-lg text-[10px] sm:text-xs font-semibold uppercase tracking-wider flex items-center gap-2 group shadow-sm transition-all">
+                            <button onClick={() => setShowLanding(false)} className="btn-animate bg-white/10 hover:bg-white text-white hover:text-[#063129] border border-white/20 px-5 py-2.5 rounded-lg text-[10px] sm:text-xs font-bold uppercase tracking-wider flex items-center gap-2 group shadow-sm transition-all">
                                 Sign In
                                 <svg className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                             </button>
@@ -1699,95 +1697,94 @@
 
                         {/* 🟢 HERO SECTION 🟢 */}
                         <div className="relative z-10 flex flex-col items-center justify-center min-h-[75vh] px-4 text-center max-w-5xl mx-auto mt-6">
-                            <div className="mb-8 px-5 py-2 rounded-full border border-gray-200 bg-gray-50/80 text-gray-700 text-[10px] sm:text-xs font-medium uppercase tracking-[0.2em] backdrop-blur-md animate-fade-in-up shadow-sm flex items-center gap-2">
-                                <ShieldCheck className="w-4 h-4 text-brand-primary" /> Verified & Secure Platform
+                            <div className="mb-8 px-5 py-2 rounded-full border border-white/10 bg-white/5 text-gray-300 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] backdrop-blur-md animate-fade-in-up shadow-sm flex items-center gap-2">
+                                <ShieldCheck className="w-4 h-4 text-[#4ade80]" /> Verified & Secure Platform
                             </div>
                             
                             <div className="min-h-[120px] sm:min-h-[160px] flex items-center justify-center w-full mb-6">
-                                <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.2] animate-fade-in-up text-center flex flex-col items-center text-gray-900" style={{animationDelay: '0.1s'}}>
+                                <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.2] animate-fade-in-up text-center flex flex-col items-center text-white" style={{animationDelay: '0.1s'}}>
                                     <span>Enterprise-Grade</span>
-                                    <span className="text-brand-primary mt-2 sm:mt-4">Digital Identity Solutions</span>
+                                    <span className="text-[#4ade80] mt-2 sm:mt-4 drop-shadow-[0_0_15px_rgba(74,222,128,0.3)]">Digital Identity Solutions</span>
                                 </h1>
                             </div>
                             
-                            <p className="text-gray-600 text-sm sm:text-base font-normal mb-10 max-w-2xl leading-relaxed tracking-wide animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+                            <p className="text-gray-300 text-sm sm:text-base font-medium mb-10 max-w-2xl leading-relaxed tracking-wide animate-fade-in-up" style={{animationDelay: '0.2s'}}>
                                 Reliable, high-quality digital accounts and instant global SMS verification infrastructure. Built for professionals, delivered instantly 24/7.
                             </p>
                             
                             <div className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto animate-fade-in-up" style={{animationDelay: '0.3s'}}>
-                                <button onClick={() => setShowLanding(false)} className="btn-animate bg-brand-primary text-[#0b120c] px-10 py-4 rounded-xl text-xs font-bold uppercase tracking-[0.2em] shadow-[0_0_25px_rgba(189,250,22,0.4)] hover:shadow-[0_0_40px_rgba(189,250,22,0.6)] transition-all">
+                                <button onClick={() => setShowLanding(false)} className="btn-animate bg-[#4ade80] text-[#063129] px-10 py-4 rounded-xl text-xs font-black uppercase tracking-[0.2em] shadow-[0_0_25px_rgba(74,222,128,0.4)] hover:shadow-[0_0_40px_rgba(74,222,128,0.6)] transition-all">
                                     Access Dashboard
                                 </button>
-                                <button onClick={() => window.scrollTo({top: window.innerHeight, behavior: 'smooth'})} className="btn-animate bg-white text-gray-900 border border-gray-200 shadow-sm px-10 py-4 rounded-xl text-xs font-bold uppercase tracking-[0.2em] hover:text-brand-primary">
+                                <button onClick={() => window.scrollTo({top: window.innerHeight, behavior: 'smooth'})} className="btn-animate bg-white/5 text-white border border-white/20 shadow-sm px-10 py-4 rounded-xl text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-[#063129]">
                                     Explore Platform
                                 </button>
                             </div>
                             
                             {/* 🟢 LIVE STATS BAR 🟢 */}
-                            <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10 w-full max-w-4xl border-t border-gray-200 pt-10 animate-fade-in-up" style={{animationDelay: '0.5s'}}>
+                            <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10 w-full max-w-4xl border-t border-white/10 pt-10 animate-fade-in-up" style={{animationDelay: '0.5s'}}>
                                 <div className="flex flex-col items-center">
-                                    <span className="text-2xl sm:text-3xl font-black text-gray-900">99.9%</span>
-                                    <span className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-widest font-bold mt-1">Network Uptime</span>
+                                    <span className="text-2xl sm:text-3xl font-black text-white">99.9%</span>
+                                    <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Network Uptime</span>
                                 </div>
                                 <div className="flex flex-col items-center">
-                                    <span className="text-2xl sm:text-3xl font-black text-gray-900">50K+</span>
-                                    <span className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-widest font-bold mt-1">Verified Orders</span>
+                                    <span className="text-2xl sm:text-3xl font-black text-white">50K+</span>
+                                    <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Verified Orders</span>
                                 </div>
                                 <div className="flex flex-col items-center">
-                                    <span className="text-2xl sm:text-3xl font-black text-gray-900">&lt; 1s</span>
-                                    <span className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-widest font-bold mt-1">Delivery Time</span>
+                                    <span className="text-2xl sm:text-3xl font-black text-white">&lt; 1s</span>
+                                    <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Delivery Time</span>
                                 </div>
                                 <div className="flex flex-col items-center">
-                                    <span className="text-2xl sm:text-3xl font-black text-brand-primary flex items-center gap-1">24/7</span>
-                                    <span className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-widest font-bold mt-1">Active Support</span>
+                                    <span className="text-2xl sm:text-3xl font-black text-[#4ade80] flex items-center gap-1">24/7</span>
+                                    <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Active Support</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* 🟢 BENTO GRID SECTION 🟢 */}
-                        <div className="relative z-10 pt-24 pb-24 mt-12 bg-gradient-to-b from-transparent to-gray-50">
+                        <div className="relative z-10 pt-24 pb-24 mt-12 border-t border-white/10 bg-transparent">
                             <div className="max-w-6xl mx-auto px-4 sm:px-6">
                                 <div className="text-center mb-16 reveal-card visible">
-                                    <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-brand-primary mb-3">Capabilities</h2>
-                                    <p className="text-2xl sm:text-3xl font-light text-gray-900 tracking-wide">Everything you need to scale securely.</p>
+                                    <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-[#4ade80] mb-3">Capabilities</h2>
+                                    <p className="text-2xl sm:text-3xl font-bold text-white tracking-wide">Everything you need to scale securely.</p>
                                 </div>
                                 
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
-                                    
                                     {/* Large Card */}
-                                    <div className="md:col-span-2 bg-white shadow-lg p-8 sm:p-10 rounded-3xl reveal-card visible group overflow-hidden relative border border-gray-100 hover:border-brand-primary/50 transition-all duration-500 hover:-translate-y-2">
-                                        <div className="absolute -right-10 -top-10 w-40 h-40 bg-brand-primary/10 rounded-full blur-3xl group-hover:bg-brand-primary/20 transition-all duration-700"></div>
-                                        <Smartphone className="w-10 h-10 text-brand-primary mb-6 opacity-90"/>
-                                        <h3 className="text-xl sm:text-2xl font-bold tracking-wide text-gray-900 mb-3 uppercase">Direct Carrier SMS Nodes</h3>
-                                        <p className="text-sm text-gray-600 font-light leading-relaxed max-w-md">We route OTPs through our proprietary telecom partnerships across 100+ countries. Get real, non-VoIP numbers with zero third-party API delays.</p>
+                                    <div className="md:col-span-2 bg-white/5 shadow-lg p-8 sm:p-10 rounded-3xl reveal-card visible group overflow-hidden relative border border-white/10 hover:border-[#4ade80]/50 transition-all duration-500 hover:-translate-y-2 backdrop-blur-md">
+                                        <div className="absolute -right-10 -top-10 w-40 h-40 bg-[#4ade80]/10 rounded-full blur-3xl group-hover:bg-[#4ade80]/20 transition-all duration-700"></div>
+                                        <Smartphone className="w-10 h-10 text-[#4ade80] mb-6 opacity-90"/>
+                                        <h3 className="text-xl sm:text-2xl font-bold tracking-wide text-white mb-3 uppercase">Direct Carrier SMS Nodes</h3>
+                                        <p className="text-sm text-gray-400 font-medium leading-relaxed max-w-md">We route OTPs through our proprietary telecom partnerships across 100+ countries. Get real, non-VoIP numbers with zero third-party API delays.</p>
                                     </div>
                                     
                                     {/* Small Card 1 */}
-                                    <div className="bg-white shadow-lg p-8 sm:p-10 rounded-3xl reveal-card visible group border border-gray-100 hover:border-brand-primary/50 transition-colors">
-                                        <Package className="w-8 h-8 text-brand-primary mb-6 opacity-90"/>
-                                        <h3 className="text-lg font-bold tracking-wide text-gray-900 mb-3 uppercase">Verified Accounts</h3>
-                                        <p className="text-xs text-gray-600 font-light leading-relaxed">Buy high-quality, aged accounts like Google Voice and TextPlus, ready for immediate secure use.</p>
+                                    <div className="bg-white/5 shadow-lg p-8 sm:p-10 rounded-3xl reveal-card visible group border border-white/10 hover:border-[#4ade80]/50 transition-colors backdrop-blur-md">
+                                        <Package className="w-8 h-8 text-[#4ade80] mb-6 opacity-90"/>
+                                        <h3 className="text-lg font-bold tracking-wide text-white mb-3 uppercase">Verified Accounts</h3>
+                                        <p className="text-xs text-gray-400 font-medium leading-relaxed">Buy high-quality, aged accounts like Google Voice and TextPlus, ready for immediate secure use.</p>
                                     </div>
 
                                     {/* Small Card 2 */}
-                                    <div className="bg-white shadow-lg p-8 sm:p-10 rounded-3xl reveal-card visible group border border-gray-100 hover:border-brand-primary/50 transition-colors">
-                                        <Zap className="w-8 h-8 text-brand-primary mb-6 opacity-90"/>
-                                        <h3 className="text-lg font-bold tracking-wide text-gray-900 mb-3 uppercase">Instant Delivery</h3>
-                                        <p className="text-xs text-gray-600 font-light leading-relaxed">Our system is 100% automated. Add funds with crypto or bank transfer and receive your assets instantly.</p>
+                                    <div className="bg-white/5 shadow-lg p-8 sm:p-10 rounded-3xl reveal-card visible group border border-white/10 hover:border-[#4ade80]/50 transition-colors backdrop-blur-md">
+                                        <Zap className="w-8 h-8 text-[#4ade80] mb-6 opacity-90"/>
+                                        <h3 className="text-lg font-bold tracking-wide text-white mb-3 uppercase">Instant Delivery</h3>
+                                        <p className="text-xs text-gray-400 font-medium leading-relaxed">Our system is 100% automated. Add funds with crypto or bank transfer and receive your assets instantly.</p>
                                     </div>
 
                                     {/* Support Card */}
-                                    <div className="md:col-span-2 bg-white shadow-lg border border-brand-primary/20 hover:border-brand-primary/50 transition-colors p-8 sm:p-10 rounded-3xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 reveal-card visible">
+                                    <div className="md:col-span-2 bg-white/5 shadow-lg border border-[#4ade80]/20 hover:border-[#4ade80]/50 transition-colors p-8 sm:p-10 rounded-3xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 reveal-card visible backdrop-blur-md">
                                         <div>
-                                            <h3 className="text-lg font-bold tracking-wide text-brand-primary mb-2 uppercase">24/7 Admin Support</h3>
-                                            <p className="text-sm text-gray-600 font-light">Need help? Get priority assistance directly from our team.</p>
+                                            <h3 className="text-lg font-bold tracking-wide text-[#4ade80] mb-2 uppercase">24/7 Admin Support</h3>
+                                            <p className="text-sm text-gray-400 font-medium">Need help? Get priority assistance directly from our team.</p>
                                         </div>
                                         <div className="flex flex-wrap gap-4 w-full sm:w-auto">
-                                            <a href="https://wa.me/8801913003817" target="_blank" rel="noopener noreferrer" className="bg-[#25D366]/10 hover:bg-[#25D366] text-[#25D366] hover:text-black border border-[#25D366]/50 px-6 py-3.5 rounded-xl text-[10px] font-bold tracking-widest uppercase transition-colors flex items-center gap-2 shadow-inner">
+                                            <a href="https://wa.me/8801913003817" target="_blank" rel="noopener noreferrer" className="bg-[#25D366]/20 hover:bg-[#25D366] text-[#25D366] hover:text-black border border-[#25D366]/50 px-6 py-3.5 rounded-xl text-[10px] font-bold tracking-widest uppercase transition-colors flex items-center gap-2 shadow-inner">
                                                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.87-2.03-.97-.272-.099-.47-.149-.669.149-.198.297-.768.97-.941 1.168-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.305-.88-.653-1.474-1.46-1.647-1.758-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.396-.272.322-1.04 1.014-1.04 2.476 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
                                                 WhatsApp
                                             </a>
-                                            <a href="https://t.me/+8801913003817" target="_blank" rel="noopener noreferrer" className="bg-[#0088cc]/10 hover:bg-[#0088cc] text-[#0088cc] hover:text-white border border-[#0088cc]/50 px-6 py-3.5 rounded-xl text-[10px] font-bold tracking-widest uppercase transition-colors flex items-center gap-2 shadow-inner">
+                                            <a href="https://t.me/+8801913003817" target="_blank" rel="noopener noreferrer" className="bg-[#0088cc]/20 hover:bg-[#0088cc] text-[#0088cc] hover:text-white border border-[#0088cc]/50 px-6 py-3.5 rounded-xl text-[10px] font-bold tracking-widest uppercase transition-colors flex items-center gap-2 shadow-inner">
                                                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
                                                 Telegram
                                             </a>
@@ -1798,117 +1795,117 @@
                         </div>
 
                         {/* 🟢 TRUST TICKER (MARQUEE) 🟢 */}
-                        <div className="w-full bg-gray-50 border-y border-gray-200 py-6 overflow-hidden relative z-10 flex">
+                        <div className="w-full border-y border-white/10 py-6 overflow-hidden relative z-10 flex bg-transparent">
                             <style>{`
                                 @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
                                 .animate-scroll { animation: scroll 30s linear infinite; width: max-content; }
                                 .animate-scroll:hover { animation-play-state: paused; }
                             `}</style>
                             <div className="animate-scroll flex items-center gap-12 sm:gap-24 pl-12 sm:pl-24 text-gray-400 font-bold text-xs sm:text-sm uppercase tracking-[0.3em]">
-                                {/* দুইবার দেওয়া হয়েছে যাতে লুপ কন্টিনিউ হয় */}
-                                <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-primary"/> Premium Accounts</div>
-                                <div className="flex items-center gap-2"><Lock className="w-4 h-4 text-brand-primary"/> Secure Infrastructure</div>
-                                <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-brand-primary"/> Global OTP Bypass</div>
-                                <div className="flex items-center gap-2"><Zap className="w-4 h-4 text-brand-primary"/> Instant Crypto Deposit</div>
-                                <div className="flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-brand-primary"/> 30-Min Warranty</div>
+                                {/* দুইবার দেওয়া হয়েছে যাতে লুপ কন্টিনিউ হয় */}
+                                <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-[#4ade80]"/> Premium Accounts</div>
+                                <div className="flex items-center gap-2"><Lock className="w-4 h-4 text-[#4ade80]"/> Secure Infrastructure</div>
+                                <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-[#4ade80]"/> Global OTP Bypass</div>
+                                <div className="flex items-center gap-2"><Zap className="w-4 h-4 text-[#4ade80]"/> Instant Crypto Deposit</div>
+                                <div className="flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-[#4ade80]"/> 30-Min Warranty</div>
                                 
-                                <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-primary"/> Premium Accounts</div>
-                                <div className="flex items-center gap-2"><Lock className="w-4 h-4 text-brand-primary"/> Secure Infrastructure</div>
-                                <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-brand-primary"/> Global OTP Bypass</div>
-                                <div className="flex items-center gap-2"><Zap className="w-4 h-4 text-brand-primary"/> Instant Crypto Deposit</div>
-                                <div className="flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-brand-primary"/> 30-Min Warranty</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-[#4ade80]"/> Premium Accounts</div>
+                                <div className="flex items-center gap-2"><Lock className="w-4 h-4 text-[#4ade80]"/> Secure Infrastructure</div>
+                                <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-[#4ade80]"/> Global OTP Bypass</div>
+                                <div className="flex items-center gap-2"><Zap className="w-4 h-4 text-[#4ade80]"/> Instant Crypto Deposit</div>
+                                <div className="flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-[#4ade80]"/> 30-Min Warranty</div>
                             </div>
                         </div>
 
                         {/* 🟢 HOW IT WORKS SECTION 🟢 */}
-                        <div className="relative z-10 py-24 bg-white">
+                        <div className="relative z-10 py-24 border-b border-white/10 bg-transparent">
                             <div className="max-w-6xl mx-auto px-4 sm:px-6">
                                 <div className="text-center mb-16 reveal-card visible">
-                                    <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-brand-primary mb-3">Workflow</h2>
-                                    <p className="text-2xl sm:text-3xl font-light text-gray-900 tracking-wide">3 simple steps to get started.</p>
+                                    <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-[#4ade80] mb-3">Workflow</h2>
+                                    <p className="text-2xl sm:text-3xl font-bold text-white tracking-wide">3 simple steps to get started.</p>
                                 </div>
                                 
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
                                     {/* Connecting Line (Hidden on mobile) */}
-                                    <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-gray-100 z-0"></div>
+                                    <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-white/10 z-0"></div>
                                     
                                     {/* Step 1 */}
                                     <div className="relative z-10 flex flex-col items-center text-center reveal-card visible group">
-                                        <div className="w-24 h-24 bg-white border-2 border-gray-100 rounded-2xl shadow-sm flex items-center justify-center mb-6 group-hover:border-brand-primary group-hover:-translate-y-2 transition-all duration-300">
-                                            <span className="text-3xl font-black text-gray-200 group-hover:text-brand-primary transition-colors">01</span>
+                                        <div className="w-24 h-24 bg-[#0a211c] border-2 border-white/20 rounded-2xl shadow-sm flex items-center justify-center mb-6 group-hover:border-[#4ade80] group-hover:-translate-y-2 transition-all duration-300">
+                                            <span className="text-3xl font-black text-gray-400 group-hover:text-[#4ade80] transition-colors">01</span>
                                         </div>
-                                        <h3 className="text-lg font-bold text-gray-900 mb-2 uppercase">Create Account</h3>
-                                        <p className="text-sm text-gray-500 font-light max-w-[250px]">Sign up instantly with your email or use 1-click Google Auth.</p>
+                                        <h3 className="text-lg font-bold text-white mb-2 uppercase">Create Account</h3>
+                                        <p className="text-sm text-gray-400 font-medium max-w-[250px]">Sign up instantly with your email or use 1-click Google Auth.</p>
                                     </div>
                                     
                                     {/* Step 2 */}
                                     <div className="relative z-10 flex flex-col items-center text-center reveal-card visible group" style={{transitionDelay: '0.1s'}}>
-                                        <div className="w-24 h-24 bg-white border-2 border-gray-100 rounded-2xl shadow-sm flex items-center justify-center mb-6 group-hover:border-brand-primary group-hover:-translate-y-2 transition-all duration-300">
-                                            <span className="text-3xl font-black text-gray-200 group-hover:text-brand-primary transition-colors">02</span>
+                                        <div className="w-24 h-24 bg-[#0a211c] border-2 border-white/20 rounded-2xl shadow-sm flex items-center justify-center mb-6 group-hover:border-[#4ade80] group-hover:-translate-y-2 transition-all duration-300">
+                                            <span className="text-3xl font-black text-gray-400 group-hover:text-[#4ade80] transition-colors">02</span>
                                         </div>
-                                        <h3 className="text-lg font-bold text-gray-900 mb-2 uppercase">Add Funds</h3>
-                                        <p className="text-sm text-gray-500 font-light max-w-[250px]">Deposit via Local Bank Transfer or automated Crypto gateways.</p>
+                                        <h3 className="text-lg font-bold text-white mb-2 uppercase">Add Funds</h3>
+                                        <p className="text-sm text-gray-400 font-medium max-w-[250px]">Deposit via Local Bank Transfer or automated Crypto gateways.</p>
                                     </div>
                                     
                                     {/* Step 3 */}
                                     <div className="relative z-10 flex flex-col items-center text-center reveal-card visible group" style={{transitionDelay: '0.2s'}}>
-                                        <div className="w-24 h-24 bg-brand-primary border-2 border-brand-primary rounded-2xl shadow-[0_10px_20px_rgba(189,250,22,0.3)] flex items-center justify-center mb-6 group-hover:-translate-y-2 transition-all duration-300">
-                                            <span className="text-3xl font-black text-gray-900">03</span>
+                                        <div className="w-24 h-24 bg-[#4ade80]/20 border-2 border-[#4ade80] rounded-2xl shadow-[0_10px_20px_rgba(74,222,128,0.3)] flex items-center justify-center mb-6 group-hover:-translate-y-2 transition-all duration-300">
+                                            <span className="text-3xl font-black text-[#4ade80]">03</span>
                                         </div>
-                                        <h3 className="text-lg font-bold text-gray-900 mb-2 uppercase">Acquire Assets</h3>
-                                        <p className="text-sm text-gray-500 font-light max-w-[250px]">Purchase premium accounts or get instant OTPs directly to your vault.</p>
+                                        <h3 className="text-lg font-bold text-white mb-2 uppercase">Acquire Assets</h3>
+                                        <p className="text-sm text-gray-400 font-medium max-w-[250px]">Purchase premium accounts or get instant OTPs directly to your vault.</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
                         {/* 🟢 REAL CUSTOMER REVIEWS (SOCIAL PROOF) 🟢 */}
-                        <div className="relative z-10 py-24 bg-gray-50 border-t border-gray-200">
+                        <div className="relative z-10 py-24 border-b border-white/10 bg-transparent">
                             <div className="max-w-6xl mx-auto px-4 sm:px-6">
                                 <div className="text-center mb-16 reveal-card visible">
-                                    <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-brand-primary mb-3">Wall of Love</h2>
-                                    <p className="text-2xl sm:text-3xl font-light text-gray-900 tracking-wide">Trusted by 5,000+ professionals globally.</p>
+                                    <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-[#4ade80] mb-3">Wall of Love</h2>
+                                    <p className="text-2xl sm:text-3xl font-bold text-white tracking-wide">Trusted by 5,000+ professionals globally.</p>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     {/* Review 1 */}
-                                    <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 reveal-card visible hover:-translate-y-1 transition-transform">
+                                    <div className="bg-white/5 p-8 rounded-3xl shadow-sm border border-white/10 reveal-card visible hover:-translate-y-1 transition-transform backdrop-blur-md">
                                         <div className="flex text-yellow-400 mb-4">
                                             <Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/>
                                         </div>
-                                        <p className="text-gray-600 text-sm leading-relaxed mb-6 font-medium">"I was skeptical at first, but the Google Voice accounts were delivered instantly. The 30-min replacement policy is legit. Had one bad account, got replaced in 2 mins."</p>
-                                        <div className="flex items-center gap-3 border-t border-gray-100 pt-4">
-                                            <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xs">JD</div>
+                                        <p className="text-gray-300 text-sm leading-relaxed mb-6 font-medium">"I was skeptical at first, but the Google Voice accounts were delivered instantly. The 30-min replacement policy is legit. Had one bad account, got replaced in 2 mins."</p>
+                                        <div className="flex items-center gap-3 border-t border-white/10 pt-4">
+                                            <div className="w-8 h-8 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center font-bold text-xs border border-blue-500/50">JD</div>
                                             <div>
-                                                <p className="text-xs font-bold text-gray-900">John D.</p>
-                                                <p className="text-[10px] text-gray-400 uppercase tracking-widest">Verified Buyer</p>
+                                                <p className="text-xs font-bold text-white">John D.</p>
+                                                <p className="text-[10px] text-[#4ade80] uppercase tracking-widest">Verified Buyer</p>
                                             </div>
                                         </div>
                                     </div>
                                     {/* Review 2 */}
-                                    <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 reveal-card visible hover:-translate-y-1 transition-transform" style={{transitionDelay: '0.1s'}}>
+                                    <div className="bg-white/5 p-8 rounded-3xl shadow-sm border border-white/10 reveal-card visible hover:-translate-y-1 transition-transform backdrop-blur-md" style={{transitionDelay: '0.1s'}}>
                                         <div className="flex text-yellow-400 mb-4">
                                             <Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/>
                                         </div>
-                                        <p className="text-gray-600 text-sm leading-relaxed mb-6 font-medium">"Their proprietary SMS routing is insane. Used it for bulk WhatsApp verifications and the OTPs came through instantly. Crypto deposits are fully automated which saves me hours."</p>
-                                        <div className="flex items-center gap-3 border-t border-gray-100 pt-4">
-                                            <div className="w-8 h-8 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center font-bold text-xs">MS</div>
+                                        <p className="text-gray-300 text-sm leading-relaxed mb-6 font-medium">"Their proprietary SMS routing is insane. Used it for bulk WhatsApp verifications and the OTPs came through instantly. Crypto deposits are fully automated which saves me hours."</p>
+                                        <div className="flex items-center gap-3 border-t border-white/10 pt-4">
+                                            <div className="w-8 h-8 bg-purple-500/20 text-purple-400 rounded-full flex items-center justify-center font-bold text-xs border border-purple-500/50">MS</div>
                                             <div>
-                                                <p className="text-xs font-bold text-gray-900">Mark S.</p>
-                                                <p className="text-[10px] text-gray-400 uppercase tracking-widest">Agency Owner</p>
+                                                <p className="text-xs font-bold text-white">Mark S.</p>
+                                                <p className="text-[10px] text-[#4ade80] uppercase tracking-widest">Agency Owner</p>
                                             </div>
                                         </div>
                                     </div>
                                     {/* Review 3 */}
-                                    <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 reveal-card visible hover:-translate-y-1 transition-transform" style={{transitionDelay: '0.2s'}}>
+                                    <div className="bg-white/5 p-8 rounded-3xl shadow-sm border border-white/10 reveal-card visible hover:-translate-y-1 transition-transform backdrop-blur-md" style={{transitionDelay: '0.2s'}}>
                                         <div className="flex text-yellow-400 mb-4">
                                             <Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/><Star fill="currentColor" className="w-4 h-4"/>
                                         </div>
-                                        <p className="text-gray-600 text-sm leading-relaxed mb-6 font-medium">"Best plug for TextPlus and old Gmails. I've spent over $500 here. The dashboard is clean, and the Telegram support actually replies fast."</p>
-                                        <div className="flex items-center gap-3 border-t border-gray-100 pt-4">
-                                            <div className="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold text-xs">RK</div>
+                                        <p className="text-gray-300 text-sm leading-relaxed mb-6 font-medium">"Best plug for TextPlus and old Gmails. I've spent over $500 here. The dashboard is clean, and the Telegram support actually replies fast."</p>
+                                        <div className="flex items-center gap-3 border-t border-white/10 pt-4">
+                                            <div className="w-8 h-8 bg-[#4ade80]/20 text-[#4ade80] rounded-full flex items-center justify-center font-bold text-xs border border-[#4ade80]/50">RK</div>
                                             <div>
-                                                <p className="text-xs font-bold text-gray-900">Rahul K.</p>
-                                                <p className="text-[10px] text-gray-400 uppercase tracking-widest">VIP Member</p>
+                                                <p className="text-xs font-bold text-white">Rahul K.</p>
+                                                <p className="text-[10px] text-[#4ade80] uppercase tracking-widest">VIP Member</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1917,38 +1914,38 @@
                         </div>
 
                         {/* 🟢 IRONCLAD GUARANTEE & FAQ 🟢 */}
-                        <div className="relative z-10 py-24 bg-white border-t border-gray-200">
+                        <div className="relative z-10 py-24 border-b border-white/10 bg-transparent">
                             <div className="max-w-5xl mx-auto px-4 sm:px-6">
                                 
-                                {/* Guarantee Box (Light mode friendly premium box) */}
-                                <div className="bg-white border border-gray-200 rounded-3xl p-8 sm:p-12 text-gray-900 shadow-[0_8px_30px_rgba(0,0,0,0.06)] reveal-card visible mb-16 relative overflow-hidden">
-                                    <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl"></div>
+                                {/* Guarantee Box */}
+                                <div className="bg-white/5 border border-white/10 rounded-3xl p-8 sm:p-12 text-white shadow-[0_8px_30px_rgba(0,0,0,0.2)] reveal-card visible mb-16 relative overflow-hidden backdrop-blur-md">
+                                    <div className="absolute top-0 right-0 w-64 h-64 bg-[#4ade80]/10 rounded-full blur-3xl"></div>
                                     <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                                         <div>
-                                            <ShieldCheck className="w-12 h-12 text-brand-primary mb-4"/>
+                                            <ShieldCheck className="w-12 h-12 text-[#4ade80] mb-4"/>
                                             <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-wide mb-4">Ironclad Guarantee</h3>
-                                            <p className="text-gray-600 leading-relaxed text-sm">We don't sell dead logs. Every account is checked before stocking. If an account fails to login or is dead on delivery, our automated system and admin team will replace it within our strict <strong className="text-gray-900">30-Minute Replacement Window</strong>.</p>
+                                            <p className="text-gray-300 leading-relaxed text-sm font-medium">We don't sell dead logs. Every account is checked before stocking. If an account fails to login or is dead on delivery, our automated system and admin team will replace it within our strict <strong className="text-white">30-Minute Replacement Window</strong>.</p>
                                         </div>
                                         <div className="space-y-4">
-                                            <div className="bg-gray-50 border border-gray-100 p-4 rounded-xl flex items-center gap-4 shadow-sm">
-                                                <div className="bg-green-100 p-2 rounded-lg"><CheckCircle className="w-5 h-5 text-green-600"/></div>
+                                            <div className="bg-black/30 border border-white/5 p-4 rounded-xl flex items-center gap-4 shadow-sm">
+                                                <div className="bg-[#4ade80]/20 p-2 rounded-lg border border-[#4ade80]/30"><CheckCircle className="w-5 h-5 text-[#4ade80]"/></div>
                                                 <div>
-                                                    <p className="font-bold text-sm uppercase tracking-wider">100% Valid Assets</p>
-                                                    <p className="text-[10px] text-gray-500 font-mono mt-0.5">Pre-checked inventory</p>
+                                                    <p className="font-bold text-sm uppercase tracking-wider text-white">100% Valid Assets</p>
+                                                    <p className="text-[10px] text-gray-400 font-mono mt-0.5">Pre-checked inventory</p>
                                                 </div>
                                             </div>
-                                            <div className="bg-gray-50 border border-gray-100 p-4 rounded-xl flex items-center gap-4 shadow-sm">
-                                                <div className="bg-blue-100 p-2 rounded-lg"><Clock className="w-5 h-5 text-blue-600"/></div>
+                                            <div className="bg-black/30 border border-white/5 p-4 rounded-xl flex items-center gap-4 shadow-sm">
+                                                <div className="bg-[#4ade80]/20 p-2 rounded-lg border border-[#4ade80]/30"><Clock className="w-5 h-5 text-[#4ade80]"/></div>
                                                 <div>
-                                                    <p className="font-bold text-sm uppercase tracking-wider">Instant Auto-Delivery</p>
-                                                    <p className="text-[10px] text-gray-500 font-mono mt-0.5">Zero waiting time</p>
+                                                    <p className="font-bold text-sm uppercase tracking-wider text-white">Instant Auto-Delivery</p>
+                                                    <p className="text-[10px] text-gray-400 font-mono mt-0.5">Zero waiting time</p>
                                                 </div>
                                             </div>
-                                            <div className="bg-gray-50 border border-gray-100 p-4 rounded-xl flex items-center gap-4 shadow-sm">
-                                                <div className="bg-brand-primary/10 p-2 rounded-lg"><ShieldCheck className="w-5 h-5 text-brand-primary"/></div>
+                                            <div className="bg-black/30 border border-white/5 p-4 rounded-xl flex items-center gap-4 shadow-sm">
+                                                <div className="bg-[#4ade80]/20 p-2 rounded-lg border border-[#4ade80]/30"><ShieldCheck className="w-5 h-5 text-[#4ade80]"/></div>
                                                 <div>
-                                                    <p className="font-bold text-sm uppercase tracking-wider">Secure Escrow System</p>
-                                                    <p className="text-[10px] text-gray-500 font-mono mt-0.5">Funds safe until purchase</p>
+                                                    <p className="font-bold text-sm uppercase tracking-wider text-white">Secure Escrow System</p>
+                                                    <p className="text-[10px] text-gray-400 font-mono mt-0.5">Funds safe until purchase</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1957,43 +1954,43 @@
 
                                 {/* FAQ Section */}
                                 <div className="text-center mb-12 reveal-card visible">
-                                    <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-brand-primary mb-3">Questions?</h2>
-                                    <p className="text-2xl sm:text-3xl font-light text-gray-900 tracking-wide">Frequently Asked Questions.</p>
+                                    <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-[#4ade80] mb-3">Questions?</h2>
+                                    <p className="text-2xl sm:text-3xl font-bold text-white tracking-wide">Frequently Asked Questions.</p>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 reveal-card visible">
-                                    <div className="bg-gray-50 border border-gray-200 p-6 rounded-2xl hover:border-brand-primary/50 transition-colors">
-                                        <h4 className="font-bold text-gray-900 mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><Package className="w-4 h-4 text-brand-primary"/> Are these accounts fresh or aged?</h4>
-                                        <p className="text-sm text-gray-600 leading-relaxed font-light">We provide both. You can select exactly what you need from the dashboard. Aged accounts are clearly marked and come with robust recovery options.</p>
+                                    <div className="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-[#4ade80]/50 transition-colors backdrop-blur-md">
+                                        <h4 className="font-bold text-white mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><Package className="w-4 h-4 text-[#4ade80]"/> Are these accounts fresh or aged?</h4>
+                                        <p className="text-sm text-gray-400 leading-relaxed font-medium">We provide both. You can select exactly what you need from the dashboard. Aged accounts are clearly marked and come with robust recovery options.</p>
                                     </div>
-                                    <div className="bg-gray-50 border border-gray-200 p-6 rounded-2xl hover:border-brand-primary/50 transition-colors">
-                                        <h4 className="font-bold text-gray-900 mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><Wallet className="w-4 h-4 text-brand-primary"/> How do I deposit funds?</h4>
-                                        <p className="text-sm text-gray-600 leading-relaxed font-light">We accept automated Crypto (NOWPayments) for global users, and Local Bank Transfers with instant manual approval from the admin team.</p>
+                                    <div className="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-[#4ade80]/50 transition-colors backdrop-blur-md">
+                                        <h4 className="font-bold text-white mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><Wallet className="w-4 h-4 text-[#4ade80]"/> How do I deposit funds?</h4>
+                                        <p className="text-sm text-gray-400 leading-relaxed font-medium">We accept automated Crypto (NOWPayments) for global users, and Local Bank Transfers with instant manual approval from the admin team.</p>
                                     </div>
-                                    <div className="bg-gray-50 border border-gray-200 p-6 rounded-2xl hover:border-brand-primary/50 transition-colors">
-                                        <h4 className="font-bold text-gray-900 mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><RefreshCw className="w-4 h-4 text-brand-primary"/> What if an account doesn't work?</h4>
-                                        <p className="text-sm text-gray-600 leading-relaxed font-light">Report it via the "Report Issue" button in your vault within 30 minutes. If valid, our admin will instantly credit your balance or provide a fresh replacement.</p>
+                                    <div className="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-[#4ade80]/50 transition-colors backdrop-blur-md">
+                                        <h4 className="font-bold text-white mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><RefreshCw className="w-4 h-4 text-[#4ade80]"/> What if an account doesn't work?</h4>
+                                        <p className="text-sm text-gray-400 leading-relaxed font-medium">Report it via the "Report Issue" button in your vault within 30 minutes. If valid, our admin will instantly credit your balance or provide a fresh replacement.</p>
                                     </div>
-                                    <div className="bg-gray-50 border border-gray-200 p-6 rounded-2xl hover:border-brand-primary/50 transition-colors">
-                                        <h4 className="font-bold text-gray-900 mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><Zap className="w-4 h-4 text-brand-primary"/> Are you a reseller or direct provider?</h4>
-                                        <p className="text-sm text-gray-600 leading-relaxed font-light">We are a direct infrastructure provider. We maintain our own physical SIM banks and telecom nodes to ensure you get the fastest, un-flagged numbers without reseller markups.</p>
+                                    <div className="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-[#4ade80]/50 transition-colors backdrop-blur-md">
+                                        <h4 className="font-bold text-white mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><Zap className="w-4 h-4 text-[#4ade80]"/> Are you a reseller or direct provider?</h4>
+                                        <p className="text-sm text-gray-400 leading-relaxed font-medium">We are a direct infrastructure provider. We maintain our own physical SIM banks and telecom nodes to ensure you get the fastest, un-flagged numbers without reseller markups.</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         {/* 🟢 FINAL CTA SECTION 🟢 */}
-                        <div className="relative z-10 py-20 bg-gray-50 border-t border-gray-200">
+                        <div className="relative z-10 py-20 border-b border-white/10 bg-transparent">
                             <div className="max-w-4xl mx-auto px-4 text-center reveal-card visible">
-                                <h2 className="text-3xl sm:text-4xl font-black text-gray-900 uppercase tracking-tight mb-6">Ready to scale your operations?</h2>
-                                <p className="text-gray-600 mb-10 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">Join thousands of professionals relying on our robust infrastructure for their daily verification and account needs.</p>
-                                <button onClick={() => setShowLanding(false)} className="btn-animate bg-brand-primary hover:bg-blue-600 text-white px-12 py-5 rounded-2xl text-xs sm:text-sm font-bold uppercase tracking-[0.2em] shadow-lg transition-all">
+                                <h2 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tight mb-6">Ready to scale your operations?</h2>
+                                <p className="text-gray-300 mb-10 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed font-medium">Join thousands of professionals relying on our robust infrastructure for their daily verification and account needs.</p>
+                                <button onClick={() => setShowLanding(false)} className="btn-animate bg-[#4ade80] hover:bg-green-400 text-[#063129] px-12 py-5 rounded-2xl text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(74,222,128,0.5)] transition-all">
                                     Start Now - It's Free
                                 </button>
                             </div>
                         </div>
 
                         {/* 🟢 FOOTER 🟢 */}
-                        <div className="relative z-10 border-t border-gray-200 bg-gray-50 py-8 text-center">
+                        <div className="relative z-10 py-8 text-center bg-transparent">
                             <p className="text-[10px] text-gray-500 font-mono uppercase tracking-widest">&copy; 2026 VerifyHub Elite. All Systems Operational.</p>
                         </div>
                     </div>
@@ -2596,29 +2593,29 @@
                             </div>
                         </div>
                         
-                        {/* 🟢 TRUST & REASSURANCE MESSAGE (ENGLISH) 🟢 */}
-                        <div className="bg-green-50 border border-green-200 p-3.5 sm:p-4 rounded-xl flex gap-3 items-start shadow-sm w-full">
-                            <ShieldCheck className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
-                            <p className="text-[10px] sm:text-[11px] text-green-800 font-medium leading-relaxed">
-                                <span className="uppercase block mb-1 text-green-600 text-[9px] font-bold tracking-widest">🛡️ 100% Safe & Secure</span>
-                                Don't worry! If you do not receive the OTP code for any reason, simply cancel the number. You will <span className="font-bold text-green-700 underline">not be charged</span> and your balance will remain completely safe.
+                        {/* 🟢 TRUST & REASSURANCE MESSAGE (PLAIN TEXT) 🟢 */}
+                        <div className="flex gap-3 items-start w-full px-2 mb-2">
+                            <ShieldCheck className="w-4 h-4 text-[#4ade80] shrink-0 mt-0.5" />
+                            <p className="text-[10px] sm:text-[11px] text-gray-300 font-medium leading-relaxed">
+                                <span className="uppercase block mb-1 text-[#4ade80] text-[9px] font-bold tracking-widest">🛡️ 100% Safe & Secure</span>
+                                Don't worry! If you do not receive the OTP code for any reason, simply cancel the number. You will <span className="font-bold text-white underline">not be charged</span> and your balance will remain completely safe.
                             </p>
                         </div>
                     </div>
 
-                   {/* 🟢 Active Order Premium White View 🟢 */}
+                   {/* 🟢 Active Order Premium Glass View (Juicysms Theme) 🟢 */}
                     {activeOrder ? (
-                        <div className={`relative w-full rounded-[24px] overflow-hidden animate-fade-in-up transition-all duration-500 bg-white border ${activeOrder.code ? 'border-green-400 shadow-[0_10px_40px_rgba(74,222,128,0.15)]' : activeOrder.status === 'Cancelled' ? 'border-red-300 shadow-md' : 'border-brand-primary/30 shadow-[0_10px_40px_rgba(59,130,246,0.1)]'}`}>
+                        <div className={`relative w-full rounded-[24px] overflow-hidden animate-fade-in-up transition-all duration-500 glass-effect backdrop-blur-2xl border ${activeOrder.code ? 'border-[#4ade80] shadow-[0_10px_40px_rgba(74,222,128,0.2)]' : activeOrder.status === 'Cancelled' ? 'border-red-500/50 shadow-md' : 'border-white/20 shadow-[0_10px_40px_rgba(0,0,0,0.3)]'}`}>
                             
                             {/* Inner Container */}
                             <div className="p-6 sm:p-8 w-full h-full relative flex flex-col md:flex-row gap-8 justify-between items-center z-10">
                                 
                                 {/* Background Soft Glow */}
-                                <div className={`absolute -top-24 -right-24 w-48 h-48 rounded-full blur-[80px] opacity-30 pointer-events-none ${activeOrder.code ? 'bg-green-400' : 'bg-brand-primary'}`}></div>
+                                <div className={`absolute -top-24 -right-24 w-48 h-48 rounded-full blur-[80px] opacity-30 pointer-events-none ${activeOrder.code ? 'bg-[#4ade80]' : 'bg-[#4ade80]/50'}`}></div>
 
                                 {/* Progress Bar Line */}
-                                <div className="absolute top-0 left-0 w-full h-1.5 bg-gray-100">
-                                    {activeOrder.status === 'Active' && <div className="h-full bg-brand-primary timer-bar rounded-r-full shadow-[0_0_10px_#3b82f6]" style={{
+                                <div className="absolute top-0 left-0 w-full h-1.5 bg-white/10">
+                                    {activeOrder.status === 'Active' && <div className="h-full bg-[#4ade80] timer-bar rounded-r-full shadow-[0_0_10px_#4ade80]" style={{
                                         animationDuration: activeOrder.duration === '15 minutes' ? '900s' : 
                                                            activeOrder.duration === '5 minutes' ? '300s' :
                                                            activeOrder.duration === '3 days' ? '259200s' : 
@@ -2629,12 +2626,12 @@
 
                                 {/* Left: Number & Service */}
                                 <div className="flex items-center gap-3 sm:gap-5 w-full md:w-auto relative z-10 overflow-hidden">
-                                    {/* Logo Container - Shrink fixed so it doesn't get squeezed */}
+                                    {/* Logo Container */}
                                     <div className="relative shrink-0">
                                         {activeOrder.status === 'Active' && !activeOrder.code && (
-                                            <div className="absolute inset-0 bg-brand-primary rounded-2xl animate-ping opacity-20"></div>
+                                            <div className="absolute inset-0 bg-[#4ade80] rounded-2xl animate-ping opacity-20"></div>
                                         )}
-                                        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl border border-gray-200 bg-gray-50 flex items-center justify-center shrink-0 shadow-sm overflow-hidden p-1.5 sm:p-2 relative z-10">
+                                        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md flex items-center justify-center shrink-0 shadow-sm overflow-hidden p-1.5 sm:p-2 relative z-10">
                                             <img 
                                                  src={`https://logo.clearbit.com/${String(activeOrder.service).toLowerCase().replace(/[^a-z0-9]/g, '')}.com`} 
                                                  onError={(e) => { 
@@ -2648,15 +2645,14 @@
                                         </div>
                                     </div>
                                     
-                                    {/* Number & Info Container - Flexible Width */}
+                                    {/* Number & Info Container */}
                                     <div className="flex flex-col min-w-0 w-full">
                                         <div className="flex items-center gap-2 mb-1">
-                                            <p className="text-[9px] sm:text-xs text-gray-500 font-bold tracking-widest uppercase truncate">{activeOrder.service} Verification</p>
-                                            {activeOrder.status === 'Active' && !activeOrder.code && <span className="flex h-2 w-2 shrink-0 relative"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-brand-primary"></span></span>}
+                                            <p className="text-[9px] sm:text-xs text-gray-400 font-bold tracking-widest uppercase truncate">{activeOrder.service} Verification</p>
+                                            {activeOrder.status === 'Active' && !activeOrder.code && <span className="flex h-2 w-2 shrink-0 relative"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4ade80] opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-[#4ade80]"></span></span>}
                                         </div>
                                         <div className="flex items-center gap-2 sm:gap-3 w-full">
-                                            {/* 🟢 Responsive Font Size & Dynamic Letter Spacing 🟢 */}
-                                            <span className="text-[18px] leading-tight sm:text-3xl md:text-4xl font-black font-mono text-gray-900 tracking-tight sm:tracking-wider truncate">
+                                            <span className="text-[18px] leading-tight sm:text-3xl md:text-4xl font-black font-mono text-white tracking-tight sm:tracking-wider truncate">
                                                 {(() => {
                                                     let p = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
                                                     if (p.length === 10) return `+1 ${p}`;
@@ -2666,35 +2662,25 @@
                                                 })()}
                                             </span>
                                             
-                                            {/* Copy Button - Shrink fixed so it stays visible */}
+                                            {/* Copy Button */}
                                             <button onClick={() => {
                                                 let cleanNum = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
                                                 if (cleanNum.startsWith('1') && cleanNum.length === 11) cleanNum = cleanNum.slice(1);
                                                 
-                                                // 🟢 Bulletproof Copy Fallback Logic 🟢
                                                 const fallbackCopy = (text) => {
                                                     const textArea = document.createElement("textarea");
                                                     textArea.value = text;
                                                     document.body.appendChild(textArea);
                                                     textArea.focus();
                                                     textArea.select();
-                                                    try {
-                                                        document.execCommand('copy');
-                                                        triggerToast("Number copied!");
-                                                    } catch (err) {
-                                                        triggerToast("Failed to copy");
-                                                    }
+                                                    try { document.execCommand('copy'); triggerToast("Number copied!"); } catch (err) { triggerToast("Failed to copy"); }
                                                     document.body.removeChild(textArea);
                                                 };
 
                                                 if (navigator.clipboard && window.isSecureContext) {
-                                                    navigator.clipboard.writeText(cleanNum)
-                                                        .then(() => triggerToast("Number copied!"))
-                                                        .catch(() => fallbackCopy(cleanNum));
-                                                } else {
-                                                    fallbackCopy(cleanNum);
-                                                }
-                                            }} className="shrink-0 bg-gray-50 hover:bg-brand-primary/10 text-gray-500 hover:text-brand-primary p-1.5 sm:p-2 rounded-lg transition-colors border border-gray-200 shadow-sm" title="Copy Number"><Copy className="w-4 h-4 sm:w-5 sm:h-5"/></button>
+                                                    navigator.clipboard.writeText(cleanNum).then(() => triggerToast("Number copied!")).catch(() => fallbackCopy(cleanNum));
+                                                } else fallbackCopy(cleanNum);
+                                            }} className="shrink-0 bg-white/10 hover:bg-[#4ade80]/20 text-white hover:text-[#4ade80] p-1.5 sm:p-2 rounded-lg transition-colors border border-white/20 shadow-sm" title="Copy Number"><Copy className="w-4 h-4 sm:w-5 sm:h-5"/></button>
                                         </div>
                                     </div>
                                 </div>
@@ -2703,76 +2689,57 @@
                                 <div className="flex flex-col items-center md:items-end w-full md:w-auto mt-2 md:mt-0 relative z-10 max-w-full">
                                     {activeOrder.code ? (
                                         <div className="flex flex-col items-center md:items-end w-full max-w-full">
-                                            <p className="text-[11px] text-green-600 font-black uppercase tracking-[0.2em] mb-2 flex items-center gap-1.5"><CheckCircle className="w-4 h-4"/> Code Received Successfully!</p>
-                                            <div className="flex items-center justify-between gap-3 sm:gap-4 bg-green-50 px-4 sm:px-6 py-4 rounded-2xl border border-green-200 shadow-sm w-full max-w-full overflow-hidden group hover:border-green-400 transition-all">
-                                                {/* 🟢 DYNAMIC TEXT SIZING FOR LONG/SHORT SMS 🟢 */}
-                                                <span className={`font-mono font-black text-green-600 select-all transition-transform break-words whitespace-pre-wrap flex-grow overflow-hidden ${String(activeOrder.code).length > 12 ? 'text-xs sm:text-sm tracking-normal leading-relaxed text-left' : 'text-3xl sm:text-4xl tracking-[0.2em] text-center group-hover:scale-105'}`}>
+                                            <p className="text-[11px] text-[#4ade80] font-black uppercase tracking-[0.2em] mb-2 flex items-center gap-1.5"><CheckCircle className="w-4 h-4"/> Code Received Successfully!</p>
+                                            <div className="flex items-center justify-between gap-3 sm:gap-4 bg-[#4ade80]/10 px-4 sm:px-6 py-4 rounded-2xl border border-[#4ade80]/30 shadow-sm w-full max-w-full overflow-hidden group hover:border-[#4ade80]/60 transition-all">
+                                                <span className={`font-mono font-black text-[#4ade80] select-all transition-transform break-words whitespace-pre-wrap flex-grow overflow-hidden ${String(activeOrder.code).length > 12 ? 'text-xs sm:text-sm tracking-normal leading-relaxed text-left' : 'text-3xl sm:text-4xl tracking-[0.2em] text-center group-hover:scale-105'}`}>
                                                     {activeOrder.code}
                                                 </span>
                                                 <button onClick={() => {
                                                     const textToCopy = activeOrder.code;
-                                                    // 🟢 Bulletproof Copy Fallback Logic 🟢
                                                     const fallbackCopy = (text) => {
-                                                        const textArea = document.createElement("textarea");
-                                                        textArea.value = text;
-                                                        document.body.appendChild(textArea);
-                                                        textArea.focus();
-                                                        textArea.select();
-                                                        try {
-                                                            document.execCommand('copy');
-                                                            triggerToast("Code copied!");
-                                                        } catch (err) {
-                                                            triggerToast("Failed to copy");
-                                                        }
-                                                        document.body.removeChild(textArea);
+                                                        const textArea = document.createElement("textarea"); textArea.value = text; document.body.appendChild(textArea); textArea.focus(); textArea.select();
+                                                        try { document.execCommand('copy'); triggerToast("Code copied!"); } catch (err) { triggerToast("Failed to copy"); } document.body.removeChild(textArea);
                                                     };
-
-                                                    if (navigator.clipboard && window.isSecureContext) {
-                                                        navigator.clipboard.writeText(textToCopy)
-                                                            .then(() => triggerToast("Code copied!"))
-                                                            .catch(() => fallbackCopy(textToCopy));
-                                                    } else {
-                                                        fallbackCopy(textToCopy);
-                                                    }
-                                                }} className="bg-white border border-green-200 text-green-600 hover:bg-green-100 p-3 sm:p-4 rounded-xl transition-transform hover:scale-110 shadow-sm" title="Copy Code"><Copy className="w-5 h-5 sm:w-6 sm:h-6"/></button>
+                                                    if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(textToCopy).then(() => triggerToast("Code copied!")).catch(() => fallbackCopy(textToCopy)); } else fallbackCopy(textToCopy);
+                                                }} className="bg-white/10 border border-white/20 text-white hover:bg-white/20 p-3 sm:p-4 rounded-xl transition-transform hover:scale-110 shadow-sm" title="Copy Code"><Copy className="w-5 h-5 sm:w-6 sm:h-6"/></button>
                                             </div>
                                         </div>
                                     ) : activeOrder.status === 'Cancelled' ? (
                                         <div className="flex flex-col items-center md:items-end w-full">
-                                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2">Order Status</p>
-                                            <div className="flex items-center gap-3 px-6 py-4 rounded-2xl border border-red-200 bg-red-50 w-full sm:w-auto justify-center">
-                                                <X className="w-5 h-5 text-red-500" />
-                                                <span className="text-red-600 font-mono text-sm uppercase tracking-widest font-bold">Cancelled & Refunded</span>
+                                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-2">Order Status</p>
+                                            <div className="flex items-center gap-3 px-6 py-4 rounded-2xl border border-red-500/30 bg-red-500/10 w-full sm:w-auto justify-center">
+                                                <X className="w-5 h-5 text-red-400" />
+                                                <span className="text-red-400 font-mono text-sm uppercase tracking-widest font-bold">Cancelled & Refunded</span>
                                             </div>
                                         </div>
                                     ) : (
                                         <div className="flex flex-col items-center md:items-end w-full">
-                                            <p className="text-[10px] sm:text-xs text-brand-primary font-bold uppercase tracking-[0.2em] mb-2 flex items-center gap-2"><RefreshCw className="w-3.5 h-3.5 animate-spin"/> Awaiting SMS Code...</p>
-                                            <div className="flex items-center justify-center gap-4 bg-blue-50/50 px-6 sm:px-8 py-5 rounded-2xl border border-blue-100 relative overflow-hidden min-w-[280px] sm:min-w-[320px] shadow-sm w-full">
-                                                {/* Scanning Radar Effect */}
-                                                <div className="absolute inset-0 bg-white/50 w-full h-full">
-                                                    <div className="w-[200%] h-full bg-gradient-to-r from-transparent via-blue-200/30 to-transparent absolute top-0 -left-[100%] animate-shimmer"></div>
+                                            <p className="text-[10px] sm:text-xs text-[#4ade80] font-bold uppercase tracking-[0.2em] mb-2 flex items-center gap-2"><RefreshCw className="w-3.5 h-3.5 animate-spin"/> Awaiting SMS Code...</p>
+                                            <div className="flex items-center justify-center gap-4 bg-white/5 px-6 sm:px-8 py-5 rounded-2xl border border-white/10 relative overflow-hidden min-w-[280px] sm:min-w-[320px] shadow-sm w-full">
+                                                <div className="absolute inset-0 bg-transparent w-full h-full">
+                                                    <div className="w-[200%] h-full bg-gradient-to-r from-transparent via-white/5 to-transparent absolute top-0 -left-[100%] animate-shimmer"></div>
                                                 </div>
-                                                <MessageSquare className="w-6 h-6 animate-pulse text-brand-primary/60 relative z-10" />
-                                                <span className="text-2xl sm:text-3xl font-mono font-black text-gray-300 tracking-[0.4em] relative z-10">_ _ _ _</span>
-                                                <div className="absolute top-2 right-3 flex items-center gap-1.5 bg-white px-2 py-1 rounded-md border border-gray-200 shadow-sm">
-                                                    <Clock className="w-3 h-3 text-gray-500" />
-                                                    <span className="text-[10px] text-gray-700 font-black font-mono">{formatTime(timeRemaining)}</span>
+                                                <MessageSquare className="w-6 h-6 animate-pulse text-white/50 relative z-10" />
+                                                <span className="text-2xl sm:text-3xl font-mono font-black text-gray-500 tracking-[0.4em] relative z-10">_ _ _ _</span>
+                                                <div className="absolute top-2 right-3 flex items-center gap-1.5 bg-black/40 px-2 py-1 rounded-md border border-white/10 shadow-sm">
+                                                    <Clock className="w-3 h-3 text-gray-400" />
+                                                    <span className="text-[10px] text-white font-black font-mono">{formatTime(timeRemaining)}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     )}
                                    <div className="flex gap-4 mt-5 sm:mt-6 w-full justify-end">
-                                        {activeOrder.status === 'Active' && <button onClick={cancelNumber} disabled={isCancelling} className="text-xs bg-white hover:bg-red-50 text-red-500 border border-red-200 px-5 py-2.5 rounded-xl uppercase font-bold tracking-widest disabled:opacity-50 transition-colors shadow-sm w-full sm:w-auto">{isCancelling ? 'Cancelling...' : 'Cancel Order'}</button>}
+                                        {activeOrder.status === 'Active' && <button onClick={cancelNumber} disabled={isCancelling} className="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 px-5 py-2.5 rounded-xl uppercase font-bold tracking-widest disabled:opacity-50 transition-colors shadow-sm w-full sm:w-auto">{isCancelling ? 'Cancelling...' : 'Cancel Order'}</button>}
                                         
-                                        {activeOrder.status === 'Completed' && <button onClick={handleComplete} className="text-xs bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl uppercase font-black tracking-widest transition-colors shadow-sm w-full sm:w-auto">Dismiss</button>}
+                                        {activeOrder.status === 'Completed' && <button onClick={handleComplete} className="text-xs bg-[#4ade80] hover:bg-green-400 text-[#063129] px-6 py-2.5 rounded-xl uppercase font-black tracking-widest transition-colors shadow-sm w-full sm:w-auto border-none">Dismiss</button>}
                                         
-                                        {activeOrder.status === 'Cancelled' && <button onClick={handleComplete} className="text-xs bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-2.5 rounded-xl uppercase font-bold tracking-widest transition-colors shadow-sm w-full sm:w-auto">Close</button>}
+                                        {activeOrder.status === 'Cancelled' && <button onClick={handleComplete} className="text-xs bg-white/10 border border-white/20 text-white hover:bg-white/20 px-6 py-2.5 rounded-xl uppercase font-bold tracking-widest transition-colors shadow-sm w-full sm:w-auto">Close</button>}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     ) : (
+                  
                         /* 🟢 Ultra-Minimalist Purchase Configuration 🟢 */
                         <div className="w-full flex flex-col items-center mt-2 animate-fade-in-up">
                             <div className="w-full max-w-3xl bg-white rounded-[32px] border border-gray-200 shadow-[0_4px_30px_rgba(0,0,0,0.03)] p-6 sm:p-10 relative overflow-hidden">
@@ -2780,53 +2747,46 @@
                                 {/* Subtle Background Accents */}
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-[60px] pointer-events-none"></div>
 
-                                {/* 🟢 ULTRA-PREMIUM Sliding Segmented Control (Juicysms Theme Fixed) 🟢 */}
-                                <div className="flex flex-col items-center w-full mb-10 relative z-[60]">
-                                    <div className="relative flex p-1.5 rounded-2xl w-full sm:w-[420px] shadow-inner border" style={{ backgroundColor: 'rgba(0,0,0,0.3)', borderColor: 'rgba(255,255,255,0.1)' }}>
+                                {/* 🟢 SMS Mode Selection Cards (Glass Theme) 🟢 */}
+                                <div className="grid grid-cols-2 gap-4 w-full sm:w-[500px] mb-10 mx-auto relative z-[60]">
+                                    
+                                    {/* Card 1: Quick Verify */}
+                                    <button 
+                                        className={`flex flex-col items-center justify-center py-5 px-3 rounded-2xl border transition-all duration-300 relative overflow-hidden group ${smsMode === 'quick' ? 'bg-[#4ade80]/10 border-[#4ade80] shadow-[0_0_20px_rgba(74,222,128,0.2)]' : 'bg-white/5 border-white/10 hover:border-[#4ade80]/50 hover:bg-white/10'}`}
+                                        onClick={()=>setSmsMode('quick')}
+                                    >
+                                        <div className="flex items-center gap-2 relative z-10 mb-2">
+                                            {smsMode==='quick' ? <CheckCircle className="w-4 h-4 text-[#4ade80]" /> : <Clock className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />}
+                                            <span className={`text-[11px] sm:text-xs font-black tracking-widest uppercase transition-colors ${smsMode === 'quick' ? 'text-[#4ade80]' : 'text-gray-300 group-hover:text-white'}`}>Quick Verify</span>
+                                        </div>
+                                        <span className={`text-[9px] sm:text-[10px] font-mono font-medium transition-colors ${smsMode === 'quick' ? 'text-green-200' : 'text-gray-500 group-hover:text-gray-400'}`}>5 Mins OTP</span>
                                         
-                                        {/* The Sliding Pill (Background) - Forced Solid White */}
-                                        <div className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] rounded-[12px] shadow-[0_2px_15px_rgba(0,0,0,0.3)] transition-transform duration-500 ease-out ${smsMode === 'quick' ? 'translate-x-0' : 'translate-x-full'}`} style={{ backgroundColor: '#ffffff' }}></div>
+                                        {/* Magic Floating Text (UK) */}
+                                        {smsMode==='quick' && (
+                                            <div className="absolute -top-1 left-0 w-full flex justify-center items-center pointer-events-none">
+                                                <span className="animate-magic-float text-[8px] sm:text-[9px] font-black tracking-wider uppercase text-white whitespace-nowrap" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>🇬🇧 Instant Access</span>
+                                            </div>
+                                        )}
+                                    </button>
 
-                                        {/* Button 1: Quick Verify */}
-                                        <button 
-                                            className="flex-1 flex flex-col items-center justify-center py-3.5 relative z-10 cursor-pointer transition-none shadow-none"
-                                            style={{ background: 'transparent', border: 'none' }}
-                                            onClick={()=>setSmsMode('quick')}
-                                        >
-                                            <div className="flex items-center gap-2 relative">
-                                                {smsMode==='quick' && <div className="w-1.5 h-1.5 rounded-full bg-[#063129] animate-pulse shadow-sm"></div>}
-                                                <span className="text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-colors duration-300" style={{ color: smsMode === 'quick' ? '#063129' : 'rgba(255,255,255,0.6)' }}>Quick Verify</span>
-                                                
-                                                {/* Magic Floating Text (UK) */}
-                                                {smsMode==='quick' && (
-                                                    <div className="absolute -top-1 left-0 w-full flex justify-center items-center pointer-events-none">
-                                                        <span className="animate-magic-float text-[8px] sm:text-[9px] font-black tracking-wider uppercase text-white whitespace-nowrap" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>🇬🇧 Best for UK WhatsApp</span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <span className="text-[8px] font-mono mt-1 transition-colors duration-300 font-bold" style={{ color: smsMode === 'quick' ? 'rgba(6,49,41,0.6)' : 'rgba(255,255,255,0.4)' }}>5 Mins</span>
-                                        </button>
+                                    {/* Card 2: Long-Term */}
+                                    <button 
+                                        className={`flex flex-col items-center justify-center py-5 px-3 rounded-2xl border transition-all duration-300 relative overflow-hidden group ${smsMode === 'standard' ? 'bg-[#4ade80]/10 border-[#4ade80] shadow-[0_0_20px_rgba(74,222,128,0.2)]' : 'bg-white/5 border-white/10 hover:border-[#4ade80]/50 hover:bg-white/10'}`}
+                                        onClick={()=>setSmsMode('standard')}
+                                    >
+                                        <div className="flex items-center gap-2 relative z-10 mb-2">
+                                            {smsMode==='standard' ? <CheckCircle className="w-4 h-4 text-[#4ade80]" /> : <ShieldCheck className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />}
+                                            <span className={`text-[11px] sm:text-xs font-black tracking-widest uppercase transition-colors ${smsMode === 'standard' ? 'text-[#4ade80]' : 'text-gray-300 group-hover:text-white'}`}>Long-Term</span>
+                                        </div>
+                                        <span className={`text-[9px] sm:text-[10px] font-mono font-medium transition-colors ${smsMode === 'standard' ? 'text-green-200' : 'text-gray-500 group-hover:text-gray-400'}`}>3 to 25 Days</span>
                                         
-                                        {/* Button 2: Long-Term */}
-                                        <button 
-                                            className="flex-1 flex flex-col items-center justify-center py-3.5 relative z-10 cursor-pointer transition-none shadow-none"
-                                            style={{ background: 'transparent', border: 'none' }}
-                                            onClick={()=>setSmsMode('standard')}
-                                        >
-                                            <div className="flex items-center gap-2 relative">
-                                                {smsMode==='standard' && <div className="w-1.5 h-1.5 rounded-full bg-[#063129] animate-pulse shadow-sm"></div>}
-                                                <span className="text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-colors duration-300" style={{ color: smsMode === 'standard' ? '#063129' : 'rgba(255,255,255,0.6)' }}>Long-Term</span>
-                                                
-                                                {/* Magic Floating Text (USA) */}
-                                                {smsMode==='standard' && (
-                                                    <div className="absolute -top-1 left-0 w-full flex justify-center items-center pointer-events-none">
-                                                        <span className="animate-magic-float text-[8px] sm:text-[9px] font-black tracking-wider uppercase text-white whitespace-nowrap" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>🇺🇸 Best for USA WhatsApp</span>
-                                                    </div>
-                                                )}
+                                        {/* Magic Floating Text (USA) */}
+                                        {smsMode==='standard' && (
+                                            <div className="absolute -top-1 left-0 w-full flex justify-center items-center pointer-events-none">
+                                                <span className="animate-magic-float-delayed text-[8px] sm:text-[9px] font-black tracking-wider uppercase text-white whitespace-nowrap" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>🇺🇸 Extended Access</span>
                                             </div>
-                                            <span className="text-[8px] font-mono mt-1 transition-colors duration-300 font-bold" style={{ color: smsMode === 'standard' ? 'rgba(6,49,41,0.6)' : 'rgba(255,255,255,0.4)' }}>3-25 Days</span>
-                                        </button>
-                                    </div>
+                                        )}
+                                    </button>
                                 </div>
 
                                 {/* 🟢 Form Fields (Clean Grid with Real Logos) 🟢 */}
@@ -2870,19 +2830,19 @@
 
                                     {/* Duration */}
                                     <div className="flex flex-col gap-2.5 relative z-[70]">
-                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">Time Duration</label>
+                                        <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold ml-1">Time Duration</label>
                                         <div className="relative group">
-                                            <select value={selectedDuration} onChange={e => setSelectedDuration(e.target.value)} className="w-full bg-gray-50/80 border border-gray-200 text-gray-800 text-[13px] rounded-2xl py-4 px-5 outline-none cursor-pointer focus:bg-white focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 hover:border-gray-300 transition-all appearance-none font-mono font-bold shadow-sm" disabled={isPanda}>
-                                                {durationOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+                                            <select value={selectedDuration} onChange={e => setSelectedDuration(e.target.value)} className="w-full bg-white/5 backdrop-blur-md border border-white/10 text-white text-[13px] rounded-2xl py-4 px-5 outline-none cursor-pointer focus:bg-black/40 focus:border-[#4ade80] focus:ring-2 focus:ring-[#4ade80]/30 hover:border-white/30 transition-all appearance-none font-mono font-bold shadow-sm" disabled={isPanda}>
+                                                {durationOptions.map(opt => <option key={opt.value} value={opt.value} className="bg-[#063129] text-white">{opt.label}</option>)}
                                             </select>
-                                            <ChevronDown className="w-4 h-4 text-gray-400 absolute right-4 top-[18px] pointer-events-none group-hover:text-gray-600 transition-colors"/>
+                                            <ChevronDown className="w-4 h-4 text-gray-400 absolute right-4 top-[18px] pointer-events-none group-hover:text-white transition-colors"/>
                                         </div>
                                     </div>
 
                                     {/* Dynamic Options */}
                                     {smsMode === 'standard' && (selectedCountry === 'USA' || selectedCountry === 'United States') && (
                                         <div className="flex flex-col gap-2.5 relative z-[60] animate-fade-in-up">
-                                            <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1">State (Optional)</label>
+                                            <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold ml-1">State (Optional)</label>
                                             <SearchableDropdown 
                                                 options={usaStatesList} 
                                                 value={selectedUsaState} 
@@ -2896,25 +2856,24 @@
                                     
                                     {smsMode === 'quick' && (
                                         <div className="flex flex-col gap-2.5 relative z-[60] animate-fade-in-up">
-                                            <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><img src="https://cdn-icons-png.flaticon.com/512/1000/1000958.png" className="w-4 h-4 drop-shadow-sm" alt="sim-card"/> Reuse Number (Optional)</label>
-                                            <input type="text" value={reuseNumberInput} onChange={e => setReuseNumberInput(e.target.value)} placeholder="e.g. 447123456789" className="w-full bg-gray-50/80 border border-gray-200 text-gray-800 text-[13px] rounded-2xl py-4 px-5 outline-none hover:border-gray-300 focus:bg-white focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all font-mono font-bold shadow-sm placeholder-gray-400" />
+                                            <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold ml-1 flex items-center gap-1.5"><img src="https://cdn-icons-png.flaticon.com/512/1000/1000958.png" className="w-4 h-4 drop-shadow-sm" alt="sim-card"/> Reuse Number (Optional)</label>
+                                            <input type="text" value={reuseNumberInput} onChange={e => setReuseNumberInput(e.target.value)} placeholder="e.g. 447123456789" className="w-full bg-white/5 backdrop-blur-md border border-white/10 text-white text-[13px] rounded-2xl py-4 px-5 outline-none hover:border-white/30 focus:bg-black/40 focus:border-[#4ade80] focus:ring-2 focus:ring-[#4ade80]/30 transition-all font-mono font-bold shadow-sm placeholder-gray-500" />
                                         </div>
                                     )}
                                 </div>
 
                                 {/* 🟢 Divider 🟢 */}
-                                <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-8"></div>
+                                <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-8"></div>
 
-                                {/* 🟢 Unified Checkout Bottom 🟢 */}
+                                {/* 🟢 Unified Checkout Bottom (Dark Theme) 🟢 */}
                                 <div className="flex flex-col gap-6 relative z-10">
-                                    
-                                    <div className="flex flex-col sm:flex-row justify-between items-center gap-6 bg-gray-50/50 p-5 sm:p-6 rounded-[20px] border border-gray-100">
+                                    <div className="flex flex-col sm:flex-row justify-between items-center gap-6 glass-effect p-5 sm:p-6 rounded-[20px] border border-white/10">
                                         {/* Price Display */}
                                         <div className="flex flex-col w-full sm:w-auto items-center sm:items-start text-center sm:text-left">
-                                            <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Total Cost</p>
+                                            <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Total Cost</p>
                                             <div className="flex flex-col sm:flex-row items-center sm:items-baseline gap-1 sm:gap-3">
-                                                <span className="text-3xl sm:text-4xl font-black font-mono text-gray-900 tracking-tight">${displayPrice ? displayPrice.toFixed(2) : '0.00'}</span>
-                                                <span className="text-[11px] font-mono font-bold text-brand-primary bg-brand-primary/10 px-2.5 py-1 rounded-md border border-brand-primary/20">
+                                                <span className="text-3xl sm:text-4xl font-black font-mono text-white tracking-tight">${displayPrice ? displayPrice.toFixed(2) : '0.00'}</span>
+                                                <span className="text-[11px] font-mono font-bold text-[#4ade80] bg-[#4ade80]/10 px-2.5 py-1 rounded-md border border-[#4ade80]/20">
                                                     ~ ₦{(displayPrice > 0 ? (displayPrice * (bankSettings?.nairaRate || 1500)) + 500 : 0).toLocaleString('en-US', {maximumFractionDigits: 0})}
                                                 </span>
                                             </div>
@@ -2925,19 +2884,19 @@
                                             <button 
                                                 onClick={() => buyNumber(currentServiceObj || { code: selectedServiceCode, name: selectedServiceCode, finalPrice: displayPrice })} 
                                                 disabled={isBuying || (smsMode === 'quick' && !displayPrice)} 
-                                                className="btn-animate w-full bg-gray-900 hover:bg-black text-white transition-colors py-4 px-6 rounded-2xl text-[11px] sm:text-xs font-black uppercase tracking-widest flex justify-center items-center gap-2.5 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_10px_25px_rgba(0,0,0,0.25)]"
+                                                className="btn-animate w-full bg-[#4ade80] hover:bg-green-400 text-[#063129] transition-colors py-4 px-6 rounded-2xl text-[11px] sm:text-xs font-black uppercase tracking-widest flex justify-center items-center gap-2.5 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_8px_20px_rgba(74,222,128,0.2)] hover:shadow-[0_10px_25px_rgba(74,222,128,0.4)]"
                                             >
-                                                {isBuying ? <RefreshCw className="w-5 h-5 animate-spin"/> : <Zap className="w-4 h-4 text-brand-gold" />}
+                                                {isBuying ? <RefreshCw className="w-5 h-5 animate-spin"/> : <Zap className="w-4 h-4 text-[#063129]" />}
                                                 {isBuying ? 'Processing...' : 'Get Number Now'}
                                             </button>
                                         </div>
                                     </div>
 
-                                    {/* Minimal Warning Alert */}
-                                    <div className="flex items-start gap-3 bg-red-50/80 border border-red-100 p-4 rounded-2xl mx-auto w-full max-w-2xl">
-                                        <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
-                                        <p className="text-[10px] sm:text-[11px] text-red-800 font-medium leading-relaxed">
-                                            If the app shows <strong className="text-red-600 font-bold">"Already Registered"</strong>, DO NOT request OTP. Cancel the number immediately to avoid charges.
+                                    {/* Minimal Warning Alert (PLAIN TEXT) */}
+                                    <div className="flex items-start gap-3 mx-auto w-full max-w-2xl px-2 mt-4 mb-2">
+                                        <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                                        <p className="text-[10px] sm:text-[11px] text-gray-300 font-medium leading-relaxed">
+                                            If the app shows <strong className="text-red-400 font-bold">"Already Registered"</strong>, DO NOT request OTP. Cancel the number immediately to avoid charges.
                                         </p>
                                     </div>
 
@@ -3195,19 +3154,19 @@
                                       </div>
                                   </div>
 
-                                  {/* Middle: State Selector (Subtle) */}
+                                  {/* Middle: State Selector (Dark Theme Fixed) */}
                                   <div className="w-full sm:w-1/3 flex justify-start sm:justify-center mb-3 sm:mb-0 pl-14 sm:pl-0">
                                       {!isOutOfStock && availableStates.length > 0 ? (
                                           <div className="relative inline-block w-full max-w-[140px]">
                                               <select 
                                                   value={selectedStates[product.id] || ''} 
                                                   onChange={(e) => handleStateChange(product.id, e.target.value)}
-                                                  className="w-full bg-gray-50 border border-gray-200 rounded-lg text-[11px] text-gray-700 font-mono py-2 px-3 outline-none cursor-pointer hover:border-gray-300 appearance-none focus:ring-2 focus:ring-brand-primary/20 transition-all"
+                                                  className="w-full bg-black/40 border border-white/10 rounded-lg text-[11px] text-white font-mono py-2 px-3 outline-none cursor-pointer hover:border-white/30 appearance-none focus:ring-2 focus:ring-[#4ade80]/50 transition-all"
                                               >
-                                                  <option value="" className="bg-white text-gray-800">Any State</option>
-                                                  {availableStates.map(state => <option key={state} value={state} className="bg-white text-gray-800">{state}</option>)}
+                                                  <option value="" className="bg-[#063129] text-white">Any State</option>
+                                                  {availableStates.map(state => <option key={state} value={state} className="bg-[#063129] text-white">{state}</option>)}
                                               </select>
-                                              <ChevronDown className="w-3.5 h-3.5 text-gray-500 absolute right-2.5 top-[9px] pointer-events-none"/>
+                                              <ChevronDown className="w-3.5 h-3.5 text-gray-400 absolute right-2.5 top-[9px] pointer-events-none"/>
                                           </div>
                                       ) : null}
                                   </div>
