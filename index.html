@@ -2276,16 +2276,15 @@
 
                 {(!maintenanceSettings?.active || user.role === 'admin') && (
                     <div className="w-full relative z-30 mb-8 px-3 sm:px-0 mt-4">
-                        {/* 🟢 PREMIUM NO-BOX MENU (Ultra Minimalist) 🟢 */}
+                        {/* 🟢 PREMIUM NO-BOX TEXT-ONLY MENU (Ultra Minimalist) 🟢 */}
                         <div className="glass-effect flex flex-wrap justify-center sm:justify-between items-center w-full mx-auto max-w-4xl p-2 sm:p-3 rounded-[24px] border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.4)] gap-1 sm:gap-2 relative overflow-hidden">
                             {(user.role === 'admin' ? ADMIN_TABS : CUSTOMER_TABS).map(tab => (
                                 <button 
                                     key={tab.id} 
                                     onClick={() => setActiveTab(tab.id)} 
-                                    className={`w-[31%] sm:w-auto sm:flex-1 relative flex flex-col items-center justify-center py-3 sm:py-4 transition-all duration-300 group bg-transparent border-none ${activeTab === tab.id ? 'text-[#4ade80] scale-105 z-10' : 'text-gray-400 hover:text-white scale-95 hover:scale-100'}`}
+                                    className={`w-[31%] sm:w-auto sm:flex-1 relative flex items-center justify-center py-3.5 sm:py-5 transition-all duration-300 group bg-transparent border-none ${activeTab === tab.id ? 'text-[#4ade80] scale-105 z-10' : 'text-gray-400 hover:text-white scale-95 hover:scale-100'}`}
                                 >
-                                    <tab.icon className={`w-5 h-5 sm:w-6 sm:h-6 mb-1.5 transition-all duration-300 ${activeTab === tab.id ? 'scale-110 text-[#4ade80] drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]' : 'opacity-70 group-hover:opacity-100 group-hover:drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]'}`} strokeWidth={activeTab === tab.id ? 2.5 : 2} />
-                                    <span className={`text-[9px] sm:text-[11px] leading-tight uppercase tracking-widest text-center w-full px-1 transition-colors ${activeTab === tab.id ? 'font-black text-[#4ade80]' : 'font-bold'}`}>
+                                    <span className={`text-[10px] sm:text-[12px] leading-tight uppercase tracking-[0.15em] text-center w-full px-1 transition-colors ${activeTab === tab.id ? 'font-black text-[#4ade80] drop-shadow-[0_0_8px_rgba(74,222,128,0.6)]' : 'font-bold group-hover:drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]'}`}>
                                         {tab.label}
                                     </span>
                                 </button>
@@ -2471,11 +2470,12 @@
                             setSelectedServiceCode(whatsappApp ? whatsappApp.code : data.data[0].code);
                         } else setSelectedServiceCode('WhatsApp');
                     } else {
-                        triggerToast(data.message || 'Failed to load SMS services.');
+                        // 🟢 BRAND PROTECTED ERROR HANDLING 🟢
+                        triggerToast('⚠️ Telecom nodes syncing. Services temporarily unavailable.');
                         setServices([]); setSelectedServiceCode('');
                     }
                 } catch(e) {
-                    triggerToast('Network error loading SMS services.'); setServices([]);
+                    triggerToast('⚠️ Network delay while connecting to carrier nodes.'); setServices([]);
                 }
                 setIsLoadingRates(false);
             }, [selectedCountry, selectedQuickCountry, smsMode, triggerToast]);
@@ -2608,8 +2608,24 @@
                         setActiveOrder(newOrder);
                         startPolling(newOrder);
                         pollingRef.current = true;
-                    } else triggerToast(data.message || "Failed to get number.");
-                } catch(e) { triggerToast("Network error."); }
+                    } else {
+                        // 🟢 100% BRAND PROTECTED ERROR HANDLING (Hides 3rd Party API Errors) 🟢
+                        let errText = (data.message || '').toLowerCase();
+                        
+                        // If API has no balance, limit reached, or explicitly says provider name
+                        if (errText.includes('balance') || errText.includes('api') || errText.includes('smspinverify') || errText.includes('pandasms') || errText.includes('fund')) {
+                            triggerToast("⚠️ Network Routing Error: Nodes are optimizing. Please try again in 5 minutes.");
+                        } 
+                        // If numbers are actually out of stock
+                        else if (errText.includes('available') || errText.includes('no number') || errText.includes('stock') || errText.includes('shortage')) {
+                            triggerToast("⚠️ High Demand: Numbers for this service are temporarily out of stock. Try again shortly.");
+                        } 
+                        // Default fallback
+                        else {
+                            triggerToast("⚠️ All carrier nodes are currently busy. Please try again in a few moments.");
+                        }
+                    }
+                } catch(e) { triggerToast("⚠️ Connection to routing servers failed. Retrying..."); }
                 setIsCheckingOut(false);
             };
 
