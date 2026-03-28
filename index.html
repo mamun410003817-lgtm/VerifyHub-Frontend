@@ -792,27 +792,14 @@
                             {mode !== 'default' && selectedOpt ? (
                                 <div className={`shrink-0 flex items-center justify-center bg-gradient-to-b from-white/20 to-black/40 border-t border-white/40 border-b border-black/50 shadow-[0_5px_10px_rgba(0,0,0,0.5),inset_0_2px_5px_rgba(255,255,255,0.3)] backdrop-blur-xl overflow-hidden p-[3px] ${(mode === 'country' || mode === 'state') ? 'w-7 h-7 rounded-full' : 'w-7 h-7 rounded-lg'}`}>
                                     <img 
-                                        src={mode === 'state' ? (selectedOpt.value === '' ? `https://ui-avatars.com/api/?name=Any&background=0F172A&color=fff&size=64&bold=true` : `https://flagcdn.com/w40/us-${selectedOpt.value.toLowerCase()}.png`) : mode === 'country' ? (getCountryCode(selectedOpt.label) === 'un' ? `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedOpt.label)}&background=0F172A&color=fff&size=64&bold=true` : `https://flagcdn.com/w40/${getCountryCode(selectedOpt.label)}.png`) : `https://logo.clearbit.com/${getDomain(selectedOpt.label)}`} 
-                                        onError={(e) => { 
-                                            // 🟢 TRIPLE FALLBACK LOGIC 🟢
-                                            if (mode !== 'country' && mode !== 'state') {
-                                                const currentSrc = e.target.src;
-                                                const domain = getDomain(selectedOpt.label);
-                                                if (currentSrc.includes('clearbit')) {
-                                                    e.target.src = `https://icon.horse/icon/${domain}`;
-                                                } else if (currentSrc.includes('icon.horse')) {
-                                                    e.target.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-                                                } else {
-                                                    e.target.onerror = null; 
-                                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedOpt.label)}&background=0F172A&color=fff&size=64&bold=true`;
-                                                }
-                                            } else {
-                                                e.target.onerror = null; e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedOpt.label)}&background=0F172A&color=fff&size=64&bold=true`;
-                                            }
-                                        }} 
-                                        className={`w-full h-full drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)] ${(mode === 'country' || mode === 'state') ? 'object-cover rounded-full' : 'object-contain rounded-md'}`} 
-                                        alt="icon"
-                                    />
+                                            src={mode === 'state' ? (selectedOpt.value === '' ? `https://ui-avatars.com/api/?name=Any&background=0F172A&color=fff&size=128&bold=true` : `https://flagcdn.com/w80/us-${selectedOpt.value.toLowerCase()}.png`) : mode === 'country' ? (getCountryCode(selectedOpt.label) === 'un' ? `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedOpt.label)}&background=0F172A&color=fff&size=128&bold=true` : `https://flagcdn.com/w80/${getCountryCode(selectedOpt.label)}.png`) : `https://www.google.com/s2/favicons?domain=${getDomain(selectedOpt.label)}&sz=256`} 
+                                            onError={(e) => { 
+                                                e.target.onerror = null; 
+                                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedOpt.label)}&background=0F172A&color=fff&size=128&bold=true`;
+                                            }} 
+                                            className={`w-full h-full drop-shadow-md ${(mode === 'country' || mode === 'state') ? 'object-cover rounded-full' : 'object-contain rounded-md'}`} 
+                                            alt="icon"
+                                        />
                                 </div>
                             ) : (
                                 Icon && <Icon className="w-4 h-4 text-brand-primary shrink-0" />
@@ -855,27 +842,14 @@
                                             {mode !== 'default' && (
                                                 <div className={`shrink-0 flex items-center justify-center bg-gradient-to-b from-white/20 to-black/40 border-t border-white/40 border-b border-black/50 shadow-[0_5px_10px_rgba(0,0,0,0.5),inset_0_2px_5px_rgba(255,255,255,0.3)] backdrop-blur-xl overflow-hidden p-[3px] ${(mode === 'country' || mode === 'state') ? 'w-9 h-9 rounded-full' : 'w-9 h-9 rounded-lg'}`}>
                                                     <img 
-                                                        src={mode === 'state' ? (opt.value === '' ? `https://ui-avatars.com/api/?name=Any&background=0F172A&color=fff&size=64&bold=true` : `https://flagcdn.com/w40/us-${opt.value.toLowerCase()}.png`) : mode === 'country' ? (getCountryCode(opt.label) === 'un' ? `https://ui-avatars.com/api/?name=${encodeURIComponent(opt.label)}&background=0F172A&color=fff&size=64&bold=true` : `https://flagcdn.com/w40/${getCountryCode(opt.label)}.png`) : `https://logo.clearbit.com/${getDomain(opt.label)}`} 
-                                                        onError={(e) => { 
-                                                            if (mode !== 'country' && mode !== 'state') {
-                                                                const currentSrc = e.target.src;
-                                                                const domain = getDomain(opt.label);
-                                                                if (currentSrc.includes('clearbit')) {
-                                                                    e.target.src = `https://icon.horse/icon/${domain}`;
-                                                                } else if (currentSrc.includes('icon.horse')) {
-                                                                    e.target.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-                                                                } else {
-                                                                    e.target.onerror = null;
-                                                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(opt.label)}&background=0F172A&color=fff&size=64&bold=true`;
-                                                                }
-                                                            } else {
-                                                                e.target.onerror = null; 
-                                                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(opt.label)}&background=0F172A&color=fff&size=64&bold=true`;
-                                                            }
-                                                        }} 
-                                                        className={`w-full h-full drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)] ${(mode === 'country' || mode === 'state') ? 'object-cover rounded-full' : 'object-contain rounded-md'}`} 
-                                                        alt="icon"
-                                                    />
+                                                            src={mode === 'state' ? (opt.value === '' ? `https://ui-avatars.com/api/?name=Any&background=0F172A&color=fff&size=128&bold=true` : `https://flagcdn.com/w80/us-${opt.value.toLowerCase()}.png`) : mode === 'country' ? (getCountryCode(opt.label) === 'un' ? `https://ui-avatars.com/api/?name=${encodeURIComponent(opt.label)}&background=0F172A&color=fff&size=128&bold=true` : `https://flagcdn.com/w80/${getCountryCode(opt.label)}.png`) : `https://www.google.com/s2/favicons?domain=${getDomain(opt.label)}&sz=256`} 
+                                                            onError={(e) => { 
+                                                                e.target.onerror = null;
+                                                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(opt.label)}&background=0F172A&color=fff&size=128&bold=true`;
+                                                            }} 
+                                                            className={`w-full h-full drop-shadow-md ${(mode === 'country' || mode === 'state') ? 'object-cover rounded-full' : 'object-contain rounded-md'}`} 
+                                                            alt="icon"
+                                                        />
                                                 </div>
                                             )}
                                             <span className="truncate">{opt.label}</span>
@@ -1006,20 +980,24 @@
             // 🟢 HD SMART LOGO MAPPER FOR VAULT ITEMS 🟢
             const getVaultLogo = (name) => {
                 let n = String(name).toLowerCase();
+                
+                if (n.includes('google voice') || n.includes('gv')) return 'https://www.google.com/s2/favicons?domain=voice.google.com&sz=256';
+                if (n.includes('textplus')) return 'https://www.google.com/s2/favicons?domain=textplus.com&sz=256';
+                if (n.includes('textnow')) return 'https://www.google.com/s2/favicons?domain=textnow.com&sz=256';
+                if (n.includes('gmail') || n.includes('google')) return 'https://www.google.com/s2/favicons?domain=google.com&sz=256';
+                
                 let cleanName = n.replace(/\b(verification|account|rent|virtual|sms|verify|:|pur-sms-)\b/g, '').trim();
                 
                 const exactMatches = {
                     'apple id': 'apple.com', 'apple': 'apple.com', 'whatsapp': 'whatsapp.com',
-                    'google voice': 'voice.google.com', 'gv': 'voice.google.com',
-                    'google': 'google.com', 'gmail': 'google.com', 'facebook': 'facebook.com',
-                    'netflix': 'netflix.com', 'textplus': 'textplus.com', 'textnow': 'textnow.com',
-                    'instagram': 'instagram.com', 'amazon': 'amazon.com', 'aws': 'aws.amazon.com',
-                    'paypal': 'paypal.com', 'microsoft': 'microsoft.com', 'telegram': 'telegram.org',
-                    'tinder': 'tinder.com', 'tiktok': 'tiktok.com', 'cashapp': 'cash.app',
-                    'venmo': 'venmo.com', 'chime': 'chime.com', 'yahoo': 'yahoo.com',
-                    'outlook': 'outlook.com', 'bumble': 'bumble.com', 'match': 'match.com',
-                    'pof': 'pof.com', 'discord': 'discord.com', 'uber': 'uber.com',
-                    'snapchat': 'snapchat.com', 'twitter': 'x.com', 'x': 'x.com', 'linkedin': 'linkedin.com'
+                    'facebook': 'facebook.com', 'netflix': 'netflix.com', 'instagram': 'instagram.com', 
+                    'amazon': 'amazon.com', 'aws': 'aws.amazon.com', 'paypal': 'paypal.com', 
+                    'microsoft': 'microsoft.com', 'telegram': 'telegram.org', 'tinder': 'tinder.com', 
+                    'tiktok': 'tiktok.com', 'cashapp': 'cash.app', 'venmo': 'venmo.com', 
+                    'chime': 'chime.com', 'yahoo': 'yahoo.com', 'outlook': 'outlook.com', 
+                    'bumble': 'bumble.com', 'match': 'match.com', 'pof': 'pof.com', 
+                    'discord': 'discord.com', 'uber': 'uber.com', 'snapchat': 'snapchat.com', 
+                    'twitter': 'x.com', 'x': 'x.com', 'linkedin': 'linkedin.com'
                 };
 
                 let domain = exactMatches[cleanName];
@@ -1030,9 +1008,8 @@
                 }
                 if (!domain && cleanName.length > 2) domain = cleanName.replace(/[^a-z0-9]/g, '') + '.com';
                 
-                if (domain) return `https://logo.clearbit.com/${domain}`;
+                if (domain) return `https://www.google.com/s2/favicons?domain=${domain}&sz=256`;
 
-                // Category Fallbacks
                 if (isSMS) return 'https://cdn-icons-png.flaticon.com/512/9135/9135759.png'; 
                 return 'https://cdn-icons-png.flaticon.com/512/2838/2838883.png';
             };
@@ -1095,20 +1072,15 @@
                     {/* Header */}
                     <div className="flex justify-between items-center mb-4 pb-4 border-b border-white/10 relative z-10">
                         <div className="flex items-center gap-3.5">
-                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-b from-white/20 to-black/40 border-t border-white/40 border-b border-black/50 shadow-[0_10px_20px_rgba(0,0,0,0.5),inset_0_2px_5px_rgba(255,255,255,0.3)] flex items-center justify-center shrink-0 p-2.5 group-hover:shadow-[0_15px_25px_rgba(74,222,128,0.3)] transition-all duration-300 backdrop-blur-xl relative z-10 overflow-hidden">
+                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-b from-white/20 to-black/40 border-t border-white/40 border-b border-black/50 shadow-[0_10px_20px_rgba(0,0,0,0.5),inset_0_2px_5px_rgba(255,255,255,0.3)] flex items-center justify-center shrink-0 p-2 group-hover:shadow-[0_15px_25px_rgba(74,222,128,0.3)] transition-all duration-300 backdrop-blur-xl relative z-10 overflow-hidden">
                                 <div className="absolute top-0 left-0 w-full h-[45%] bg-gradient-to-b from-white/20 to-transparent rounded-t-[20px] pointer-events-none"></div>
                                 <img 
                                     src={logoUrl} 
-                                    className="w-full h-full object-contain drop-shadow-[0_6px_8px_rgba(0,0,0,0.8)] group-hover:scale-110 transition-transform duration-300 relative z-10" 
+                                    className="w-full h-full object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-300 relative z-10" 
                                     alt="Account Logo"
                                     onError={(e) => {
-                                        const fallbackDomain = logoUrl.split('clearbit.com/')[1];
-                                        if (fallbackDomain && !e.target.src.includes('google.com')) {
-                                            e.target.src = `https://www.google.com/s2/favicons?domain=${fallbackDomain}&sz=128`;
-                                        } else {
-                                            e.target.onerror = null;
-                                            e.target.src = isSMS ? 'https://cdn-icons-png.flaticon.com/512/9135/9135759.png' : 'https://cdn-icons-png.flaticon.com/512/2838/2838883.png';
-                                        }
+                                        e.target.onerror = null;
+                                        e.target.src = isSMS ? 'https://cdn-icons-png.flaticon.com/512/9135/9135759.png' : 'https://cdn-icons-png.flaticon.com/512/2838/2838883.png';
                                     }}
                                 />
                             </div>
@@ -2763,14 +2735,14 @@
 
                                                         return (
                                                             <img 
-                                                                src={`https://logo.clearbit.com/${domain}`} 
-                                                                onError={(e) => { 
-                                                                    e.target.onerror = null; 
-                                                                    e.target.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`; 
-                                                                }}
-                                                                className="w-full h-full object-contain drop-shadow-[0_8px_12px_rgba(0,0,0,0.9)] relative z-10 transform transition-transform group-hover:scale-125" 
-                                                                alt={activeOrder.service}
-                                                            />
+                                                                            src={`https://www.google.com/s2/favicons?domain=${domain}&sz=256`} 
+                                                                            onError={(e) => { 
+                                                                                e.target.onerror = null; 
+                                                                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(activeOrder.service)}&background=0F172A&color=fff&size=128&bold=true`;
+                                                                            }}
+                                                                            className="w-full h-full object-contain drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)] relative z-10 transform transition-transform group-hover:scale-110" 
+                                                                            alt={activeOrder.service}
+                                                                        />
                                                         );
                                                     })()}
                                                 </div>
@@ -3247,39 +3219,39 @@
           // 🟢 SMART LOGO MAPPER 🟢
           const getProductLogo = (name) => {
               let n = String(name).toLowerCase();
-              if (n.includes('google voice') || n.includes('gv')) return 'https://www.google.com/s2/favicons?domain=voice.google.com&sz=128';
-              if (n.includes('textplus')) return 'https://www.google.com/s2/favicons?domain=textplus.com&sz=128';
-              if (n.includes('textnow')) return 'https://www.google.com/s2/favicons?domain=textnow.com&sz=128';
-              if (n.includes('nordvpn') || n.includes('nord vpn')) return 'https://www.google.com/s2/favicons?domain=nordvpn.com&sz=128';
-              if (n.includes('expressvpn') || n.includes('express vpn')) return 'https://www.google.com/s2/favicons?domain=expressvpn.com&sz=128';
-              if (n.includes('ipvanish')) return 'https://www.google.com/s2/favicons?domain=ipvanish.com&sz=128';
-              if (n.includes('surfshark')) return 'https://www.google.com/s2/favicons?domain=surfshark.com&sz=128';
-              if (n.includes('cyberghost')) return 'https://www.google.com/s2/favicons?domain=cyberghostvpn.com&sz=128';
-              if (n.includes('vyprvpn')) return 'https://www.google.com/s2/favicons?domain=vyprvpn.com&sz=128';
-              if (n.includes('pia') || n.includes('private internet')) return 'https://www.google.com/s2/favicons?domain=privateinternetaccess.com&sz=128';
-              if (n.includes('vpn')) return 'https://www.google.com/s2/favicons?domain=vpn.com&sz=128';
-              if (n.includes('gmail') || n.includes('google')) return 'https://www.google.com/s2/favicons?domain=google.com&sz=128';
-              if (n.includes('facebook') || n.includes('fb')) return 'https://www.google.com/s2/favicons?domain=facebook.com&sz=128';
-              if (n.includes('instagram') || n.includes('ig')) return 'https://www.google.com/s2/favicons?domain=instagram.com&sz=128';
-              if (n.includes('twitter') || n.includes(' x ')) return 'https://www.google.com/s2/favicons?domain=x.com&sz=128';
-              if (n.includes('tiktok')) return 'https://www.google.com/s2/favicons?domain=tiktok.com&sz=128';
-              if (n.includes('whatsapp')) return 'https://www.google.com/s2/favicons?domain=whatsapp.com&sz=128';
-              if (n.includes('telegram')) return 'https://www.google.com/s2/favicons?domain=telegram.org&sz=128';
-              if (n.includes('netflix')) return 'https://www.google.com/s2/favicons?domain=netflix.com&sz=128';
-              if (n.includes('amazon') || n.includes('aws')) return 'https://www.google.com/s2/favicons?domain=amazon.com&sz=128';
-              if (n.includes('paypal')) return 'https://www.google.com/s2/favicons?domain=paypal.com&sz=128';
-              if (n.includes('cashapp') || n.includes('cash app')) return 'https://www.google.com/s2/favicons?domain=cash.app&sz=128';
-              if (n.includes('venmo')) return 'https://www.google.com/s2/favicons?domain=venmo.com&sz=128';
-              if (n.includes('chime')) return 'https://www.google.com/s2/favicons?domain=chime.com&sz=128';
-              if (n.includes('yahoo')) return 'https://www.google.com/s2/favicons?domain=yahoo.com&sz=128';
-              if (n.includes('outlook') || n.includes('hotmail')) return 'https://www.google.com/s2/favicons?domain=outlook.com&sz=128';
-              if (n.includes('tinder')) return 'https://www.google.com/s2/favicons?domain=tinder.com&sz=128';
-              if (n.includes('bumble')) return 'https://www.google.com/s2/favicons?domain=bumble.com&sz=128';
-              if (n.includes('match')) return 'https://www.google.com/s2/favicons?domain=match.com&sz=128';
-              if (n.includes('pof') || n.includes('plenty of fish')) return 'https://www.google.com/s2/favicons?domain=pof.com&sz=128';
+              if (n.includes('google voice') || n.includes('gv')) return 'https://www.google.com/s2/favicons?domain=voice.google.com&sz=256';
+              if (n.includes('textplus')) return 'https://www.google.com/s2/favicons?domain=textplus.com&sz=256';
+              if (n.includes('textnow')) return 'https://www.google.com/s2/favicons?domain=textnow.com&sz=256';
+              if (n.includes('nordvpn') || n.includes('nord vpn')) return 'https://www.google.com/s2/favicons?domain=nordvpn.com&sz=256';
+              if (n.includes('expressvpn') || n.includes('express vpn')) return 'https://www.google.com/s2/favicons?domain=expressvpn.com&sz=256';
+              if (n.includes('ipvanish')) return 'https://www.google.com/s2/favicons?domain=ipvanish.com&sz=256';
+              if (n.includes('surfshark')) return 'https://www.google.com/s2/favicons?domain=surfshark.com&sz=256';
+              if (n.includes('cyberghost')) return 'https://www.google.com/s2/favicons?domain=cyberghostvpn.com&sz=256';
+              if (n.includes('vyprvpn')) return 'https://www.google.com/s2/favicons?domain=vyprvpn.com&sz=256';
+              if (n.includes('pia') || n.includes('private internet')) return 'https://www.google.com/s2/favicons?domain=privateinternetaccess.com&sz=256';
+              if (n.includes('vpn')) return 'https://www.google.com/s2/favicons?domain=vpn.com&sz=256';
+              if (n.includes('gmail') || n.includes('google')) return 'https://www.google.com/s2/favicons?domain=google.com&sz=256';
+              if (n.includes('facebook') || n.includes('fb')) return 'https://www.google.com/s2/favicons?domain=facebook.com&sz=256';
+              if (n.includes('instagram') || n.includes('ig')) return 'https://www.google.com/s2/favicons?domain=instagram.com&sz=256';
+              if (n.includes('twitter') || n.includes(' x ')) return 'https://www.google.com/s2/favicons?domain=x.com&sz=256';
+              if (n.includes('tiktok')) return 'https://www.google.com/s2/favicons?domain=tiktok.com&sz=256';
+              if (n.includes('whatsapp')) return 'https://www.google.com/s2/favicons?domain=whatsapp.com&sz=256';
+              if (n.includes('telegram')) return 'https://www.google.com/s2/favicons?domain=telegram.org&sz=256';
+              if (n.includes('netflix')) return 'https://www.google.com/s2/favicons?domain=netflix.com&sz=256';
+              if (n.includes('amazon') || n.includes('aws')) return 'https://www.google.com/s2/favicons?domain=amazon.com&sz=256';
+              if (n.includes('paypal')) return 'https://www.google.com/s2/favicons?domain=paypal.com&sz=256';
+              if (n.includes('cashapp') || n.includes('cash app')) return 'https://www.google.com/s2/favicons?domain=cash.app&sz=256';
+              if (n.includes('venmo')) return 'https://www.google.com/s2/favicons?domain=venmo.com&sz=256';
+              if (n.includes('chime')) return 'https://www.google.com/s2/favicons?domain=chime.com&sz=256';
+              if (n.includes('yahoo')) return 'https://www.google.com/s2/favicons?domain=yahoo.com&sz=256';
+              if (n.includes('outlook') || n.includes('hotmail')) return 'https://www.google.com/s2/favicons?domain=outlook.com&sz=256';
+              if (n.includes('tinder')) return 'https://www.google.com/s2/favicons?domain=tinder.com&sz=256';
+              if (n.includes('bumble')) return 'https://www.google.com/s2/favicons?domain=bumble.com&sz=256';
+              if (n.includes('match')) return 'https://www.google.com/s2/favicons?domain=match.com&sz=256';
+              if (n.includes('pof') || n.includes('plenty of fish')) return 'https://www.google.com/s2/favicons?domain=pof.com&sz=256';
               
               let word = n.split(' ')[0].replace(/[^a-z0-9]/g, '');
-              return word ? `https://www.google.com/s2/favicons?domain=${word}.com&sz=128` : null;
+              return word ? `https://www.google.com/s2/favicons?domain=${word}.com&sz=256` : null;
           };
 
           return (
@@ -3308,7 +3280,7 @@
                                       <div className={`w-12 h-12 flex items-center justify-center rounded-xl shrink-0 bg-gradient-to-b from-white/20 to-black/40 border-t border-white/40 border-b border-black/50 shadow-[0_8px_15px_rgba(0,0,0,0.4),inset_0_2px_5px_rgba(255,255,255,0.3)] backdrop-blur-xl relative overflow-hidden ${!isOutOfStock && 'group-hover:scale-110 group-hover:shadow-[0_12px_20px_rgba(74,222,128,0.3)]'} transition-all duration-300 p-2`}>
                                           <div className="absolute top-0 left-0 w-full h-[45%] bg-gradient-to-b from-white/20 to-transparent rounded-t-[20px] pointer-events-none"></div>
                                           {logoUrl ? (
-                                              <img src={logoUrl} onError={(e) => { e.target.onerror = null; e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name)}&background=f8fafc&color=0f172a&size=64&bold=true`; }} className="w-full h-full object-contain drop-shadow-[0_5px_8px_rgba(0,0,0,0.7)] relative z-10" alt={product.name} />
+                                              <img src={logoUrl} onError={(e) => { e.target.onerror = null; e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name)}&background=0F172A&color=fff&size=128&bold=true`; }} className="w-full h-full object-contain drop-shadow-md relative z-10" alt={product.name} />
                                           ) : (
                                               <Icon className="w-5 h-5 text-gray-500" strokeWidth={1.5} />
                                           )}
