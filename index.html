@@ -2728,35 +2728,110 @@
                                             {activeOrder.status === 'Active' && !activeOrder.code && <span className="flex h-2 w-2 shrink-0 relative"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4ade80] opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-[#4ade80]"></span></span>}
                                         </div>
                                         <div className="flex items-center gap-2 sm:gap-3 w-full">
-                                            <span className="text-[18px] leading-tight sm:text-3xl md:text-4xl font-black font-mono text-white tracking-tight sm:tracking-wider truncate">
-                                                {(() => {
-                                                    let p = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
-                                                    if (p.length === 10) return `+1 ${p}`;
-                                                    if (p.startsWith('1') && p.length === 11) return `+1 ${p.slice(1)}`;
-                                                    if (p.startsWith('44')) return `+44 ${p.slice(2)}`;
-                                                    return `+${p}`;
-                                                })()}
-                                            </span>
-                                            
-                                            {/* Copy Button */}
-                                            <button onClick={() => {
-                                                let cleanNum = String(activeOrder.phone).replace('+', '').replace(/\s+/g, '');
-                                                if (cleanNum.startsWith('1') && cleanNum.length === 11) cleanNum = cleanNum.slice(1);
+                                            {(() => {
+                                                let p = String(activeOrder.phone).replace(/\D/g, ''); // Extract only numbers
+                                                let code = '+'; let num = p;
                                                 
-                                                const fallbackCopy = (text) => {
-                                                    const textArea = document.createElement("textarea");
-                                                    textArea.value = text;
-                                                    document.body.appendChild(textArea);
-                                                    textArea.focus();
-                                                    textArea.select();
-                                                    try { document.execCommand('copy'); triggerToast("Number copied!"); } catch (err) { triggerToast("Failed to copy"); }
-                                                    document.body.removeChild(textArea);
+                                                // 🌍 Country to Dialing Code Dictionary
+                                                const countryToDialCode = {
+                                                    'usa': '1', 'united states': '1', 'usa rent': '1', 'usa virtual': '1', 'usa rent up to 25 days': '1',
+                                                    'uk': '44', 'united kingdom': '44', 'united kingdom uk': '44', 'canada': '1',
+                                                    'hong kong': '852', 'germany': '49', 'russia': '7', 'india': '91', 'pakistan': '92',
+                                                    'brazil': '55', 'mozambique': '258', 'south africa': '27', 'venezuela': '58', 
+                                                    'swaziland': '268', 'eswatini': '268', 'france': '33', 'malawi': '265', 
+                                                    'nigeria': '234', 'china': '86', 'lesotho': '266', 'zambia': '260', 
+                                                    'egypt': '20', 'peru': '51', 'mexico': '52', 'spain': '34', 'ghana': '233', 
+                                                    'morocco': '212', 'algeria': '213', 'myanmar': '95', 'argentina': '54', 
+                                                    'romania': '40', 'ukraine': '380', 'vietnam': '84', 'tanzania': '255', 
+                                                    'namibia': '264', 'switzerland': '41', 'italy': '39', 'colombia': '57', 
+                                                    'botswana': '267', 'sweden': '46', 'denmark': '45', 'ecuador': '593', 
+                                                    'austria': '43', 'czech republic': '420', 'norway': '47', 'luxembourg': '352', 
+                                                    'belgium': '32', 'poland': '48', 'finland': '358', 'hungary': '36', 
+                                                    'ireland': '353', 'greece': '30', 'bosnia and herzegovina': '387', 'bosnia': '387',
+                                                    'bulgaria': '359', 'slovakia': '421', 'belarus': '375', 'serbia': '381', 
+                                                    'croatia': '385', 'moldova': '373', 'israel': '972', 'albania': '355', 
+                                                    'lithuania': '370', 'northmacedonia': '389', 'slovenia': '386', 'latvia': '371', 
+                                                    'estonia': '372', 'montenegro': '382', 'malta': '356', 'iceland': '354', 
+                                                    'andorra': '376', 'monaco': '377', 'liechtenstein': '423', 'san marino': '378', 
+                                                    'holy see': '379', 'australia': '61', 'new zealand': '64', 'fiji': '679', 
+                                                    'paraguay': '595', 'cuba': '53', 'japan': '81', 'macao': '853', 'taiwan': '886', 
+                                                    'qatar': '974', 'singapore': '65', 'uae': '971', 'kazakhstan': '7', 'malaysia': '60', 
+                                                    'philippines': '63', 'turkey': '90', 'uzbekistan': '998', 'srilanka': '94', 
+                                                    'cambodia': '855', 'north korea': '850', 'indonesia': '62', 'iran': '98', 
+                                                    'thailand': '66', 'south korea': '82', 'iraq': '964', 'afghanistan': '93', 
+                                                    'saudiarabia': '966', 'yemen': '967', 'nepal': '977', 'syria': '963', 
+                                                    'jordan': '962', 'azerbaijan': '994', 'tajikistan': '992', 'laos': '856', 
+                                                    'lebanon': '961', 'kyrgyzstan': '996', 'turkmenistan': '993', 'oman': '968', 
+                                                    'state of palestine': '970', 'palestine': '970', 'kuwait': '965', 'georgia': '995', 
+                                                    'mongolia': '976', 'armenia': '374', 'timor-leste': '670', 'cyprus': '357', 
+                                                    'maldives': '960', 'brunei': '673', 'chile': '56', 'guatemala': '502', 
+                                                    'bolivia': '591', 'haiti': '509', 'ethiopia': '251', 'honduras': '504', 
+                                                    'nicaragua': '505', 'el salvador': '503', 'costarica': '506', 'panama': '507', 
+                                                    'uruguay': '598', 'jamaica': '1', 'trinidad and tobago': '1', 'guyana': '592', 
+                                                    'suriname': '597', 'belize': '501', 'bahamas': '1', 'saintlucia': '1', 
+                                                    'solomonislands': '677', 'kiribati': '686', 'tonga': '676', 'marshall islands': '692', 
+                                                    'palau': '680', 'tuvalu': '688', 'nauru': '674', 'kenya': '254', 'uganda': '256', 
+                                                    'sudan': '249', 'madagascar': '261', 'cameroon': '237', 'côte d\'ivoire': '225', 
+                                                    'ivorycoast': '225', 'niger': '227', 'mali': '223', 'senegal': '221', 'somalia': '252', 
+                                                    'zimbabwe': '263', 'rwanda': '250', 'tunisia': '216', 'southsudan': '211', 'togo': '228', 
+                                                    'sierraleone': '232', 'libya': '218', 'liberia': '231', 'mauritania': '222', 
+                                                    'gambia': '220', 'mauritius': '230', 'cabo verde': '238', 'saotomeandprincipe': '239', 
+                                                    'montserrat': '1', 'newcaledonia': '687', 'turksandcaicos': '1', 'virginislands': '1'
                                                 };
 
-                                                if (navigator.clipboard && window.isSecureContext) {
-                                                    navigator.clipboard.writeText(cleanNum).then(() => triggerToast("Number copied!")).catch(() => fallbackCopy(cleanNum));
-                                                } else fallbackCopy(cleanNum);
-                                            }} className="shrink-0 bg-white/10 hover:bg-[#4ade80]/20 text-white hover:text-[#4ade80] p-1.5 sm:p-2 rounded-lg transition-colors border border-white/20 shadow-sm" title="Copy Number"><Copy className="w-4 h-4 sm:w-5 sm:h-5"/></button>
+                                                // 🟢 Determine the selected country name
+                                                let countryName = '';
+                                                if (smsMode === 'quick') {
+                                                    const qOpt = quickCountries.find(c => c.value === selectedQuickCountry);
+                                                    if(qOpt) countryName = qOpt.label.toLowerCase();
+                                                } else {
+                                                    const sOpt = countryOptions.find(c => c.value === selectedCountry);
+                                                    if(sOpt) countryName = sOpt.label.toLowerCase();
+                                                }
+
+                                                // 🟢 Logic to inject code based on selected country
+                                                let targetCode = countryToDialCode[countryName] || '';
+                                                
+                                                if (targetCode) {
+                                                    code = `+${targetCode}`;
+                                                    // Only remove the prefix if the API accidentally attached it 
+                                                    // (Prevents double country codes like +1 1205...)
+                                                    if (p.startsWith(targetCode) && p.length > targetCode.length + 5) {
+                                                        num = p.slice(targetCode.length);
+                                                    } else {
+                                                        num = p;
+                                                    }
+                                                } else {
+                                                    // Fallback if country not found
+                                                    code = activeOrder.provider === 'route1' ? '+' : ''; 
+                                                    num = p;
+                                                }
+
+                                                // Special hardcoded catch for standard USA 10-digit formats
+                                                if (num.length === 10 && (countryName.includes('usa') || countryName.includes('united states'))) {
+                                                    code = '+1';
+                                                }
+                                                
+                                                return (
+                                                    <>
+                                                        <span className="text-[18px] leading-tight sm:text-3xl md:text-4xl font-black font-mono text-white tracking-tight sm:tracking-wider truncate flex items-baseline gap-1.5 sm:gap-2">
+                                                            {code && <span className="text-gray-400 text-sm sm:text-2xl">{code}</span>}
+                                                            <span>{num}</span>
+                                                        </span>
+                                                        
+                                                        {/* 🟢 Copy Button (Only Copies the Exact Number Without Code) 🟢 */}
+                                                        <button onClick={() => {
+                                                            const fallbackCopy = (text) => {
+                                                                const textArea = document.createElement("textarea"); textArea.value = text; document.body.appendChild(textArea); textArea.focus(); textArea.select();
+                                                                try { document.execCommand('copy'); triggerToast("Number copied!"); } catch (err) { triggerToast("Failed to copy"); } document.body.removeChild(textArea);
+                                                            };
+                                                            if (navigator.clipboard && window.isSecureContext) { 
+                                                                navigator.clipboard.writeText(num).then(() => triggerToast("Number copied!")).catch(() => fallbackCopy(num)); 
+                                                            } else fallbackCopy(num);
+                                                        }} className="shrink-0 bg-white/10 hover:bg-[#4ade80]/20 text-white hover:text-[#4ade80] p-1.5 sm:p-2 rounded-lg transition-colors border border-white/20 shadow-sm" title="Copy Number Only"><Copy className="w-4 h-4 sm:w-5 sm:h-5"/></button>
+                                                    </>
+                                                );
+                                            })()}
                                         </div>
                                     </div>
                                 </div>
