@@ -1003,35 +1003,38 @@
             const [renewDuration, setRenewDuration] = useState('3 days');
             const [renewStatus, setRenewStatus] = useState('');
 
-            // 🟢 SMART LOGO MAPPER FOR VAULT ITEMS 🟢
+            // 🟢 HD SMART LOGO MAPPER FOR VAULT ITEMS 🟢
             const getVaultLogo = (name) => {
                 let n = String(name).toLowerCase();
-                // Specific App Logos
-                if (n.includes('google voice') || n.includes('gv')) return 'https://www.google.com/s2/favicons?domain=voice.google.com&sz=128';
-                if (n.includes('textplus') || n.includes('text plus')) return 'https://www.google.com/s2/favicons?domain=textplus.com&sz=128';
-                if (n.includes('textnow')) return 'https://www.google.com/s2/favicons?domain=textnow.com&sz=128';
-                if (n.includes('gmail') || n.includes('google')) return 'https://www.google.com/s2/favicons?domain=google.com&sz=128';
-                if (n.includes('facebook') || n.includes('fb')) return 'https://www.google.com/s2/favicons?domain=facebook.com&sz=128';
-                if (n.includes('whatsapp')) return 'https://www.google.com/s2/favicons?domain=whatsapp.com&sz=128';
-                if (n.includes('telegram')) return 'https://www.google.com/s2/favicons?domain=telegram.org&sz=128';
-                if (n.includes('instagram') || n.includes('ig')) return 'https://www.google.com/s2/favicons?domain=instagram.com&sz=128';
-                if (n.includes('tiktok')) return 'https://www.google.com/s2/favicons?domain=tiktok.com&sz=128';
-                if (n.includes('twitter') || n.includes(' x ')) return 'https://www.google.com/s2/favicons?domain=x.com&sz=128';
-                if (n.includes('netflix')) return 'https://www.google.com/s2/favicons?domain=netflix.com&sz=128';
-                if (n.includes('amazon') || n.includes('aws')) return 'https://www.google.com/s2/favicons?domain=amazon.com&sz=128';
-                if (n.includes('paypal')) return 'https://www.google.com/s2/favicons?domain=paypal.com&sz=128';
-                if (n.includes('cashapp')) return 'https://www.google.com/s2/favicons?domain=cash.app&sz=128';
-                if (n.includes('venmo')) return 'https://www.google.com/s2/favicons?domain=venmo.com&sz=128';
-                if (n.includes('chime')) return 'https://www.google.com/s2/favicons?domain=chime.com&sz=128';
-                if (n.includes('yahoo')) return 'https://www.google.com/s2/favicons?domain=yahoo.com&sz=128';
-                if (n.includes('outlook') || n.includes('hotmail')) return 'https://www.google.com/s2/favicons?domain=outlook.com&sz=128';
-                if (n.includes('tinder')) return 'https://www.google.com/s2/favicons?domain=tinder.com&sz=128';
-                if (n.includes('bumble')) return 'https://www.google.com/s2/favicons?domain=bumble.com&sz=128';
+                let cleanName = n.replace(/\b(verification|account|rent|virtual|sms|verify|:|pur-sms-)\b/g, '').trim();
                 
+                const exactMatches = {
+                    'apple id': 'apple.com', 'apple': 'apple.com', 'whatsapp': 'whatsapp.com',
+                    'google voice': 'voice.google.com', 'gv': 'voice.google.com',
+                    'google': 'google.com', 'gmail': 'google.com', 'facebook': 'facebook.com',
+                    'netflix': 'netflix.com', 'textplus': 'textplus.com', 'textnow': 'textnow.com',
+                    'instagram': 'instagram.com', 'amazon': 'amazon.com', 'aws': 'aws.amazon.com',
+                    'paypal': 'paypal.com', 'microsoft': 'microsoft.com', 'telegram': 'telegram.org',
+                    'tinder': 'tinder.com', 'tiktok': 'tiktok.com', 'cashapp': 'cash.app',
+                    'venmo': 'venmo.com', 'chime': 'chime.com', 'yahoo': 'yahoo.com',
+                    'outlook': 'outlook.com', 'bumble': 'bumble.com', 'match': 'match.com',
+                    'pof': 'pof.com', 'discord': 'discord.com', 'uber': 'uber.com',
+                    'snapchat': 'snapchat.com', 'twitter': 'x.com', 'x': 'x.com', 'linkedin': 'linkedin.com'
+                };
+
+                let domain = exactMatches[cleanName];
+                if (!domain) {
+                    for (let key in exactMatches) {
+                        if (n.includes(key)) { domain = exactMatches[key]; break; }
+                    }
+                }
+                if (!domain && cleanName.length > 2) domain = cleanName.replace(/[^a-z0-9]/g, '') + '.com';
+                
+                if (domain) return `https://logo.clearbit.com/${domain}`;
+
                 // Category Fallbacks
-                if (isSMS) return 'https://cdn-icons-png.flaticon.com/512/9135/9135759.png'; // Beautiful SMS Icon
-                
-                return 'https://cdn-icons-png.flaticon.com/512/2838/2838883.png'; // Premium Key/Account Icon
+                if (isSMS) return 'https://cdn-icons-png.flaticon.com/512/9135/9135759.png'; 
+                return 'https://cdn-icons-png.flaticon.com/512/2838/2838883.png';
             };
 
             useEffect(() => {
@@ -1098,8 +1101,13 @@
                                     className="w-full h-full object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300" 
                                     alt="Account Logo"
                                     onError={(e) => {
-                                        e.target.onerror = null;
-                                        e.target.src = isSMS ? 'https://cdn-icons-png.flaticon.com/512/9135/9135759.png' : 'https://cdn-icons-png.flaticon.com/512/2838/2838883.png';
+                                        const fallbackDomain = logoUrl.split('clearbit.com/')[1];
+                                        if (fallbackDomain && !e.target.src.includes('google.com')) {
+                                            e.target.src = `https://www.google.com/s2/favicons?domain=${fallbackDomain}&sz=128`;
+                                        } else {
+                                            e.target.onerror = null;
+                                            e.target.src = isSMS ? 'https://cdn-icons-png.flaticon.com/512/9135/9135759.png' : 'https://cdn-icons-png.flaticon.com/512/2838/2838883.png';
+                                        }
                                     }}
                                 />
                             </div>
@@ -2718,24 +2726,54 @@
 
                                 {/* Left: Number & Service */}
                                 <div className="flex items-center gap-3 sm:gap-5 w-full md:w-auto relative z-10 overflow-hidden">
-                                    {/* Logo Container */}
-                                    <div className="relative shrink-0">
-                                        {activeOrder.status === 'Active' && !activeOrder.code && (
-                                            <div className="absolute inset-0 bg-[#4ade80] rounded-2xl animate-ping opacity-20"></div>
-                                        )}
-                                        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md flex items-center justify-center shrink-0 shadow-sm overflow-hidden p-1.5 sm:p-2 relative z-10">
-                                            <img 
-                                                 src={`https://logo.clearbit.com/${String(activeOrder.service).toLowerCase().replace(/[^a-z0-9]/g, '')}.com`} 
-                                                 onError={(e) => { 
-                                                     const backupDomain = String(activeOrder.service).toLowerCase().replace(/[^a-z0-9]/g, '') + '.com';
-                                                     e.target.onerror = null; 
-                                                     e.target.src = `https://www.google.com/s2/favicons?domain=${backupDomain}&sz=128`; 
-                                                 }}
-                                                 className="w-full h-full object-contain drop-shadow-sm" 
-                                                 alt="Service Logo"
-                                            />
-                                        </div>
-                                    </div>
+                                    {/* 🟢 3D PREMIUM LOGO CONTAINER 🟢 */}
+                                            <div className="relative shrink-0 group">
+                                                {activeOrder.status === 'Active' && !activeOrder.code && (
+                                                    <div className="absolute inset-0 bg-[#4ade80] rounded-[20px] animate-ping opacity-30"></div>
+                                                )}
+                                                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-[20px] bg-gradient-to-b from-white/20 to-black/40 border-t border-white/40 border-b border-black/50 shadow-[0_10px_20px_rgba(0,0,0,0.5),inset_0_2px_5px_rgba(255,255,255,0.3)] flex items-center justify-center shrink-0 overflow-hidden p-2 sm:p-2.5 relative z-10 backdrop-blur-xl">
+                                                    {/* 3D Glass Reflection Overlay */}
+                                                    <div className="absolute top-0 left-0 w-full h-[45%] bg-gradient-to-b from-white/20 to-transparent rounded-t-[20px] pointer-events-none"></div>
+                                                    
+                                                    {(() => {
+                                                        let n = String(activeOrder.service).toLowerCase();
+                                                        let cleanName = n.replace(/\b(verification|account|rent|virtual|sms|verify)\b/g, '').trim();
+                                                        
+                                                        const exactMatches = {
+                                                            'apple id': 'apple.com', 'apple': 'apple.com', 'whatsapp': 'whatsapp.com',
+                                                            'google': 'google.com', 'gmail': 'google.com', 'facebook': 'facebook.com',
+                                                            'netflix': 'netflix.com', 'textplus': 'textplus.com', 'instagram': 'instagram.com',
+                                                            'amazon': 'amazon.com', 'aws': 'aws.amazon.com', 'paypal': 'paypal.com', 
+                                                            'microsoft': 'microsoft.com', 'telegram': 'telegram.org', 'tinder': 'tinder.com', 
+                                                            'tiktok': 'tiktok.com', 'cashapp': 'cash.app', 'venmo': 'venmo.com', 
+                                                            'chime': 'chime.com', 'yahoo': 'yahoo.com', 'outlook': 'outlook.com', 
+                                                            'bumble': 'bumble.com', 'match': 'match.com', 'pof': 'pof.com', 
+                                                            'discord': 'discord.com', 'uber': 'uber.com', 'lyft': 'lyft.com', 
+                                                            'snapchat': 'snapchat.com', 'twitter': 'x.com', 'x': 'x.com', 'linkedin': 'linkedin.com'
+                                                        };
+
+                                                        let domain = exactMatches[cleanName];
+                                                        if (!domain) {
+                                                            for (let key in exactMatches) {
+                                                                if (n.includes(key)) { domain = exactMatches[key]; break; }
+                                                            }
+                                                        }
+                                                        if (!domain) domain = cleanName.replace(/[^a-z0-9]/g, '') + '.com';
+
+                                                        return (
+                                                            <img 
+                                                                src={`https://logo.clearbit.com/${domain}`} 
+                                                                onError={(e) => { 
+                                                                    e.target.onerror = null; 
+                                                                    e.target.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`; 
+                                                                }}
+                                                                className="w-full h-full object-contain drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)] relative z-10 transform transition-transform group-hover:scale-110" 
+                                                                alt={activeOrder.service}
+                                                            />
+                                                        );
+                                                    })()}
+                                                </div>
+                                            </div>
                                     
                                     {/* Number & Info Container */}
                                     <div className="flex flex-col min-w-0 w-full">
@@ -3887,9 +3925,55 @@
                                                 <p className="text-[9px] text-gray-400 font-mono mt-1">{item.id}</p>
                                             </td>
                                             <td className="p-4">
-                                                <div className="flex items-center gap-2">
-                                                    {isDeposit ? <Wallet className="w-3.5 h-3.5 text-blue-500"/> : <ShoppingCart className="w-3.5 h-3.5 text-brand-primary"/>}
-                                                    <span className="text-xs font-bold text-gray-800 tracking-wide">{item.type}</span>
+                                                <div className="flex items-center gap-3">
+                                                    {isDeposit ? (
+                                                        <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shadow-sm shrink-0">
+                                                            <Wallet className="w-4 h-4 text-blue-500"/>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="w-8 h-8 rounded-lg bg-white/5 border border-gray-300 shadow-sm flex items-center justify-center overflow-hidden p-1.5 shrink-0 bg-gradient-to-b from-white to-gray-100 relative">
+                                                            {(() => {
+                                                                let n = String(item.type).toLowerCase();
+                                                                let cleanName = n.replace(/\b(verification|account|rent|virtual|sms|verify|:|pur-sms-)\b/g, '').trim();
+                                                                
+                                                                const exactMatches = {
+                                                                    'apple id': 'apple.com', 'apple': 'apple.com', 'whatsapp': 'whatsapp.com',
+                                                                    'google': 'google.com', 'gmail': 'google.com', 'facebook': 'facebook.com',
+                                                                    'netflix': 'netflix.com', 'textplus': 'textplus.com', 'instagram': 'instagram.com',
+                                                                    'amazon': 'amazon.com', 'paypal': 'paypal.com', 'microsoft': 'microsoft.com', 
+                                                                    'telegram': 'telegram.org', 'tinder': 'tinder.com', 'tiktok': 'tiktok.com', 
+                                                                    'cashapp': 'cash.app', 'venmo': 'venmo.com', 'chime': 'chime.com', 
+                                                                    'yahoo': 'yahoo.com', 'outlook': 'outlook.com', 'bumble': 'bumble.com', 
+                                                                    'discord': 'discord.com', 'twitter': 'x.com', 'x': 'x.com', 'linkedin': 'linkedin.com'
+                                                                };
+
+                                                                let domain = exactMatches[cleanName];
+                                                                if (!domain) {
+                                                                    for (let key in exactMatches) {
+                                                                        if (n.includes(key)) { domain = exactMatches[key]; break; }
+                                                                    }
+                                                                }
+                                                                if (!domain && cleanName.length > 2) domain = cleanName.replace(/[^a-z0-9]/g, '') + '.com';
+
+                                                                return (
+                                                                    <img 
+                                                                        src={`https://logo.clearbit.com/${domain}`} 
+                                                                        onError={(e) => { 
+                                                                            if (!e.target.src.includes('google.com')) {
+                                                                                e.target.onerror = null; 
+                                                                                e.target.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`; 
+                                                                            } else {
+                                                                                e.target.style.display = 'none';
+                                                                            }
+                                                                        }}
+                                                                        className="w-full h-full object-contain drop-shadow-sm relative z-10" 
+                                                                        alt="logo"
+                                                                    />
+                                                                );
+                                                            })()}
+                                                        </div>
+                                                    )}
+                                                    <span className="text-xs font-bold text-gray-800 tracking-wide truncate max-w-[150px] sm:max-w-none">{item.type}</span>
                                                 </div>
                                             </td>
                                             <td className="p-4 sm:p-5">
